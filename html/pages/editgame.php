@@ -5,14 +5,12 @@
 if (isset($_REQUEST["name"])) {
     $game_id = (int)$_REQUEST['game_id'];
     if (!$game_id) {
-        die('Ошибка: ID игры не указан.');
+        throw new Exception('Ошибка: ID игры не указан.');
     }
     $game = Game::get($game_id);
     if (!$game) {
-        die('Ошибка: Игра не найдена.');
+        throw new Exception('Ошибка: Игра не найдена.');
     }
-
-    // Валидация данных (аналогично созданию)
     $name = trim(htmlspecialchars($_REQUEST["name"]));
     $map_w = (int) $_REQUEST["map_w"];
     $map_h = (int) $_REQUEST["map_h"];
@@ -67,11 +65,11 @@ if (isset($_REQUEST["name"])) {
 } else { // Если это GET-запрос, загружаем данные для формы
     $game_id = (int)$_REQUEST['game_id'];
     if (!$game_id) {
-        die('Ошибка: ID игры не указан.');
+        throw new Exception('Ошибка: ID игры не указан.');
     }
     $game = Game::get($game_id);
     if (!$game) {
-        die('Ошибка: Игра не найдена.');
+        throw new Exception('Ошибка: Игра не найдена.');
     }
 
     // Загружаем пользователей
@@ -83,7 +81,7 @@ if (isset($_REQUEST["name"])) {
 
     // Заполняем массив $data для шаблона
     $data = [
-        "game_id" => $game->id, // Добавляем ID для шаблона
+        "game_id" => $game->id, 
         "name" => $game->name,
         "map_w" => $game->map_w,
         "map_h" => $game->map_h,

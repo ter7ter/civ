@@ -43,6 +43,9 @@ include 'partials/header.php';
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-auto">
+            <div class="text-end mb-2">
+                <a href="index.php?method=selectgame">Выход к выбору игры</a>
+            </div>
             <div class="d-flex align-items-start">
                 <!-- Map Wrapper -->
                 <div id="map-wrapper" style="position: relative; width: 792px; height: 648px;">
@@ -60,7 +63,7 @@ include 'partials/header.php';
                 </div>
 
                 <!-- Main Action Buttons -->
-                <div style="width: 100px; margin-left: 10px;">
+                <div style="width: 100px; margin-left: 10px;" class="align-self-center">
                     <div class="d-grid gap-3">
                         <button type="button" id="open-empire" class="btn btn-primary py-3">Империя</button>
                         <button type="button" id="open-research" class="btn btn-info py-3">Исслед.</button>

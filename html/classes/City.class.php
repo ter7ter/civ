@@ -103,7 +103,7 @@ class City {
 		if (isset(City::$_all[$id])) {
 			return City::$_all[$id];
 		} else {
-			$data = MyDB::query("SELECT * FROM city WHERE id = ?id", ['id' => $id], 'row');
+			$data = MyDB::query("SELECT * FROM city WHERE id =:id", ['id' => $id], 'row');
 			return new City($data);
 		}
 	}
@@ -118,7 +118,7 @@ class City {
      */
 	public static function by_coords($x, $y, $planet = null) {
 		if (is_null($planet)) $planet = Cell::$map_planet;
-		$data = MyDB::query("SELECT * FROM city WHERE x = '?x' AND y = '?y' AND planet = '?planet'", 
+		$data = MyDB::query("SELECT * FROM city WHERE x = :x AND y = :y AND planet = :planet",
 			['x' => $x, 'y' => $y, 'planet' => $planet], 'row');
 		if ($data) {
 			return new City($data);
@@ -168,11 +168,11 @@ class City {
 		if (isset($this->id)) {
 			City::$_all[$this->id] = $this;
 			$this->people_cells = [];
-			$people_cells = MyDB::query("SELECT * FROM city_people WHERE city_id = ?id", ['id' => $this->id]);
+			$people_cells = MyDB::query("SELECT * FROM city_people WHERE city_id =:id", ['id' => $this->id]);
 			foreach ($people_cells as $pcell) {
 				$this->people_cells[] = Cell::get($pcell['x'], $pcell['y']);
 			}
-			$buildings = MyDB::query("SELECT * FROM building WHERE city_id = ?id ORDER BY `type`", ['id' => $this->id]);
+			$buildings = MyDB::query("SELECT * FROM building WHERE city_id =:id ORDER BY `type`", ['id' => $this->id]);
 			$this->buildings = [];
 			foreach ($buildings as $building) {
                 $this->buildings[$building['type']] = new Building($building);
@@ -181,7 +181,7 @@ class City {
 			if ($data['resource_group']) {
                 $resources = MyDB::query("SELECT resource.* FROM resource_group 
                     INNER JOIN resource ON resource.id = resource_group.resource_id
-                    WHERE group_id = ?gid AND user_id = ?uid",
+                    WHERE group_id =:gid AND user_id =:uid",
                     ['gid' => $data['resource_group'], 'uid' => $this->user->id]);
                 foreach ($resources as $row) {
                     $resource = new Resource($row);
@@ -238,9 +238,9 @@ class City {
             $cid = 0;
         }
 		foreach ($cells as $cell) {
-			if ((MyDB:: query("SELECT city_id FROM city_people WHERE x = ?x AND y = ?y AND planet = ?planet AND city_id <> ?cid",
+			if ((MyDB:: query("SELECT city_id FROM city_people WHERE x =:x AND y =:y AND planet =:planet AND city_id <>:cid",
 				['x' => $cell->x, 'y' => $cell->y, 'cid' => $cid, 'planet' => $this->planet], 'num_rows') == 0) &&
-                (MyDB::query("SELECT id FROM city WHERE x = ?x AND y = ?y AND planet = ?planet",
+                (MyDB::query("SELECT id FROM city WHERE x =:x AND y =:y AND planet =:planet",
                     ['x' => $cell->x, 'y' => $cell->y, 'planet' => $this->planet], 'num_rows') == 0)
             ) {
 					$result[] = $cell;
@@ -512,7 +512,7 @@ class City {
 			$this->id = MyDB::insert('city', $values);
 			City::$_all[$this->id] = $this;
 		}
-		MyDB::query("DELETE FROM city_people WHERE city_id = ?id", ['id' => $this->id]);
+		MyDB::query("DELETE FROM city_people WHERE city_id =:id", ['id' => $this->id]);
 		foreach ($this->people_cells as $cell) {
 			MyDB::insert('city_people', ['x' => $cell->x, 'y' => $cell->y, 'planet' => $cell->planet, 'city_id' => $this->id]);
 		}

@@ -53,8 +53,8 @@
     <body>
         <h2>Database Config</h2>
         <ul>
-            <li class="success">Test tables creation</li>
             <li class="success">Transaction handling</li>
+            <li class="success">Test tables creation</li>
             <li class="success">Test data cleanup</li>
             <li class="success">Query logging</li>
             <li class="success">Test data operations</li>
@@ -66,31 +66,31 @@
         </ul>
         <h2>Edit Game</h2>
         <ul>
+            <li class="success">Edit with empty name</li>
             <li class="success">Data preservation on validation error</li>
             <li class="success">Game not changed on validation error</li>
-            <li class="success">Edit with empty name</li>
-            <li class="success">X s s in edited game name</li>
-            <li class="success">Multiple validation errors</li>
-            <li class="success">Edit game name only</li>
-            <li class="success">Very long strings in edit</li>
             <li class="success">Edit basic game parameters</li>
-            <li class="success">Edit turn type</li>
-            <li class="success">Edit with invalid map size</li>
+            <li class="success">Edit game name only</li>
             <li class="success">Edit map size</li>
+            <li class="success">Edit with invalid map size</li>
             <li class="success">Edit with invalid turn type</li>
-            <li class="defect">Load game data for editing</li>
+            <li class="success">X s s in edited game name</li>
+            <li class="success">Very long strings in edit</li>
+            <li class="success">Multiple validation errors</li>
+            <li class="success">Edit turn type</li>
+            <li class="success">Load game data for editing</li>
             <li class="defect">Edit without game id</li>
-            <li class="defect">Edit non existent game</li>
             <li class="defect">Load non existent game for editing</li>
             <li class="defect">Load game without id</li>
+            <li class="defect">Edit non existent game</li>
         </ul>
         <h2>Open Game</h2>
         <ul>
             <li class="success">Successful game opening</li>
             <li class="success">Open non existent game</li>
             <li class="success">Open game with non existent user</li>
-            <li class="success">Empty game list</li>
             <li class="success">Game list loading</li>
+            <li class="success">Empty game list</li>
             <li class="success">Open game without game id</li>
             <li class="success">Open game without user id</li>
             <li class="defect">Open game with user from different game</li>
@@ -102,20 +102,20 @@
         </ul>
         <h2>Create Game</h2>
         <ul>
+            <li class="success">Maximum map size</li>
+            <li class="success">Empty game name</li>
             <li class="success">Insufficient players</li>
             <li class="success">Duplicate player names</li>
-            <li class="success">Empty player fields</li>
-            <li class="success">X s s in game name</li>
             <li class="success">X s s in player names</li>
             <li class="success">Invalid turn type</li>
             <li class="success">Create basic game</li>
             <li class="success">Minimum map size</li>
-            <li class="success">Maximum map size</li>
-            <li class="success">Empty game name</li>
-            <li class="success">Player color generation</li>
-            <li class="success">Maximum players game</li>
+            <li class="success">X s s in game name</li>
             <li class="success">Very long strings</li>
+            <li class="success">Player color generation</li>
+            <li class="success">Empty player fields</li>
             <li class="success">Different turn types</li>
+            <li class="success">Maximum players game</li>
             <li class="success">Too small map size</li>
             <li class="success">Too large map size</li>
             <li class="success">Too many players</li>
@@ -125,40 +125,40 @@
         <h2>Create Game Integration</h2>
         <ul>
             <li class="success">Validation errors integration</li>
-            <li class="success">Initial player parameters</li>
-            <li class="success">Player turn order</li>
             <li class="success">Game data persistence</li>
+            <li class="success">Player turn order</li>
+            <li class="success">Initial player parameters</li>
             <li class="success">S q l injection protection</li>
             <li class="success">Full game creation process</li>
             <li class="success">Unique player colors</li>
             <li class="success">Performance with max players</li>
-            <li class="success">Different turn types integration</li>
             <li class="success">Multiple game creation</li>
+            <li class="success">Different turn types integration</li>
         </ul>
         <h2>Edit Game Integration</h2>
         <ul>
+            <li class="success">Edited game data persistence</li>
+            <li class="success">Player order preservation on edit</li>
             <li class="success">Player parameters preservation on edit</li>
             <li class="success">Validation errors integration on edit</li>
             <li class="success">S q l injection protection on edit</li>
-            <li class="success">Edited game data persistence</li>
             <li class="success">Full game edit process</li>
-            <li class="success">Player order preservation on edit</li>
-            <li class="success">Edit different turn types integration</li>
             <li class="success">Performance edit with max players</li>
+            <li class="success">Edit different turn types integration</li>
             <li class="success">Multiple game edits</li>
-            <li class="defect">Load game data for editing integration</li>
-            <li class="defect">Edit game with related data preservation</li>
+            <li class="success">Load game data for editing integration</li>
+            <li class="success">Edit game with related data preservation</li>
         </ul>
         <h2>Open Game Integration</h2>
         <ul>
-            <li class="success">Security invalid ids</li>
-            <li class="defect">Multiple game openings</li>
             <li class="success">Game list with different player counts</li>
+            <li class="success">Security invalid ids</li>
+            <li class="success">Multiple game openings</li>
+            <li class="success">Game opening session persistence</li>
+            <li class="success">Error handling in game opening</li>
+            <li class="success">Game opening data integrity</li>
+            <li class="success">Game opening object relationships</li>
             <li class="success">Full game opening process</li>
-            <li class="defect">Game opening object relationships</li>
-            <li class="defect">Game opening session persistence</li>
-            <li class="defect">Game opening data integrity</li>
-            <li class="defect">Error handling in game opening</li>
             <li class="success">Game opening with different configurations</li>
             <li class="success">Performance game opening</li>
         </ul>

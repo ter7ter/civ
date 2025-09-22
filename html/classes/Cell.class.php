@@ -106,7 +106,7 @@ class Cell {
 	}
 
 	public function get_units() {
-		$rows = MyDB::query("SELECT * FROM unit WHERE x = ?x AND y = ?y AND planet = ?planet", 
+		$rows = MyDB::query("SELECT * FROM unit WHERE x =:x AND y =:y AND planet =:planet", 
 					['x' => $this->x, 'y' => $this->y, 'planet' => Cell::$map_planet]);
 		$this->units = [];
 		foreach ($rows as $row) {
@@ -133,9 +133,9 @@ class Cell {
         if (!$improvement) {
             $improvement = 'none';
         }
-		MyDB::query("INSERT INTO `cell` SET `x` = '?x', `y` = '?y', `planet` = '?planet', 
-            `type` = '?type', `owner` = ?owner, `owner_culture` = '?culture', `road` = '?road', `improvement` = '?improvement'
-			ON DUPLICATE KEY UPDATE `type` = '?type', `owner` = ?owner, `owner_culture` = '?culture', `road` = '?road', `improvement` = '?improvement'",
+		MyDB::query("INSERT INTO `cell` SET `x` = :x, `y` = :y, `planet` = :planet, 
+            `type` = :type, `owner` =:owner, `owner_culture` = :culture, `road` = :road, `improvement` = :improvement
+			ON DUPLICATE KEY UPDATE `type` = :type, `owner` =:owner, `owner_culture` = :culture, `road` = :road, `improvement` = :improvement",
 			['x' => $this->x, 'y' => $this->y, 'planet' => Cell::$map_planet, 'type' => $this->type->id,
              'owner' => $owner_id, 'culture' => $this->owner_culture, 'road' => $road, 'improvement' => $improvement]);
 	}
@@ -199,19 +199,19 @@ class Cell {
     }
 
 	public static function generate_map() {
-		MyDB::query("DELETE FROM `unit` WHERE `planet` = '?planet'", ['planet' => Cell::$map_planet]);
-        $data = MyDB::query("SELECT id FROM city WHERE planet = ?planet", ['planet' => Cell::$map_planet]);
+		MyDB::query("DELETE FROM `unit` WHERE `planet` = :planet", ['planet' => Cell::$map_planet]);
+        $data = MyDB::query("SELECT id FROM city WHERE planet =:planet", ['planet' => Cell::$map_planet]);
         foreach ($data as $row) {
-            MyDB::query("DELETE FROM `building` WHERE `city_id` = '?cid'", ['cid' => $row['id']]);
+            MyDB::query("DELETE FROM `building` WHERE `city_id` = :cid", ['cid' => $row['id']]);
         }
-        MyDB::query("DELETE FROM `city_people` WHERE `planet` = '?planet'", ['planet' => Cell::$map_planet]);
-		MyDB::query("DELETE FROM `city` WHERE `planet` = '?planet'", ['planet' => Cell::$map_planet]);
-		$data = MyDB::query("SELECT id FROM user WHERE game = ?game", ['game' => Cell::$map_planet]);
+        MyDB::query("DELETE FROM `city_people` WHERE `planet` = :planet", ['planet' => Cell::$map_planet]);
+		MyDB::query("DELETE FROM `city` WHERE `planet` = :planet", ['planet' => Cell::$map_planet]);
+		$data = MyDB::query("SELECT id FROM user WHERE game =:game", ['game' => Cell::$map_planet]);
 		foreach ($data as $row) {
-            MyDB::query("DELETE FROM `research` WHERE `user_id` = '?uid'", ['uid' => $row['id']]);
+            MyDB::query("DELETE FROM `research` WHERE `user_id` = :uid", ['uid' => $row['id']]);
         }
-        MyDB::query("DELETE FROM `resource` WHERE `planet` = '?planet'", ['planet' => Cell::$map_planet]);
-		MyDB::query("DELETE FROM `cell` WHERE `planet` = '?planet'", ['planet' => Cell::$map_planet]);
+        MyDB::query("DELETE FROM `resource` WHERE `planet` = :planet", ['planet' => Cell::$map_planet]);
+		MyDB::query("DELETE FROM `cell` WHERE `planet` = :planet", ['planet' => Cell::$map_planet]);
 		
 		for ($x = 0; $x < Cell::$map_width; $x++) {
 			for ($y = 0; $y < Cell::$map_height; $y++) {
@@ -413,7 +413,7 @@ class Cell {
                 return 0;
             }
         }
-        $complete_points = MyDB::query("SELECT sum(mission_points) FROM `unit` WHERE x = '?x' AND y = '?y' AND planet = '?planet' AND mission = '?mission'",
+        $complete_points = MyDB::query("SELECT sum(mission_points) FROM `unit` WHERE x = :x AND y = :y AND planet = :planet AND mission = :mission",
             [   'x' => $this->x,
                 'y' => $this->y,
                 'planet' => $this->planet,

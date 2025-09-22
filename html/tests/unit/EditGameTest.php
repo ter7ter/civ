@@ -15,7 +15,7 @@ class EditGameTest extends TestBase
         $this->headers = [];
     }
 
-    /**
+    /**о
      * Тест 5.1: Загрузка игры без указания ID
      */
     public function testLoadGameWithoutId(): void

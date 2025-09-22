@@ -24,7 +24,7 @@ class Building {
 		if (isset(Building::$_all[$id])) {
 			return Building::$_all[$id];
 		} else {
-			$data = MyDB::query("SELECT * FROM building WHERE id = ?id", ['id' => $id], 'row');
+			$data = MyDB::query("SELECT * FROM building WHERE id =:id", ['id' => $id], 'row');
 			return new Building($data);
 		}
 	}

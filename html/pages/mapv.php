@@ -4,9 +4,9 @@ if (isset($_REQUEST['cx']) && isset($_REQUEST['cy'])) {
     $x = (int)$_REQUEST['cx'];
     $y = (int)$_REQUEST['cy'];
 } else {
-    $coords = MyDB::query("SELECT x, y FROM city WHERE user_id = '?uid' LIMIT 1", ['uid' => $user->id], 'row');
+    $coords = MyDB::query("SELECT x, y FROM city WHERE user_id = :uid LIMIT 1", ['uid' => $user->id], 'row');
     if (!$coords) {
-        $coords = MyDB::query("SELECT x, y FROM unit WHERE user_id = '?uid' LIMIT 1", ['uid' => $user->id], 'row');
+        $coords = MyDB::query("SELECT x, y FROM unit WHERE user_id =:uid LIMIT 1", ['uid' => $user->id], 'row');
     }
     $x = $coords['x'];
     $y = $coords['y'];

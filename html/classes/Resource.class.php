@@ -14,7 +14,7 @@ class Resource {
 	public $amount;
 	
 	public static function get($x, $y) {
-		$data = MyDB::query("SELECT * FROM resource WHERE x = '?x' AND y = '?y' AND planet = '?planet'", ['x' => $x, 'y' => $y, 'planet' => Cell::$map_planet], 'row');
+		$data = MyDB::query("SELECT * FROM resource WHERE x = :x AND y = :y AND planet = :planet", ['x' => $x, 'y' => $y, 'planet' => Cell::$map_planet], 'row');
 		if ($data) {
             return new Resource($data);
         } else {

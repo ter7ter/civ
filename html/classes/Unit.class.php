@@ -55,7 +55,7 @@ class Unit {
 		if (isset(Unit::$_all[$id])) {
 			return Unit::$_all[$id];
 		} else {
-			$data = MyDB::query("SELECT * FROM unit WHERE id = '?id'", ['id' => $id], 'row');
+			$data = MyDB::query("SELECT * FROM unit WHERE id = :id", ['id' => $id], 'row');
 			if ($data) {
 				return new Unit($data);
 			} else {
@@ -92,7 +92,7 @@ class Unit {
 	}
 	
 	public function remove() {
-		MyDB::query("DELETE FROM unit WHERE id = '?id'", ['id' => $this->id]);
+		MyDB::query("DELETE FROM unit WHERE id = :id", ['id' => $this->id]);
 		unset(Unit::$_all[$this->id]);
 	}
 	
@@ -244,7 +244,7 @@ class Unit {
      * @param $path
      */
 	public function move_path($path) {
-        MyDB::query("DELETE FROM mission_order WHERE unit_id = '?uid'", ['uid' => $this->id]);
+        MyDB::query("DELETE FROM mission_order WHERE unit_id = :uid", ['uid' => $this->id]);
         $number = 1;
         foreach ($path as $cell) {
             $this->add_order('move', $cell['x'], $cell['y'], $number);
@@ -254,7 +254,7 @@ class Unit {
 
     public function add_order($mission, $target_x = 'NULL', $target_y = 'NULL', $number = false) {
 	    if (!$number) {
-	        $number = MyDB::query("SELECT max(number) FROM mission_order WHERE unit_id = '?uid'",
+	        $number = MyDB::query("SELECT max(number) FROM mission_order WHERE unit_id = :uid",
                 ['uid' => $this->id], 'el');
 	        if (!$number) $number = 0;
             $number++;
@@ -273,7 +273,7 @@ class Unit {
             $need_points = $cell->get_mission_need_points($this->mission);
             if ($need_points <= $this->points) {
                 //Можем закончить
-                $units = MyDB::query("SELECT id FROM unit WHERE x = '?x' AND y = '?y' AND planet = '?planet' AND mission = '?mission' AND id != '?uid'",
+                $units = MyDB::query("SELECT id FROM unit WHERE x = :x AND y = :y AND planet = :planet AND mission = :mission AND id != :uid",
                         ['x' => $this->x,
                         'y' => $this->y,
                         'planet' => $this->planet,
@@ -294,33 +294,33 @@ class Unit {
                 $this->points = 0;
             }
         } else {
-            $order = MyDB::query("SELECT * FROM mission_order WHERE unit_id = '?uid'
+            $order = MyDB::query("SELECT * FROM mission_order WHERE unit_id = :uid
                         ORDER BY `number` ASC LIMIT 1", ['uid' => $this->id], 'row');
             while ($order && $this->points > 0) {
                 if ($order['type'] == 'move') {
                     $cell = Cell::get($order['target_x'], $order['target_y']);
                     if (!$cell) {
                         //Несуществующая клетка в задаче, отменяем
-                        MyDB::query("DELETE FROM mission_order WHERE `unit_id` = '?uid'", ['uid' => $this->id]);
+                        MyDB::query("DELETE FROM mission_order WHERE `unit_id` = :uid", ['uid' => $this->id]);
                         break;
                     }
                     if ($this->can_move($cell)) {
                         $this->move_to($cell);
-                        MyDB::query("DELETE FROM mission_order WHERE `unit_id` = '?uid' AND `number` = '?number'",
+                        MyDB::query("DELETE FROM mission_order WHERE `unit_id` = :uid AND `number` = :number",
                             ['uid' => $this->id, 'number' => $order['number']]);
                     } else {//Если не можем туда идти отменяем все дальнейшие задачи
-                        MyDB::query("DELETE FROM mission_order WHERE `unit_id` = '?uid'", ['uid' => $this->id]);
+                        MyDB::query("DELETE FROM mission_order WHERE `unit_id` = :uid", ['uid' => $this->id]);
                         break;
                     }
                 } else {
                     if ($this->start_mission(MissionType::get($order['type']))) { //Смогли запустить миссию
-                        MyDB::query("DELETE FROM mission_order WHERE `unit_id` = '?uid' AND `number` = '?number'",
+                        MyDB::query("DELETE FROM mission_order WHERE `unit_id` = :uid AND `number` = :number",
                             ['uid' => $this->id, 'number' => $order['number']]);
                     } else {//Если не можем то отменяем все дальнейшие задачи
-                        MyDB::query("DELETE FROM mission_order WHERE `unit_id` = '?uid'", ['uid' => $this->id]);
+                        MyDB::query("DELETE FROM mission_order WHERE `unit_id` = :uid", ['uid' => $this->id]);
                     }
                 }
-                $order = MyDB::query("SELECT * FROM mission_order WHERE unit_id = '?uid'
+                $order = MyDB::query("SELECT * FROM mission_order WHERE unit_id = :uid
                         ORDER BY `number` ASC LIMIT 1", ['uid' => $this->id], 'row');
             }
             //Автоматизация действий рабочих. Ещё не протестировано
@@ -329,7 +329,7 @@ class Unit {
                 $uy = $this->y;
                 $number = 0;
                 $auto_ok = false;
-                if (MyDB::query("SELECT count(unit_id) FROM mission_order WHERE unit_id = '?uid'",
+                if (MyDB::query("SELECT count(unit_id) FROM mission_order WHERE unit_id = :uid",
                     ['uid' => $this->id], 'el') == 0) {//Выполняемых задач нет, нужно выдать следующую
                     $cities = $this->user->get_cities();
                     $paths = [];
@@ -387,7 +387,7 @@ class Unit {
                         $path = false;
                         $peoples = MyDB::query("SELECT `p`.`x` as `x`, `p`.`y` as `y` FROM `people_cells` as `p`
                                         INNER JOIN `cell` ON cell.x = p.x AND cell.y = p.y AND cell.planet = p.planet
-                                        WHERE cell.road = 'none' AND cell.owner = '?userid'",
+                                        WHERE cell.road = 'none' AND cell.owner = :userid",
                                         ['userid' => $this->user->id]);
                         foreach ($peoples as $cell) {
                             $npath = $this->calculate_path(Cell::get($this->x, $this->y), Cell::get($cell['x'], $cell['y']));
@@ -416,7 +416,7 @@ class Unit {
                         //TODO: выбор типа улучшения с учётом технологий и приоритетов
                         $peoples = MyDB::query("SELECT `p`.`x` as `x`, `p`.`y` as `y` FROM `people_cells` as `p`
                                         INNER JOIN `cell` ON cell.x = p.x AND cell.y = p.y AND cell.planet = p.planet
-                                        WHERE cell.improvement = 'none' AND cell.owner = '?userid'
+                                        WHERE cell.improvement = 'none' AND cell.owner = :userid
                                         AND `cell`.`type` IN ('" . join($cell_types, "', '") . "')",
                             ['userid' => $this->user->id]);
                         foreach ($peoples as $cell) {

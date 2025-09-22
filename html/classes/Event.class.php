@@ -29,7 +29,7 @@ class Event {
      * @throws Exception
      */
 	public static function get($id) {
-		$data = MyDB::query("SELECT * FROM event WHERE id = ?id", ['id' => $id], 'row');
+		$data = MyDB::query("SELECT * FROM event WHERE id =:id", ['id' => $id], 'row');
         return new Event($data);
 	}
 	
@@ -69,6 +69,6 @@ class Event {
 	}
 
 	public function remove() {
-	    MyDB::query("DELETE FROM event WHERE id = ?id", ['id' => $this->id]);
+	    MyDB::query("DELETE FROM event WHERE id =:id", ['id' => $this->id]);
     }
 }

@@ -10,7 +10,7 @@ class Research {
 	public static $all = [];
 	
 	public static function get($id) {
-		$data = MyDB::query("SELECT * FROM research WHERE id = '?id'", ['id' => $id], 'row');
+		$data = MyDB::query("SELECT * FROM research WHERE id = :id", ['id' => $id], 'row');
 		return new Research($data);
 	}
 	

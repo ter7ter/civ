@@ -1,7 +1,7 @@
 <?php
 class MyDB {
     /**
-     * @var mysqli
+     * @var PDO
      */
 	private static $_link = false;
 	
@@ -13,13 +13,16 @@ class MyDB {
 	
 	public static function connect() {
 		if (MyDB::$_link) {
-			MyDB::$_link->close();
+			MyDB::$_link = null;
 		}
-		@MyDB::$_link = new mysqli(MyDB::$dbhost, MyDB::$dbuser, MyDB::$dbpass, MyDB::$dbname, MyDB::$dbport);
-		if (!MyDB::$_link) {
-			die(mysqli_connect_error());
+		try {
+			$dsn = "mysql:host=" . MyDB::$dbhost . ";dbname=" . MyDB::$dbname . ";charset=utf8;port=" . MyDB::$dbport;
+			MyDB::$_link = new PDO($dsn, MyDB::$dbuser, MyDB::$dbpass);
+			MyDB::$_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			MyDB::$_link->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+		} catch (PDOException $e) {
+			die("Connection failed: " . $e->getMessage());
 		}
-		MyDB::$_link->query("SET charset utf8");
 	}
 	
 	public static function get() {
@@ -31,130 +34,90 @@ class MyDB {
 	
 	public static function query($query, $vars = [], $output = 'assoc') {
 		$db = MyDB::get();
-		if (count($vars)) {
-			foreach ($vars as $key => $var) {
-				$var = $db->real_escape_string($var);
-				$query = str_replace('?'.$key, $var, $query);
-			}
-		}
-		//var_dump($query);
-		$res = $db->query($query);
-		if ($db->error) {
-			throw new Exception("$query SQL Error:".$db->error);
-		}
-		if ($res === true)
+		$stmt = $db->prepare($query);
+		$stmt->execute($vars);
+		if ($stmt->columnCount() == 0) {
+			// Non-SELECT query
 			return true;
-		if ($output == 'assoc') {
-			$result = [];
-		} else {
-			$result = false;
 		}
 		switch ($output) {
 			case 'num_rows':
-				if ($res->num_rows) {
-					$result = $res->num_rows;
-				}
-			break;
+				$result = $stmt->rowCount();
+				break;
 			case 'row':
-				if ($res->num_rows) {
-					$result = $res->fetch_assoc();
-				}
-			break;
+				$result = $stmt->fetch(PDO::FETCH_ASSOC);
+				break;
 			case 'obj':
-				if ($res->num_rows) {
-					$result = $res->fetch_object();
-				}
-			break;
+				$result = $stmt->fetch(PDO::FETCH_OBJ);
+				break;
 			case 'elem':
-				if ($res->num_rows) {
-					$result = $res->fetch_row();
-					$result = $result[0];
-				}
-			break;
+				$row = $stmt->fetch(PDO::FETCH_NUM);
+				$result = $row ? $row[0] : null;
+				break;
 			default:
-				while ($next = $res->fetch_assoc()) {
-					$result[] = $next;
-				}
+				$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		}
-		$res->close();
 		return $result;
 	}
 	
 	public static function insert($table, $values)
     {
         $db = MyDB::get();
-        $query = "INSERT INTO `" . $db->real_escape_string($table) . "`";
         if (isset($values[0]) && is_array($values[0])) {
-            $keys = [];
-            foreach ($values[0] as $key => $val) {
-                $keys[] = '`' . $db->real_escape_string($key) . '`';
-            }
-            $query .= '(' . implode(', ', $keys) . ') VALUES ';
-            $rows = [];
+            // Multiple rows
+            $keys = array_keys($values[0]);
+            $placeholders = '(' . implode(',', array_map(fn($i) => ":p$i", range(0, count($keys)-1))) . ')';
+            $query = "INSERT INTO `$table` (" . implode(',', array_map(fn($k) => "`$k`", $keys)) . ") VALUES " . implode(',', array_fill(0, count($values), $placeholders));
+            $params = [];
+            $i = 0;
             foreach ($values as $row) {
-                $inserts = [];
-                foreach ($values as $val) {
-                    if ($val === 'NULL') {
-                        $inserts[] = "NULL";
-                    } else {
-                        $val = $db->real_escape_string($val);
-                        $inserts[] = "'$val'";
-                    }
+                foreach ($keys as $key) {
+                    $params[":p$i"] = $row[$key] === 'NULL' ? null : $row[$key];
+                    $i++;
                 }
-                $rows[] = '(' . implode(', ', $inserts) . ')';
             }
-            $query .= implode(', ', $rows);
         } else {
-            $query .= " SET ";
-            $inserts = [];
-            foreach ($values as $key => $val) {
-                $key = $db->real_escape_string($key);
-                if ($val === 'NULL') {
-                    $inserts[] = "`$key` = NULL";
-                } else {
-                    $val = $db->real_escape_string($val);
-                    $inserts[] = "`$key` = '$val'";
-                }
+            // Single row
+            $keys = array_keys($values);
+            $query = "INSERT INTO `$table` SET " . implode(', ', array_map(fn($k) => "`$k` = :$k", $keys));
+            $params = [];
+            foreach ($values as $k => $v) {
+                $params[":$k"] = $v === 'NULL' ? null : $v;
             }
-            $query .= implode(", ", $inserts);
         }
-        if (MyDB::query($query)) {
-            return $db->insert_id;
-        } else
-        {
-            return false;
-        }
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+        return $db->lastInsertId();
 	}
 	
 	public static function update($table, $values, $where) {
 		$db = MyDB::get();
-		$table = $db->real_escape_string($table);
-		$query = "UPDATE `$table` SET ";
-		$updates = [];
-		foreach ($values as $key => $val) {
-			$key = $db->real_escape_string($key);
-			if ($val === 'NULL') {
-					$updates[] = "`$key` = NULL";
-			} else {
-				$val = $db->real_escape_string($val);
-				$updates[] = "`$key` = '$val'";
-			}
+		$setParts = array_map(fn($k) => "`$k` = :$k", array_keys($values));
+		$query = "UPDATE `$table` SET " . implode(', ', $setParts);
+		$params = [];
+		foreach ($values as $k => $v) {
+			$params[":$k"] = $v === 'NULL' ? null : $v;
 		}
-		$query .= implode(", ", $updates);
 		if ($where == (int)$where) {
-			$query .= " WHERE `id` = $where";
+			$query .= " WHERE `id` = :id";
+			$params['id'] = $where;
 		} else {
-			$query .= " WHERE ".$where;
+			$query .= " WHERE " . $where;
+			// Assuming $where does not have placeholders, or handle separately
 		}
-		return MyDB::query($query);
+		$stmt = $db->prepare($query);
+		$stmt->execute($params);
+		return true;
 	}
 	
 	public static function start_transaction() {
-		MyDB::query("START TRANSACTION;");
+		$db = MyDB::get();
+		$db->beginTransaction();
 	}
 	
 	public static function end_transaction() {
-		MyDB::query("COMMIT;");
+		$db = MyDB::get();
+		$db->commit();
 	}
 }
 ?>

@@ -21,7 +21,7 @@ include 'partials/header.php';
     #game-info-window {
         position: absolute;
         top: 10px;
-        right: 300px; /* Position relative to col-auto */
+        right: 310px; /* Position relative to col-auto */
         width: 280px;
         background-color: rgba(33, 37, 41, 0.85) !important; 
         padding: 10px;

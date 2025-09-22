@@ -12,19 +12,22 @@ include 'partials/header.php';
                 
                 <div class="mb-3">
                     <label for="select-game-select" class="form-label">Игра</label>
-                    <select id="select-game-select" name="gid" class="form-select">
-                        <?php
-                        $turn_type_labels = [
-                            'concurrently' => 'Одновременно',
-                            'byturn' => 'По очереди',
-                            'onewindow' => 'По очереди за одним компьютером'
-                        ];
-                        foreach ($gamelist as $game):?>
-                            <option value="<?=$game['id']?>">
-                                <?=$game['name']?> (<?=$game['map_w']?>x<?=$game['map_h']?>, <?=$game['ucount']?> игрока, <?=$turn_type_labels[$game['turn_type']] ?? $game['turn_type']?>)
-                            </option>
-                        <?endforeach;?>
-                    </select>
+                    <div class="input-group">
+                        <select id="select-game-select" name="gid" class="form-select">
+                            <?php
+                            $turn_type_labels = [
+                                'concurrently' => 'Одновременно',
+                                'byturn' => 'По очереди',
+                                'onewindow' => 'По очереди за одним компьютером'
+                            ];
+                            foreach ($gamelist as $game):?>
+                                <option value="<?=$game['id']?>">
+                                    <?=$game['name']?> (<?=$game['map_w']?>x<?=$game['map_h']?>, <?=$game['ucount']?> игрока, <?=$turn_type_labels[$game['turn_type']] ?? $game['turn_type']?>)
+                                </option>
+                            <?endforeach;?>
+                        </select>
+                        <button type="button" id="edit-selected-game" class="btn btn-outline-secondary">Редактировать</button>
+                    </div>
                 </div>
                 
                 <div class="mb-4">
@@ -35,9 +38,8 @@ include 'partials/header.php';
                 <div class="d-grid gap-2 mb-3">
                     <input id="select-game-open" type="submit" value="Открыть игру" class="btn btn-primary">
                 </div>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-between">
-                     <a href="index.php?method=creategame" class="btn btn-outline-success">Создать новую игру</a>
-                     <button type="button" id="edit-selected-game" class="btn btn-outline-secondary">Редактировать игру</button>
+                <div class="text-center">
+                     <a href="index.php?method=creategame" class="btn btn-link">Создать новую игру</a>
                 </div>
             </form>
         </div>

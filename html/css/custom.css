@@ -9,6 +9,16 @@ body {
     padding: 10px;
     border: 1px solid #495057;
     width: 300px; /* Fixed width for flexbox */
+    vertical-align: top;
+    position: relative;
+    top: 0;
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+    box-sizing: border-box;
+}
+#map-wrapper {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
 }
 #game-info-window {
     position: absolute;

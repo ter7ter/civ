@@ -10,16 +10,16 @@ include 'partials/header.php';
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-auto">
-            <div id="turninfo-container" class="text-end mb-2">
-                <!-- Content loaded via AJAX -->
-            </div>
             <div class="text-end mb-2">
                 <a href="index.php?method=selectgame">Выход к выбору игры</a>
             </div>
             <div class="d-flex align-items-start">
                 <!-- Map Wrapper -->
-                <div id="map-wrapper" style="position: relative; width: 792px; height: 648px;">
+                <div id="map-wrapper" style="position: relative;">
                     <div id="mapv"></div>
+                    <div id="turninfo-container">
+                        <!-- Content loaded via AJAX -->
+                    </div>
                     <button onclick="map.up()" class="btn btn-secondary btn-sm" style="position: absolute; top: 5px; left: 50%; transform: translateX(-50%); z-index: 10;">/\</button>
                     <button onclick="map.down()" class="btn btn-secondary btn-sm" style="position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); z-index: 10;">\/</button>
                     <button onclick="map.left()" class="btn btn-secondary btn-sm" style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%); z-index: 10;">&lt;</button>

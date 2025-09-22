@@ -88,18 +88,11 @@ body {
 	padding: 5px;
 	background-color: darkgray;
 }
-#game-info-window {
-	position: absolute;
-	left: 530px;
-	top: 15px;
-	background-color: lightblue;
-	width: 280px;
-	padding: 3px;
-	cursor: pointer;
-}
+
 .game-info-player {
 	display: none;
 	padding: 2px;
+	text-align: left;
 }
 .game-info-you-player {
 	display: block;

@@ -19,12 +19,27 @@ body {
 #map-wrapper {
     margin-top: 0 !important;
     padding-top: 0 !important;
+    position: relative;
+    width: 792px; /* Set to map width */
+    height: 648px; /* Defined height */
+    margin: 0 auto; /* Center map-wrapper */
 }
-#game-info-window {
+#mapv {
+    position: relative; /* Added for correct positioning of absolute children */
+    width: 100%; /* Fill parent */
+    height: 100%; /* Fill parent height */
+}
+#turninfo-container {
     position: absolute;
     top: 10px;
     right: 10px;
-    width: 280px;
+    z-index: 100; /* Ensure it's above other elements */
+    width: 280px; /* Explicitly set width */
+}
+#game-info-window {
+    position: relative; /* Position relative to parent #turninfo-container */
+    width: 100%; /* Fill parent width */
+    height: 100%; /* Fill parent height */
     background-color: rgba(33, 37, 41, 0.85) !important; 
     padding: 10px;
     border-radius: .375rem; 

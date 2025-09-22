@@ -9,6 +9,19 @@ include 'partials/header.php';
     #game-info-window {
         background-color: #495057 !important; /* Override lightblue background for dark theme */
     }
+    body {
+        background-color: #212529 !important; /* Override legacy background */
+    }
+    #cellinfo {
+        margin-top: 0 !important;
+        float: none !important;
+        display: inline-block;
+        vertical-align: top;
+        height: 600px; /* Adjust height to align better */
+    }
+    #mapv {
+        display: inline-block;
+    }
 </style>
 <!-- Original game styles -->
 <link type="text/css" href="css/style.css" rel="stylesheet" />

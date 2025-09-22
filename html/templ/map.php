@@ -5,7 +5,39 @@ include 'partials/header.php';
 <!-- Original game styles -->
 <link type="text/css" href="css/city.css" rel="Stylesheet" />
 <link type="text/css" href="css/map.css" rel="Stylesheet" />
-<link type="text/css" href="css/style.css" rel="Stylesheet" />
+<style>
+    body {
+        background-color: #212529 !important; 
+    }
+    #cellinfo {
+        background-color: #343a40 !important; 
+        color: #f8f9fa;
+        height: 655px; /* Original height */
+        overflow-y: auto;
+        padding: 10px;
+        border: 1px solid #495057;
+        margin-top: 0 !important; /* Override legacy negative margin */
+    }
+    #game-info-window {
+        position: absolute;
+        top: 10px;
+        right: 300px; /* Position relative to col-auto */
+        width: 280px;
+        background-color: rgba(33, 37, 41, 0.85) !important; 
+        padding: 10px;
+        border-radius: .375rem; 
+        z-index: 20;
+        color: #f8f9fa;
+        border: 1px solid #495057;
+    }
+    .cell-info-img {
+        float: none !important; /* Disable float for flexbox layout */
+    }
+    #message-window {
+        border: 1px solid #495057;
+        border-radius: .375rem;
+    }
+</style>
 
 <div class="container-fluid">
     <div class="row justify-content-center">

@@ -194,8 +194,10 @@ class OpenGameIntegrationTest extends TestBase
             'uid' => 1
         ]);
 
-        $this->expectOutputString('game error');
+        ob_start();
         $this->simulateGameOpening();
+        $output = ob_get_clean();
+        $this->assertEquals('game error', $output);
 
         // Тест с несуществующим пользователем
         $this->clearTestData();
@@ -207,8 +209,10 @@ class OpenGameIntegrationTest extends TestBase
             'uid' => 999
         ]);
 
-        $this->expectOutputString('user error');
+        ob_start();
         $this->simulateGameOpening();
+        $output = ob_get_clean();
+        $this->assertEquals('user error', $output);
 
         // Тест с пользователем из другой игры
         $this->clearTestData();
@@ -223,8 +227,10 @@ class OpenGameIntegrationTest extends TestBase
             'uid' => $userFromGame2['id']
         ]);
 
-        $this->expectOutputString('user error');
+        ob_start();
         $this->simulateGameOpening();
+        $output = ob_get_clean();
+        $this->assertEquals('user error', $output);
     }
 
     /**
@@ -279,8 +285,10 @@ class OpenGameIntegrationTest extends TestBase
             'uid' => -1
         ]);
 
-        $this->expectOutputString('game error');
+        ob_start();
         $this->simulateGameOpening();
+        $output = ob_get_clean();
+        $this->assertEquals('game error', $output);
 
         // Тест с очень большими ID
         $this->simulatePostRequest([
@@ -289,8 +297,10 @@ class OpenGameIntegrationTest extends TestBase
             'uid' => PHP_INT_MAX
         ]);
 
-        $this->expectOutputString('game error');
+        ob_start();
         $this->simulateGameOpening();
+        $output = ob_get_clean();
+        $this->assertEquals('game error', $output);
 
         // Тест с нечисловыми ID
         $this->simulatePostRequest([
@@ -299,8 +309,10 @@ class OpenGameIntegrationTest extends TestBase
             'uid' => 'also_not_a_number'
         ]);
 
-        $this->expectOutputString('game error');
+        ob_start();
         $this->simulateGameOpening();
+        $output = ob_get_clean();
+        $this->assertEquals('game error', $output);
     }
 
     /**
@@ -458,7 +470,11 @@ class OpenGameIntegrationTest extends TestBase
                 return;
             }
             $user = User::get((int)$_REQUEST['uid']);
-            if (!$user || $user->game != $game->id) {
+            if (!$user) {
+                echo 'user error';
+                return;
+            }
+            if ($user->game != $game->id) {
                 echo 'user error';
                 return;
             }

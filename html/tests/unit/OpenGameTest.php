@@ -16,6 +16,34 @@ class OpenGameTest extends TestBase
     }
 
     /**
+     * Тест 2.3: Попытка открыть игру с пользователем из другой игры
+     */
+    public function testOpenGameWithUserFromDifferentGame(): void
+    {
+        $this->clearSession(); // Очищаем сессию перед тестом
+
+        $game1 = $this->createTestGame(['name' => 'Игра 1']);
+        $game2 = $this->createTestGame(['name' => 'Игра 2']);
+
+        $userFromGame2 = $this->createTestUser([
+            'login' => 'Игрок из игры 2',
+            'game' => $game2['id']
+        ]);
+
+        $this->simulatePostRequest([
+            'method' => 'login',
+            'gid' => $game1['id'], // пытаемся открыть игру 1
+            'uid' => $userFromGame2['id'] // пользователем из игры 2
+        ]);
+
+        $this->simulateGameOpening();
+
+        // Проверяем, что сессия НЕ установлена (пользователь из другой игры)
+        $this->assertArrayNotHasKey('game_id', $_SESSION);
+        $this->assertArrayNotHasKey('user_id', $_SESSION);
+    }
+
+    /**
      * Тест 1.1: Успешное открытие игры
      */
     public function testSuccessfulGameOpening(): void
@@ -48,6 +76,8 @@ class OpenGameTest extends TestBase
         // Проверяем, что сессия установлена корректно
         $this->assertEquals($game['id'], $_SESSION['game_id'], 'ID игры должен быть установлен в сессии');
         $this->assertEquals($user['id'], $_SESSION['user_id'], 'ID пользователя должен быть установлен в сессии');
+
+        $this->clearSession(); // Очищаем сессию после теста
     }
 
     /**
@@ -82,6 +112,8 @@ class OpenGameTest extends TestBase
 
         $this->assertEquals($game['id'], $_SESSION['game_id']);
         $this->assertEquals($players[1]['id'], $_SESSION['user_id']);
+
+        $this->clearSession(); // Очищаем сессию после теста
     }
 
     /**
@@ -117,6 +149,8 @@ class OpenGameTest extends TestBase
 
             $this->assertEquals($game['id'], $_SESSION['game_id'], "Сессия должна быть установлена для типа ходов {$turnType}");
             $this->assertEquals($user['id'], $_SESSION['user_id'], "Пользователь должен быть установлен для типа ходов {$turnType}");
+
+            $this->clearSession(); // Очищаем сессию после каждого цикла
         }
     }
 
@@ -133,8 +167,10 @@ class OpenGameTest extends TestBase
             'uid' => $user['id']
         ]);
 
-        $this->expectOutputString('game error');
+        ob_start();
         $this->simulateGameOpening();
+        $output = ob_get_clean();
+        $this->assertEquals('game error', $output);
     }
 
     /**
@@ -150,39 +186,13 @@ class OpenGameTest extends TestBase
             'uid' => 999 // несуществующий ID пользователя
         ]);
 
-        $this->expectOutputString('user error');
-        $this->simulateGameOpening();
-    }
-
-    /**
-     * Тест 2.3: Попытка открыть игру с пользователем из другой игры
-     */
-    public function testOpenGameWithUserFromDifferentGame(): void
-    {
-        $game1 = $this->createTestGame(['name' => 'Игра 1']);
-        $game2 = $this->createTestGame(['name' => 'Игра 2']);
-
-        $userFromGame2 = $this->createTestUser([
-            'login' => 'Игрок из игры 2',
-            'game' => $game2['id']
-        ]);
-
-        $this->simulatePostRequest([
-            'method' => 'login',
-            'gid' => $game1['id'], // пытаемся открыть игру 1
-            'uid' => $userFromGame2['id'] // пользователем из игры 2
-        ]);
-
         ob_start();
         $this->simulateGameOpening();
         $output = ob_get_clean();
-
         $this->assertEquals('user error', $output);
-
-        // Проверяем, что сессия НЕ установлена
-        $this->assertArrayNotHasKey('game_id', $_SESSION);
-        $this->assertArrayNotHasKey('user_id', $_SESSION);
     }
+
+
 
     /**
      * Тест 2.4: Открытие игры без указания ID игры
@@ -197,8 +207,10 @@ class OpenGameTest extends TestBase
             'uid' => $user['id']
         ]);
 
-        $this->expectOutputString('game error');
+        ob_start();
         $this->simulateGameOpening();
+        $output = ob_get_clean();
+        $this->assertEquals('game error', $output);
     }
 
     /**
@@ -214,8 +226,10 @@ class OpenGameTest extends TestBase
             // 'uid' не указан
         ]);
 
-        $this->expectOutputString('user error');
+        ob_start();
         $this->simulateGameOpening();
+        $output = ob_get_clean();
+        $this->assertEquals('user error', $output);
     }
 
     /**
@@ -294,6 +308,8 @@ class OpenGameTest extends TestBase
         $this->assertEquals($game['id'], $_SESSION['game_id']);
         $this->assertEquals($user['id'], $_SESSION['user_id']);
         $this->assertEquals('test', $_SESSION['some_other_data'], 'Другие данные сессии должны сохраниться');
+
+        $this->clearSession(); // Очищаем сессию после теста
     }
 
     /**
@@ -339,6 +355,8 @@ class OpenGameTest extends TestBase
 
         $this->assertEquals($user2['id'], $_SESSION['user_id']);
         $this->assertEquals($game['id'], $_SESSION['game_id']);
+
+        $this->clearSession(); // Очищаем сессию после теста
     }
 
     /**
@@ -374,6 +392,8 @@ class OpenGameTest extends TestBase
 
         $this->assertEquals($game['id'], $_SESSION['game_id']);
         $this->assertEquals($players[15]['id'], $_SESSION['user_id']);
+
+        $this->clearSession(); // Очищаем сессию после теста
     }
 
     /**

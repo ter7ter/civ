@@ -1,0 +1,371 @@
+
+🚀 Запуск тестов для системы создания игр
+============================================================
+Время запуска: 2025-09-22 18:33:16
+PHP версия: 8.4.1
+Проект: I:\pr1\html
+Типы тестов: Unit, Integration
+============================================================
+
+🧪 Запуск PHP тестов...
+==================================================
+PHPUnit 9.6.27 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.1
+Configuration: I:\pr1\html\tests/phpunit.xml
+Warning:       XDEBUG_MODE=coverage (environment variable) or xdebug.mode=coverage (PHP configuration setting) has to be set
+
+..........EEEEEEEEEEEEEEEEE.......F.............................. 65 / 90 ( 72%)
+....EEEEEEEEEEE..Euser error.FFFF..                                         90 / 90 (100%)
+
+Time: 00:00.365, Memory: 8.00 MB
+
+There were 29 errors:
+
+1) EditGameTest::testEditBasicGameParameters
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:43
+I:\pr1\html\vendor\bin\phpunit:122
+
+2) EditGameTest::testEditGameNameOnly
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:83
+I:\pr1\html\vendor\bin\phpunit:122
+
+3) EditGameTest::testEditTurnType
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:147
+I:\pr1\html\vendor\bin\phpunit:122
+
+4) EditGameTest::testEditWithoutGameId
+Exception: Ошибка: ID игры не указан.
+
+I:\pr1\html\pages\editgame.php:7
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:328
+I:\pr1\html\vendor\bin\phpunit:122
+
+5) EditGameTest::testXSSInEditedGameName
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:382
+I:\pr1\html\vendor\bin\phpunit:122
+
+6) EditGameTest::testVeryLongStringsInEdit
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:415
+I:\pr1\html\vendor\bin\phpunit:122
+
+7) EditGameTest::testLoadGameWithoutId
+Exception: Ошибка: ID игры не указан.
+
+I:\pr1\html\pages\editgame.php:68
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:452
+I:\pr1\html\vendor\bin\phpunit:122
+
+8) EditGameTest::testEditMapSize
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:114
+I:\pr1\html\vendor\bin\phpunit:122
+
+9) EditGameTest::testLoadGameDataForEditing
+Exception: Test DB query failed: SQLSTATE[HY000]: General error: 1 near "id": syntax error SQL: SELECT * FROM user WHERE game = ?id ORDER BY turn_order Params: {"id":"1"}
+
+I:\pr1\html\tests\DatabaseMocks.php:78
+I:\pr1\html\tests\DatabaseMocks.php:386
+I:\pr1\html\pages\editgame.php:78
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:180
+I:\pr1\html\vendor\bin\phpunit:122
+
+10) EditGameTest::testEditWithEmptyName
+Exception: Test DB query failed: SQLSTATE[HY000]: General error: 1 near "id": syntax error SQL: SELECT * FROM user WHERE game = ?id ORDER BY turn_order Params: {"id":1}
+
+I:\pr1\html\tests\DatabaseMocks.php:78
+I:\pr1\html\tests\DatabaseMocks.php:386
+I:\pr1\html\pages\editgame.php:48
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:209
+I:\pr1\html\vendor\bin\phpunit:122
+
+11) EditGameTest::testEditWithInvalidMapSize
+Exception: Test DB query failed: SQLSTATE[HY000]: General error: 1 near "id": syntax error SQL: SELECT * FROM user WHERE game = ?id ORDER BY turn_order Params: {"id":1}
+
+I:\pr1\html\tests\DatabaseMocks.php:78
+I:\pr1\html\tests\DatabaseMocks.php:386
+I:\pr1\html\pages\editgame.php:48
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:237
+I:\pr1\html\vendor\bin\phpunit:122
+
+12) EditGameTest::testEditWithInvalidTurnType
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:282
+I:\pr1\html\vendor\bin\phpunit:122
+
+13) EditGameTest::testEditNonExistentGame
+Exception: Ошибка: Игра не найдена.
+
+I:\pr1\html\pages\editgame.php:14
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:310
+I:\pr1\html\vendor\bin\phpunit:122
+
+14) EditGameTest::testDataPreservationOnValidationError
+Exception: Test DB query failed: SQLSTATE[HY000]: General error: 1 near "id": syntax error SQL: SELECT * FROM user WHERE game = ?id ORDER BY turn_order Params: {"id":1}
+
+I:\pr1\html\tests\DatabaseMocks.php:78
+I:\pr1\html\tests\DatabaseMocks.php:386
+I:\pr1\html\pages\editgame.php:48
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:350
+I:\pr1\html\vendor\bin\phpunit:122
+
+15) EditGameTest::testLoadNonExistentGameForEditing
+Exception: Ошибка: Игра не найдена.
+
+I:\pr1\html\pages\editgame.php:74
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:439
+I:\pr1\html\vendor\bin\phpunit:122
+
+16) EditGameTest::testMultipleValidationErrors
+Exception: Test DB query failed: SQLSTATE[HY000]: General error: 1 near "id": syntax error SQL: SELECT * FROM user WHERE game = ?id ORDER BY turn_order Params: {"id":1}
+
+I:\pr1\html\tests\DatabaseMocks.php:78
+I:\pr1\html\tests\DatabaseMocks.php:386
+I:\pr1\html\pages\editgame.php:48
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:472
+I:\pr1\html\vendor\bin\phpunit:122
+
+17) EditGameTest::testGameNotChangedOnValidationError
+Exception: Test DB query failed: SQLSTATE[HY000]: General error: 1 near "id": syntax error SQL: SELECT * FROM user WHERE game = ?id ORDER BY turn_order Params: {"id":1}
+
+I:\pr1\html\tests\DatabaseMocks.php:78
+I:\pr1\html\tests\DatabaseMocks.php:386
+I:\pr1\html\pages\editgame.php:48
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\unit\EditGameTest.php:503
+I:\pr1\html\vendor\bin\phpunit:122
+
+18) EditGameIntegrationTest::testFullGameEditProcess
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:48
+I:\pr1\html\vendor\bin\phpunit:122
+
+19) EditGameIntegrationTest::testEditedGameDataPersistence
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:89
+I:\pr1\html\vendor\bin\phpunit:122
+
+20) EditGameIntegrationTest::testEditDifferentTurnTypesIntegration
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:136
+I:\pr1\html\vendor\bin\phpunit:122
+
+21) EditGameIntegrationTest::testPlayerOrderPreservationOnEdit
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:215
+I:\pr1\html\vendor\bin\phpunit:122
+
+22) EditGameIntegrationTest::testPlayerParametersPreservationOnEdit
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:269
+I:\pr1\html\vendor\bin\phpunit:122
+
+23) EditGameIntegrationTest::testSQLInjectionProtectionOnEdit
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:408
+I:\pr1\html\vendor\bin\phpunit:122
+
+24) EditGameIntegrationTest::testEditGameWithRelatedDataPreservation
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:524
+I:\pr1\html\vendor\bin\phpunit:122
+
+25) EditGameIntegrationTest::testLoadGameDataForEditingIntegration
+Exception: Test DB query failed: SQLSTATE[HY000]: General error: 1 near "id": syntax error SQL: SELECT * FROM user WHERE game = ?id ORDER BY turn_order Params: {"id":"1"}
+
+I:\pr1\html\tests\DatabaseMocks.php:78
+I:\pr1\html\tests\DatabaseMocks.php:386
+I:\pr1\html\pages\editgame.php:78
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:172
+I:\pr1\html\vendor\bin\phpunit:122
+
+26) EditGameIntegrationTest::testValidationErrorsIntegrationOnEdit
+Exception: Test DB query failed: SQLSTATE[HY000]: General error: 1 near "id": syntax error SQL: SELECT * FROM user WHERE game = ?id ORDER BY turn_order Params: {"id":1}
+
+I:\pr1\html\tests\DatabaseMocks.php:78
+I:\pr1\html\tests\DatabaseMocks.php:386
+I:\pr1\html\pages\editgame.php:48
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:314
+I:\pr1\html\vendor\bin\phpunit:122
+
+27) EditGameIntegrationTest::testPerformanceEditWithMaxPlayers
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:363
+I:\pr1\html\vendor\bin\phpunit:122
+
+28) EditGameIntegrationTest::testMultipleGameEdits
+ErrorException: Cannot modify header information - headers already sent by (output started at I:\pr1\html\vendor\phpunit\phpunit\src\Util\Printer.php:104)
+
+I:\pr1\html\pages\editgame.php:63
+I:\pr1\html\tests\test_bootstrap_classes.php:167
+I:\pr1\html\tests\test_bootstrap_classes.php:174
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:461
+I:\pr1\html\vendor\bin\phpunit:122
+
+29) OpenGameIntegrationTest::testMultipleGameOpenings
+ErrorException: Undefined array key "game_id"
+
+I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:353
+I:\pr1\html\vendor\bin\phpunit:122
+
+--
+
+There were 5 failures:
+
+1) OpenGameTest::testOpenGameWithUserFromDifferentGame
+Failed asserting that an array does not have the key 'game_id'.
+
+I:\pr1\html\tests\unit\OpenGameTest.php:42
+I:\pr1\html\vendor\bin\phpunit:122
+
+2) OpenGameIntegrationTest::testGameOpeningSessionPersistence
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'Тест сессии'
++'Отредактированная игра 1'
+
+I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:100
+I:\pr1\html\vendor\bin\phpunit:122
+
+3) OpenGameIntegrationTest::testErrorHandlingInGameOpening
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'user error'
++''
+
+I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:233
+I:\pr1\html\vendor\bin\phpunit:122
+
+4) OpenGameIntegrationTest::testGameOpeningDataIntegrity
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'Тест целостности данных'
++'Отредактированная игра 1'
+
+I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:398
+I:\pr1\html\vendor\bin\phpunit:122
+
+5) OpenGameIntegrationTest::testGameOpeningObjectRelationships
+Игра должна содержать 4 пользователей
+Failed asserting that actual size 0 matches expected size 4.
+
+I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:449
+I:\pr1\html\vendor\bin\phpunit:122
+
+ERRORS!
+Tests: 90, Assertions: 222, Errors: 29, Failures: 5.
+
+❌ PHP тесты завершились с ошибками (0.64s)
+--------------------------------------------------
+
+
+📊 ИТОГОВЫЙ ОТЧЕТ
+============================================================
+PHP            : ❌ ПРОВАЛЕН (0.64s)
+------------------------------------------------------------
+Общее время выполнения: 0.64s
+Всего наборов тестов: 1
+Пройдено: 0
+Провалено: 1
+
+💥 НЕКОТОРЫЕ ТЕСТЫ ПРОВАЛЕНЫ!
+
+📁 Дополнительные файлы:
+   ✓ JUnit XML отчет: I:\pr1\html\tests/results/junit.xml
+   ✓ TestDox HTML отчет: I:\pr1\html\tests/results/testdox.html
+   ✓ Лог ошибок PHP: I:\pr1\html\tests/results/php_errors.log
+============================================================

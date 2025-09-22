@@ -114,7 +114,7 @@ class DatabaseConfigTest extends TestBase
         $this->assertGreaterThan(0, $gameId, 'ID игры должен быть больше 0');
 
         // Проверяем, что игра создана
-        $game = MyDBTestWrapper::query("SELECT * FROM game WHERE id = '?id'", ['id' => $gameId], 'row');
+        $game = MyDBTestWrapper::query("SELECT * FROM game WHERE id = :id", ['id' => $gameId], 'row');
         $this->assertNotNull($game, 'Игра должна быть найдена в БД');
         $this->assertEquals('Test Database Game', $game['name'], 'Название игры должно совпадать');
 
@@ -124,7 +124,7 @@ class DatabaseConfigTest extends TestBase
         $this->assertTrue($result, 'Обновление должно быть успешным');
 
         // Проверяем обновление
-        $updatedGame = MyDBTestWrapper::query("SELECT * FROM game WHERE id = '?id'", ['id' => $gameId], 'row');
+        $updatedGame = MyDBTestWrapper::query("SELECT * FROM game WHERE id = :id", ['id' => $gameId], 'row');
         $this->assertEquals('Updated Test Game', $updatedGame['name'], 'Название должно быть обновлено');
     }
 
@@ -187,7 +187,7 @@ class DatabaseConfigTest extends TestBase
         MyDBTestWrapper::end_transaction();
 
         // Проверяем, что данные сохранены
-        $game = MyDBTestWrapper::query("SELECT * FROM game WHERE id = '?id'", ['id' => $gameId], 'row');
+        $game = MyDBTestWrapper::query("SELECT * FROM game WHERE id = :id", ['id' => $gameId], 'row');
         $this->assertNotNull($game, 'Игра должна быть сохранена после коммита');
     }
 

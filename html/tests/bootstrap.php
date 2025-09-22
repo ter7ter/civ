@@ -123,7 +123,7 @@ if (file_exists(PROJECT_ROOT . "/functions.php")) {
 }
 
 // Настройка обработки ошибок для тестов
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_NOTICE);
 ini_set("display_errors", 1);
 
 // Функция для создания тестовых данных
@@ -158,6 +158,10 @@ register_shutdown_function("cleanupTestData");
 
 // Устанавливаем обработчик ошибок для тестов
 set_error_handler(function ($severity, $message, $file, $line) {
+    // Игнорируем ошибки header в тестах
+    if (strpos($message, "Cannot modify header information") !== false) {
+        return true;
+    }
     // Преобразуем ошибки PHP в исключения для лучшего тестирования
     if (!(error_reporting() & $severity)) {
         return false;

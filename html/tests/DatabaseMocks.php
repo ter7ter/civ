@@ -51,6 +51,9 @@ class DatabaseTestAdapter
     {
         $pdo = self::getConnection();
 
+        // Replace ?key with :key for named parameters
+        $sql = preg_replace('/\?(\w+)/', ':$1', $sql);
+
         // Логируем запрос для отладки
         self::$queries[] = [
             "sql" => $sql,
@@ -59,19 +62,11 @@ class DatabaseTestAdapter
         ];
 
         try {
-            // Заменяем плейсхолдеры в стиле ?param на экранированные значения (как в MyDB)
-            $pdoSql = $sql;
+            // Remove debug logs
+            error_log("Executing SQL: " . $sql);
 
-            if (!empty($params)) {
-                foreach ($params as $key => $value) {
-                    // Экранируем значение для SQLite
-                    $escapedValue = $pdo->quote($value);
-                    $pdoSql = str_replace("?{$key}", $escapedValue, $pdoSql);
-                }
-            }
-
-            $stmt = $pdo->prepare($pdoSql);
-            $stmt->execute();
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params); // Pass parameters directly to execute
 
             switch ($mode) {
                 case "row":
@@ -84,7 +79,7 @@ class DatabaseTestAdapter
             }
         } catch (PDOException $e) {
             throw new Exception(
-                "Test DB query failed: " . $e->getMessage() . " SQL: " . $sql,
+                "Test DB query failed: " . $e->getMessage() . " SQL: " . $sql . " Params: " . json_encode($params),
             );
         }
     }
@@ -479,7 +474,7 @@ class GameTestMock
         }
 
         $data = DatabaseTestAdapter::query(
-            "SELECT * FROM game WHERE id = ?id",
+            "SELECT * FROM game WHERE id = :id",
             ["id" => $id],
             "row",
         );
@@ -513,7 +508,7 @@ class GameTestMock
     {
         // Упрощенная версия для тестов - просто создаем базовые юниты
         $users = DatabaseTestAdapter::query(
-            "SELECT id FROM user WHERE game = ?gameid ORDER BY turn_order",
+            "SELECT id FROM user WHERE game = :gameid ORDER BY turn_order",
             ["gameid" => $this->id],
         );
 
@@ -538,6 +533,18 @@ class GameTestMock
         return DatabaseTestAdapter::query("SELECT game.*, count(user.id) as ucount FROM game
                                INNER JOIN user ON user.game = game.id
                                GROUP BY user.game ORDER BY id DESC");
+    }
+
+    public function calculate()
+    {
+        // Mock implementation for tests
+        return true;
+    }
+
+    public function all_system_message($text)
+    {
+        // Mock implementation for tests
+        return true;
     }
 }
 
@@ -601,7 +608,7 @@ class UserTestMock
         }
 
         $data = DatabaseTestAdapter::query(
-            "SELECT * FROM user WHERE id = ?id",
+            "SELECT * FROM user WHERE id = :id",
             ["id" => $id],
             "row",
         );

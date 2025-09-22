@@ -13,6 +13,7 @@ include 'partials/header.php';
         overflow-y: auto;
         padding: 10px;
         border: 1px solid #495057;
+        margin-top: 0 !important; /* Override legacy negative margin */
     }
     #game-info-window {
         position: absolute;

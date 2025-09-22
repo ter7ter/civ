@@ -170,8 +170,12 @@ function mockIncludeFile($filename, $varsToExtract = []) {
             eval('?>' . $content);
         } catch (TestExitException $e) {
             // ignore
+        } finally {
+            // Гарантированно закрываем буфер вывода
+            if (ob_get_level() > 0) {
+                ob_end_clean();
+            }
         }
-        ob_end_clean();
         return get_defined_vars();
     };
     return $scope();

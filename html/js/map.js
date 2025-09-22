@@ -253,7 +253,6 @@ var map = {
 			$('.map_cell').removeClass('selected_cell');
 			$('.map_cell[coordx="' + map.select_x + '"][coordy="' + map.select_y + '"]').addClass('selected_cell');
 			$('#cellinfo').html(data);
-			$('#game-info-window').appendTo('#map-wrapper');
 		});
 	},
 	get_cell: function(x, y) {

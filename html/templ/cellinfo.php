@@ -27,12 +27,12 @@
     <input type="button" value="Следующий ход[Enter]" id="do-next-step">
 </div>
 <?endif;?>
-<div class="d-flex align-items-start">
-    <div class="cell-info-img flex-shrink-0">
-        <img src="./img/map_<?=$data['type']?>.png">
+<div style="width: 100%">
+    <div class="cell-info-img">
+        <img src="./img/map_<?=$data['type']?>.png"></img>
     </div>
-    <div class="flex-grow-1 ms-3">
-        <div style="width: 100%;">
+    <div style="margin-left: 90px;">
+        <div style="width: 100%">
             <b>(<?=$data['x']?>,<?=$data['y']?>)</b> <?=$data['title']?>
         </div>
         <div>

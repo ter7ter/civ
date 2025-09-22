@@ -19,11 +19,13 @@ if (!isset($page_title)) {
         #cellinfo {
             background-color: #343a40 !important; 
             color: #f8f9fa;
-            height: 655px; /* Original height */
             overflow-y: auto;
             padding: 10px;
             border: 1px solid #495057;
-            margin-top: 0 !important; /* Override legacy negative margin */
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
         }
         #game-info-window {
             position: absolute;

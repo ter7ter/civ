@@ -6,27 +6,29 @@ include 'partials/header.php';
     body {
         background-color: #212529 !important; 
     }
-    /* Override original styles that break the new layout */
-    #cellinfo, #mapv {
-        float: none !important;
-        margin-top: 0 !important;
-        position: static !important; /* Let flexbox control positioning */
-    }
     #cellinfo {
-        background-color: #343a40 !important; /* Darker background for info panel */
+        background-color: #343a40 !important; 
         color: #f8f9fa;
-        height: 648px; /* Match map height */
+        height: 648px; 
         overflow-y: auto;
         padding: 10px;
     }
-    #mapv {
-        display: inline-block;
+    #game-info-window {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 280px;
+        background-color: rgba(33, 37, 41, 0.8) !important; /* Dark, semi-transparent background */
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 10;
+        color: #f8f9fa;
     }
     .cell-info-img {
         float: none !important;
     }
 </style>
-<!-- Original game styles that are still needed -->
+<!-- Original game styles -->
 <link type="text/css" href="css/city.css" rel="Stylesheet" />
 <link type="text/css" href="css/map.css" rel="Stylesheet" />
 <link type="text/css" href="css/style.css" rel="Stylesheet" />
@@ -42,6 +44,17 @@ include 'partials/header.php';
                     <button onclick="map.down()" class="btn btn-secondary btn-sm" style="position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); z-index: 10;">\/</button>
                     <button onclick="map.left()" class="btn btn-secondary btn-sm" style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%); z-index: 10;">&lt;</button>
                     <button onclick="map.right()" class="btn btn-secondary btn-sm" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); z-index: 10;">&gt;</button>
+                    
+                    <div id="game-info-window">
+                        <?php foreach ($data['players'] as $player):?>
+                        <div class="game-info-player<?=($player['login']==$data['user_login']) ? ' game-info-you-player' : ''?>">
+                            <b><?=$player['turn_order']?>.</b> Игрок <span style="color: <?=$player['color']?>; font-weight: bold"><?=$player['login']?></span>
+                            <?if ($player['turn_status'] == 'wait') echo 'Ждёт своего хода';
+                            elseif ($player['turn_status'] == 'play') echo 'Ходит';
+                            elseif ($player['turn_status'] == 'end') echo 'Закончил ход'; ?>
+                        </div>
+                        <?endforeach;?>
+                    </div>
                 </div>
 
                 <!-- Right Info Panel -->

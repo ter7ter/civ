@@ -2,8 +2,7 @@
 // Логика страницы редактирования игры
 
 // Если это POST-запрос, сохраняем изменения
-if (isset($_REQUEST["name"])) {
-    $game_id = (int)$_REQUEST['game_id'];
+    $game_id = (isset($_REQUEST['game_id'])) ? (int)$_REQUEST['game_id'] : throw new Exception('Ошибка: ID игры не указан.');
     if (!$game_id) {
         throw new Exception('Ошибка: ID игры не указан.');
     }
@@ -63,7 +62,7 @@ if (isset($_REQUEST["name"])) {
     }
 
 } else { // Если это GET-запрос, загружаем данные для формы
-    $game_id = (int)$_REQUEST['game_id'];
+    $game_id = (isset($_REQUEST['game_id'])) ? (int)$_REQUEST['game_id'] : throw new Exception('Ошибка: ID игры не указан.');
     if (!$game_id) {
         throw new Exception('Ошибка: ID игры не указан.');
     }

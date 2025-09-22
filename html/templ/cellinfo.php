@@ -27,12 +27,12 @@
     <input type="button" value="Следующий ход[Enter]" id="do-next-step">
 </div>
 <?endif;?>
-<div class="d-flex align-items-start">
-    <div class="cell-info-img flex-shrink-0">
-        <img src="./img/map_<?=$data['type']?>.png">
+<div style="width: 100%">
+    <div class="cell-info-img">
+        <img src="./img/map_<?=$data['type']?>.png"></img>
     </div>
-    <div class="flex-grow-1 ms-3">
-        <div style="width: 100%;">
+    <div style="margin-left: 90px;">
+        <div style="width: 100%">
             <b>(<?=$data['x']?>,<?=$data['y']?>)</b> <?=$data['title']?>
         </div>
         <div>
@@ -106,7 +106,16 @@
 </div>
 <?endif;?>
 </div>
-
+<div id="game-info-window">
+    <?php foreach ($data['players'] as $player):?>
+    <div class="game-info-player<?=($player['login']==$data['user_login']) ? ' game-info-you-player' : ''?>">
+        <b><?=$player['turn_order']?>.</b> Игрок <span style="color: <?=$player['color']?>; font-weight: bold"><?=$player['login']?></span>
+        <?if ($player['turn_status'] == 'wait') echo 'Ждёт своего хода';
+        elseif ($player['turn_status'] == 'play') echo 'Ходит';
+        elseif ($player['turn_status'] == 'end') echo 'Закончил ход'; ?>
+    </div>
+    <?endforeach;?>
+</div>
 <script type="text/javascript">
     map.turn_status = '<?=$data['turn_status']?>';
 </script>

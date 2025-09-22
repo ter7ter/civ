@@ -16,6 +16,19 @@ class EditGameTest extends TestBase
     }
 
     /**
+     * Тест 5.1: Загрузка игры без указания ID
+     */
+    public function testLoadGameWithoutId(): void
+    {
+        $this->expectException(Exception::class);
+
+        $_REQUEST = []; // ID не указан
+        $_GET = [];
+
+        mockIncludeFile(__DIR__ . "/../../pages/editgame.php");
+    }
+
+    /**
      * Тест 1.1: Редактирование базовых параметров игры
      */
     public function testEditBasicGameParameters(): void
@@ -297,7 +310,7 @@ class EditGameTest extends TestBase
      */
     public function testEditNonExistentGame(): void
     {
-        $this->expectOutputString('Ошибка: Игра не найдена.');
+        $this->expectException(Exception::class);
 
         $this->simulatePostRequest([
             "game_id" => 999, // несуществующий ID
@@ -315,7 +328,7 @@ class EditGameTest extends TestBase
      */
     public function testEditWithoutGameId(): void
     {
-        $this->expectOutputString('Ошибка: ID игры не указан.');
+        $this->expectException(Exception::class);
 
         $this->simulatePostRequest([
             // game_id не указан
@@ -431,7 +444,7 @@ class EditGameTest extends TestBase
      */
     public function testLoadNonExistentGameForEditing(): void
     {
-        $this->expectOutputString('Ошибка: Игра не найдена.');
+        $this->expectException(Exception::class);
 
         $_REQUEST = ['game_id' => 999]; // несуществующий ID
         $_GET = ['game_id' => 999];
@@ -439,18 +452,7 @@ class EditGameTest extends TestBase
         mockIncludeFile(__DIR__ . "/../../pages/editgame.php");
     }
 
-    /**
-     * Тест 5.2: Загрузка игры без указания ID
-     */
-    public function testLoadGameWithoutId(): void
-    {
-        $this->expectOutputString('Ошибка: ID игры не указан.');
 
-        $_REQUEST = []; // ID не указан
-        $_GET = [];
-
-        mockIncludeFile(__DIR__ . "/../../pages/editgame.php");
-    }
 
     /**
      * Тест 6.1: Множественные ошибки валидации

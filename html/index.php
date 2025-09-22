@@ -23,7 +23,7 @@ try {
     if ($page == 'login' && isset($_REQUEST['gid']) && isset($_REQUEST['uid'])) {
         $game = Game::get((int)$_REQUEST['gid']);
         if (!$game) {
-            die('game error');
+            throw new Exception('Game error');
         }
 
         if ($game->turn_type == 'onewindow') {
@@ -38,14 +38,14 @@ try {
         }
 
         if (!$user || $user->game != $game->id) {
-            die('user error');
+            throw new Exception('User error');
         }
         $_SESSION['game_id'] = $game->id;
         $_SESSION['user_id'] = $user->id;
         $page = 'map';
     }
     if (!file_exists("pages/{$page}.php")) {
-        die('404 Not found');
+        throw new Exception('404 Not found');
     }
     $page_no_login = ['selectgame', 'creategame', 'gameinfo', 'login', 'editgame'];
     if (isset($_SESSION['game_id'])) {

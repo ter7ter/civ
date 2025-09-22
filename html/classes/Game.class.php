@@ -47,7 +47,7 @@ class Game {
         if (isset(Game::$_all[$id])) {
             return Game::$_all[$id];
         } else {
-            $data = MyDB::query("SELECT * FROM game WHERE id = '?id'", ['id' => $id], 'row');
+            $data = MyDB::query("SELECT * FROM game WHERE id = :id", ['id' => $id], 'row');
             return new Game($data);
         }
     }
@@ -65,7 +65,7 @@ class Game {
         if (isset($data['id'])) {
             $this->id = $data['id'];
             Cell::$map_planet = $this->id;
-            $users = MyDB::query("SELECT id FROM user WHERE game = '?gameid'", ['gameid' => $this->id]);
+            $users = MyDB::query("SELECT id FROM user WHERE game = :gameid", ['gameid' => $this->id]);
             foreach ($users as $user) {
                 $this->users[$user['id']] = User::get($user['id']);
             }
@@ -87,7 +87,7 @@ class Game {
 
 	public function create_new_game() {
         Cell::generate_map();
-        $users = MyDB::query("SELECT id FROM user WHERE game = '?gameid' ORDER BY turn_order",
+        $users = MyDB::query("SELECT id FROM user WHERE game = :gameid ORDER BY turn_order",
             ['gameid' => $this->id]);
         foreach ($users as $user) {
             $this->users[$user['id']] = User::get($user['id']);
@@ -174,6 +174,6 @@ class Game {
     }
 
     public function getActivePlayer() {
-        return MyDB::query("SELECT id FROM user WHERE game = ?gid AND turn_status = 'play' LIMIT 1", ['gid' => $this->id], 'elem');
+        return MyDB::query("SELECT id FROM user WHERE game = :gid AND turn_status = 'play' LIMIT 1", ['gid' => $this->id], 'elem');
     }
 }

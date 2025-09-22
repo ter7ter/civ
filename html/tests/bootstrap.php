@@ -62,6 +62,8 @@ if (!function_exists("test_exit")) {
     }
 }
 
+
+
 // Автозагрузчик для классов тестов
 spl_autoload_register(function ($className) {
     $testFile = TESTS_ROOT . "/" . str_replace("\\", "/", $className) . ".php";

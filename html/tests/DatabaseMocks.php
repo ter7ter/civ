@@ -359,6 +359,14 @@ class DatabaseTestAdapter
         self::clearAllTables();
         self::resetAutoIncrements();
         self::clearQueries();
+
+        // Очистка кэшей моков
+        if (class_exists('GameTestMock')) {
+            GameTestMock::$_all = [];
+        }
+        if (class_exists('UserTestMock')) {
+            UserTestMock::$_all = [];
+        }
     }
 }
 
@@ -448,7 +456,7 @@ class GameTestMock
     public $turn_num;
     public $users = [];
 
-    private static $_all = [];
+    public static $_all = [];
 
     public function __construct($data)
     {
@@ -461,9 +469,15 @@ class GameTestMock
             }
         }
 
+        $this->users = [];
         if (isset($data["id"])) {
             $this->id = $data["id"];
             self::$_all[$this->id] = $this;
+
+            $users = DatabaseTestAdapter::query("SELECT id FROM user WHERE game = :gameid", ['gameid' => $this->id]);
+            foreach ($users as $user) {
+                $this->users[$user['id']] = User::get($user['id']);
+            }
         }
     }
 
@@ -568,7 +582,7 @@ class UserTestMock
     public $process_research_turns = 0;
     public $process_research_type = 0;
 
-    private static $_all = [];
+    public static $_all = [];
 
     public function __construct($data)
     {

@@ -24,6 +24,9 @@ class TestBase extends PHPUnit\Framework\TestCase
 
         // Сохраняем ссылку на тестовую БД
         self::$pdo = DatabaseTestAdapter::getConnection();
+
+        // Очищаем БД перед запуском тестов класса
+        DatabaseTestAdapter::resetTestDatabase();
     }
 
     public static function tearDownAfterClass(): void

@@ -1,8 +1,11 @@
 <?php
 // Логика страницы редактирования игры
-
-// Если это POST-запрос, сохраняем изменения
-    $game_id = (isset($_REQUEST['game_id'])) ? (int)$_REQUEST['game_id'] : throw new Exception('Ошибка: ID игры не указан.');
+if (isset($_REQUEST["name"])) {
+    if (isset($_REQUEST['game_id'])) {
+        $game_id = (int)$_REQUEST['game_id'];
+    } else {
+        throw new Exception('Ошибка: ID игры не указан.');
+    }
     if (!$game_id) {
         throw new Exception('Ошибка: ID игры не указан.');
     }
@@ -42,7 +45,7 @@
             "turn_type" => $turn_type,
             "users" => [], // Нужно будет загрузить заново
         ];
-        $users_data = MyDB::query("SELECT * FROM user WHERE game = ?id ORDER BY turn_order", ['id' => $game_id]);
+        $users_data = MyDB::query("SELECT * FROM user WHERE game = :id ORDER BY turn_order", ['id' => $game_id]);
         foreach ($users_data as $user) {
             $data['users'][] = $user['login'];
         }
@@ -72,7 +75,7 @@
     }
 
     // Загружаем пользователей
-    $users_data = MyDB::query("SELECT * FROM user WHERE game = ?id ORDER BY turn_order", ['id' => $game->id]);
+    $users_data = MyDB::query("SELECT * FROM user WHERE game = :id ORDER BY turn_order", ['id' => $game->id]);
     $user_logins = [];
     foreach ($users_data as $user) {
         $user_logins[] = $user['login'];

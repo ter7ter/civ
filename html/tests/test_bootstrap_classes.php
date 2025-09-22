@@ -164,7 +164,10 @@ function mockIncludeFile($filename, $varsToExtract = []) {
             if (basename($filename) === 'includes.php') {
                 return [];
             }
-            include $filename;
+            $content = file_get_contents($filename);
+            $content = preg_replace('/\bexit\s*\(/', 'terminate_script(', $content);
+            $content = preg_replace('/\bdie\s*\(/', 'terminate_script(', $content);
+            eval('?>' . $content);
         } catch (TestExitException $e) {
             // ignore
         }

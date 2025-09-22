@@ -81,7 +81,7 @@ class User {
 		if (isset(User::$_all[$id])) {
 			return User::$_all[$id];
 		} else {
-            $data = MyDB::query("SELECT * FROM user WHERE id = ?id", ['id' => $id], 'row');
+            $data = MyDB::query("SELECT * FROM user WHERE id = :id", ['id' => $id], 'row');
 			return new User($data);
 		}
 	}
@@ -191,7 +191,7 @@ class User {
     }
 	
 	public function calculate_units() {
-		$rows = MyDB::query("SELECT * FROM unit WHERE user_id = ?id", ['id' => $this->id]);
+		$rows = MyDB::query("SELECT * FROM unit WHERE user_id = :id", ['id' => $this->id]);
 		foreach ($rows as $row) {
 			$unit = new Unit($row);
 			$unit->calculate();
@@ -234,7 +234,7 @@ class User {
             if (empty($r_need_age)) {
                 $r_count = 0;
             } else {
-                $r_count = MyDB::query("SELECT count(id) FROM research WHERE user_id = ?uid AND 
+                $r_count = MyDB::query("SELECT count(id) FROM research WHERE user_id = :uid AND
                 `type` IN (" . join(',', $r_need_age) . ")",
                     ['uid' => $this->id], 'elem'
                 );
@@ -255,7 +255,7 @@ class User {
      */
 	public function get_cities() {
 		$result = [];
-		$rows = MyDB::query("SELECT id FROM city WHERE user_id = ?id", ['id' => $this->id]);
+		$rows = MyDB::query("SELECT id FROM city WHERE user_id = :id", ['id' => $this->id]);
 		foreach ($rows as $row) {
 			$result[] = City::get($row['id']);
 		}
@@ -268,7 +268,7 @@ class User {
      * @throws Exception
      */
 	public function get_research() {
-		$rows = MyDB::query("SELECT * FROM research WHERE user_id = ?id", ['id' => $this->id]);
+		$rows = MyDB::query("SELECT * FROM research WHERE user_id = :id", ['id' => $this->id]);
 		$result = [];
 		foreach ($rows as $row) {
 			$result[$row['type']] = new Research($row);
@@ -398,10 +398,10 @@ class User {
                 }
             }
         }
-        MyDB::query("DELETE FROM resource_group WHERE user_id = ?uid", ['uid' => $this->id]);
+        MyDB::query("DELETE FROM resource_group WHERE user_id = :uid", ['uid' => $this->id]);
         foreach ($groups as $group_id => $group) {
             foreach ($group['resources'] as $resource) {
-                MyDB::query("INSERT INTO resource_group(`group_id`, `user_id`, `resource_id`) VALUES ('?gid', '?uid', '?rid')",
+                MyDB::query("INSERT INTO resource_group(`group_id`, `user_id`, `resource_id`) VALUES (:gid, :uid, :rid)",
                     ['gid' => $group_id, 'uid' => $this->id, 'rid' => $resource->id]);
             }
             foreach ($group['cities'] as $city) {
@@ -429,7 +429,7 @@ class User {
      */
     public function get_messages($last = 0) {
         $result = [];
-        $messages = MyDB::query("SELECT * FROM message WHERE (from_id = ?uid OR to_id = ?uid) AND id > ?last ORDER BY DATE LIMIT 50",
+        $messages = MyDB::query("SELECT * FROM message WHERE (from_id = :uid OR to_id = :uid) AND id > :last ORDER BY DATE LIMIT 50",
             ['uid' => $this->id, 'last' => $last]);
         foreach ($messages as $message) {
             $result[] = new Message($message);
@@ -451,7 +451,7 @@ class User {
     }
 
     public function get_next_event() {
-        $data = MyDB::query("SELECT * FROM event WHERE user_id = ?uid ORDER BY id LIMIT 1",
+        $data = MyDB::query("SELECT * FROM event WHERE user_id = :uid ORDER BY id LIMIT 1",
             ['uid' => $this->id], 'row');
         if ($data) {
             $event = new Event($data);

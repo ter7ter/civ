@@ -1,0 +1,30 @@
+# Test results and coverage
+tests/results/
+tests/coverage-html/
+tests/out.txt
+tests/.phpunit.result.cache
+
+# Vendor directory
+vendor/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+*.log
+apache_logs/
+nginx_logs/
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+
+# Database files
+*.sql
+!civ.sql

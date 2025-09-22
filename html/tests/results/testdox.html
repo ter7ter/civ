@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Test Documentation</title>
+        <style>
+            body {
+                text-rendering: optimizeLegibility;
+                font-family: Source SansSerif Pro, Arial, sans-serif;
+                font-variant-ligatures: common-ligatures;
+                font-kerning: normal;
+                margin-left: 2rem;
+                background-color: #fff;
+                color: #000;
+            }
+
+            body > ul > li {
+                font-size: larger;
+            }
+
+            h2 {
+                font-size: larger;
+                text-decoration-line: underline;
+                text-decoration-thickness: 2px;
+                margin: 0;
+                padding: 0.5rem 0;
+            }
+
+            ul {
+                list-style: none;
+                margin: 0 0 2rem;
+                padding: 0 0 0 1rem;
+                text-indent: -1rem;
+            }
+
+            .success:before {
+                color: #4e9a06;
+                content: '✓';
+                padding-right: 0.5rem;
+            }
+
+            .defect {
+                color: #a40000;
+            }
+
+            .defect:before {
+                color: #a40000;
+                content: '✗';
+                padding-right: 0.5rem;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Create Game</h2>
+        <ul>
+            <li class="defect">X s s in game name</li>
+            <li class="defect">Very long strings</li>
+            <li class="success">Duplicate player names</li>
+            <li class="defect">Create basic game</li>
+            <li class="defect">Minimum map size</li>
+            <li class="defect">Maximum map size</li>
+            <li class="success">Empty game name</li>
+            <li class="success">Insufficient players</li>
+            <li class="defect">Player color generation</li>
+            <li class="defect">Empty player fields</li>
+            <li class="defect">Invalid turn type</li>
+            <li class="defect">X s s in player names</li>
+            <li class="defect">Maximum players game</li>
+            <li class="defect">Different turn types</li>
+            <li class="success">Too small map size</li>
+            <li class="success">Too large map size</li>
+            <li class="success">Too many players</li>
+            <li class="success">Data preservation on error</li>
+            <li class="success">No post data</li>
+        </ul>
+        <h2>Database Config</h2>
+        <ul>
+            <li class="success">Test database connection</li>
+            <li class="success">Test tables creation</li>
+            <li class="success">Test data cleanup</li>
+            <li class="defect">Transaction handling</li>
+            <li class="defect">Test data operations</li>
+            <li class="success">Query logging</li>
+            <li class="success">Test my d b initialization</li>
+            <li class="success">Test database constants</li>
+            <li class="success">Database constants separation</li>
+            <li class="success">Game and user mocks</li>
+        </ul>
+        <h2>Open Game</h2>
+        <ul>
+            <li class="success">Successful game opening</li>
+            <li class="success">Open game without game id</li>
+            <li class="success">Open game without user id</li>
+            <li class="defect">Open game with user from different game</li>
+            <li class="success">Open game with multiple players</li>
+            <li class="success">Open game with different turn types</li>
+            <li class="success">Open non existent game</li>
+            <li class="success">Open game with non existent user</li>
+            <li class="success">Game list loading</li>
+            <li class="success">Empty game list</li>
+            <li class="success">Session state after game opening</li>
+            <li class="success">Reopen game with different user</li>
+            <li class="success">Open game with max players</li>
+        </ul>
+        <h2>Edit Game</h2>
+        <ul>

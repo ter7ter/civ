@@ -1,0 +1,151 @@
+body {
+	background-color: #cbc1f5;
+}
+.login-content {
+	padding-top: 150px;
+	margin: 0 300px;
+}
+.form-field {
+	padding: 0 0 10px 0;
+}
+.form-field .form-label {
+	width: 200px;
+	display: inline-block;
+}
+.create-player input {
+	width: 200px;
+}
+.create-player span {
+	width: 173px;
+	display: inline-block;
+}
+#select-game-select, #select-game-user {
+	width: 250px;
+	font-size: 14pt;
+}
+#cell-info-window {
+	width: 100%;
+}
+#cellmenu {
+	position: absolute;
+	background:burlywood;
+	width: 150px;
+	margin-left: -390px;
+	margin-top: 20px;
+	display: none;
+}
+#cellmenu ul {
+	
+}
+#cellmenu ul li {
+	font-size: 14px;
+	text-align: left;
+	cursor: pointer;
+	text-decoration: underline;
+}
+#cellinfo {
+	background-color: beige;
+	width: 300px;
+	float: left;
+	margin-top: -592px;
+	height: 655px;
+	padding: 5px;
+}
+.cell-info-img {
+	float: left;
+	width: 74px;
+	padding: 10px
+}
+
+#empire-window {
+	display: none;
+	width: 1100px;
+	height: 680px;
+	background-color: lavenderblush;
+	position: absolute;
+	top: 70px;
+	margin-left: 20px;
+	border-width: 10px;
+	border-style: ridge;
+}
+#empire-city-list {
+	border-style: double;
+    width: 100%;
+}
+#empire-city-list td {
+	border-style: dashed;
+	border-width: 1px;
+	text-align: center;
+	cursor: pointer;
+}
+/*input[type=text] {
+	width: 40px;
+}*/
+.research-info-block {
+	position: absolute;
+	height: 64px;
+	width: 184px;
+	padding: 5px;
+	background-color: darkgray;
+}
+#game-info-window {
+	position: absolute;
+	left: 530px;
+	top: 15px;
+	background-color: lightblue;
+	width: 280px;
+	padding: 3px;
+	cursor: pointer;
+}
+.game-info-player {
+	display: none;
+	padding: 2px;
+}
+.game-info-you-player {
+	display: block;
+}
+#event-window-research {
+	display: none;
+	width: 480px;
+	height: 300px;
+	background-color: mediumslateblue;
+	position: absolute;
+	top: 100px;
+	left: 200px;
+	border-width: 4px;
+	border-style: double;
+	padding: 10px;
+	line-height: 30px;
+}
+#event-window-research-title {
+	font-weight: bold;
+}
+#event-window-select-research,#event-window-select-build {
+	width: 300px;
+	padding: 2px;
+	margin: 5px;
+}
+#event-window-research-ok,#event-window-research-cancel {
+	padding: 2px;
+	margin: 5px;
+}
+#event-window-city {
+	display: none;
+	width: 450px;
+	height: 250px;
+	background-color: sandybrown;
+	position: absolute;
+	top: 100px;
+	left: 200px;
+	border-width: 4px;
+	border-style: double;
+	padding: 10px;
+	line-height: 30px;
+}
+#event-window-city-title,#event-window-city-build {
+	font-weight: bold;
+}
+#event-window-build-ok,#event-window-build-tocity {
+	padding: 2px;
+	margin: 5px;
+}

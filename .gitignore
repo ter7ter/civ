@@ -1,0 +1,17 @@
+# IDE settings
+.idea/
+
+# Composer dependencies
+vendor/
+
+# Logs
+*.log
+
+# Local database data
+mysql/
+
+# PHPUnit cache
+.phpunit.result.cache
+
+# Local configuration files
+phpmyadmin.config.php

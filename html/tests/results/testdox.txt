@@ -1,0 +1,49 @@
+Create Game
+ [ ] X s s in game name
+ [ ] Very long strings
+ [x] Duplicate player names
+ [ ] Create basic game
+ [ ] Minimum map size
+ [ ] Maximum map size
+ [x] Empty game name
+ [x] Insufficient players
+ [ ] Player color generation
+ [ ] Empty player fields
+ [ ] Invalid turn type
+ [ ] X s s in player names
+ [ ] Maximum players game
+ [ ] Different turn types
+ [x] Too small map size
+ [x] Too large map size
+ [x] Too many players
+ [x] Data preservation on error
+ [x] No post data
+
+Database Config
+ [x] Test database connection
+ [x] Test tables creation
+ [x] Test data cleanup
+ [ ] Transaction handling
+ [ ] Test data operations
+ [x] Query logging
+ [x] Test my d b initialization
+ [x] Test database constants
+ [x] Database constants separation
+ [x] Game and user mocks
+
+Open Game
+ [x] Successful game opening
+ [x] Open game without game id
+ [x] Open game without user id
+ [ ] Open game with user from different game
+ [x] Open game with multiple players
+ [x] Open game with different turn types
+ [x] Open non existent game
+ [x] Open game with non existent user
+ [x] Game list loading
+ [x] Empty game list
+ [x] Session state after game opening
+ [x] Reopen game with different user
+ [x] Open game with max players
+
+Edit Game

@@ -1,0 +1,73 @@
+services:
+ php:
+  build:
+   context: ./php
+   dockerfile: "Dockerfile"
+  ports:
+   - '81:80'
+  volumes:
+   - ./html:/var/www/html
+   - ./html/apache_logs:/var/log/apache2
+   - ./mysite.conf:/usr/local/apache2/conf/extra/mysite.conf
+  depends_on:
+   - db
+  environment:
+   - DOMAIN=localhost
+  networks:
+   - pr1_network
+ db:
+  image: mysql:latest
+  volumes:
+   - ./mysql:/var/lib/mysql
+   - ./my.cnf:/etc/mysql/conf.d/my.cnf
+  environment:
+   - MYSQL_DATABASE=base_docker
+   - MYSQL_USER=docker
+   - MYSQL_PASSWORD=dockerpass
+   - MYSQL_ROOT_PASSWORD=rootpass
+  networks:
+   - pr1_network
+  ports:
+   - '3306:3306'
+ phpmyadmin:
+  image: phpmyadmin
+  ports:
+   - '8081:80'
+  environment:
+   - PMA_ABSOLUTE_URI=http://localhost/phpmyadmin
+   - PMA_ARBITRARY=1
+   - PMA_HOST=db
+   - MYSQL_ROOT_PASSWORD=rootpass
+  depends_on:
+   - db
+  networks:
+   - pr1_network
+  volumes:
+   - ./phpmyadmin.config.php:/etc/phpmyadmin/config.user.inc.php
+ proxy:
+  image: nginx:latest
+  volumes:
+   - ./nginx.conf:/etc/nginx/conf.d/default.conf
+   - ./html/nginx_logs:/var/log/nginx
+  ports:
+   - '80:80'
+  networks:
+   - pr1_network
+ redis:
+  image: redis:latest
+  networks:
+   - pr1_network
+ phpredisadmin:
+  image: erikdubbelboer/phpredisadmin
+  ports:
+   - '8082:80'
+  environment:
+   - REDIS_1_HOST=redis
+  depends_on:
+   - redis
+  networks:
+   - pr1_network
+
+networks:
+ pr1_network:
+  driver: bridge

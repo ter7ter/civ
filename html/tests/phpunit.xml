@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+         bootstrap="bootstrap.php"
+         cacheResultFile=".phpunit.result.cache"
+         executionOrder="depends,defects"
+         forceCoversAnnotation="false"
+         beStrictAboutCoversAnnotation="true"
+         beStrictAboutOutputDuringTests="true"
+         beStrictAboutTodoAnnotatedTests="true"
+         convertDeprecationsToExceptions="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         verbose="true">
+
+    <testsuites>
+        <testsuite name="Unit Tests">
+            <directory suffix="Test.php">unit</directory>
+        </testsuite>
+        <testsuite name="Integration Tests">
+            <directory suffix="Test.php">integration</directory>
+        </testsuite>
+    </testsuites>
+
+    <coverage cacheDirectory=".phpunit.cache/code-coverage"
+              processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">../pages</directory>
+            <directory suffix=".php">../classes</directory>
+        </include>
+        <exclude>
+            <directory>../tests</directory>
+            <directory>../vendor</directory>
+            <file>../config.php</file>
+        </exclude>
+        <report>
+            <html outputDirectory="coverage-html"/>
+            <text outputFile="coverage.txt"/>
+        </report>
+    </coverage>
+
+    <logging>
+        <junit outputFile="results/junit.xml"/>
+        <testdoxHtml outputFile="results/testdox.html"/>
+        <testdoxText outputFile="results/testdox.txt"/>
+    </logging>
+
+    <php>
+        <!-- Переменные окружения для тестов -->
+        <env name="APP_ENV" value="testing"/>
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value=":memory:"/>
+
+        <!-- Константы для тестового окружения -->
+        <const name="TESTING" value="true"/>
+        <const name="TEST_DB_HOST" value="localhost"/>
+        <const name="TEST_DB_USER" value="test_user"/>
+        <const name="TEST_DB_PASS" value="test_pass"/>
+        <const name="TEST_DB_NAME" value="test_db"/>
+        <const name="TEST_DB_PORT" value="3306"/>
+    </php>
+
+    <extensions>
+    </extensions>
+</phpunit>

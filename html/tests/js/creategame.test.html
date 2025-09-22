@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Тесты создания игры - JavaScript</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+        <!-- Тестовая HTML форма -->
+        <div class="login-content">
+            <form id="test-form" action="index.php?method=creategame" method="post">
+                <div class="form-field">
+                    <span class="form-label">Название игры*</span>
+                    <input type="text" name="name" id="game-name" required>
+                </div>
+
+                <div class="form-field">
+                    <span class="form-label">Ширина карты (50-500)</span>
+                    <input type="number" name="map_w" id="map-width" value="100" min="50" max="500">
+                </div>
+
+                <div class="form-field">
+                    <span class="form-label">Высота карты (50-500)</span>
+                    <input type="number" name="map_h" id="map-height" value="100" min="50" max="500">
+                </div>
+
+                <div class="form-field">
+                    <span class="form-label">Порядок ходов</span>
+                    <select name="turn_type" id="turn-type">
+                        <option value="concurrently">Одновременно</option>
+                        <option value="byturn" selected>По очереди</option>
+                        <option value="onewindow">По очереди за одним компьютером</option>
+                    </select>
+                </div>
+
+                <h3>Игроки:</h3>
+                <div class="form-field create-player">
+                    <input type="text" name="users[]" placeholder="Имя игрока 1">
+                    <span style="background-color: #ff0000">&nbsp;&nbsp;&nbsp;</span>
+                </div>
+                <div class="form-field create-player">
+                    <input type="text" name="users[]" placeholder="Имя игрока 2">
+                    <span style="background-color: #00ff00">&nbsp;&nbsp;&nbsp;</span>
+                    <button type="button" class="remove-player">✕</button>
+                </div>
+
+                <div class="form-field">
+                    <input type="button" id="create-game-add-player" value="Добавить игрока">
+                </div>
+
+                <div class="form-field">
+                    <input type="submit" value="Создать игру">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Подключаем библиотеки -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+
+    <!-- Подключаем тестируемый код -->
+    <script src="../../js/forms.js"></script>
+
+    <script>
+    // Настройки QUnit
+    QUnit.config.reorder = false;
+
+    // Модуль: Добавление игроков
+    QUnit.module("Добавление игроков", function(hooks) {
+        hooks.beforeEach(function() {
+            // Сбрасываем форму к начальному состоянию
+            $('#qunit-fixture').html(`
+                <div class="login-content">
+                    <form id="test-form">
+                        <div class="form-field create-player">
+                            <input type="text" name="users[]" placeholder="Имя игрока 1">
+                            <span style="background-color: #ff0000">&nbsp;&nbsp;&nbsp;</span>
+                        </div>
+                        <div class="form-field create-player">
+                            <input type="text" name="users[]" placeholder="Имя игрока 2">
+                            <span style="background-color: #00ff00">&nbsp;&nbsp;&nbsp;</span>
+                            <button type="button" class="remove-player">✕</button>
+                        </div>
+                        <div class="form-field">
+                            <input type="button" id="create-game-add-player" value="Добавить игрока">
+                        </div>
+                    </form>
+                </div>
+            `);
+        });
+
+        QUnit.test("Добавление одного игрока", function(assert) {
+            var initialCount = $('.create-player').length;
+            $('#create-game-add-player').click();
+
+            assert.equal($('.create-player').length, initialCount + 1,
+                "Количество игроков должно увеличиться на 1");
+        });
+
+        QUnit.test("Добавление нескольких игроков", function(assert) {
+            var initialCount = $('.create-player').length;
+
+            // Добавляем 3 игроков
+            $('#create-game-add-player').click();
+            $('#create-game-add-player').click();
+            $('#create-game-add-player').click();
+
+            assert.equal($('.create-player').length, initialCount + 3,
+                "Должно быть добавлено 3 игрока");
+        });
+
+        QUnit.test("Ограничение максимального количества игроков", function(assert) {
+            // Устанавливаем mock для alert
+            var alertCalled = false;
+            var originalAlert = window.alert;
+            window.alert = function(message) {
+                alertCalled = true;
+                assert.ok(message.includes('16'), "Сообщение должно содержать максимальное количество 16");
+            };
+
+            // Добавляем максимальное количество игроков
+            for (var i = 0; i < 15; i++) {
+                $('#create-game-add-player').click();
+            }
+
+            var currentCount = $('.create-player').length;
+            assert.equal(currentCount, 16, "Должно быть 16 игроков");
+
+            // Пытаемся добавить 17-го
+            $('#create-game-add-player').click();
+
+            assert.ok(alertCalled, "Должно появиться предупреждение о максимуме");
+            assert.equal($('.create-player').length, 16,
+                "Количество игроков не должно превышать 16");
+
+            // Восстанавливаем оригинальный alert
+            window.alert = originalAlert;
+        });
+
+        QUnit.test("Генерация уникальных цветов", function(assert) {
+            // Добавляем несколько игроков
+            for (var i = 0; i < 5; i++) {
+                $('#create-game-add-player').click();
+            }
+
+            var colors = [];
+            $('.create-player span').each(function() {
+                var color = $(this).css('background-color');
+                colors.push(color);
+            });
+
+            // Проверяем уникальность цветов
+            var uniqueColors = [...new Set(colors)];
+            assert.equal(colors.length, uniqueColors.length,
+                "Все цвета должны быть уникальными");
+        });
+
+        QUnit.test("Корректность placeholder'ов", function(assert) {
+            $('#create-game-add-player').click();
+
+            var placeholders = [];
+            $('.create-player input').each(function(index) {
+                placeholders.push($(this).attr('placeholder'));
+            });
+
+            assert.equal(placeholders[0], "Имя игрока 1", "Первый placeholder корректный");
+            assert.equal(placeholders[1], "Имя игрока 2", "Второй placeholder корректный");
+            assert.equal(placeholders[2], "Имя игрока 3", "Третий placeholder корректный");
+        });
+    });
+
+    // Модуль: Удаление игроков
+    QUnit.module("Удаление игроков", function(hooks) {
+        hooks.beforeEach(function() {
+            $('#qunit-fixture').html(`
+                <div class="login-content">
+                    <form id="test-form">
+                        <div class="form-field create-player">
+                            <input type="text" name="users[]" placeholder="Имя игрока 1">
+                            <span style="background-color: #ff0000">&nbsp;&nbsp;&nbsp;</span>
+                        </div>
+                        <div class="form-field create-player">
+                            <input type="text" name="users[]" placeholder="Имя игрока 2">
+                            <span style="background-color: #00ff00">&nbsp;&nbsp;&nbsp;</span>
+                            <button type="button" class="remove-player">✕</button>
+                        </div>
+                        <div class="form-field create-player">
+                            <input type="text" name="users[]" placeholder="Имя игрока 3">
+                            <span style="background-color: #0000ff">&nbsp;&nbsp;&nbsp;</span>
+                            <button type="button" class="remove-player">✕</button>
+                        </div>
+                        <input type="button" id="create-game-add-player" value="Добавить игрока">
+                    </form>
+                </div>
+            `);
+        });
+
+        QUnit.test("Удаление игрока", function(assert) {
+            var initialCount = $('.create-player').length;
+            $('.remove-player:first').click();
+
+            assert.equal($('.create-player').length, initialCount - 1,
+                "Количество игроков должно уменьшиться на 1");
+        });
+
+        QUnit.test("Предотвращение удаления при минимуме игроков", function(assert) {
+            // Устанавливаем mock для alert
+            var alertCalled = false;
+            var originalAlert = window.alert;
+            window.alert = function(message) {
+                alertCalled = true;
+                assert.ok(message.includes('минимум 2'),
+                    "Сообщение должно содержать информацию о минимуме");
+            };
+
+            // Удаляем игроков до минимума
+            $('.remove-player').click(); // остается 2
+            var countAfterOne = $('.create-player').length;
+
+            $('.remove-player').click(); // пытаемся удалить еще одного
+
+            assert.ok(alertCalled, "Должно появиться предупреждение");
+            assert.equal($('.create-player').length, countAfterOne,
+                "Количество игроков не должно стать меньше 2");
+
+            window.alert = originalAlert;
+        });
+
+        QUnit.test("Обновление placeholder'ов после удаления", function(assert) {
+            // Удаляем второго игрока
+            $('.create-player:eq(1) .remove-player').click();
+
+            var placeholders = [];
+            $('.create-player input').each(function() {
+                placeholders.push($(this).attr('placeholder'));
+            });
+
+            assert.equal(placeholders[0], "Имя игрока 1", "Первый placeholder не изменился");
+            assert.equal(placeholders[1], "Имя игрока 2", "Второй placeholder обновился");
+        });
+    });
+
+    // Модуль: Валидация формы
+    QUnit.module("Валидация формы", function(hooks) {
+        hooks.beforeEach(function() {
+            $('#qunit-fixture').html(`
+                <div class="login-content">
+                    <form action="index.php?method=creategame" method="post" id="test-form">
+                        <input type="text" name="name" id="game-name">
+                        <input type="number" name="map_w" id="map-width" value="100">
+                        <input type="number" name="map_h" id="map-height" value="100">
+                        <div class="create-player">
+                            <input type="text" name="users[]" value="">
+                        </div>
+                        <div class="create-player">
+                            <input type="text" name="users[]" value="">
+                        </div>
+                        <input type="submit" value="Создать игру">
+                    </form>
+                </div>
+            `);
+        });
+
+        QUnit.test("Валидация пустого названия игры", function(assert) {
+            var alertCalled = false;
+            var originalAlert = window.alert;
+            window.alert = function(message) {
+                alertCalled = true;
+                assert.ok(message.includes('название'),
+                    "Сообщение должно содержать информацию о названии");
+            };
+
+            // Устанавливаем пустое название и валидных игроков
+            $('#game-name').val('');
+            $('input[name="users[]"]:eq(0)').val('Игрок1');
+            $('input[name="users[]"]:eq(1)').val('Игрок2');
+
+            var event = $.Event('submit');
+            $('#test-form').trigger(event);
+
+            assert.ok(alertCalled, "Должно появиться предупреждение о пустом названии");
+            assert.ok(event.isDefaultPrevented(), "Отправка формы должна быть предотвращена");
+
+            window.alert = originalAlert;
+        });
+
+        QUnit.test("Валидация недостаточного количества игроков", function(assert) {
+            var alertCalled = false;
+            var originalAlert = window.alert;
+            window.alert = function(message) {
+                alertCalled = true;
+                assert.ok(message.includes('минимум 2'),
+                    "Сообщение должно содержать информацию о минимуме игроков");
+            };
+
+            $('#game-name').val('Тест');
+            $('input[name="users[]"]:eq(0)').val('Игрок1');
+            $('input[name="users[]"]:eq(1)').val(''); // второй игрок пустой
+
+            var event = $.Event('submit');
+            $('#test-form').trigger(event);
+
+            assert.ok(alertCalled, "Должно появиться предупреждение о количестве игроков");
+            assert.ok(event.isDefaultPrevented(), "Отправка формы должна быть предотвращена");
+
+            window.alert = originalAlert;
+        });
+
+        QUnit.test("Валидация дублирующихся имен игроков", function(assert) {
+            var alertCalled = false;
+            var originalAlert = window.alert;
+            window.alert = function(message) {
+                alertCalled = true;
+                assert.ok(message.includes('повторяться'),
+                    "Сообщение должно содержать информацию о повторении имен");
+            };
+
+            $('#game-name').val('Тест');
+            $('input[name="users[]"]:eq(0)').val('Игрок1');
+            $('input[name="users[]"]:eq(1)').val('Игрок1'); // дублирующееся имя
+
+            var event = $.Event('submit');
+            $('#test-form').trigger(event);
+
+            assert.ok(alertCalled, "Должно появиться предупреждение о дублировании");
+            assert.ok(event.isDefaultPrevented(), "Отправка формы должна быть предотвращена");
+
+            window.alert = originalAlert;
+        });
+
+        QUnit.test("Валидация размеров карты", function(assert) {
+            var alertCount = 0;
+            var originalAlert = window.alert;
+            window.alert = function(message) {
+                alertCount++;
+                assert.ok(message.includes('50') && message.includes('500'),
+                    "Сообщение должно содержать информацию о диапазоне размеров");
+            };
+
+            // Тестируем слишком маленькую ширину
+            $('#game-name').val('Тест');
+            $('#map-width').val('49');
+            $('#map-height').val('100');
+            $('input[name="users[]"]:eq(0)').val('Игрок1');
+            $('input[name="users[]"]:eq(1)').val('Игрок2');
+
+            var event1 = $.Event('submit');
+            $('#test-form').trigger(event1);
+
+            // Тестируем слишком большую высоту
+            $('#map-width').val('100');
+            $('#map-height').val('501');
+
+            var event2 = $.Event('submit');
+            $('#test-form').trigger(event2);
+
+            assert.equal(alertCount, 2, "Должно быть 2 предупреждения о размерах");
+            assert.ok(event1.isDefaultPrevented(), "Первая отправка должна быть предотвращена");
+            assert.ok(event2.isDefaultPrevented(), "Вторая отправка должна быть предотвращена");
+
+            window.alert = originalAlert;
+        });
+
+        QUnit.test("Успешная валидация", function(assert) {
+            var alertCalled = false;
+            var originalAlert = window.alert;
+            window.alert = function() {
+                alertCalled = true;
+            };
+
+            $('#game-name').val('Тестовая игра');
+            $('#map-width').val('100');
+            $('#map-height').val('100');
+            $('input[name="users[]"]:eq(0)').val('Игрок1');
+            $('input[name="users[]"]:eq(1)').val('Игрок2');
+
+            var event = $.Event('submit');
+            $('#test-form').trigger(event);
+
+            assert.notOk(alertCalled, "Не должно быть предупреждений при корректных данных");
+            // Примечание: preventDefault все равно будет вызван в тестовой среде
+
+            window.alert = originalAlert;
+        });
+    });
+
+    // Модуль: Генерация цветов
+    QUnit.module("Генерация цветов", function() {
+        QUnit.test("Правильность алгоритма генерации цветов", function(assert) {
+            // Тестируем алгоритм генерации цветов из JavaScript
+            function generateColor(count) {
+                var color = '#';
+                var sym = 'ff';
+                var color_num = count;
+                if (count > 8) {
+                    sym = '88';
+                    color_num = count - 8;
+                }
+                if ((color_num & 4) > 0) {
+                    color += sym;
+                } else {
+                    color += '00';
+                }
+                if ((color_num & 2) > 0) {
+                    color += sym;
+                } else {
+                    color += '00';
+                }
+                if ((color_num & 1) > 0) {
+                    color += sym;
+                } else {
+                    color += '00';
+                }
+                return color;
+            }
+
+            // Проверяем первые несколько цветов
+            assert.equal(generateColor(1), '#0000ff', "Цвет для игрока 1");
+            assert.equal(generateColor(2), '#00ff00', "Цвет для игрока 2");
+            assert.equal(generateColor(3), '#00ffff', "Цвет для игрока 3");
+            assert.equal(generateColor(4), '#ff0000', "Цвет для игрока 4");
+
+            // Проверяем цвета для игроков свыше 8
+            assert.equal(generateColor(9), '#000088', "Цвет для игрока 9");
+            assert.equal(generateColor(10), '#008800', "Цвет для игрока 10");
+
+            // Проверяем, что все цвета валидны (hex формат)
+            for (var i = 1; i <= 16; i++) {
+                var color = generateColor(i);
+                assert.ok(/^#[0-9a-f]{6}$/i.test(color),
+                    `Цвет для игрока ${i} должен быть в формате hex: ${color}`);
+            }
+        });
+
+        QUnit.test("Уникальность цветов в пределах 8 игроков", function(assert) {
+            function generateColor(count) {
+                var color = '#';
+                var sym = 'ff';
+                var color_num = count;
+                if (count > 8) {
+                    sym = '88';
+                    color_num = count - 8;
+                }
+                if ((color_num & 4) > 0) {
+                    color += sym;
+                } else {
+                    color += '00';
+                }
+                if ((color_num & 2) > 0) {
+                    color += sym;
+                } else {
+                    color += '00';
+                }
+                if ((color_num & 1) > 0) {
+                    color += sym;
+                } else {
+                    color += '00';
+                }
+                return color;
+            }
+
+            var colors = [];
+            for (var i = 1; i <= 8; i++) {
+                colors.push(generateColor(i));
+            }
+
+            var uniqueColors = [...new Set(colors)];
+            assert.equal(colors.length, uniqueColors.length,
+                "Первые 8 цветов должны быть уникальными");
+        });
+    });
+
+    // Модуль: Интеграционные тесты UI
+    QUnit.module("Интеграционные тесты UI", function(hooks) {
+        hooks.beforeEach(function() {
+            $('#qunit-fixture').html(`
+                <div class="login-content">
+                    <form action="index.php?method=creategame" method="post" id="test-form">
+                        <input type="text" name="name" id="game-name">
+                        <input type="number" name="map_w" id="map-width" value="100">
+                        <input type="number" name="map_h" id="map-height" value="100">
+                        <select name="turn_type" id="turn-type">
+                            <option value="byturn" selected>По очереди</option>
+                        </select>
+                        <div class="form-field create-player">
+                            <input type="text" name="users[]" placeholder="Имя игрока 1">
+                            <span>&nbsp;&nbsp;&nbsp;</span>
+                        </div>
+                        <div class="form-field create-player">
+                            <input type="text" name="users[]" placeholder="Имя игрока 2">
+                            <span>&nbsp;&nbsp;&nbsp;</span>
+                            <button type="button" class="remove-player">✕</button>
+                        </div>
+                        <input type="button" id="create-game-add-player" value="Добавить игрока">
+                        <input type="submit" value="Создать игру">
+                    </form>
+                </div>
+            `);
+        });
+
+        QUnit.test("Полный сценарий создания игры", function(assert) {
+            // Заполняем основные поля
+            $('#game-name').val('Интеграционная игра');
+            $('#map-width').val('150');
+            $('#map-height').val('200');
+
+            // Заполняем игроков
+            $('input[name="users[]"]:eq(0)').val('Алиса');
+            $('input[name="users[]"]:eq(1)').val('Боб');
+
+            // Добавляем третьего игрока
+            $('#create-game-add-player').click();
+            $('input[name="users[]"]:eq(2)').val('Чарли');
+
+            assert.equal($('.create-player').length, 3, "Должно быть 3 игрока");
+
+            // Проверяем, что все поля заполнены корректно
+            assert.equal($('#game-name').val(), 'Интеграционная игра');
+            assert.equal($('#map-width').val(), '150');
+            assert.equal($('#map-height').val(), '200');
+            assert.equal($('input[name="users[]"]:eq(0)').val(), 'Алиса');
+            assert.equal($('input[name="users[]"]:eq(1)').val(), 'Боб');
+            assert.equal($('input[name="users[]"]:eq(2)').val(), 'Чарли');
+        });
+
+        QUnit.test("Сценарий с удалением и добавлением игроков", function(assert) {
+            // Добавляем игроков
+            for (var i = 0; i < 3; i++) {
+                $('#create-game-add-player').click();
+            }
+
+            assert.equal($('.create-player').length, 5, "Должно быть 5 игроков после добавления");
+
+            // Удаляем некоторых игроков
+            $('.remove-player:eq(1)').click(); // удаляем третьего
+            $('.remove-player:eq(1)').click(); // удаляем четвертого (который стал третьим)
+
+            assert.equal($('.create-player').length, 3, "Должно остаться 3 игрока после удаления");
+
+            // Проверяем корректность placeholder'ов
+            var placeholders = [];
+            $('.create-player input').each(function() {
+                placeholders.push($(this).attr('placeholder'));
+            });
+
+            assert.equal(placeholders[0], "Имя игрока 1");
+            assert.equal(placeholders[1], "Имя игрока 2");
+            assert.equal(placeholders[2], "Имя игрока 3");
+        });
+    });
+
+    // Запуск всех тестов
+    QUnit.start();
+    </script>
+</body>
+</html>

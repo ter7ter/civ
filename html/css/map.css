@@ -1,0 +1,358 @@
+.map_unit {
+    width: 66px;
+    height: 66px;
+    padding: 4px;
+    position: absolute;
+}
+.map_unit_selected {
+    width: 66px;
+    height: 66px;
+    padding: 0px;
+    border-style: groove;
+    position: absolute;
+}
+.map_cell {
+    border-style: dashed;
+    border-width: 1px;
+    float: left;
+    width: 72px;
+    height: 72px;
+}
+.selected_cell {
+    border-style: groove;
+    border-width: 2px;
+    width: 70px;
+    height: 70px;
+}
+.map_cell_none {
+    border-style: hidden;
+    padding: 5px;
+}
+.map_row {
+    clear: both;
+}
+.map-global-button {
+    width: 70px;
+    height: 70px;
+    margin: 3px;
+}
+.map-city-title {
+    background:bisque;
+    width: 54px;
+    margin-top: 50px;
+    position: absolute;
+    margin-left: 18px;
+}
+.map-city-population {
+    background:tan;
+    width: 18px;
+    font-weight: bold;
+    margin-top: 50px;
+    position: absolute;
+}
+.map_cell_forest {
+    background-image: url(../img/map_forest.png);
+}
+.map_cell_plains {
+    background-image: url(../img/map_plains.png);
+}
+.map_cell_plains2 {
+    background-image: url(../img/map_plains2.png);
+}
+.map_cell_hills {
+    background-image: url(../img/map_hills.png);
+}
+.map_cell_desert {
+    background-image: url(../img/map_desert.png);
+}
+.map_cell_mountains {
+    background-image: url(../img/map_mountains.png);
+}
+.map_cell_water1 {
+    background-image: url(../img/map_water1.png);
+}
+.map_cell_water2 {
+    background-image: url(../img/map_water2.png);
+}
+.map_cell_water3 {
+    background-image: url(../img/map_water3.png);
+}
+.map_cell_city1 {
+    background-image: url(../img/city1.jpg);
+}
+.map-cell-road {
+    position: absolute;
+    width: 72px;
+    height: 72px;
+}
+.map-cell-road- {
+    background-image: url(../img/road/roadn.png);
+}
+.map-cell-road-1 {
+    background-image: url(../img/road/road1.png);
+}
+.map-cell-road-2 {
+    background-image: url(../img/road/road2.png);
+}
+.map-cell-road-3 {
+    background-image: url(../img/road/road3.png);
+}
+.map-cell-road-4 {
+    background-image: url(../img/road/road4.png);
+}
+.map-cell-road-6 {
+    background-image: url(../img/road/road6.png);
+}
+.map-cell-road-7 {
+    background-image: url(../img/road/road7.png);
+}
+.map-cell-road-8 {
+    background-image: url(../img/road/road8.png);
+}
+.map-cell-road-9 {
+    background-image: url(../img/road/road9.png);
+}
+.map-cell-road-13 {
+    background-image: url(../img/road/road13.png);
+}
+.map-cell-road-16 {
+    background-image: url(../img/road/road16.png);
+}
+.map-cell-road-17 {
+    background-image: url(../img/road/road17.png);
+}
+.map-cell-road-18 {
+    background-image: url(../img/road/road18.png);
+}
+.map-cell-road-19 {
+    background-image: url(../img/road/road19.png);
+}
+.map-cell-road-24 {
+    background-image: url(../img/road/road24.png);
+}
+.map-cell-road-26 {
+    background-image: url(../img/road/road26.png);
+}
+.map-cell-road-27 {
+    background-image: url(../img/road/road27.png);
+}
+.map-cell-road-28 {
+    background-image: url(../img/road/road28.png);
+}
+.map-cell-road-29 {
+    background-image: url(../img/road/road29.png);
+}
+.map-cell-road-34 {
+    background-image: url(../img/road/road34.png);
+}
+.map-cell-road-37 {
+    background-image: url(../img/road/road37.png);
+}
+.map-cell-road-38 {
+    background-image: url(../img/road/road38.png);
+}
+.map-cell-road-39 {
+    background-image: url(../img/road/road39.png);
+}
+.map-cell-road-46 {
+    background-image: url(../img/road/road46.png);
+}
+.map-cell-road-48 {
+    background-image: url(../img/road/road48.png);
+}
+.map-cell-road-49 {
+    background-image: url(../img/road/road49.png);
+}
+.map-cell-road-67 {
+    background-image: url(../img/road/road67.png);
+}
+.map-cell-road-68 {
+    background-image: url(../img/road/road68.png);
+}
+.map-cell-road-79 {
+    background-image: url(../img/road/road79.png);
+}
+.map-cell-road-137 {
+    background-image: url(../img/road/road137.png);
+}
+.map-cell-road-138 {
+    background-image: url(../img/road/road138.png);
+}
+.map-cell-road-139 {
+    background-image: url(../img/road/road139.png);
+}
+.map-cell-road-167 {
+    background-image: url(../img/road/road167.png);
+}
+.map-cell-road-168 {
+    background-image: url(../img/road/road168.png);
+}
+.map-cell-road-179 {
+    background-image: url(../img/road/road17.png);
+}
+.map-cell-road-246 {
+    background-image: url(../img/road/road246.png);
+}
+.map-cell-road-248 {
+    background-image: url(../img/road/road248.png);
+}
+.map-cell-road-249 {
+    background-image: url(../img/road/road249.png);
+}
+.map-cell-road-267 {
+    background-image: url(../img/road/road267.png);
+}
+.map-cell-road-268 {
+    background-image: url(../img/road/road268.png);
+}
+.map-cell-road-279 {
+    background-image: url(../img/road/road279.png);
+}
+.map-cell-road-348 {
+    background-image: url(../img/road/road348.png);
+}
+.map-cell-road-349 {
+    background-image: url(../img/road/road349.png);
+}
+.map-cell-road-379 {
+    background-image: url(../img/road/road379.png);
+}
+.map-cell-road-468 {
+    background-image: url(../img/road/road468.png);
+}
+.map_move {
+    position: absolute;
+}
+.map-cell-owner-color {
+    width: 72px;
+    height: 72px;
+    opacity: 0.2;
+    position: absolute;
+}
+.map-cell-resource,.map-cell-improvement {
+    position: absolute;
+    width: 72px;
+    height: 72px;
+}
+.map-path-line {
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    z-index: 50;
+}
+.map-path-line-1 {
+    background-image: url(../img/path/line-1.png);
+}
+.map-path-line-2 {
+    background-image: url(../img/path/line-2.png);
+}
+.map-path-line-3 {
+    background-image: url(../img/path/line-3.png);
+}
+.map-path-line-4 {
+    background-image: url(../img/path/line-4.png);
+}
+.map-path-line-6 {
+    background-image: url(../img/path/line-6.png);
+}
+.map-path-line-7 {
+    background-image: url(../img/path/line-7.png);
+}
+.map-path-line-8 {
+    background-image: url(../img/path/line-8.png);
+}
+.map-path-line-9 {
+    background-image: url(../img/path/line-9.png);
+}
+.map-path-line-13 {
+    background-image: url(../img/path/line-13.png);
+}
+.map-path-line-16 {
+    background-image: url(../img/path/line-16.png);
+}
+.map-path-line-17 {
+    background-image: url(../img/path/line-17.png);
+}
+.map-path-line-18 {
+    background-image: url(../img/path/line-18.png);
+}
+.map-path-line-19 {
+    background-image: url(../img/path/line-19.png);
+}
+.map-path-line-24 {
+    background-image: url(../img/path/line-24.png);
+}
+.map-path-line-26 {
+    background-image: url(../img/path/line-26.png);
+}
+.map-path-line-27 {
+    background-image: url(../img/path/line-27.png);
+}
+.map-path-line-28 {
+    background-image: url(../img/path/line-28.png);
+}
+.map-path-line-29 {
+    background-image: url(../img/path/line-29.png);
+}
+.map-path-line-34 {
+    background-image: url(../img/path/line-34.png);
+}
+.map-path-line-37 {
+    background-image: url(../img/path/line-37.png);
+}
+.map-path-line-38 {
+    background-image: url(../img/path/line-38.png);
+}
+.map-path-line-39 {
+    background-image: url(../img/path/line-39.png);
+}
+.map-path-line-46 {
+    background-image: url(../img/path/line-46.png);
+}+
+.map-path-line-48 {
+    background-image: url(../img/path/line-48.png);
+}
+.map-path-line-49 {
+    background-image: url(../img/path/line-49.png);
+}
+.map-path-line-67 {
+    background-image: url(../img/path/line-67.png);
+}
+.map-path-line-68 {
+    background-image: url(../img/path/line-68.png);
+}
+.map-path-line-79 {
+    background-image: url(../img/path/line-79.png);
+}
+#message-window {
+    width: 100%;
+    clear: both;
+    height: 200px;
+    background-color: #fce94f;
+}
+#message-window-lines{
+    width: 100%;
+    height: 170px;
+    border-style: outset;
+    border-width: 1px;
+    overflow-y: auto;
+}
+#message-window-tabs {
+    width: 100%;
+    height: 20px;
+    border-style: outset;
+    border-width: 1px;
+}
+.message-window-tab {
+    display: table-cell;
+    border-width: 1px;
+    border-style: outset;
+    cursor: pointer;
+}
+.message-window-tab-active {
+    background-color: cornflowerblue;
+    cursor: default;
+}
+#message-window-input {
+    width: 100%;
+}

@@ -1,0 +1,142 @@
+#city-create-window {
+    position: absolute;
+    background: aliceblue;
+    width: 300px;
+    height: 100px;
+    margin-top: -300px;
+    margin-left: 260px;
+    padding: 5px;
+    text-align: center;
+    display: none;
+}
+#city-window {
+    display: none;
+    width: 960px;
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    border-width: 7px;
+    border-style: outset;
+    height: 750px;
+}
+#city-window-title {
+    background: grey;
+    text-align: center;
+    font-size: 30pt;
+    float: left;
+    width:920px;
+}
+#city-window-close {
+    float: left;
+    font-size:30pt;
+    background: coral;
+    width: 40px;
+    text-align: center;
+    cursor: pointer;
+}
+#city-window-bottom-panel {
+    background: khaki;
+    margin-top: 605px;
+    height: 133px;
+    padding: 2px;
+    border-width: 4px;
+    border-style: double;
+
+}
+#city-production-select {
+    float: right;
+    border-width: 2px;
+    border-style: dashed;
+    height: 110px;
+    width: 110px;
+    margin-top: -15px;
+    margin-right: 5px;
+    padding: 5px;
+    cursor: pointer;
+}
+#city-production-select-pic {
+    text-align: center;
+}
+#city-production-select-title {
+    text-align: center;
+}
+#city-production-list {
+    display: none;
+    position: absolute;
+    background: blanchedalmond;
+    margin-left: 770px;
+    margin-top: 50px;
+    width: 180px;
+    border-width: 4px;
+    border-style: outset;
+    height: 545px;
+    overflow-y: auto;
+}
+#city-building-list {
+    position: absolute;
+    background: khaki;
+    margin-top: 88px;
+    width: 180px;
+    height: 517px;
+}
+.city-building-list-item {
+    border-width: 1px;
+    border-style: dotted;
+}
+.city-production-list-item {
+    border-width: 1px;
+    border-style: dotted;
+    cursor: pointer;
+}
+.city-production-list-item img {
+    width: 50px;
+    height: 50px;
+}
+.city-production-list-item-title {
+    #float: right;
+}
+.city-production-list-item-description {
+    float: right;
+    width: 112px
+}
+.city_map_citizen {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-image: url(../img/people.png);
+    background-repeat: round;
+    margin-top: -460px;
+    margin-left: 350px;
+    color: mintcream;
+}
+.city-window-bg {
+    position: absolute;
+    opacity: 0.8;
+    background: gray;
+}
+.city-window-cell {
+    position: absolute;
+    width: 72px;
+    height: 72px;
+    cursor: pointer;
+    background: white;
+    opacity: 0.1;
+    z-index: 100;
+}
+#city-window-up-panel {
+    position: absolute;
+    width: 100%;
+    background: antiquewhite;
+    margin-top: 48px;
+    height: 40px;
+    font-size: 20pt;
+    text-align: center;
+}
+#city-resource-info {
+    position: absolute;
+    margin-left: 600px;
+    margin-top: 88px;
+    background-color: blanchedalmond;
+    z-index: 10;
+    width: 170px;
+}

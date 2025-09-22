@@ -19,11 +19,11 @@ include 'partials/header.php';
         overflow-y: auto;
         padding: 10px;
     }
-    #game-info-window {
-        background-color: #495057 !important;
-        position: static !important; /* Let it flow in the document */
-        width: 100% !important;
-        margin-top: 10px;
+    #mapv {
+        display: inline-block;
+    }
+    .cell-info-img {
+        float: none !important;
     }
 </style>
 <!-- Original game styles that are still needed -->

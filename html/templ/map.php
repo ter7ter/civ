@@ -5,71 +5,6 @@ include 'partials/header.php';
 <!-- Original game styles -->
 <link type="text/css" href="css/city.css" rel="Stylesheet" />
 <link type="text/css" href="css/map.css" rel="Stylesheet" />
-<style>
-    body {
-        background-color: #212529 !important; 
-    }
-    #cellinfo {
-        background-color: #343a40 !important; 
-        color: #f8f9fa;
-        height: 655px; /* Original height */
-        overflow-y: auto;
-        padding: 10px;
-        border: 1px solid #495057;
-        margin-top: 0 !important; /* Override legacy negative margin */
-    }
-    #game-info-window {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        width: 280px;
-        background-color: rgba(33, 37, 41, 0.85) !important; 
-        padding: 10px;
-        border-radius: .375rem; 
-        z-index: 20;
-        color: #f8f9fa;
-        border: 1px solid #495057;
-    }
-    .cell-info-img {
-        float: none !important; /* Disable float for flexbox layout */
-    }
-    #message-window {
-        border: 1px solid #495057;
-        border-radius: .375rem;
-    }
-</style>
-    body {
-        background-color: #212529 !important; 
-    }
-    #cellinfo {
-        background-color: #343a40 !important; 
-        color: #f8f9fa;
-        height: 655px; /* Original height */
-        overflow-y: auto;
-        padding: 10px;
-        border: 1px solid #495057;
-        margin-top: 0 !important; /* Override legacy negative margin */
-    }
-    #game-info-window {
-        position: absolute;
-        top: 10px;
-        right: 310px; /* Position relative to col-auto */
-        width: 280px;
-        background-color: rgba(33, 37, 41, 0.85) !important; 
-        padding: 10px;
-        border-radius: .375rem; 
-        z-index: 20;
-        color: #f8f9fa;
-        border: 1px solid #495057;
-    }
-    .cell-info-img {
-        float: none !important; /* Disable float for flexbox layout */
-    }
-    #message-window {
-        border: 1px solid #495057;
-        border-radius: .375rem;
-    }
-</style>
 
 <div class="container-fluid">
     <div class="row justify-content-center">
@@ -85,7 +20,6 @@ include 'partials/header.php';
                     <button onclick="map.down()" class="btn btn-secondary btn-sm" style="position: absolute; bottom: 5px; left: 50%; transform: translateX(-50%); z-index: 10;">\/</button>
                     <button onclick="map.left()" class="btn btn-secondary btn-sm" style="position: absolute; left: 5px; top: 50%; transform: translateY(-50%); z-index: 10;">&lt;</button>
                     <button onclick="map.right()" class="btn btn-secondary btn-sm" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); z-index: 10;">&gt;</button>
-                    <!-- #game-info-window will be moved here by JS -->
                 </div>
 
                 <!-- Right Info Panel -->

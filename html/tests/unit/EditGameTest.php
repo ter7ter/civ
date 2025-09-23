@@ -54,7 +54,7 @@ class EditGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/editgame.php");
-        $error = $vars['error'] ?? false;
+        $error = isset($vars['error']) ? $vars['error'] : false;
 
         // Проверяем, что редактирование прошло успешно
         $this->assertFalse(
@@ -64,6 +64,7 @@ class EditGameTest extends TestBase
 
         // Проверяем, что данные обновились в БД
         $updatedGame = $this->getLastRecord("game");
+        $this->assertNotNull($updatedGame, "Игра должна существовать в БД");
         $this->assertEquals("Новое название", $updatedGame['name']);
         $this->assertEquals(150, $updatedGame['map_w']);
         $this->assertEquals(200, $updatedGame['map_h']);
@@ -94,7 +95,7 @@ class EditGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/editgame.php");
-        $error = $vars['error'] ?? false;
+        $error = isset($vars['error']) ? $vars['error'] : false;
 
         $this->assertFalse(
             $error,

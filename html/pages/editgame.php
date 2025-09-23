@@ -1,6 +1,10 @@
 <?php
 // Логика страницы редактирования игры
+$error = false;
+$data = [];
+
 if (isset($_REQUEST["name"])) {
+    MyDB::start_transaction();
     if (isset($_REQUEST['game_id'])) {
         $game_id = (int)$_REQUEST['game_id'];
     } else {
@@ -61,7 +65,7 @@ if (isset($_REQUEST["name"])) {
         // Завершаем транзакцию и перенаправляем
         MyDB::end_transaction();
         header("Location: index.php?method=editgame&game_id=" . $game->id . "&saved=1");
-        exit();
+        terminate_script();
     }
 
 } else { // Если это GET-запрос, загружаем данные для формы

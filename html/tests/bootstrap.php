@@ -48,7 +48,7 @@ require_once __DIR__ . "/mocks/MockLoader.php";
 
 require_once __DIR__ . "/test_bootstrap_classes.php";
 
-DatabaseTestAdapter::createTestTablesStatic();
+DatabaseTestAdapter::createTestTables();
 
 // Настройка обработки ошибок для тестов
 error_reporting(E_ALL & ~E_NOTICE);

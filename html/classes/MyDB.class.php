@@ -173,7 +173,9 @@ class MyDB
     public static function start_transaction()
     {
         $db = MyDB::get();
-        $db->beginTransaction();
+        if (!$db->inTransaction()) {
+            $db->beginTransaction();
+        }
     }
 
     public static function end_transaction()

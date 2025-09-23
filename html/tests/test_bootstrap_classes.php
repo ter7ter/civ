@@ -140,29 +140,41 @@ function clearTestHeaders() {
  * Предотвращает подключение includes.php в тестах
  */
 function mockIncludeFile($filename, $varsToExtract = []) {
-    $scope = function() use ($filename, $varsToExtract) {
-        extract($varsToExtract, EXTR_SKIP);
-        ob_start();
-        try {
-            // Предотвращаем подключение includes.php в тестах
-            if (basename($filename) === 'includes.php') {
-                return [];
-            }
-            $content = file_get_contents($filename);
-            /*$content = preg_replace('/\bexit\s*\(/', 'terminate_script(', $content);
-            $content = preg_replace('/\bdie\s*\(/', 'terminate_script(', $content);
-            eval('?>' . $content);*/
-        } catch (TestExitException $e) {
-            // ignore
-        } finally {
-            // Гарантированно закрываем буфер вывода
-            if (ob_get_level() > 0) {
-                ob_end_clean();
-            }
+    // Предотвращаем подключение includes.php в тестах
+    if (basename($filename) === 'includes.php') {
+        return [];
+    }
+
+    // Извлекаем переменные в глобальную область видимости
+    extract($varsToExtract, EXTR_SKIP);
+
+    // Сохраняем текущее состояние переменных
+    $beforeVars = get_defined_vars();
+
+    ob_start();
+    try {
+        include $filename;
+    } catch (TestExitException $e) {
+        // Игнорируем выход из скрипта
+    } finally {
+        // Гарантированно закрываем буфер вывода
+        if (ob_get_level() > 0) {
+            ob_end_clean();
         }
-        return get_defined_vars();
-    };
-    return $scope();
+    }
+
+    // Получаем переменные после выполнения
+    $afterVars = get_defined_vars();
+
+    // Возвращаем все переменные, которые были определены или изменены в файле
+    $resultVars = [];
+    foreach ($afterVars as $key => $value) {
+        if (!array_key_exists($key, $beforeVars) || $beforeVars[$key] !== $value) {
+            $resultVars[$key] = $value;
+        }
+    }
+
+    return $resultVars;
 }
 
 /**
@@ -176,6 +188,18 @@ function initializeTestClassEnvironment() {
         }
         throw new ErrorException($message, 0, $severity, $file, $line);
     });
+
+    // Переопределяем встроенные функции для тестов
+    if (!function_exists('header')) {
+        function header($header, $replace = true, $response_code = null) {
+            global $test_headers;
+            if (!isset($test_headers)) {
+                $test_headers = [];
+            }
+            $test_headers[] = $header;
+            return true;
+        }
+    }
 
     // Настраиваем переменные окружения
     $_SERVER['REQUEST_METHOD'] = 'POST';

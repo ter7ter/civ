@@ -1,109 +1,109 @@
 Database Config
  [x] Test tables creation
  [x] Test database constants
+ [x] Test data cleanup
  [x] Transaction handling
  [x] Test data operations
- [x] Test data cleanup
  [x] Game and user mocks
  [x] Database constants separation
 
 Edit Game
- [ ] Edit basic game parameters
- [ ] Edit game name only
- [ ] Edit turn type
- [ ] Load game data for editing
- [ ] X s s in edited game name
- [ ] Very long strings in edit
- [ ] Edit map size
  [ ] Edit with invalid turn type
- [ ] Load game without id
- [ ] Edit with empty name
- [ ] Edit non existent game
- [ ] Edit without game id
- [ ] Multiple validation errors
- [ ] Data preservation on validation error
- [ ] Load non existent game for editing
+ [x] Data preservation on validation error
+ [ ] X s s in edited game name
+ [x] Multiple validation errors
  [ ] Game not changed on validation error
- [ ] Edit with invalid map size
+ [ ] Edit map size
+ [ ] Edit turn type
+ [ ] Very long strings in edit
+ [ ] Edit game name only
+ [x] Edit with invalid map size
+ [ ] Edit basic game parameters
+ [ ] Load non existent game for editing
+ [x] Load game data for editing
+ [x] Edit with empty name
+ [ ] Edit non existent game
+ [x] Edit without game id
+ [x] Load game without id
 
 Open Game
- [x] Successful game opening
  [x] Open game with non existent user
- [x] Open game without game id
- [x] Open game without user id
- [x] Session state after game opening
- [x] Open game with multiple players
- [x] Open game with different turn types
- [x] Game list loading
- [x] Reopen game with different user
- [x] Open game with max players
  [ ] Open non existent game
  [ ] Open game with user from different game
+ [x] Open game without game id
+ [x] Open game without user id
  [x] Empty game list
+ [x] Session state after game opening
+ [x] Reopen game with different user
+ [x] Successful game opening
+ [x] Open game with multiple players
+ [x] Game list loading
+ [x] Open game with max players
+ [x] Open game with different turn types
 
 Create Game
- [x] Minimum map size
- [x] Maximum map size
- [x] Different turn types
- [x] Player color generation
- [x] Empty player fields
- [x] Invalid turn type
- [ ] Create basic game
- [ ] Maximum players game
- [ ] Empty game name
- [ ] Insufficient players
- [ ] Duplicate player names
- [ ] Too small map size
- [ ] Too large map size
- [ ] Too many players
- [ ] Data preservation on error
+ [ ] Maximum map size
  [ ] X s s in game name
- [ ] X s s in player names
  [ ] Very long strings
+ [ ] Player color generation
+ [ ] Empty player fields
+ [ ] Invalid turn type
+ [ ] Create basic game
+ [ ] Different turn types
+ [ ] X s s in player names
+ [ ] Maximum players game
+ [ ] Minimum map size
+ [x] Empty game name
+ [x] Insufficient players
+ [x] Duplicate player names
+ [x] Too small map size
+ [x] Too large map size
+ [x] Too many players
+ [x] Data preservation on error
  [x] No post data
 
 Create Game Integration
  [ ] Game data persistence
- [ ] Different turn types integration
- [x] Full game creation process
- [ ] Unique player colors
- [ ] Player turn order
  [ ] Validation errors integration
- [ ] Performance with max players
  [ ] Multiple game creation
- [ ] Initial player parameters
+ [ ] Full game creation process
+ [ ] Different turn types integration
+ [ ] Unique player colors
+ [ ] Performance with max players
+ [x] Player turn order
+ [x] Initial player parameters
  [x] S q l injection protection
 
 Edit Game Integration
+ [ ] Full game edit process
+ [ ] Edited game data persistence
  [ ] Edit different turn types integration
- [ ] Load game data for editing integration
  [x] Player order preservation on edit
  [x] Player parameters preservation on edit
- [ ] S q l injection protection on edit
- [ ] Edited game data persistence
- [ ] Performance edit with max players
- [ ] Edit game with related data preservation
- [ ] Full game edit process
  [ ] Validation errors integration on edit
  [ ] Multiple game edits
+ [ ] Edit game with related data preservation
+ [ ] Performance edit with max players
+ [ ] S q l injection protection on edit
+ [x] Load game data for editing integration
 
 Map Actions Integration
  [ ] Unit movement
  [ ] City foundation
- [ ] Map boundaries
- [ ] Map scrolling
  [ ] Map loading with units
  [ ] Map loading with city
+ [ ] Map boundaries
+ [ ] Map scrolling
 
 Open Game Integration
  [x] Full game opening process
- [x] Game opening with different configurations
- [x] Game list with different player counts
- [x] Performance game opening
  [ ] Multiple game openings
- [x] Game opening object relationships
  [ ] Game opening session persistence
- [ ] Error handling in game opening
  [ ] Security invalid ids
+ [ ] Error handling in game opening
  [ ] Game opening data integrity
+ [x] Game opening with different configurations
+ [x] Performance game opening
+ [x] Game opening object relationships
+ [x] Game list with different player counts
 

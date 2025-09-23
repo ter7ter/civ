@@ -313,6 +313,9 @@ class Cell
             $planet = new Planet(["name" => "Planet " . Cell::$map_planet, "game_id" => $game_id]);
             $planet->save();
         }
+        MyDB::query("DELETE FROM `mission_order` WHERE `unit_id` IN (SELECT id FROM `unit` WHERE `planet` = :planet)", [
+            "planet" => Cell::$map_planet,
+        ]);
         MyDB::query("DELETE FROM `unit` WHERE `planet` = :planet", [
             "planet" => Cell::$map_planet,
         ]);

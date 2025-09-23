@@ -235,6 +235,17 @@ class DatabaseTestAdapter
                     title TEXT NOT NULL
                 )
             ",
+            "mission_order" => "
+                CREATE TABLE IF NOT EXISTS mission_order (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    unit_id INTEGER NOT NULL,
+                    mission TEXT NOT NULL,
+                    x INTEGER NOT NULL,
+                    y INTEGER NOT NULL,
+                    planet INTEGER NOT NULL,
+                    FOREIGN KEY (unit_id) REFERENCES unit(id)
+                )
+            ",
         ];
 
         foreach ($tables as $tableName => $sql) {
@@ -260,6 +271,7 @@ class DatabaseTestAdapter
             "city",
             "building",
             "building_type",
+            "mission_order",
             "unit",
             "unit_type",
             "mission_type",

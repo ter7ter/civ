@@ -7,6 +7,7 @@ require_once __DIR__ . "/classes/MyDB.class.php";
 
 require_once __DIR__ . "/classes/User.class.php";
 require_once __DIR__ . "/classes/Game.class.php";
+require_once __DIR__ . "/classes/Planet.class.php";
 require_once __DIR__ . "/classes/CellType.class.php";
 require_once __DIR__ . "/classes/Cell.class.php";
 require_once __DIR__ . "/classes/MissionType.class.php";

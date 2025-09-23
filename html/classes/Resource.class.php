@@ -14,11 +14,11 @@ class Resource
     public $type;
     public $amount;
 
-    public static function get($x, $y)
+    public static function get($x, $y, $planet)
     {
         $data = MyDB::query(
             "SELECT * FROM resource WHERE x = :x AND y = :y AND planet = :planet",
-            ["x" => $x, "y" => $y, "planet" => Cell::$map_planet],
+            ["x" => $x, "y" => $y, "planet" => $planet],
             "row",
         );
         if ($data) {

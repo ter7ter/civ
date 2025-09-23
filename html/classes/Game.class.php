@@ -148,7 +148,7 @@ class Game
             $i++;
             $pos_x = mt_rand(0, $this->map_w - 1);
             $pos_y = mt_rand(0, $this->map_h - 1);
-            $cell = Cell::get($pos_x, $pos_y);
+            $cell = Cell::get($pos_x, $pos_y, Cell::$map_planet);
             if ($i > 1000) {
                 throw new Exception("Too many iterations");
             }
@@ -265,5 +265,21 @@ class Game
             ["gid" => $this->id],
             "elem",
         );
+    }
+
+    /**
+     * @return Planet
+     */
+    public function get_first_planet()
+    {
+        $planet_id = MyDB::query(
+            "SELECT id FROM planet WHERE game_id = :game_id ORDER BY id LIMIT 1",
+            ["game_id" => $this->id],
+            "elem",
+        );
+        if ($planet_id) {
+            return Planet::get($planet_id);
+        }
+        return null;
     }
 }

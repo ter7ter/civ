@@ -35,7 +35,7 @@ class Cell
      */
     public $improvement = false;
 
-    private static $_all = [];
+    private static $_all = []; // $_all[$planet][$x][$y]
 
     public static $map_planet = 1;
     public static $map_width = 100;
@@ -57,12 +57,21 @@ class Cell
     /**
      * @param $x
      * @param $y
+     * @param $planet
      * @return Cell
      */
-    public static function get($x, $y)
+    public static function get($x, $y, $planet)
     {
-        $cell = Cell::load_cells([["x" => $x, "y" => $y]]);
-        return isset($cell[0]) ? $cell[0] : false;
+        if (isset(self::$_all[$planet][$x][$y])) {
+            return self::$_all[$planet][$x][$y];
+        } else {
+            $data = MyDB::query("SELECT * FROM cell WHERE x = :x AND y = :y AND planet = :planet", ["x" => $x, "y" => $y, "planet" => $planet], "row");
+            if ($data) {
+                return new Cell($data);
+            } else {
+                return false;
+            }
+        }
     }
 
     public static function load_cells($coords)
@@ -121,20 +130,20 @@ class Cell
         } else {
             $this->improvement = $data["improvement"];
         }
-        $resource = Resource::get($this->x, $this->y);
+        $resource = Resource::get($this->x, $this->y, $this->planet);
         if ($resource) {
             $this->resource = $resource;
         } else {
             $this->resource = null;
         }
-        Cell::$_all[$this->x][$this->y] = $this;
+        self::$_all[$this->planet][$this->x][$this->y] = $this;
     }
 
     public function get_units()
     {
         $rows = MyDB::query(
             "SELECT * FROM unit WHERE x =:x AND y =:y AND planet =:planet",
-            ["x" => $this->x, "y" => $this->y, "planet" => Cell::$map_planet],
+            ["x" => $this->x, "y" => $this->y, "planet" => $this->planet],
         );
         $this->units = [];
         foreach ($rows as $row) {
@@ -146,6 +155,14 @@ class Cell
     public function get_title()
     {
         return $this->type->get_title();
+    }
+
+    /**
+     * @return Planet
+     */
+    public function get_planet()
+    {
+        return Planet::get($this->planet);
     }
 
     public function save()
@@ -214,15 +231,17 @@ class Cell
      * @param $dx int
      * @param $dy int
      * @param bool $load подгружать ли клетку из БД если она ещё не загружена
+     * @param $planet int
      * @return Cell
      */
-    public static function d_coord($x, $y, $dx, $dy, $load = true)
+    public static function d_coord($x, $y, $dx, $dy, $load = true, $planet = null)
     {
         Cell::calc_coord($x, $y, $dx, $dy);
-        if (isset(Cell::$_all[$x][$y])) {
-            return Cell::$_all[$x][$y];
+        $planet = $planet ?? Cell::$map_planet;
+        if (isset(self::$_all[$planet][$x][$y])) {
+            return self::$_all[$planet][$x][$y];
         } elseif ($load) {
-            return Cell::get($x, $y);
+            return Cell::get($x, $y, $planet);
         } else {
             return false;
         }
@@ -288,6 +307,11 @@ class Cell
     {
         if ($game_id === null) {
             $game_id = Cell::$map_planet;
+        }
+        $planet = Planet::get(Cell::$map_planet);
+        if (!$planet) {
+            $planet = new Planet(["name" => "Planet " . Cell::$map_planet, "game_id" => $game_id]);
+            $planet->save();
         }
         MyDB::query("DELETE FROM `unit` WHERE `planet` = :planet", [
             "planet" => Cell::$map_planet,
@@ -443,9 +467,10 @@ class Cell
      * @param $y int
      * @param $width int
      * @param $height int
+     * @param $planet int
      * @return array
      */
-    public static function get_cells_around($x, $y, $width, $height)
+    public static function get_cells_around($x, $y, $width, $height, $planet)
     {
         $rx = (int) ($width - 1) / 2;
         $ry = (int) ($height - 1) / 2;
@@ -477,7 +502,7 @@ class Cell
         foreach ($intx as $x) {
             $row = [];
             foreach ($inty as $y) {
-                $cell = Cell::get($x, $y);
+                $cell = Cell::get($x, $y, $planet);
                 $cell->get_units();
                 $row[] = $cell;
             }

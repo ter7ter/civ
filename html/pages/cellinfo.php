@@ -3,7 +3,9 @@
 $x = (isset($_REQUEST['x'])) ? (int)$_REQUEST['x'] : 0;
 $y = (isset($_REQUEST['y'])) ? (int)$_REQUEST['y'] : 0;
 $unit_id = (isset($_REQUEST['unit_id'])) ? (int)$_REQUEST['unit_id'] : false;
-$cell = Cell::get($x, $y);
+$game = Game::get($user->game);
+$planet = $game->get_first_planet();
+$cell = Cell::get($x, $y, $planet->id);
 if ($cell) {
 	$building = false;
 	$data['x'] = $cell->x;

@@ -227,7 +227,7 @@ class Unit
             $this->save();
             return false;
         }
-        $cell = Cell::get($this->x, $this->y);
+        $cell = Cell::get($this->x, $this->y, $this->planet);
         if (!$mtype->check_cell($this->x, $this->y)) {
             return false;
         }
@@ -262,6 +262,9 @@ class Unit
      */
     public function can_move($cell)
     {
+        if ($cell->planet != $this->planet) {
+            return false;
+        }
         if ($cell->city && $cell->city->user->id == $this->user->id) {
             return true;
         }
@@ -293,7 +296,7 @@ class Unit
         if (!$this->can_move($cell)) {
             return false;
         }
-        $cell_from = Cell::get($this->x, $this->y);
+        $cell_from = Cell::get($this->x, $this->y, $this->planet);
         if (
             ($cell->road || $cell->city) &&
             ($cell_from->road || $cell_from->city)
@@ -365,7 +368,7 @@ class Unit
             return;
         }
         if ($this->mission) {
-            $cell = Cell::get($this->x, $this->y);
+            $cell = Cell::get($this->x, $this->y, $this->planet);
             $need_points = $cell->get_mission_need_points($this->mission);
             if ($need_points <= $this->points) {
                 //Можем закончить
@@ -402,7 +405,7 @@ class Unit
             );
             while ($order && $this->points > 0) {
                 if ($order["type"] == "move") {
-                    $cell = Cell::get($order["target_x"], $order["target_y"]);
+                    $cell = Cell::get($order["target_x"], $order["target_y"], $this->planet);
                     if (!$cell) {
                         //Несуществующая клетка в задаче, отменяем
                         MyDB::query(
@@ -468,8 +471,8 @@ class Unit
                     foreach ($cities as $city) {
                         //Проверяем расстояния до своих городов
                         $path = $this->calculate_path(
-                            Cell::get($this->x, $this->y),
-                            Cell::get($city->x, $city->y),
+                            Cell::get($this->x, $this->y, $this->planet),
+                            Cell::get($city->x, $city->y, $city->planet),
                         );
                         if ($path) {
                             $paths[$city->id] = $path;
@@ -493,8 +496,8 @@ class Unit
                                 continue;
                             }
                             $path_to = $this->calculate_path(
-                                Cell::get($city->x, $city->y),
-                                Cell::get($city_to->x, $city_to->y),
+                                Cell::get($city->x, $city->y, $city->planet),
+                                Cell::get($city_to->x, $city_to->y, $city_to->planet),
                             );
                             if ($path_to) {
                                 $paths_to[$city_to->id] = $path_to;
@@ -520,7 +523,7 @@ class Unit
                                     ) {
                                         $need_road = true; //Строим тут дорогу
                                         $move_path = $this->calculate_path(
-                                            Cell::get($ux, $uy),
+                                            Cell::get($ux, $uy, $this->planet),
                                             $cell,
                                         );
                                         array_shift($move_path);
@@ -562,8 +565,8 @@ class Unit
                         );
                         foreach ($peoples as $cell) {
                             $npath = $this->calculate_path(
-                                Cell::get($this->x, $this->y),
-                                Cell::get($cell["x"], $cell["y"]),
+                                Cell::get($this->x, $this->y, $this->planet),
+                                Cell::get($cell["x"], $cell["y"], $this->planet),
                             );
                             if ($npath && $npath["dist"] < $max_path) {
                                 $max_path = $npath["dist"];
@@ -613,8 +616,8 @@ class Unit
                         );
                         foreach ($peoples as $cell) {
                             $npath = $this->calculate_path(
-                                Cell::get($this->x, $this->y),
-                                Cell::get($cell["x"], $cell["y"]),
+                                Cell::get($this->x, $this->y, $this->planet),
+                                Cell::get($cell["x"], $cell["y"], $this->planet),
                             );
                             if ($npath && $npath["dist"] < $max_path) {
                                 $max_path = $npath["dist"];
@@ -671,6 +674,9 @@ class Unit
      */
     public function calculate_path($cell1, $cell2, $max_path = 200)
     {
+        if ($cell1->planet != $cell2->planet) {
+            return false;
+        }
         $cells_next = [["cell" => $cell1, "prev" => false, "dist" => 0]];
         $cells_path = [];
         $dist = $max_path + 1;
@@ -696,6 +702,7 @@ class Unit
                 $next["cell"]->y,
                 3,
                 3,
+                $next["cell"]->planet,
             );
             foreach ($cells_around as $row) {
                 foreach ($row as $map_near) {

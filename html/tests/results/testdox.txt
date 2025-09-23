@@ -6,8 +6,8 @@ Building
  [x] Different building types
  [x] Save new
  [x] Get existing building
- [x] Constructor
  [x] Building type relation
+ [x] Constructor
 
 City
  [x] City resources
@@ -15,10 +15,10 @@ City
  [x] New city
  [x] Create unit
  [x] Get possible buildings
- [x] Coastal city
  [x] Calculate production
- [x] Get city cells
+ [x] Coastal city
  [x] Calculate people
+ [x] Get city cells
  [x] Locate people
  [x] Get existing city
  [x] By coords existing
@@ -31,32 +31,32 @@ City
 Create Game Simple
  [x] Create basic game class
  [x] Html escaping in game name
- [x] Create game with different map sizes
- [x] Create users for game
  [x] Game get method
  [x] Game caching
- [x] Update game data
  [x] Html escaping in user login
- [x] User color generation
- [x] Game list
  [x] Create game with different turn types
+ [x] Create game with different map sizes
+ [x] Create users for game
+ [x] Game list
+ [x] Update game data
+ [x] User color generation
 
 Create Game
+ [x] Empty game name
  [x] Duplicate player names
  [x] Too small map size
  [x] Too large map size
  [x] Too many players
  [x] Data preservation on error
  [x] No post data
- [x] Empty game name
  [x] Create basic game
  [x] Create concurrent game
  [x] Create one window game
- [x] Game initial conditions
  [x] Empty player fields
  [x] X s s in player names
  [x] Player color generation
  [x] Invalid turn type
+ [x] Game initial conditions
  [x] Very long strings
  [x] X s s in game name
  [x] Whitespace game name
@@ -64,22 +64,22 @@ Create Game
 
 Edit Game
  [x] Edit basic game parameters
- [x] Edit map size
- [x] Edit non existent game
- [x] Data preservation on validation error
- [x] X s s in edited game name
- [x] Very long strings in edit
- [x] Multiple validation errors
- [x] Game not changed on validation error
  [x] Load game data for editing
  [x] Edit with empty name
  [x] Edit with invalid map size
  [x] Edit with invalid turn type
+ [x] Edit non existent game
+ [x] X s s in edited game name
+ [x] Very long strings in edit
+ [x] Multiple validation errors
  [x] Edit game name only
+ [x] Edit map size
+ [x] Data preservation on validation error
+ [x] Game not changed on validation error
  [x] Edit turn type
  [x] Load game without id
- [x] Edit without game id
  [x] Load non existent game for editing
+ [x] Edit without game id
 
 Game
  [x] Get existing game
@@ -88,10 +88,10 @@ Game
  [x] Save new
  [x] Save update
  [x] Game list
- [x] Get active player by turn
- [x] Get active player concurrently
  [x] Get active player no active
  [x] All system message
+ [x] Get active player by turn
+ [x] Get active player concurrently
 
 Research
  [x] Save update
@@ -99,11 +99,11 @@ Research
  [x] Different research types
  [x] Researches for different users
  [x] Multiple researches for user
- [x] Get existing research
  [x] Constructor
  [x] Constructor without id
  [x] Research type relation
  [x] Required fields
+ [x] Get existing research
  [x] Research user relation
 
 Resource
@@ -115,23 +115,23 @@ Resource
  [x] Get non existing resource
 
 Unit
+ [x] Get title
  [x] Get existing unit
  [x] Construct
  [x] Save new
  [x] Save update
- [x] Get title
  [x] Remove
  [x] Get non existing unit
 
 User
- [x] Calculate income
+ [x] Get research
+ [x] Start research
  [x] Start research already done
  [x] New system message
  [x] Get next event no events
  [x] Get next event with event
+ [x] Calculate income
  [x] Get cities
- [x] Get research
- [x] Start research
  [x] Get existing user
  [x] Get non existing user
  [x] Construct
@@ -139,8 +139,8 @@ User
  [x] Save update
 
 Message
- [x] Construct
  [x] Construct system message
+ [x] Construct
  [x] Save new
  [x] Save system message
  [x] Save update
@@ -172,8 +172,8 @@ Open Game
 Map Actions Integration
  [x] Map boundaries
  [x] City foundation
- [x] Map loading with city
  [x] Map loading with units
+ [x] Map loading with city
  [x] Unit movement
  [x] Map scrolling
 

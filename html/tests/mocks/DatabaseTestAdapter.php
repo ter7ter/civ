@@ -53,6 +53,13 @@ class DatabaseTestAdapter
                     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
             ",
+            "planet" => "
+                CREATE TABLE IF NOT EXISTS planet (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    game_id INTEGER NOT NULL
+                )
+            ",
             "user" => "
                 CREATE TABLE IF NOT EXISTS user (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -258,6 +265,7 @@ class DatabaseTestAdapter
             "mission_type",
             "cell",
             "user",
+            "planet",
             "game",
         ];
 

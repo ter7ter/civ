@@ -20,6 +20,7 @@ class TestBase extends PHPUnit\Framework\TestCase
         Game::clearCache();
         User::clearCache();
         Cell::clearCache();
+        Planet::clearCache();
 
         // Устанавливаем глобальные переменные для тестов
         Cell::$map_planet = 0;
@@ -56,6 +57,7 @@ class TestBase extends PHPUnit\Framework\TestCase
         Game::clearCache();
         User::clearCache();
         Cell::clearCache();
+        Planet::clearCache();
 
         // Устанавливаем глобальные переменные для тестов
         Cell::$map_planet = 0;
@@ -204,6 +206,30 @@ class TestBase extends PHPUnit\Framework\TestCase
 
         $unitData["id"] = MyDB::insert("unit", $unitData);
         return $unitData;
+    }
+
+    /**
+     * Создает тестовую планету
+     */
+    protected function createTestPlanet($data = []): array
+    {
+        // Создаем игру, если её нет
+        if (!isset($data["game_id"])) {
+            $gameData = $this->createTestGame();
+            $gameId = $gameData["id"];
+        } else {
+            $gameId = $data["game_id"];
+        }
+
+        $defaultData = [
+            "name" => "Test Planet",
+            "game_id" => $gameId,
+        ];
+
+        $planetData = array_merge($defaultData, $data);
+
+        $planetData["id"] = MyDB::insert("planet", $planetData);
+        return $planetData;
     }
 
     /**

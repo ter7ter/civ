@@ -13,7 +13,9 @@ if ($user->turn_status != 'play') {
 	$action = (isset($_REQUEST['action'])) ? $_REQUEST['action'] : 'move';
 	switch ($action) {
 		case 'move':
-			$cell = Cell::get($x, $y);
+			$game = Game::get($user->game);
+			$planet = $game->get_first_planet();
+			$cell = Cell::get($x, $y, $planet->id);
 			if (!$cell) {
 				$error = "Cell not found";
 				break;

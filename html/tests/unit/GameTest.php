@@ -223,4 +223,36 @@ class GameTest extends TestBase
 
         $this->assertNull($activePlayer);
     }
+
+    /**
+     * Тест метода get_first_planet
+     */
+    public function testGetFirstPlanet(): void
+    {
+        $gameData = $this->createTestGame(['name' => 'Planet Game']);
+
+        // Создаем планету для игры
+        $planetData = $this->createTestPlanet(['game_id' => $gameData['id'], 'name' => 'First Planet']);
+
+        $game = Game::get($gameData['id']);
+        $planet = $game->get_first_planet();
+
+        $this->assertInstanceOf(Planet::class, $planet);
+        $this->assertEquals($planetData['id'], $planet->id);
+        $this->assertEquals('First Planet', $planet->name);
+        $this->assertEquals($gameData['id'], $planet->game_id);
+    }
+
+    /**
+     * Тест метода get_first_planet без планет
+     */
+    public function testGetFirstPlanetNoPlanets(): void
+    {
+        $gameData = $this->createTestGame(['name' => 'Empty Game']);
+
+        $game = Game::get($gameData['id']);
+        $planet = $game->get_first_planet();
+
+        $this->assertNull($planet);
+    }
 }

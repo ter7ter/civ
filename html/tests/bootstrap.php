@@ -34,6 +34,7 @@ $classFiles = [
     "BuildingType.class.php",
     "UnitType.class.php",
     "MissionType.class.php",
+    "Planet.class.php",
     "Cell.class.php",
     "Resource.class.php",
     "Research.class.php",

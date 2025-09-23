@@ -18,6 +18,9 @@ require_once PROJECT_ROOT . "/config.php";
 // Сначала загружаем MyDB.class.php
 require_once PROJECT_ROOT . "/classes/MyDB.class.php";
 
+// Настраиваем тестовую БД MySQL
+MyDB::setDBConfig("localhost", "civ_test", "civ_test", "3306", "civ_for_tests");
+
 // Затем загружаем моки для БД
 require_once TESTS_ROOT . "/mocks/DatabaseTestAdapter.php";
 require_once TESTS_ROOT . "/mocks/MyDBTestWrapper.php";

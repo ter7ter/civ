@@ -44,206 +44,206 @@ class DatabaseTestAdapter
         $tables = [
             "game" => "
                 CREATE TABLE IF NOT EXISTS game (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL,
-                    map_w INTEGER DEFAULT 100,
-                    map_h INTEGER DEFAULT 100,
-                    turn_type TEXT DEFAULT 'byturn',
-                    turn_num INTEGER DEFAULT 1,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(255) NOT NULL,
+                    map_w INT DEFAULT 100,
+                    map_h INT DEFAULT 100,
+                    turn_type VARCHAR(50) DEFAULT 'byturn',
+                    turn_num INT DEFAULT 1,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             ",
             "planet" => "
                 CREATE TABLE IF NOT EXISTS planet (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL,
-                    game_id INTEGER NOT NULL
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(255) NOT NULL,
+                    game_id INT NOT NULL
                 )
             ",
             "user" => "
                 CREATE TABLE IF NOT EXISTS user (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    login TEXT NOT NULL,
-                    color TEXT NOT NULL,
-                    game INTEGER NOT NULL,
-                    turn_order INTEGER DEFAULT 1,
-                    turn_status TEXT DEFAULT 'wait',
-                    money INTEGER DEFAULT 50,
-                    age INTEGER DEFAULT 1,
-                    income INTEGER DEFAULT 0,
-                    research_amount INTEGER DEFAULT 0,
-                    research_percent INTEGER DEFAULT 0,
-                    process_research_complete INTEGER DEFAULT 0,
-                    process_research_turns INTEGER DEFAULT 0,
-                    process_research_type INTEGER DEFAULT 0,
-                    pass TEXT DEFAULT '',
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    login VARCHAR(255) NOT NULL,
+                    color VARCHAR(10) NOT NULL,
+                    game INT NOT NULL,
+                    turn_order INT DEFAULT 1,
+                    turn_status VARCHAR(10) DEFAULT 'wait',
+                    money INT DEFAULT 50,
+                    age INT DEFAULT 1,
+                    income INT DEFAULT 0,
+                    research_amount INT DEFAULT 0,
+                    research_percent INT DEFAULT 0,
+                    process_research_complete INT DEFAULT 0,
+                    process_research_turns INT DEFAULT 0,
+                    process_research_type INT DEFAULT 0,
+                    pass VARCHAR(255) DEFAULT '',
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             ",
             "cell" => "
                 CREATE TABLE IF NOT EXISTS cell (
-                    x INTEGER NOT NULL,
-                    y INTEGER NOT NULL,
-                    planet INTEGER NOT NULL,
-                    type TEXT DEFAULT 'plains',
-                    owner INTEGER DEFAULT NULL,
-                    owner_culture INTEGER DEFAULT 0,
-                    road TEXT DEFAULT 'none',
-                    improvement TEXT DEFAULT 'none',
+                    x INT NOT NULL,
+                    y INT NOT NULL,
+                    planet INT NOT NULL,
+                    type VARCHAR(50) DEFAULT 'plains',
+                    owner INT DEFAULT NULL,
+                    owner_culture INT DEFAULT 0,
+                    road VARCHAR(10) DEFAULT 'none',
+                    improvement VARCHAR(20) DEFAULT 'none',
                     PRIMARY KEY (x, y, planet)
                 )
             ",
             "unit_type" => "
                 CREATE TABLE IF NOT EXISTS unit_type (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    title TEXT NOT NULL,
-                    points INTEGER DEFAULT 2,
-                    mission_points INTEGER DEFAULT 2
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL,
+                    points INT DEFAULT 2,
+                    mission_points INT DEFAULT 2
                 )
             ",
             "unit" => "
                 CREATE TABLE IF NOT EXISTS unit (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    user_id INTEGER NOT NULL,
-                    type INTEGER NOT NULL,
-                    x INTEGER NOT NULL,
-                    y INTEGER NOT NULL,
-                    planet INTEGER NOT NULL,
-                    health INTEGER NOT NULL,
-                    health_max INTEGER NOT NULL DEFAULT 3,
-                    points REAL NOT NULL,
-                    mission_points INTEGER NOT NULL DEFAULT 0,
-                    mission TEXT DEFAULT NULL,
-                    auto TEXT DEFAULT 'none'
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    user_id INT NOT NULL,
+                    type INT NOT NULL,
+                    x INT NOT NULL,
+                    y INT NOT NULL,
+                    planet INT NOT NULL,
+                    health INT NOT NULL,
+                    health_max INT NOT NULL DEFAULT 3,
+                    points DECIMAL(10,2) NOT NULL,
+                    mission_points INT NOT NULL DEFAULT 0,
+                    mission VARCHAR(50) DEFAULT NULL,
+                    auto VARCHAR(20) DEFAULT 'none'
                 )
             ",
             "city" => "
                 CREATE TABLE IF NOT EXISTS city (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    title TEXT NOT NULL,
-                    x INTEGER NOT NULL,
-                    y INTEGER NOT NULL,
-                    user_id INTEGER NOT NULL,
-                    planet INTEGER NOT NULL,
-                    population INTEGER DEFAULT 1,
-                    pmoney INTEGER DEFAULT 0,
-                    presearch INTEGER DEFAULT 0,
-                    resource_group INTEGER DEFAULT NULL,
-                    eat INTEGER DEFAULT 0,
-                    eat_up INTEGER DEFAULT 20,
-                    culture INTEGER DEFAULT 0,
-                    culture_level INTEGER DEFAULT 0,
-                    production INTEGER DEFAULT NULL,
-                    production_type TEXT DEFAULT 'unit',
-                    production_complete INTEGER DEFAULT 0,
-                    people_dis INTEGER DEFAULT 0,
-                    people_norm INTEGER DEFAULT 1,
-                    people_happy INTEGER DEFAULT 0,
-                    people_artist INTEGER DEFAULT 0,
-                    is_coastal INTEGER DEFAULT 0,
-                    pwork INTEGER DEFAULT 1,
-                    peat INTEGER DEFAULT 2
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL,
+                    x INT NOT NULL,
+                    y INT NOT NULL,
+                    user_id INT NOT NULL,
+                    planet INT NOT NULL,
+                    population INT DEFAULT 1,
+                    pmoney INT DEFAULT 0,
+                    presearch INT DEFAULT 0,
+                    resource_group INT DEFAULT NULL,
+                    eat INT DEFAULT 0,
+                    eat_up INT DEFAULT 20,
+                    culture INT DEFAULT 0,
+                    culture_level INT DEFAULT 0,
+                    production INT DEFAULT NULL,
+                    production_type VARCHAR(20) DEFAULT 'unit',
+                    production_complete INT DEFAULT 0,
+                    people_dis INT DEFAULT 0,
+                    people_norm INT DEFAULT 1,
+                    people_happy INT DEFAULT 0,
+                    people_artist INT DEFAULT 0,
+                    is_coastal TINYINT DEFAULT 0,
+                    pwork INT DEFAULT 1,
+                    peat INT DEFAULT 2
                 )
             ",
             "city_people" => "
                 CREATE TABLE IF NOT EXISTS city_people (
-                    x INTEGER NOT NULL,
-                    y INTEGER NOT NULL,
-                    planet INTEGER NOT NULL,
-                    city_id INTEGER NOT NULL,
+                    x INT NOT NULL,
+                    y INT NOT NULL,
+                    planet INT NOT NULL,
+                    city_id INT NOT NULL,
                     PRIMARY KEY (x, y, planet)
                 )
             ",
             "resource_group" => "
                 CREATE TABLE IF NOT EXISTS resource_group (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    group_id INTEGER NOT NULL,
-                    user_id INTEGER NOT NULL,
-                    resource_id INTEGER NOT NULL
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    group_id INT NOT NULL,
+                    user_id INT NOT NULL,
+                    resource_id INT NOT NULL
                 )
             ",
             "research" => "
                 CREATE TABLE IF NOT EXISTS research (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    type INTEGER NOT NULL,
-                    user_id INTEGER NOT NULL,
-                    completed_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    type INT NOT NULL,
+                    user_id INT NOT NULL,
+                    completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             ",
             "message" => "
                 CREATE TABLE IF NOT EXISTS message (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    from_id INTEGER DEFAULT NULL,
-                    to_id INTEGER NOT NULL,
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    from_id INT DEFAULT NULL,
+                    to_id INT NOT NULL,
                     text TEXT NOT NULL,
-                    type TEXT DEFAULT 'user',
-                    date DATETIME DEFAULT CURRENT_TIMESTAMP
+                    type VARCHAR(20) DEFAULT 'user',
+                    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             ",
             "event" => "
                 CREATE TABLE IF NOT EXISTS event (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    type TEXT NOT NULL,
-                    user_id INTEGER NOT NULL,
-                    object TEXT DEFAULT NULL,
-                    source INTEGER DEFAULT NULL,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    type VARCHAR(50) NOT NULL,
+                    user_id INT NOT NULL,
+                    object VARCHAR(255) DEFAULT NULL,
+                    source INT DEFAULT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             ",
             "resource_type" => "
                 CREATE TABLE IF NOT EXISTS resource_type (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    title TEXT NOT NULL,
-                    type TEXT NOT NULL
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL,
+                    type VARCHAR(50) NOT NULL
                 )
             ",
             "resource" => "
                 CREATE TABLE IF NOT EXISTS resource (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    x INTEGER NOT NULL,
-                    y INTEGER NOT NULL,
-                    planet INTEGER NOT NULL,
-                    type INTEGER NOT NULL,
-                    amount INTEGER DEFAULT 0
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    x INT NOT NULL,
+                    y INT NOT NULL,
+                    planet INT NOT NULL,
+                    type INT NOT NULL,
+                    amount INT DEFAULT 0
                 )
             ",
             "research_type" => "
                 CREATE TABLE IF NOT EXISTS research_type (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    title TEXT NOT NULL,
-                    age INTEGER DEFAULT 1,
-                    cost INTEGER DEFAULT 100
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL,
+                    age INT DEFAULT 1,
+                    cost INT DEFAULT 100
                 )
             ",
             "building_type" => "
                 CREATE TABLE IF NOT EXISTS building_type (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    title TEXT NOT NULL,
-                    cost INTEGER DEFAULT 50
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL,
+                    cost INT DEFAULT 50
                 )
             ",
             "building" => "
                 CREATE TABLE IF NOT EXISTS building (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    type INTEGER NOT NULL,
-                    city_id INTEGER NOT NULL
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    type INT NOT NULL,
+                    city_id INT NOT NULL
                 )
             ",
             "mission_type" => "
                 CREATE TABLE IF NOT EXISTS mission_type (
-                    id TEXT PRIMARY KEY,
-                    title TEXT NOT NULL
+                    id VARCHAR(50) PRIMARY KEY,
+                    title VARCHAR(255) NOT NULL
                 )
             ",
             "mission_order" => "
                 CREATE TABLE IF NOT EXISTS mission_order (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    unit_id INTEGER NOT NULL,
-                    mission TEXT NOT NULL,
-                    x INTEGER NOT NULL,
-                    y INTEGER NOT NULL,
-                    planet INTEGER NOT NULL,
-                    FOREIGN KEY (unit_id) REFERENCES unit(id)
+                    id INT AUTO_INCREMENT PRIMARY KEY,
+                    unit_id INT NOT NULL,
+                    mission VARCHAR(50) NOT NULL,
+                    x INT NOT NULL,
+                    y INT NOT NULL,
+                    planet INT NOT NULL,
+                    FOREIGN KEY (unit_id) REFERENCES unit(id) ON DELETE CASCADE
                 )
             ",
         ];
@@ -292,7 +292,35 @@ class DatabaseTestAdapter
     public static function resetAutoIncrements()
     {
         $pdo = MyDB::get();
-        $pdo->exec("DELETE FROM sqlite_sequence");
+        $tables = [
+            "game",
+            "planet",
+            "user",
+            "cell",
+            "unit_type",
+            "unit",
+            "city",
+            "city_people",
+            "resource_group",
+            "research",
+            "message",
+            "event",
+            "resource_type",
+            "resource",
+            "research_type",
+            "building_type",
+            "building",
+            "mission_type",
+            "mission_order",
+        ];
+
+        foreach ($tables as $table) {
+            try {
+                $pdo->exec("ALTER TABLE {$table} AUTO_INCREMENT = 1");
+            } catch (Exception $e) {
+                // Игнорируем ошибки, если таблица не существует или нет автоинкремента
+            }
+        }
     }
 
     /**

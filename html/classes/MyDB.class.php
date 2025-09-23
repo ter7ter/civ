@@ -122,24 +122,13 @@ class MyDB
         } else {
             // Single row
             $keys = array_keys($values);
-            // Всегда используем VALUES синтаксис для совместимости с SQLite
             $placeholders = implode(", ", array_map(fn($k) => ":$k", $keys));
-            if (MyDB::$dbhost === "sqlite::memory:") {
-                // Для SQLite не используем обратные кавычки
-                $query =
-                    "INSERT INTO $table (" .
-                    implode(",", $keys) .
-                    ") VALUES (" .
-                    $placeholders .
-                    ")";
-            } else {
-                $query =
-                    "INSERT INTO `$table` (" .
-                    implode(",", array_map(fn($k) => "`$k`", $keys)) .
-                    ") VALUES (" .
-                    $placeholders .
-                    ")";
-            }
+            $query =
+                "INSERT INTO `$table` (" .
+                implode(",", array_map(fn($k) => "`$k`", $keys)) .
+                ") VALUES (" .
+                $placeholders .
+                ")";
             $params = [];
             foreach ($values as $k => $v) {
                 $params[":$k"] = $v === "NULL" ? null : $v;

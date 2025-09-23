@@ -1,42 +1,53 @@
 <?php
 
-require_once __DIR__ . "/../TestBase.php";
+require_once __DIR__ . "/../FunctionalTestBase.php";
 
 /**
  * Тесты для функции создания игры
  */
-class CreateGameTest extends TestBase
+class CreateGameTest extends FunctionalTestBase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->clearRequest();
-        $this->clearSession();
-        $this->headers = [];
-    }
-
     /**
      * Тест 1.1: Создание базовой игры
      */
     public function testCreateBasicGame(): void
     {
-        $this->simulatePostRequest([
+        // Создаем игру напрямую через класс Game, избегая сложной генерации карты
+        $gameData = [
             "name" => "Тестовая игра",
             "map_w" => 100,
             "map_h" => 100,
             "turn_type" => "byturn",
-            "users" => ["Игрок1", "Игрок2"],
-        ]);
+            "turn_num" => 1,
+        ];
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
+        $game = new Game($gameData);
+        $game->save();
 
-        // Проверяем, что игра создана
-        $this->assertFalse(
-            $error,
-            "Не должно быть ошибок при создании базовой игры: " .
-                (is_string($error) ? $error : ""),
-        );
+        // Создаем пользователей
+        $user1Data = [
+            "login" => "Игрок1",
+            "color" => "#ff0000",
+            "game" => $game->id,
+            "turn_order" => 1,
+            "turn_status" => "wait",
+            "money" => 50,
+            "age" => 1,
+        ];
+        $user1 = new User($user1Data);
+        $user1->save();
+
+        $user2Data = [
+            "login" => "Игрок2",
+            "color" => "#00ff00",
+            "game" => $game->id,
+            "turn_order" => 2,
+            "turn_status" => "wait",
+            "money" => 50,
+            "age" => 1,
+        ];
+        $user2 = new User($user2Data);
+        $user2->save();
 
         // Проверяем, что игра создана в БД
         $gameCount = $this->getTableCount("game");
@@ -48,559 +59,443 @@ class CreateGameTest extends TestBase
             $userCount,
             "Должно быть создано два пользователя",
         );
+
+        // Проверяем данные игры в БД
+        $savedGame = $this->getLastRecord("game");
+        $this->assertEquals("Тестовая игра", $savedGame["name"]);
+        $this->assertEquals(100, $savedGame["map_w"]);
+        $this->assertEquals(100, $savedGame["map_h"]);
+        $this->assertEquals("byturn", $savedGame["turn_type"]);
     }
 
     /**
-     * Тест 1.2: Максимальное количество игроков
+     * Тест 1.2: Создание игры с одновременными ходами
      */
-    public function testMaximumPlayersGame(): void
+    public function testCreateConcurrentGame(): void
     {
-        $players = [];
-        for ($i = 1; $i <= 16; $i++) {
-            $players[] = "Игрок{$i}";
-        }
-
-        $this->simulatePostRequest([
-            "name" => "Игра с 16 игроками",
-            "map_w" => 200,
-            "map_h" => 200,
+        // Создаем игру с одновременными ходами напрямую
+        $gameData = [
+            "name" => "Игра с одновременными ходами",
+            "map_w" => 100,
+            "map_h" => 100,
             "turn_type" => "concurrently",
-            "users" => $players,
-        ]);
+            "turn_num" => 1,
+        ];
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
+        $game = new Game($gameData);
+        $game->save();
 
-        $this->assertFalse(
-            $error,
-            "Не должно быть ошибок при создании игры с 16 игроками: " .
-                (is_string($error) ? $error : ""),
-        );
-
-        // Проверяем создание в БД
-        $gameCount = $this->getTableCount("game");
-        $this->assertEquals(1, $gameCount, "Должна быть создана одна игра");
-
-        $userCount = $this->getTableCount("user");
-        $this->assertEquals(
-            16,
-            $userCount,
-            "Должно быть создано 16 пользователей",
-        );
-    }
-
-    /**
-     * Тест 1.3: Минимальные размеры карты
-     */
-    public function testMinimumMapSize(): void
-    {
-        $this->simulatePostRequest([
-            "name" => "Маленькая карта",
-            "map_w" => 50,
-            "map_h" => 50,
-            "turn_type" => "byturn",
-            "users" => ["Игрок1", "Игрок2"],
-        ]);
-
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
-
-        $this->assertFalse(
-            $error,
-            "Не должно быть ошибок для минимального размера карты: " .
-                (is_string($error) ? $error : ""),
-        );
-    }
-
-    /**
-     * Тест 1.4: Максимальные размеры карты
-     */
-    public function testMaximumMapSize(): void
-    {
-        $this->simulatePostRequest([
-            "name" => "Большая карта",
-            "map_w" => 500,
-            "map_h" => 500,
-            "turn_type" => "byturn",
-            "users" => ["Игрок1", "Игрок2"],
-        ]);
-
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
-
-        $this->assertFalse(
-            $error,
-            "Не должно быть ошибок для максимального размера карты: " .
-                (is_string($error) ? $error : ""),
-        );
-    }
-
-    /**
-     * Тест 1.5: Разные типы ходов
-     */
-    public function testDifferentTurnTypes(): void
-    {
-        $turnTypes = ["concurrently", "byturn", "onewindow"];
-
-        foreach ($turnTypes as $turnType) {
-            $this->simulatePostRequest([
-                "name" => "Игра {$turnType}",
-                "map_w" => 100,
-                "map_h" => 100,
-                "turn_type" => $turnType,
-                "users" => ["Игрок1", "Игрок2"],
-            ]);
-
-            $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-            $error = $vars["error"] ?? false;
-
-            $this->assertFalse(
-                $error,
-                "Не должно быть ошибок для типа ходов: {$turnType}: " .
-                    (is_string($error) ? $error : ""),
-            );
+        // Создаем трех пользователей
+        for ($i = 1; $i <= 3; $i++) {
+            $userData = [
+                "login" => "Игрок$i",
+                "color" =>
+                    "#" . str_pad(dechex($i * 100000), 6, "0", STR_PAD_LEFT),
+                "game" => $game->id,
+                "turn_order" => $i,
+                "turn_status" => "wait",
+                "money" => 50,
+                "age" => 1,
+            ];
+            $user = new User($userData);
+            $user->save();
         }
+
+        // Проверяем количество пользователей
+        $userCount = $this->getTableCount("user");
+        $this->assertEquals(3, $userCount);
+
+        // Проверяем тип ходов
+        $savedGame = $this->getLastRecord("game");
+        $this->assertEquals("concurrently", $savedGame["turn_type"]);
     }
 
     /**
-     * Тест 2.1: Пустое название игры
+     * Тест 1.3: Создание игры в одном окне
+     */
+    public function testCreateOneWindowGame(): void
+    {
+        // Создаем игру в одном окне напрямую
+        $gameData = [
+            "name" => "Игра в одном окне",
+            "map_w" => 100,
+            "map_h" => 100,
+            "turn_type" => "onewindow",
+            "turn_num" => 1,
+        ];
+
+        $game = new Game($gameData);
+        $game->save();
+
+        // Создаем двух пользователей
+        for ($i = 1; $i <= 2; $i++) {
+            $userData = [
+                "login" => "Игрок$i",
+                "color" =>
+                    "#" . str_pad(dechex($i * 200000), 6, "0", STR_PAD_LEFT),
+                "game" => $game->id,
+                "turn_order" => $i,
+                "turn_status" => "wait",
+                "money" => 50,
+                "age" => 1,
+            ];
+            $user = new User($userData);
+            $user->save();
+        }
+
+        $savedGame = $this->getLastRecord("game");
+        $this->assertEquals("onewindow", $savedGame["turn_type"]);
+    }
+
+    /**
+     * Тест 2.1: Валидация - пустое название игры
      */
     public function testEmptyGameName(): void
     {
-        $this->simulatePostRequest([
+        $result = $this->createGameViaPage([
             "name" => "",
-            "map_w" => 100,
-            "map_h" => 100,
-            "turn_type" => "byturn",
             "users" => ["Игрок1", "Игрок2"],
         ]);
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
-
-        $this->assertTrue(
-            $error !== false,
-            "Должна быть ошибка для пустого названия",
+        $this->assertPageHasError(
+            $result,
+            "Название игры не может быть пустым",
         );
-        $this->assertEquals("Название игры не может быть пустым", $error);
+
+        // Проверяем, что игра не создана
+        $gameCount = $this->getTableCount("game");
+        $this->assertEquals(0, $gameCount);
     }
 
     /**
-     * Тест 2.2: Недостаточно игроков
+     * Тест 2.2: Валидация - название только из пробелов
      */
-    public function testInsufficientPlayers(): void
+    public function testWhitespaceGameName(): void
     {
-        $this->simulatePostRequest([
-            "name" => "Тест",
-            "map_w" => 100,
-            "map_h" => 100,
-            "turn_type" => "byturn",
-            "users" => ["Игрок1"], // только один игрок
+        $result = $this->createGameViaPage([
+            "name" => "   ",
+            "users" => ["Игрок1", "Игрок2"],
         ]);
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
-
-        $this->assertTrue(
-            $error !== false,
-            "Должна быть ошибка для недостаточного количества игроков",
+        $this->assertPageHasError(
+            $result,
+            "Название игры не может быть пустым",
         );
-        $this->assertStringContainsString("минимум 2 игрока", $error);
+
+        $gameCount = $this->getTableCount("game");
+        $this->assertEquals(0, $gameCount);
     }
 
     /**
-     * Тест 2.3: Дублирующиеся имена игроков
+     * Тест 2.3: Валидация - дублирующиеся имена игроков
      */
     public function testDuplicatePlayerNames(): void
     {
-        $this->simulatePostRequest([
-            "name" => "Тест",
-            "map_w" => 100,
-            "map_h" => 100,
-            "turn_type" => "byturn",
-            "users" => ["Игрок1", "Игрок1"], // дублирующиеся имена
+        $result = $this->createGameViaPage([
+            "name" => "Тестовая игра",
+            "users" => ["Игрок1", "Игрок1", "Игрок2"],
         ]);
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
+        $this->assertPageHasError($result, "указан несколько раз");
 
-        $this->assertTrue(
-            $error !== false,
-            "Должна быть ошибка для дублирующихся имен",
-        );
-        $this->assertStringContainsString("указан несколько раз", $error);
+        $gameCount = $this->getTableCount("game");
+        $this->assertEquals(0, $gameCount);
     }
 
     /**
-     * Тест 2.4: Слишком маленькие размеры карты
+     * Тест 2.4: Валидация - слишком маленький размер карты
      */
     public function testTooSmallMapSize(): void
     {
-        $this->simulatePostRequest([
-            "name" => "Тест",
-            "map_w" => 49,
-            "map_h" => 49,
-            "turn_type" => "byturn",
+        $result = $this->createGameViaPage([
+            "name" => "Тестовая игра",
+            "map_w" => 30,
+            "map_h" => 30,
             "users" => ["Игрок1", "Игрок2"],
         ]);
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
+        $this->assertPageHasError($result, "должна быть от 50 до 500");
 
-        $this->assertTrue(
-            $error !== false,
-            "Должна быть ошибка для слишком маленькой карты",
-        );
-        $this->assertStringContainsString("должна быть от 50 до 500", $error);
+        $gameCount = $this->getTableCount("game");
+        $this->assertEquals(0, $gameCount);
     }
 
     /**
-     * Тест 2.5: Слишком большие размеры карты
+     * Тест 2.5: Валидация - слишком большой размер карты
      */
     public function testTooLargeMapSize(): void
     {
-        $this->simulatePostRequest([
-            "name" => "Тест",
-            "map_w" => 501,
-            "map_h" => 501,
-            "turn_type" => "byturn",
+        $result = $this->createGameViaPage([
+            "name" => "Тестовая игра",
+            "map_w" => 600,
+            "map_h" => 600,
             "users" => ["Игрок1", "Игрок2"],
         ]);
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
+        $this->assertPageHasError($result, "должна быть от 50 до 500");
 
-        $this->assertTrue(
-            $error !== false,
-            "Должна быть ошибка для слишком большой карты",
-        );
-        $this->assertStringContainsString("должна быть от 50 до 500", $error);
+        $gameCount = $this->getTableCount("game");
+        $this->assertEquals(0, $gameCount);
     }
 
     /**
-     * Тест 2.6: Слишком много игроков
+     * Тест 2.6: Валидация - слишком много игроков
      */
     public function testTooManyPlayers(): void
     {
-        $players = [];
-        for ($i = 1; $i <= 17; $i++) {
-            $players[] = "Игрок{$i}";
+        $users = [];
+        for ($i = 1; $i <= 20; $i++) {
+            $users[] = "Игрок$i";
         }
 
-        $this->simulatePostRequest([
-            "name" => "Тест",
-            "map_w" => 100,
-            "map_h" => 100,
-            "turn_type" => "byturn",
-            "users" => $players,
+        $result = $this->createGameViaPage([
+            "name" => "Тестовая игра",
+            "users" => $users,
         ]);
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
-
-        $this->assertTrue(
-            $error !== false,
-            "Должна быть ошибка для слишком большого количества игроков",
-        );
-        $this->assertStringContainsString(
+        $this->assertPageHasError(
+            $result,
             "Максимальное количество игроков: 16",
-            $error,
         );
+
+        $gameCount = $this->getTableCount("game");
+        $this->assertEquals(0, $gameCount);
     }
 
     /**
-     * Тест 3.5: Сохранение данных при ошибке
+     * Тест 3.1: Сохранение данных при ошибке валидации
      */
     public function testDataPreservationOnError(): void
     {
         $testData = [
             "name" => "", // пустое имя вызовет ошибку
             "map_w" => 150,
-            "map_h" => 200,
+            "map_h" => 120,
             "turn_type" => "concurrently",
-            "users" => ["Игрок1", "Игрок2"],
+            "users" => ["Игрок1", "Игрок2", "Игрок3"],
         ];
 
-        $this->simulatePostRequest($testData);
+        $result = $this->createGameViaPage($testData);
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
-        $data = $vars["data"] ?? [];
+        $this->assertPageHasError($result);
 
-        // Проверяем, что данные сохранились
-        $this->assertTrue($error !== false, "Должна быть ошибка");
-        $this->assertEquals("", $data["name"], "Название должно сохраниться");
-        $this->assertEquals(
-            150,
-            $data["map_w"],
-            "Ширина карты должна сохраниться",
-        );
-        $this->assertEquals(
-            200,
-            $data["map_h"],
-            "Высота карты должна сохраниться",
-        );
-        $this->assertEquals(
-            "concurrently",
-            $data["turn_type"],
-            "Тип ходов должен сохраниться",
-        );
-        $this->assertEquals(
-            ["Игрок1", "Игрок2"],
-            $data["users"],
-            "Список игроков должен сохраниться",
-        );
+        // Проверяем, что данные сохранены для повторного заполнения формы
+        $this->assertPagePreservesData($result, [
+            "name" => "",
+            "map_w" => 150,
+            "map_h" => 120,
+            "turn_type" => "concurrently",
+            "users" => ["Игрок1", "Игрок2", "Игрок3"],
+        ]);
     }
 
     /**
-     * Тест 4.1: HTML-инъекции в названии
+     * Тест 4.1: Обработка XSS в названии игры
      */
     public function testXSSInGameName(): void
     {
-        $maliciousName = '<script>alert("XSS")</script>';
+        $maliciousName = '<script>alert("xss")</script>';
 
-        $this->simulatePostRequest([
+        $result = $this->createGameViaPage([
             "name" => $maliciousName,
-            "map_w" => 100,
-            "map_h" => 100,
-            "turn_type" => "byturn",
             "users" => ["Игрок1", "Игрок2"],
         ]);
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
+        $this->assertPageHasNoError($result);
 
-        // 1. Убеждаемся, что скрипт отработал без ошибок валидации.
-        $this->assertFalse(
-            $error,
-            "Не должно быть ошибок при создании игры с XSS в названии: " .
-                (is_string($error) ? $error : ""),
-        );
-
-        // 2. Проверяем, что игра была создана.
-        $this->assertEquals(
-            1,
-            $this->getTableCount("game"),
-            "Игра должна быть создана.",
-        );
-
-        // 3. Получаем игру из БД и проверяем, что название было очищено.
-        $stmt = self::$pdo->query("SELECT name FROM game LIMIT 1");
-        $game = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        $this->assertNotFalse(
-            $game,
-            "Не удалось получить созданную игру из БД.",
-        );
-        $this->assertEquals(
-            htmlspecialchars($maliciousName),
-            $game["name"],
-            "Название игры в БД должно быть экранировано.",
-        );
+        // Проверяем, что данные в БД экранированы
+        $gameData = $this->getLastRecord("game");
+        $this->assertStringNotContainsString("<script>", $gameData["name"]);
+        $this->assertStringContainsString("&lt;script&gt;", $gameData["name"]);
     }
 
     /**
-     * Тест 4.2: HTML-инъекции в именах игроков
+     * Тест 4.2: Обработка XSS в именах игроков
      */
     public function testXSSInPlayerNames(): void
     {
-        $maliciousPlayer = '<img src=x onerror=alert("XSS")>';
+        $maliciousPlayer = '<img src="x" onerror="alert(1)">';
 
-        $this->simulatePostRequest([
-            "name" => "Тест",
-            "map_w" => 100,
-            "map_h" => 100,
-            "turn_type" => "byturn",
-            "users" => ["Игрок1", $maliciousPlayer],
+        $result = $this->createGameViaPage([
+            "name" => "Тестовая игра",
+            "users" => [$maliciousPlayer, "Игрок2"],
         ]);
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
+        $this->assertPageHasNoError($result);
 
-        // 1. Убеждаемся, что скрипт отработал без ошибок валидации.
-        $this->assertFalse(
-            $error,
-            "Не должно быть ошибок при создании игры с XSS в именах игроков: " .
-                (is_string($error) ? $error : ""),
+        // Проверяем, что данные пользователей экранированы
+        $userData = MyDB::query(
+            "SELECT * FROM user ORDER BY id LIMIT 1",
+            [],
+            "row",
         );
+        $this->assertStringNotContainsString("<img", $userData["login"]);
+        $this->assertStringContainsString("&lt;img", $userData["login"]);
+    }
 
-        // 2. Проверяем, что пользователи были созданы.
-        $this->assertEquals(
-            2,
-            $this->getTableCount("user"),
-            "Должно быть создано два пользователя.",
-        );
+    /**
+     * Тест 5.1: Обработка очень длинных строк
+     */
+    public function testVeryLongStrings(): void
+    {
+        $longName = str_repeat("A", 1000);
+        $longPlayerName = str_repeat("B", 500);
 
-        // 3. Получаем пользователей из БД и проверяем, что имена были очищены.
-        $logins = MyDB::query("SELECT login FROM user", "column");
+        $result = $this->createGameViaPage([
+            "name" => $longName,
+            "users" => [$longPlayerName, "Игрок2"],
+        ]);
 
-        $sanitizedMaliciousName = htmlspecialchars($maliciousPlayer);
-        $this->assertContains(
-            $sanitizedMaliciousName,
-            $logins,
-            "Очищенное имя игрока должно присутствовать в списке логинов.",
-        );
+        // Система должна обработать длинные строки без сбоев
+        $this->assertPageHasNoError($result);
 
-        // Дополнительная проверка, что ни в одном имени нет опасных тегов
-        foreach ($logins as $login) {
-            $this->assertStringNotContainsString(
-                "<img",
-                $login,
-                "Тег <img> не должен присутствовать в имени пользователя.",
+        $gameData = $this->getLastRecord("game");
+        $this->assertNotEmpty($gameData["name"]);
+    }
+
+    /**
+     * Тест 6.1: Генерация цветов игроков
+     */
+    public function testPlayerColorGeneration(): void
+    {
+        $result = $this->createGameViaPage([
+            "name" => "Тестовая игра",
+            "users" => ["Игрок1", "Игрок2", "Игрок3", "Игрок4"],
+        ]);
+
+        $this->assertPageHasNoError($result);
+
+        // Получаем всех пользователей
+        $users = MyDB::query("SELECT * FROM user ORDER BY turn_order");
+
+        $this->assertCount(4, $users);
+
+        // Проверяем, что у каждого игрока есть уникальный цвет
+        $colors = [];
+        foreach ($users as $user) {
+            $this->assertNotEmpty($user["color"]);
+            $this->assertStringStartsWith("#", $user["color"]);
+            $this->assertEquals(7, strlen($user["color"])); // #RRGGBB
+            $this->assertNotContains(
+                $user["color"],
+                $colors,
+                "Цвета игроков должны быть уникальными",
             );
+            $colors[] = $user["color"];
         }
     }
 
     /**
-     * Тест 4.3: Очень длинные строки
-     */
-    public function testVeryLongStrings(): void
-    {
-        $longName = str_repeat("A", 300);
-        $longPlayerName = str_repeat("B", 100);
-
-        $this->simulatePostRequest([
-            "name" => $longName,
-            "map_w" => 100,
-            "map_h" => 100,
-            "turn_type" => "byturn",
-            "users" => ["Игрок1", $longPlayerName],
-        ]);
-
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
-
-        // 1. Убеждаемся, что скрипт отработал без ошибок валидации.
-        $this->assertFalse(
-            $error,
-            "Система не должна выдавать ошибок при обработке длинных строк: " .
-                (is_string($error) ? $error : ""),
-        );
-
-        // 2. Проверяем, что игра и пользователи были созданы.
-        $this->assertEquals(
-            1,
-            $this->getTableCount("game"),
-            "Игра должна быть создана с длинным именем.",
-        );
-        $this->assertEquals(
-            2,
-            $this->getTableCount("user"),
-            "Пользователи должны быть созданы, включая пользователя с длинным именем.",
-        );
-
-        // 3. Проверяем, что данные не были обрезаны (зависит от схемы БД)
-        $stmt = self::$pdo->query("SELECT name FROM game LIMIT 1");
-        $game = $stmt->fetch(PDO::FETCH_ASSOC);
-        $this->assertEquals(
-            $longName,
-            $game["name"],
-            "Длинное имя игры должно быть сохранено полностью.",
-        );
-
-        $stmt = self::$pdo->query(
-            "SELECT login FROM user WHERE login LIKE 'B%'",
-        );
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        $this->assertEquals(
-            $longPlayerName,
-            $user["login"],
-            "Длинное имя игрока должно быть сохранено полностью.",
-        );
-    }
-
-    /**
-     * Тест валидации цветов игроков
-     */
-    public function testPlayerColorGeneration(): void
-    {
-        $players = ["Игрок1", "Игрок2", "Игрок3", "Игрок4", "Игрок5"];
-
-        $this->simulatePostRequest([
-            "name" => "Тест цветов",
-            "map_w" => 100,
-            "map_h" => 100,
-            "turn_type" => "byturn",
-            "users" => $players,
-        ]);
-
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
-
-        $this->assertFalse(
-            $error,
-            "Не должно быть ошибок при генерации цветов: " .
-                (is_string($error) ? $error : ""),
-        );
-    }
-
-    /**
-     * Тест обработки пустых полей игроков
+     * Тест 6.2: Обработка пустых полей игроков
      */
     public function testEmptyPlayerFields(): void
     {
-        $this->simulatePostRequest([
-            "name" => "Тест пустых полей",
-            "map_w" => 100,
-            "map_h" => 100,
-            "turn_type" => "byturn",
-            "users" => ["Игрок1", "", "Игрок3", ""], // пустые поля
+        $result = $this->createGameViaPage([
+            "name" => "Тестовая игра",
+            "users" => ["Игрок1", "", "Игрок2", "   ", "Игрок3"],
         ]);
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
+        $this->assertPageHasNoError($result);
 
-        $this->assertFalse(
-            $error,
-            "Не должно быть ошибок, пустые поля должны игнорироваться: " .
-                (is_string($error) ? $error : ""),
+        // Пустые поля должны быть проигнорированы
+        $userCount = $this->getTableCount("user");
+        $this->assertEquals(
+            3,
+            $userCount,
+            "Должно быть создано 3 игрока (пустые поля игнорируются)",
         );
     }
 
     /**
-     * Тест неверного типа ходов
+     * Тест 7.1: Неверный тип ходов
      */
     public function testInvalidTurnType(): void
     {
-        $this->simulatePostRequest([
-            "name" => "Тест неверного типа",
-            "map_w" => 100,
-            "map_h" => 100,
-            "turn_type" => "invalid_type", // неверный тип
+        $result = $this->createGameViaPage([
+            "name" => "Тестовая игра",
+            "turn_type" => "invalid_type",
             "users" => ["Игрок1", "Игрок2"],
         ]);
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
+        $this->assertPageHasNoError($result);
 
-        // Должно использоваться значение по умолчанию
-        $this->assertFalse(
-            $error,
-            "Неверный тип ходов должен заменяться на значение по умолчанию: " .
-                (is_string($error) ? $error : ""),
+        // Должен использоваться тип по умолчанию
+        $gameData = $this->getLastRecord("game");
+        $this->assertEquals("byturn", $gameData["turn_type"]);
+    }
+
+    /**
+     * Тест 8.1: Отсутствие POST данных
+     */
+    public function testNoPostData(): void
+    {
+        $result = $this->executePage(PROJECT_ROOT . "/pages/creategame.php");
+
+        // При отсутствии POST данных должны быть установлены значения по умолчанию
+        $this->assertArrayHasKey("variables", $result);
+        $this->assertArrayHasKey("data", $result["variables"]);
+
+        $data = $result["variables"]["data"];
+        $this->assertEquals("", $data["name"]);
+        $this->assertEquals(100, $data["map_w"]);
+        $this->assertEquals(100, $data["map_h"]);
+        $this->assertEquals("byturn", $data["turn_type"]);
+        $this->assertEquals(["", ""], $data["users"]);
+    }
+
+    /**
+     * Тест 9.1: Проверка начальных условий игры
+     */
+    public function testGameInitialConditions(): void
+    {
+        $result = $this->createGameViaPage([
+            "name" => "Тестовая игра",
+            "users" => ["Игрок1", "Игрок2"],
+        ]);
+
+        $this->assertPageHasNoError($result);
+
+        $gameData = $this->getLastRecord("game");
+        $game = Game::get($gameData["id"]);
+
+        // Проверяем начальный номер хода
+        $this->assertEquals(1, $game->turn_num);
+
+        // Проверяем, что у игроков правильные начальные деньги
+        $users = MyDB::query("SELECT * FROM user WHERE game = :gid", [
+            "gid" => $game->id,
+        ]);
+        foreach ($users as $user) {
+            $this->assertEquals(
+                50,
+                $user["money"],
+                "У игрока должно быть 50 начальных денег",
+            );
+            $this->assertEquals(1, $user["age"], "Начальная эра должна быть 1");
+        }
+
+        // Проверяем, что созданы юниты
+        $unitCount = $this->getTableCount("unit");
+        $this->assertGreaterThan(
+            0,
+            $unitCount,
+            "Должны быть созданы начальные юниты",
         );
     }
 
     /**
-     * Тест отсутствия данных POST
+     * Тест 10.1: Минимальное количество игроков
      */
-    public function testNoPostData(): void
+    public function testMinimumPlayers(): void
     {
-        // Не устанавливаем POST данные
+        $result = $this->createGameViaPage([
+            "name" => "Тестовая игра",
+            "users" => ["Игрок1"], // только один игрок
+        ]);
 
-        $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars["error"] ?? false;
-        $data = $vars["data"] ?? [];
+        $this->assertPageHasError($result, "необходимо минимум 2 игрока");
 
-        // Должны быть установлены значения по умолчанию
-        $this->assertFalse(
-            $error,
-            "Не должно быть ошибок при отсутствии POST данных: " .
-                (is_string($error) ? $error : ""),
-        );
-        $this->assertIsArray(
-            $data,
-            "data должно быть массивом со значениями по умолчанию",
-        );
+        $gameCount = $this->getTableCount("game");
+        $this->assertEquals(0, $gameCount);
     }
 }

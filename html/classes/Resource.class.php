@@ -33,6 +33,9 @@ class Resource {
 	}
 	
 	public function save() {
+		if (!$this->type) {
+			throw new Exception("Resource type is not set");
+		}
 		$data = [];
 		foreach (['x', 'y', 'planet', 'amount'] as $field) {
 			$data[$field] = $this->$field;
@@ -46,7 +49,7 @@ class Resource {
 	}
 
     function get_title() {
-        return $this->type->title;
+        return $this->type ? $this->type->title : '';
     }
 }
 ?>

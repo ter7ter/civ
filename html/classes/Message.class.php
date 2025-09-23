@@ -35,8 +35,9 @@ class Message {
 	
 	public function save() {
 		$values =  ['text' => $this->text,
-					'from_id' => ($this->from ? $this->from->id : 'NULL'),
-					'to_id' => ($this->to ? $this->to->id : 'NULL')];
+					'from_id' => ($this->from ? $this->from->id : null),
+					'to_id' => ($this->to ? $this->to->id : null),
+					'type' => $this->type];
 		if ($this->id) {
 			MyDB::update('message', $values, $this->id);
 		} else {

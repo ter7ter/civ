@@ -42,7 +42,7 @@ class TestRunner
             "js" => false,
             "coverage" => false,
             "verbose" => false,
-            "stop-on-failure" => false,
+            "stop-on-failure" => true, // Останавливаться при первой ошибке по умолчанию
             "filter" => null,
             "help" => false,
         ];
@@ -180,8 +180,8 @@ class TestRunner
 
         $startTime = microtime(true);
 
-        // Запускаем PHPUnit
-        passthru($fullCmd, $exitCode);
+        // Запускаем PHPUnit без таймаута, чтобы ошибки выводились сразу
+        $exitCode = $this->runCommand($fullCmd);
 
         $duration = microtime(true) - $startTime;
 
@@ -451,6 +451,134 @@ class TestRunner
         }
 
         echo str_repeat("=", 60) . "\n";
+    }
+
+    /**
+     * Запуск команды без таймаута
+     */
+    private function runCommand($command)
+    {
+        $descriptors = [
+            0 => ['pipe', 'r'], // stdin
+            1 => ['pipe', 'w'], // stdout
+            2 => ['pipe', 'w'], // stderr
+        ];
+
+        $process = proc_open($command, $descriptors, $pipes);
+
+        if (!is_resource($process)) {
+            echo "❌ Не удалось запустить команду: {$command}\n";
+            return 1;
+        }
+
+        // Закрываем stdin
+        fclose($pipes[0]);
+
+        // Читаем вывод в реальном времени
+        while (!feof($pipes[1])) {
+            $data = fread($pipes[1], 8192);
+            if ($data !== false) {
+                echo $data;
+            }
+        }
+
+        while (!feof($pipes[2])) {
+            $data = fread($pipes[2], 8192);
+            if ($data !== false) {
+                echo $data;
+            }
+        }
+
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+
+        $exitCode = proc_close($process);
+
+        return $exitCode;
+    }
+
+    /**
+     * Запуск команды с таймаутом
+     */
+    private function runCommandWithTimeout($command, $timeout = 300)
+    {
+        $descriptors = [
+            0 => ['pipe', 'r'], // stdin
+            1 => ['pipe', 'w'], // stdout
+            2 => ['pipe', 'w'], // stderr
+        ];
+
+        $process = proc_open($command, $descriptors, $pipes);
+
+        if (!is_resource($process)) {
+            echo "❌ Не удалось запустить команду: {$command}\n";
+            return 1;
+        }
+
+        // Закрываем stdin
+        fclose($pipes[0]);
+
+        $startTime = time();
+        $output = '';
+        $errorOutput = '';
+
+        // Читаем вывод в реальном времени
+        $stdoutDone = false;
+        $stderrDone = false;
+
+        stream_set_blocking($pipes[1], false);
+        stream_set_blocking($pipes[2], false);
+
+        while (!$stdoutDone || !$stderrDone) {
+            $read = [$pipes[1], $pipes[2]];
+            $write = null;
+            $except = null;
+
+            if (stream_select($read, $write, $except, 1) > 0) {
+                foreach ($read as $stream) {
+                    if ($stream === $pipes[1]) {
+                        $data = fread($stream, 8192);
+                        if ($data === false || $data === '') {
+                            $stdoutDone = true;
+                        } else {
+                            echo $data;
+                            $output .= $data;
+                        }
+                    } elseif ($stream === $pipes[2]) {
+                        $data = fread($stream, 8192);
+                        if ($data === false || $data === '') {
+                            $stderrDone = true;
+                        } else {
+                            echo $data;
+                            $errorOutput .= $data;
+                        }
+                    }
+                }
+            }
+
+            // Проверяем таймаут
+            if (time() - $startTime > $timeout) {
+                echo "\n❌ Превышен таймаут {$timeout} секунд. Завершаем процесс.\n";
+                proc_terminate($process);
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                proc_close($process);
+                return 124; // Код выхода для таймаута
+            }
+
+            // Проверяем, завершен ли процесс
+            $status = proc_get_status($process);
+            if (!$status['running']) {
+                break;
+            }
+        }
+
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+
+        $exitCode = proc_close($process);
+
+        return $exitCode;
     }
 
     /**

@@ -122,22 +122,23 @@ class MyDB
         } else {
             // Single row
             $keys = array_keys($values);
+            // Всегда используем VALUES синтаксис для совместимости с SQLite
+            $placeholders = implode(", ", array_map(fn($k) => ":$k", $keys));
             if (MyDB::$dbhost === "sqlite::memory:") {
-                // Для SQLite используем VALUES синтаксис
-                $placeholders = implode(
-                    ", ",
-                    array_map(fn($k) => ":$k", $keys),
-                );
+                // Для SQLite не используем обратные кавычки
+                $query =
+                    "INSERT INTO $table (" .
+                    implode(",", $keys) .
+                    ") VALUES (" .
+                    $placeholders .
+                    ")";
+            } else {
                 $query =
                     "INSERT INTO `$table` (" .
                     implode(",", array_map(fn($k) => "`$k`", $keys)) .
                     ") VALUES (" .
                     $placeholders .
                     ")";
-            } else {
-                $query =
-                    "INSERT INTO `$table` SET " .
-                    implode(", ", array_map(fn($k) => "`$k` = :$k", $keys));
             }
             $params = [];
             foreach ($values as $k => $v) {
@@ -181,7 +182,9 @@ class MyDB
     public static function end_transaction()
     {
         $db = MyDB::get();
-        $db->commit();
+        if ($db->inTransaction()) {
+            $db->commit();
+        }
     }
 }
 ?>

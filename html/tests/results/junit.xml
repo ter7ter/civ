@@ -1,420 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="93" assertions="255" errors="22" warnings="0" failures="27" skipped="0" time="0.159351">
-    <testsuite name="Unit Tests" tests="56" assertions="133" errors="8" warnings="0" failures="15" skipped="0" time="0.089642">
-      <testsuite name="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" tests="7" assertions="37" errors="0" warnings="0" failures="0" skipped="0" time="0.016969">
-        <testcase name="testTestTablesCreation" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="99" assertions="5" time="0.009574"/>
-        <testcase name="testTestDatabaseConstants" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="13" assertions="10" time="0.001458"/>
-        <testcase name="testTestDataCleanup" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="170" assertions="4" time="0.001088"/>
-        <testcase name="testTransactionHandling" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="216" assertions="2" time="0.001445"/>
-        <testcase name="testTestDataOperations" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="122" assertions="5" time="0.000487"/>
-        <testcase name="testGameAndUserMocks" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="245" assertions="8" time="0.001229"/>
-        <testcase name="testDatabaseConstantsSeparation" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="68" assertions="3" time="0.001687"/>
+  <testsuite name="" tests="37" assertions="158" errors="0" warnings="0" failures="1" skipped="0" time="2.082068">
+    <testsuite name="Unit Tests" tests="37" assertions="158" errors="0" warnings="0" failures="1" skipped="0" time="2.082068">
+      <testsuite name="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" tests="9" assertions="51" errors="0" warnings="0" failures="0" skipped="0" time="0.016449">
+        <testcase name="testSaveNew" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="121" assertions="4" time="0.007262"/>
+        <testcase name="testSaveUpdate" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="163" assertions="3" time="0.000973"/>
+        <testcase name="testBuildingCache" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="209" assertions="2" time="0.001312"/>
+        <testcase name="testBuildingCityRelation" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="249" assertions="4" time="0.000755"/>
+        <testcase name="testDifferentBuildingTypes" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="321" assertions="20" time="0.002950"/>
+        <testcase name="testGetTitle" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="86" assertions="3" time="0.000957"/>
+        <testcase name="testGetExistingBuilding" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="13" assertions="6" time="0.000796"/>
+        <testcase name="testConstructor" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="51" assertions="5" time="0.000740"/>
+        <testcase name="testBuildingTypeRelation" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="285" assertions="4" time="0.000705"/>
       </testsuite>
-      <testsuite name="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" tests="17" assertions="34" errors="8" warnings="0" failures="2" skipped="0" time="0.027686">
-        <testcase name="testEditWithInvalidTurnType" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="282" assertions="1" time="0.003180">
-          <error type="ErrorException">EditGameTest::testEditWithInvalidTurnType
-ErrorException: Undefined array key "turn_type"
-
-I:\pr1\html\tests\unit\EditGameTest.php:306</error>
-        </testcase>
-        <testcase name="testDataPreservationOnValidationError" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="348" assertions="6" time="0.001271"/>
-        <testcase name="testXSSInEditedGameName" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="380" assertions="1" time="0.001690">
-          <error type="ErrorException">EditGameTest::testXSSInEditedGameName
-ErrorException: Undefined array key "name"
-
-I:\pr1\html\tests\unit\EditGameTest.php:407</error>
-        </testcase>
-        <testcase name="testMultipleValidationErrors" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="461" assertions="3" time="0.001387"/>
-        <testcase name="testGameNotChangedOnValidationError" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="486" assertions="1" time="0.001360">
-          <error type="ErrorException">EditGameTest::testGameNotChangedOnValidationError
-ErrorException: Undefined array key "name"
-
-I:\pr1\html\tests\unit\EditGameTest.php:513</error>
-        </testcase>
-        <testcase name="testEditMapSize" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="114" assertions="1" time="0.001485">
-          <error type="ErrorException">EditGameTest::testEditMapSize
-ErrorException: Undefined array key "map_w"
-
-I:\pr1\html\tests\unit\EditGameTest.php:137</error>
-        </testcase>
-        <testcase name="testEditTurnType" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="144" assertions="1" time="0.001471">
-          <error type="ErrorException">EditGameTest::testEditTurnType
-ErrorException: Undefined array key "turn_type"
-
-I:\pr1\html\tests\unit\EditGameTest.php:170</error>
-        </testcase>
-        <testcase name="testVeryLongStringsInEdit" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="413" assertions="1" time="0.001702">
-          <error type="ErrorException">EditGameTest::testVeryLongStringsInEdit
-ErrorException: Undefined array key "name"
-
-I:\pr1\html\tests\unit\EditGameTest.php:440</error>
-        </testcase>
-        <testcase name="testEditGameNameOnly" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="77" assertions="1" time="0.001669">
-          <error type="ErrorException">EditGameTest::testEditGameNameOnly
-ErrorException: Undefined array key "name"
-
-I:\pr1\html\tests\unit\EditGameTest.php:106</error>
-        </testcase>
-        <testcase name="testEditWithInvalidMapSize" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="236" assertions="4" time="0.001414"/>
-        <testcase name="testEditBasicGameParameters" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="34" assertions="2" time="0.001517">
-          <error type="ErrorException">EditGameTest::testEditBasicGameParameters
-ErrorException: Undefined array key "name"
-
-I:\pr1\html\tests\unit\EditGameTest.php:68</error>
-        </testcase>
-        <testcase name="testLoadNonExistentGameForEditing" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="446" assertions="1" time="0.002189">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameTest::testLoadNonExistentGameForEditing
-Failed asserting that exception of type "Exception" is thrown.</failure>
-        </testcase>
-        <testcase name="testLoadGameDataForEditing" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="177" assertions="6" time="0.000905"/>
-        <testcase name="testEditWithEmptyName" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="209" assertions="2" time="0.000902"/>
-        <testcase name="testEditNonExistentGame" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="312" assertions="1" time="0.003471">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameTest::testEditNonExistentGame
-Failed asserting that exception of type "Exception" is thrown.</failure>
-        </testcase>
-        <testcase name="testEditWithoutGameId" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="330" assertions="1" time="0.001171"/>
-        <testcase name="testLoadGameWithoutId" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="21" assertions="1" time="0.000902"/>
+      <testsuite name="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" tests="17" assertions="63" errors="0" warnings="0" failures="0" skipped="0" time="0.070069">
+        <testcase name="testCityResources" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="402" assertions="2" time="0.000604"/>
+        <testcase name="testCityCache" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="429" assertions="3" time="0.000816"/>
+        <testcase name="testNewCity" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="206" assertions="9" time="0.006495"/>
+        <testcase name="testCalculateProduction" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="238" assertions="4" time="0.007744"/>
+        <testcase name="testGetPossibleBuildings" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="335" assertions="1" time="0.010328"/>
+        <testcase name="testCoastalCity" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="374" assertions="1" time="0.006741"/>
+        <testcase name="testCreateUnit" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="313" assertions="2" time="0.008983"/>
+        <testcase name="testLocatePeople" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="267" assertions="3" time="0.007017"/>
+        <testcase name="testGetCityCells" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="353" assertions="2" time="0.007695"/>
+        <testcase name="testCalculatePeople" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="289" assertions="8" time="0.006483"/>
+        <testcase name="testGetExistingCity" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="13" assertions="7" time="0.000859"/>
+        <testcase name="testByCoordsExisting" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="45" assertions="2" time="0.001406"/>
+        <testcase name="testByCoordsNonExisting" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="70" assertions="1" time="0.000754"/>
+        <testcase name="testConstruct" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="80" assertions="9" time="0.000676"/>
+        <testcase name="testSaveNew" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="113" assertions="5" time="0.001512"/>
+        <testcase name="testSaveUpdate" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="148" assertions="3" time="0.001313"/>
+        <testcase name="testGetTitle" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="185" assertions="1" time="0.000644"/>
       </testsuite>
-      <testsuite name="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" tests="13" assertions="31" errors="0" warnings="0" failures="2" skipped="0" time="0.009934">
-        <testcase name="testOpenGameWithNonExistentUser" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="179" assertions="1" time="0.000530"/>
-        <testcase name="testOpenNonExistentGame" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="160" assertions="1" time="0.001192">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">OpenGameTest::testOpenNonExistentGame
-Failed asserting that two strings are equal.
---- Expected
-+++ Actual
-@@ @@
--'game error'
-+'user error'
-
-I:\pr1\html\tests\unit\OpenGameTest.php:173</failure>
-        </testcase>
-        <testcase name="testOpenGameWithUserFromDifferentGame" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="21" assertions="1" time="0.001793">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">OpenGameTest::testOpenGameWithUserFromDifferentGame
-Failed asserting that an array does not have the key 'game_id'.
-
-I:\pr1\html\tests\unit\OpenGameTest.php:42</failure>
-        </testcase>
-        <testcase name="testOpenGameWithoutGameId" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="200" assertions="1" time="0.000310"/>
-        <testcase name="testOpenGameWithoutUserId" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="219" assertions="1" time="0.000234"/>
-        <testcase name="testEmptyGameList" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="282" assertions="1" time="0.000730"/>
-        <testcase name="testSessionStateAfterGameOpening" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="291" assertions="3" time="0.000365"/>
-        <testcase name="testReopenGameWithDifferentUser" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="318" assertions="3" time="0.000411"/>
-        <testcase name="testSuccessfulGameOpening" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="49" assertions="2" time="0.000317"/>
-        <testcase name="testOpenGameWithMultiplePlayers" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="86" assertions="2" time="0.000480"/>
-        <testcase name="testGameListLoading" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="238" assertions="7" time="0.001161"/>
-        <testcase name="testOpenGameWithMaxPlayers" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="365" assertions="2" time="0.001693"/>
-        <testcase name="testOpenGameWithDifferentTurnTypes" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="122" assertions="6" time="0.000719"/>
-      </testsuite>
-      <testsuite name="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" tests="19" assertions="31" errors="0" warnings="0" failures="11" skipped="0" time="0.035054">
-        <testcase name="testMaximumMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="118" assertions="1" time="0.002289">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testMaximumMapSize
-Не должно быть ошибок для максимального размера карты: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\unit\CreateGameTest.php:131</failure>
-        </testcase>
-        <testcase name="testXSSInGameName" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="358" assertions="1" time="0.003868">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testXSSInGameName
-Не должно быть ошибок при создании игры с XSS в названии: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\unit\CreateGameTest.php:374</failure>
-        </testcase>
-        <testcase name="testVeryLongStrings" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="457" assertions="1" time="0.002755">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testVeryLongStrings
-Система не должна выдавать ошибок при обработке длинных строк: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\unit\CreateGameTest.php:474</failure>
-        </testcase>
-        <testcase name="testPlayerColorGeneration" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="515" assertions="1" time="0.002234">
+      <testsuite name="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" tests="11" assertions="44" errors="0" warnings="0" failures="1" skipped="0" time="1.995550">
+        <testcase name="testDuplicatePlayerNames" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="192" assertions="3" time="0.001726"/>
+        <testcase name="testTooSmallMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="208" assertions="3" time="0.000868"/>
+        <testcase name="testTooLargeMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="226" assertions="3" time="0.000825"/>
+        <testcase name="testTooManyPlayers" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="244" assertions="3" time="0.000818"/>
+        <testcase name="testDataPreservationOnError" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="268" assertions="12" time="0.001144"/>
+        <testcase name="testNoPostData" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="430" assertions="7" time="0.000732"/>
+        <testcase name="testEmptyGameName" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="153" assertions="3" time="0.000936"/>
+        <testcase name="testCreateBasicGame" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="13" assertions="6" time="0.000700"/>
+        <testcase name="testCreateConcurrentGame" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="74" assertions="2" time="0.000626"/>
+        <testcase name="testCreateOneWindowGame" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="116" assertions="1" time="0.000614"/>
+        <testcase name="testPlayerColorGeneration" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="359" assertions="1" time="1.986560">
           <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testPlayerColorGeneration
-Не должно быть ошибок при генерации цветов: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\unit\CreateGameTest.php:530</failure>
-        </testcase>
-        <testcase name="testEmptyPlayerFields" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="540" assertions="1" time="0.001906">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testEmptyPlayerFields
-Не должно быть ошибок, пустые поля должны игнорироваться: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\unit\CreateGameTest.php:553</failure>
-        </testcase>
-        <testcase name="testInvalidTurnType" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="563" assertions="1" time="0.002341">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testInvalidTurnType
-Неверный тип ходов должен заменяться на значение по умолчанию: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\unit\CreateGameTest.php:577</failure>
-        </testcase>
-        <testcase name="testCreateBasicGame" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="21" assertions="1" time="0.002009">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testCreateBasicGame
-Не должно быть ошибок при создании базовой игры: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\unit\CreateGameTest.php:35</failure>
-        </testcase>
-        <testcase name="testDifferentTurnTypes" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="141" assertions="1" time="0.003089">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testDifferentTurnTypes
-Не должно быть ошибок для типа ходов: concurrently: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\unit\CreateGameTest.php:157</failure>
-        </testcase>
-        <testcase name="testXSSInPlayerNames" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="405" assertions="1" time="0.002088">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testXSSInPlayerNames
-Не должно быть ошибок при создании игры с XSS в именах игроков: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\unit\CreateGameTest.php:421</failure>
-        </testcase>
-        <testcase name="testMaximumPlayersGame" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="56" assertions="1" time="0.004213">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testMaximumPlayersGame
-Не должно быть ошибок при создании игры с 16 игроками: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\unit\CreateGameTest.php:74</failure>
-        </testcase>
-        <testcase name="testMinimumMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="95" assertions="1" time="0.002661">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testMinimumMapSize
-Не должно быть ошибок для минимального размера карты: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\unit\CreateGameTest.php:108</failure>
-        </testcase>
-        <testcase name="testEmptyGameName" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="168" assertions="2" time="0.000726"/>
-        <testcase name="testInsufficientPlayers" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="191" assertions="2" time="0.000573"/>
-        <testcase name="testDuplicatePlayerNames" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="214" assertions="2" time="0.000602"/>
-        <testcase name="testTooSmallMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="237" assertions="2" time="0.000588"/>
-        <testcase name="testTooLargeMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="260" assertions="2" time="0.000539"/>
-        <testcase name="testTooManyPlayers" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="283" assertions="2" time="0.000661"/>
-        <testcase name="testDataPreservationOnError" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="314" assertions="6" time="0.000784"/>
-        <testcase name="testNoPostData" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="587" assertions="2" time="0.001129"/>
-      </testsuite>
-    </testsuite>
-    <testsuite name="Integration Tests" tests="37" assertions="122" errors="14" warnings="0" failures="12" skipped="0" time="0.069708">
-      <testsuite name="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" tests="10" assertions="28" errors="1" warnings="0" failures="6" skipped="0" time="0.022126">
-        <testcase name="testGameDataPersistence" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="60" assertions="1" time="0.001801">
-          <error type="ErrorException">CreateGameIntegrationTest::testGameDataPersistence
-ErrorException: Undefined array key "name"
-
-I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:77</error>
-        </testcase>
-        <testcase name="testValidationErrorsIntegration" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="274" assertions="5" time="0.002135">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameIntegrationTest::testValidationErrorsIntegration
-Игра не должна быть создана при ошибках валидации
-Failed asserting that 1 matches expected 0.
-
-I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:300</failure>
-        </testcase>
-        <testcase name="testMultipleGameCreation" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="414" assertions="1" time="0.002115">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameIntegrationTest::testMultipleGameCreation
-Создание игры 1 должно пройти успешно: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:436</failure>
-        </testcase>
-        <testcase name="testFullGameCreationProcess" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="22" assertions="1" time="0.001817">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameIntegrationTest::testFullGameCreationProcess
-Создание игры должно пройти без ошибок: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:40</failure>
-        </testcase>
-        <testcase name="testDifferentTurnTypesIntegration" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="94" assertions="1" time="0.004017">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameIntegrationTest::testDifferentTurnTypesIntegration
-Создание игры с типом concurrently должно пройти успешно: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:118</failure>
-        </testcase>
-        <testcase name="testUniquePlayerColors" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="136" assertions="1" time="0.002741">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameIntegrationTest::testUniquePlayerColors
-Создание игры должно пройти успешно: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:160</failure>
-        </testcase>
-        <testcase name="testPerformanceWithMaxPlayers" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="315" assertions="1" time="0.002933">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameIntegrationTest::testPerformanceWithMaxPlayers
-Создание игры должно пройти успешно: Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error
-Failed asserting that 'Ошибка при создании игры: SQLSTATE[HY000]: General error: 1 near "SET": syntax error' is false.
-
-I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:340</failure>
-        </testcase>
-        <testcase name="testPlayerTurnOrder" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="194" assertions="7" time="0.001948"/>
-        <testcase name="testInitialPlayerParameters" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="234" assertions="8" time="0.001493"/>
-        <testcase name="testSQLInjectionProtection" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="367" assertions="2" time="0.001125"/>
-      </testsuite>
-      <testsuite name="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" tests="11" assertions="54" errors="6" warnings="0" failures="2" skipped="0" time="0.023019">
-        <testcase name="testFullGameEditProcess" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="22" assertions="3" time="0.002331">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameIntegrationTest::testFullGameEditProcess
+Страница не должна содержать ошибок: Ошибка при создании игры: Attempt to read property "id" on false
 Failed asserting that true is false.
 
-I:\pr1\html\tests\integration\EditGameIntegrationTest.php:74</failure>
+I:\pr1\html\tests\FunctionalTestBase.php:152
+I:\pr1\html\tests\unit\CreateGameTest.php:366</failure>
         </testcase>
-        <testcase name="testEditedGameDataPersistence" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="87" assertions="1" time="0.001980">
-          <error type="ErrorException">EditGameIntegrationTest::testEditedGameDataPersistence
-ErrorException: Undefined array key "name"
-
-I:\pr1\html\tests\integration\EditGameIntegrationTest.php:120</error>
-        </testcase>
-        <testcase name="testEditDifferentTurnTypesIntegration" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="137" assertions="1" time="0.001655">
-          <error type="ErrorException">EditGameIntegrationTest::testEditDifferentTurnTypesIntegration
-ErrorException: Undefined array key "turn_type"
-
-I:\pr1\html\tests\integration\EditGameIntegrationTest.php:178</error>
-        </testcase>
-        <testcase name="testPlayerOrderPreservationOnEdit" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="229" assertions="9" time="0.001409"/>
-        <testcase name="testPlayerParametersPreservationOnEdit" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="284" assertions="9" time="0.001196"/>
-        <testcase name="testValidationErrorsIntegrationOnEdit" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="348" assertions="3" time="0.001379">
-          <error type="ErrorException">EditGameIntegrationTest::testValidationErrorsIntegrationOnEdit
-ErrorException: Undefined array key "name"
-
-I:\pr1\html\tests\integration\EditGameIntegrationTest.php:385</error>
-        </testcase>
-        <testcase name="testMultipleGameEdits" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="533" assertions="17" time="0.005339">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameIntegrationTest::testMultipleGameEdits
-Должно быть 6 игроков всего
-Failed asserting that 1 matches expected 6.
-
-I:\pr1\html\tests\integration\EditGameIntegrationTest.php:591</failure>
-        </testcase>
-        <testcase name="testEditGameWithRelatedDataPreservation" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="601" assertions="1" time="0.001629">
-          <error type="ErrorException">EditGameIntegrationTest::testEditGameWithRelatedDataPreservation
-ErrorException: Undefined array key "name"
-
-I:\pr1\html\tests\integration\EditGameIntegrationTest.php:651</error>
-        </testcase>
-        <testcase name="testPerformanceEditWithMaxPlayers" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="408" assertions="2" time="0.003057">
-          <error type="ErrorException">EditGameIntegrationTest::testPerformanceEditWithMaxPlayers
-ErrorException: Undefined array key "name"
-
-I:\pr1\html\tests\integration\EditGameIntegrationTest.php:459</error>
-        </testcase>
-        <testcase name="testSQLInjectionProtectionOnEdit" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="476" assertions="2" time="0.002019">
-          <error type="ErrorException">EditGameIntegrationTest::testSQLInjectionProtectionOnEdit
-ErrorException: Undefined array key "name"
-
-I:\pr1\html\tests\integration\EditGameIntegrationTest.php:524</error>
-        </testcase>
-        <testcase name="testLoadGameDataForEditingIntegration" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="192" assertions="6" time="0.001025"/>
-      </testsuite>
-      <testsuite name="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" tests="6" assertions="1" errors="6" warnings="0" failures="0" skipped="0" time="0.012453">
-        <testcase name="testUnitMovement" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="32" assertions="1" time="0.001396">
-          <error type="PDOException">MapActionsIntegrationTest::testUnitMovement
-PDOException: SQLSTATE[HY000]: General error: 1 no such column: mission_points
-
-I:\pr1\html\classes\MyDB.class.php:168
-I:\pr1\html\classes\Unit.class.php:88
-I:\pr1\html\classes\Unit.class.php:238
-I:\pr1\html\tests\integration\MapActionsIntegrationTest.php:67</error>
-        </testcase>
-        <testcase name="testCityFoundation" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="93" assertions="0" time="0.001765">
-          <error type="ErrorException">MapActionsIntegrationTest::testCityFoundation
-ErrorException: Attempt to read property "x" on false
-
-I:\pr1\html\classes\City.class.php:242
-I:\pr1\html\classes\City.class.php:255
-I:\pr1\html\classes\City.class.php:155
-I:\pr1\html\tests\integration\MapActionsIntegrationTest.php:111</error>
-        </testcase>
-        <testcase name="testMapLoadingWithUnits" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="172" assertions="0" time="0.002215">
-          <error type="Error">MapActionsIntegrationTest::testMapLoadingWithUnits
-Error: Call to a member function get_units() on false
-
-I:\pr1\html\classes\Cell.class.php:347
-I:\pr1\html\pages\mapv.php:14
-I:\pr1\html\tests\test_bootstrap_classes.php:156
-I:\pr1\html\tests\integration\MapActionsIntegrationTest.php:198</error>
-        </testcase>
-        <testcase name="testMapLoadingWithCity" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="223" assertions="0" time="0.001633">
-          <error type="Error">MapActionsIntegrationTest::testMapLoadingWithCity
-Error: Call to a member function get_units() on false
-
-I:\pr1\html\classes\Cell.class.php:347
-I:\pr1\html\pages\mapv.php:14
-I:\pr1\html\tests\test_bootstrap_classes.php:156
-I:\pr1\html\tests\integration\MapActionsIntegrationTest.php:248</error>
-        </testcase>
-        <testcase name="testMapBoundaries" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="279" assertions="0" time="0.003774">
-          <error type="Error">MapActionsIntegrationTest::testMapBoundaries
-Error: Call to a member function get_units() on false
-
-I:\pr1\html\classes\Cell.class.php:347
-I:\pr1\html\pages\mapv.php:14
-I:\pr1\html\tests\test_bootstrap_classes.php:156
-I:\pr1\html\tests\integration\MapActionsIntegrationTest.php:293</error>
-        </testcase>
-        <testcase name="testMapScrolling" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="138" assertions="0" time="0.001671">
-          <error type="Error">MapActionsIntegrationTest::testMapScrolling
-Error: Call to a member function get_units() on false
-
-I:\pr1\html\classes\Cell.class.php:347
-I:\pr1\html\pages\mapv.php:14
-I:\pr1\html\tests\test_bootstrap_classes.php:156
-I:\pr1\html\tests\integration\MapActionsIntegrationTest.php:157</error>
-        </testcase>
-      </testsuite>
-      <testsuite name="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" tests="10" assertions="39" errors="1" warnings="0" failures="4" skipped="0" time="0.012110">
-        <testcase name="testFullGameOpeningProcess" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="22" assertions="4" time="0.000983"/>
-        <testcase name="testMultipleGameOpenings" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="370" assertions="2" time="0.001246">
-          <error type="ErrorException">OpenGameIntegrationTest::testMultipleGameOpenings
-ErrorException: Undefined array key "game_id"
-
-I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:402</error>
-          <system-out>user error</system-out>
-        </testcase>
-        <testcase name="testGameOpeningSessionPersistence" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="77" assertions="6" time="0.001633">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">OpenGameIntegrationTest::testGameOpeningSessionPersistence
-Failed asserting that two strings are equal.
---- Expected
-+++ Actual
-@@ @@
--'Тестовый пользователь'
-+'&amp;#039;; DROP TABLE user; --'
-
-I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:120</failure>
-        </testcase>
-        <testcase name="testSecurityInvalidIds" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="328" assertions="1" time="0.001219">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">OpenGameIntegrationTest::testSecurityInvalidIds
-Failed asserting that two strings are equal.
---- Expected
-+++ Actual
-@@ @@
--'game error'
-+''
-
-I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:340</failure>
-        </testcase>
-        <testcase name="testErrorHandlingInGameOpening" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="233" assertions="1" time="0.001193">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">OpenGameIntegrationTest::testErrorHandlingInGameOpening
-Failed asserting that two strings are equal.
---- Expected
-+++ Actual
-@@ @@
--'game error'
-+'user error'
-
-I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:245</failure>
-        </testcase>
-        <testcase name="testGameOpeningDataIntegrity" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="410" assertions="8" time="0.001684">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">OpenGameIntegrationTest::testGameOpeningDataIntegrity
-Failed asserting that two strings are equal.
---- Expected
-+++ Actual
-@@ @@
--'Тестовый игрок'
-+'&amp;#039;; DROP TABLE user; --'
-
-I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:454</failure>
-        </testcase>
-        <testcase name="testGameOpeningWithDifferentConfigurations" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="127" assertions="6" time="0.000935"/>
-        <testcase name="testPerformanceGameOpening" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="284" assertions="3" time="0.001012"/>
-        <testcase name="testGameOpeningObjectRelationships" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="465" assertions="3" time="0.000873"/>
-        <testcase name="testGameListWithDifferentPlayerCounts" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="185" assertions="5" time="0.001334"/>
       </testsuite>
     </testsuite>
   </testsuite>

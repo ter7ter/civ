@@ -44,7 +44,14 @@ class Unit {
 
 	public $lvl = 1;
 	
-	private static $_all = [];
+	protected static $_all = [];
+
+    /**
+     * Очистка кэша для тестов
+     */
+    public static function clearCache() {
+        self::$_all = [];
+    }
 
     /**
      * @param $id

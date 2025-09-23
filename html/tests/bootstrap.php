@@ -2,7 +2,7 @@
 
 /**
  * Bootstrap файл для PHPUnit тестов
- * Инициализирует тестовое окружение
+ * Инициализирует тестовое окружение с использованием реальных классов игры
  */
 
 // Устанавливаем временную зону по умолчанию
@@ -12,49 +12,72 @@ date_default_timezone_set("Europe/Moscow");
 define("PROJECT_ROOT", dirname(__DIR__));
 define("TESTS_ROOT", __DIR__);
 
-// Загружаем основные файлы проекта, но сначала MyDB для тестов
+// Подключаем конфигурацию
+require_once PROJECT_ROOT . "/config.php";
+
+// Сначала загружаем MyDB.class.php
 require_once PROJECT_ROOT . "/classes/MyDB.class.php";
-require_once PROJECT_ROOT . "/includes.php";
 
-// Настройки тестовой базы данных
-// В тестах всегда используем sqlite::memory:, независимо от phpunit.xml
-if (!defined("TEST_DB_HOST")) {
-    define("TEST_DB_HOST", "sqlite::memory:");
-}
-if (!defined("TEST_DB_USER")) {
-    define("TEST_DB_USER", $_ENV["TEST_DB_USER"] ?? "test_user");
-}
-if (!defined("TEST_DB_PASS")) {
-    define("TEST_DB_PASS", $_ENV["TEST_DB_PASS"] ?? "test_pass");
-}
-if (!defined("TEST_DB_NAME")) {
-    define("TEST_DB_NAME", $_ENV["TEST_DB_NAME"] ?? "test_db");
-}
-if (!defined("TEST_DB_PORT")) {
-    define("TEST_DB_PORT", $_ENV["TEST_DB_PORT"] ?? 3306);
+// Затем загружаем моки для БД
+require_once TESTS_ROOT . "/mocks/DatabaseTestAdapter.php";
+require_once TESTS_ROOT . "/mocks/MyDBTestWrapper.php";
+require_once TESTS_ROOT . "/mocks/MockLoader.php";
+
+// Подключаем инициализатор игровых данных
+require_once TESTS_ROOT . "/TestGameDataInitializer.php";
+
+// Загружаем остальные реальные классы проекта в правильном порядке зависимостей
+$classFiles = [
+    "CellType.class.php",
+    "ResearchType.class.php",
+    "ResourceType.class.php",
+    "BuildingType.class.php",
+    "UnitType.class.php",
+    "MissionType.class.php",
+    "Cell.class.php",
+    "Resource.class.php",
+    "Research.class.php",
+    "Building.class.php",
+    "Unit.class.php",
+    "City.class.php",
+    "Message.class.php",
+    "Event.class.php",
+    "User.class.php",
+    "Game.class.php",
+];
+
+foreach ($classFiles as $classFile) {
+    $filePath = PROJECT_ROOT . "/classes/" . $classFile;
+    if (file_exists($filePath)) {
+        require_once $filePath;
+    }
 }
 
-// Принудительно устанавливаем sqlite::memory: для тестов
-MyDB::setDBConfig(
-    "sqlite::memory:",
-    TEST_DB_USER,
-    TEST_DB_PASS,
-    TEST_DB_PORT,
-    TEST_DB_NAME,
-);
+// Очищаем данные, созданные в оригинальных классах, и инициализируем тестовые данные
+TestGameDataInitializer::clearAll();
+TestGameDataInitializer::initializeAll();
 
-// Подключаем тестовые классы ДО загрузки основных файлов проекта
-require_once __DIR__ . "/mocks/MockLoader.php";
-
-require_once __DIR__ . "/test_bootstrap_classes.php";
-
+// Создаем тестовые таблицы БД
 DatabaseTestAdapter::createTestTables();
 
 // Настройка обработки ошибок для тестов
 error_reporting(E_ALL & ~E_NOTICE);
 ini_set("display_errors", 1);
 
-// Функция для создания тестовых данных
+// Устанавливаем обработчик ошибок для тестов
+set_error_handler(function ($severity, $message, $file, $line) {
+    // Игнорируем ошибки header в тестах
+    if (strpos($message, "Cannot modify header information") !== false) {
+        return true;
+    }
+    // Преобразуем ошибки PHP в исключения для лучшего тестирования
+    if (!(error_reporting() & $severity)) {
+        return false;
+    }
+    throw new ErrorException($message, 0, $severity, $file, $line);
+});
+
+// Функция для создания тестовых директорий
 function createTestDirectory($path)
 {
     if (!is_dir($path)) {
@@ -83,19 +106,6 @@ function cleanupTestData()
 
 // Регистрируем функцию очистки при завершении
 register_shutdown_function("cleanupTestData");
-
-// Устанавливаем обработчик ошибок для тестов
-set_error_handler(function ($severity, $message, $file, $line) {
-    // Игнорируем ошибки header в тестах
-    if (strpos($message, "Cannot modify header information") !== false) {
-        return true;
-    }
-    // Преобразуем ошибки PHP в исключения для лучшего тестирования
-    if (!(error_reporting() & $severity)) {
-        return false;
-    }
-    throw new ErrorException($message, 0, $severity, $file, $line);
-});
 
 // Мок для функций, которые могут вызывать проблемы в тестах
 if (!function_exists("session_start")) {

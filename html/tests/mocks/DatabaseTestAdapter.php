@@ -36,25 +36,8 @@ class DatabaseTestAdapter
         return MyDB::get();
     }
 
-    public static function query($query, $vars = [])
-    {
-        // Используем основной класс MyDB из проекта
-        return MyDB::query($query, $vars);
-    }
-
-    public static function insert($table, $values)
-    {
-        return MyDB::insert($table, $values);
-    }
-
-    public static function update($table, $values, $where)
-    {
-        return MyDB::update($table, $values, $where);
-    }
-
-
     /**
-     * Статический метод для создания таблиц в переданном PDO соединении
+     * Создание тестовых таблиц
      */
     public static function createTestTables()
     {
@@ -92,34 +75,39 @@ class DatabaseTestAdapter
             ",
             "cell" => "
                 CREATE TABLE IF NOT EXISTS cell (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                     x INTEGER NOT NULL,
                     y INTEGER NOT NULL,
                     planet INTEGER NOT NULL,
                     type TEXT DEFAULT 'plains',
                     owner INTEGER DEFAULT NULL,
                     owner_culture INTEGER DEFAULT 0,
-                    road INTEGER DEFAULT 0
+                    road TEXT DEFAULT 'none',
+                    improvement TEXT DEFAULT 'none',
+                    PRIMARY KEY (x, y, planet)
                 )
             ",
             "unit_type" => "
                 CREATE TABLE IF NOT EXISTS unit_type (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    name TEXT NOT NULL,
-                    points INTEGER DEFAULT 2
+                    title TEXT NOT NULL,
+                    points INTEGER DEFAULT 2,
+                    mission_points INTEGER DEFAULT 2
                 )
             ",
             "unit" => "
                 CREATE TABLE IF NOT EXISTS unit (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL,
+                    type INTEGER NOT NULL,
                     x INTEGER NOT NULL,
                     y INTEGER NOT NULL,
                     planet INTEGER NOT NULL,
-                    user_id INTEGER NOT NULL,
-                    type INTEGER DEFAULT 1,
-                    health INTEGER DEFAULT 3,
-                    health_max INTEGER DEFAULT 3,
-                    points INTEGER DEFAULT 2
+                    health INTEGER NOT NULL,
+                    health_max INTEGER NOT NULL DEFAULT 3,
+                    points REAL NOT NULL,
+                    mission_points INTEGER NOT NULL DEFAULT 0,
+                    mission TEXT DEFAULT NULL,
+                    auto TEXT DEFAULT 'none'
                 )
             ",
             "city" => "
@@ -133,17 +121,30 @@ class DatabaseTestAdapter
                     population INTEGER DEFAULT 1,
                     pmoney INTEGER DEFAULT 0,
                     presearch INTEGER DEFAULT 0,
-                    resource_group INTEGER DEFAULT NULL
+                    resource_group INTEGER DEFAULT NULL,
+                    eat INTEGER DEFAULT 0,
+                    eat_up INTEGER DEFAULT 20,
+                    culture INTEGER DEFAULT 0,
+                    culture_level INTEGER DEFAULT 0,
+                    production INTEGER DEFAULT NULL,
+                    production_type TEXT DEFAULT 'unit',
+                    production_complete INTEGER DEFAULT 0,
+                    people_dis INTEGER DEFAULT 0,
+                    people_norm INTEGER DEFAULT 1,
+                    people_happy INTEGER DEFAULT 0,
+                    people_artist INTEGER DEFAULT 0,
+                    is_coastal INTEGER DEFAULT 0,
+                    pwork INTEGER DEFAULT 1,
+                    peat INTEGER DEFAULT 2
                 )
             ",
             "city_people" => "
                 CREATE TABLE IF NOT EXISTS city_people (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                     x INTEGER NOT NULL,
                     y INTEGER NOT NULL,
                     planet INTEGER NOT NULL,
                     city_id INTEGER NOT NULL,
-                    FOREIGN KEY (city_id) REFERENCES city(id)
+                    PRIMARY KEY (x, y, planet)
                 )
             ",
             "resource_group" => "
@@ -172,6 +173,23 @@ class DatabaseTestAdapter
                     date DATETIME DEFAULT CURRENT_TIMESTAMP
                 )
             ",
+            "event" => "
+                CREATE TABLE IF NOT EXISTS event (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    type TEXT NOT NULL,
+                    user_id INTEGER NOT NULL,
+                    object TEXT DEFAULT NULL,
+                    source INTEGER DEFAULT NULL,
+                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                )
+            ",
+            "resource_type" => "
+                CREATE TABLE IF NOT EXISTS resource_type (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT NOT NULL,
+                    type TEXT NOT NULL
+                )
+            ",
             "resource" => "
                 CREATE TABLE IF NOT EXISTS resource (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -182,13 +200,32 @@ class DatabaseTestAdapter
                     amount INTEGER DEFAULT 0
                 )
             ",
-            "event" => "
-                CREATE TABLE IF NOT EXISTS event (
+            "research_type" => "
+                CREATE TABLE IF NOT EXISTS research_type (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    type TEXT NOT NULL,
-                    user_id INTEGER NOT NULL,
-                    object TEXT DEFAULT NULL,
-                    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+                    title TEXT NOT NULL,
+                    age INTEGER DEFAULT 1,
+                    cost INTEGER DEFAULT 100
+                )
+            ",
+            "building_type" => "
+                CREATE TABLE IF NOT EXISTS building_type (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT NOT NULL,
+                    cost INTEGER DEFAULT 50
+                )
+            ",
+            "building" => "
+                CREATE TABLE IF NOT EXISTS building (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    type INTEGER NOT NULL,
+                    city_id INTEGER NOT NULL
+                )
+            ",
+            "mission_type" => "
+                CREATE TABLE IF NOT EXISTS mission_type (
+                    id TEXT PRIMARY KEY,
+                    title TEXT NOT NULL
                 )
             ",
         ];
@@ -207,13 +244,18 @@ class DatabaseTestAdapter
         $tables = [
             "event",
             "resource",
+            "resource_type",
             "message",
             "research",
+            "research_type",
             "resource_group",
             "city_people",
             "city",
+            "building",
+            "building_type",
             "unit",
             "unit_type",
+            "mission_type",
             "cell",
             "user",
             "game",
@@ -242,6 +284,22 @@ class DatabaseTestAdapter
         self::resetAutoIncrements();
         self::clearQueries();
 
+        // Очистка кэшей классов
+        if (class_exists("City") && method_exists("City", "clearCache")) {
+            City::clearCache();
+        }
+        if (class_exists("User") && method_exists("User", "clearCache")) {
+            User::clearCache();
+        }
+        if (class_exists("Game") && method_exists("Game", "clearCache")) {
+            Game::clearCache();
+        }
+        if (class_exists("Unit") && method_exists("Unit", "clearCache")) {
+            Unit::clearCache();
+        }
+        if (class_exists("UnitType")) {
+            UnitType::$all = [];
+        }
         // Очистка кэшей моков
         if (class_exists("GameTestMock")) {
             GameTestMock::$_all = [];

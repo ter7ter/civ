@@ -1,21 +1,30 @@
 <?php
-class Game {
+class Game
+{
     /**
      * @var Game[]
      */
-    private static $_all = [];
+    protected static $_all = [];
+
+    /**
+     * Очистка кэша для тестов
+     */
+    public static function clearCache() {
+        self::$_all = [];
+    }
+
     /**
      * @var int
      */
-	public $id;
+    public $id;
     /**
      * @var string
      */
-	public $name;
+    public $name;
     /**
      * @var User[]
      */
-	public $users = [];
+    public $users = [];
     /**
      * Ширина карты
      * @var int
@@ -43,17 +52,29 @@ class Game {
      * @param $id
      * @return Game
      */
-    public static function get($id) {
+    public static function get($id)
+    {
         if (isset(Game::$_all[$id])) {
             return Game::$_all[$id];
         } else {
-            $data = MyDB::query("SELECT * FROM game WHERE id = :id", ['id' => $id], 'row');
+            $data = MyDB::query(
+                "SELECT * FROM game WHERE id = :id",
+                ["id" => $id],
+                "row",
+            );
+            if (!isset($data["id"])) {
+                return null;
+            }
             return new Game($data);
         }
     }
 
-	public function __construct($data) {
-        foreach (['name', 'map_w', 'map_h', 'turn_type', 'turn_num'] as $field) {
+    public function __construct($data)
+    {
+        foreach (
+            ["name", "map_w", "map_h", "turn_type", "turn_num"]
+            as $field
+        ) {
             if (isset($data[$field])) {
                 $this->$field = $data[$field];
             }
@@ -61,36 +82,44 @@ class Game {
         Cell::$map_width = $this->map_w;
         Cell::$map_height = $this->map_h;
 
-		$this->users = [];
-        if (isset($data['id'])) {
-            $this->id = $data['id'];
-            Cell::$map_planet = $this->id;
-            $users = MyDB::query("SELECT id FROM user WHERE game = :gameid", ['gameid' => $this->id]);
+        $this->users = [];
+        if (isset($data["id"])) {
+            $this->id = $data["id"];
+
+            $users = MyDB::query("SELECT id FROM user WHERE game = :gameid", [
+                "gameid" => $this->id,
+            ]);
             foreach ($users as $user) {
-                $this->users[$user['id']] = User::get($user['id']);
+                $this->users[$user["id"]] = User::get($user["id"]);
             }
         }
-	}
-	
-	public function save() {
+    }
+
+    public function save()
+    {
         $values = [];
-        foreach (['name', 'map_w', 'map_h', 'turn_type', 'turn_num'] as $field) {
+        foreach (
+            ["name", "map_w", "map_h", "turn_type", "turn_num"]
+            as $field
+        ) {
             $values[$field] = $this->$field;
         }
-		if ($this->id) {
-			MyDB::update('game', $values, $this->id);
-		} else {
-			$this->id = MyDB::insert('game', $values);
-			Cell::$map_planet = $this->id;
-		}
-	}
+        if ($this->id) {
+            MyDB::update("game", $values, $this->id);
+        } else {
+            $this->id = MyDB::insert("game", $values);
+        }
+    }
 
-	public function create_new_game() {
-        Cell::generate_map();
-        $users = MyDB::query("SELECT id FROM user WHERE game = :gameid ORDER BY turn_order",
-            ['gameid' => $this->id]);
+    public function create_new_game()
+    {
+        Cell::generate_map($this->id);
+        $users = MyDB::query(
+            "SELECT id FROM user WHERE game = :gameid ORDER BY turn_order",
+            ["gameid" => $this->id],
+        );
         foreach ($users as $user) {
-            $this->users[$user['id']] = User::get($user['id']);
+            $this->users[$user["id"]] = User::get($user["id"]);
         }
         $positions = [];
         $i = 0;
@@ -99,18 +128,35 @@ class Game {
             $pos_x = mt_rand(0, $this->map_w - 1);
             $pos_y = mt_rand(0, $this->map_h - 1);
             $cell = Cell::get($pos_x, $pos_y);
-            if ($i > 1000)  {
-                var_dump($cell);
-                die('aaaaaaaaaaaaa');
+            if ($i > 1000) {
+                throw new Exception("Too many iterations");
             }
-            if (!in_array($cell->type->id, ['plains', 'plains2', 'forest', 'hills'])) {
+            if (
+                !in_array($cell->type->id, [
+                    "plains",
+                    "plains2",
+                    "forest",
+                    "hills",
+                ])
+            ) {
                 //Эта клетка не подходит для заселения
                 continue;
             }
             $around_ok = 0;
             $cells = Cell::get_cells_around($pos_x, $pos_y, 3, 3);
-            foreach ($cells as $row) foreach ($row as $item) {
-                if (in_array($cell->type->id, ['plains', 'plains2', 'forest', 'hills'])) $around_ok++;
+            foreach ($cells as $row) {
+                foreach ($row as $item) {
+                    if (
+                        in_array($cell->type->id, [
+                            "plains",
+                            "plains2",
+                            "forest",
+                            "hills",
+                        ])
+                    ) {
+                        $around_ok++;
+                    }
+                }
             }
             if ($around_ok < 3) {
                 //Мало подходящих соседних клеток
@@ -119,7 +165,9 @@ class Game {
             //Проверяем наличие соседей поблизости
             $users_around = false;
             foreach ($positions as $pos) {
-                if (Cell::calc_distance($pos[0], $pos[1], $pos_x, $pos_y) < 8) $users_around = true;
+                if (Cell::calc_distance($pos[0], $pos[1], $pos_x, $pos_y) < 8) {
+                    $users_around = true;
+                }
             }
             if ($users_around) {
                 continue;
@@ -128,34 +176,47 @@ class Game {
         }
         foreach ($this->users as $user) {
             $position = array_shift($positions);
-            $citizen = new Unit(['x' => $position[0], 'y' => $position[1], 'planet' => Cell::$map_planet, 'health' => 3, 'points' => 2, 'user_id' => $user->id, 'type' => 1]);
+            $citizen = new Unit([
+                "x" => $position[0],
+                "y" => $position[1],
+                "planet" => Cell::$map_planet,
+                "health" => 3,
+                "points" => 2,
+                "user_id" => $user->id,
+                "type" => 1,
+            ]);
             $citizen->save();
         }
     }
 
-    public static function game_list() {
+    public static function game_list()
+    {
         $games = MyDB::query("SELECT game.*, count(user.id) as ucount FROM game
                                 INNER JOIN user ON user.game = game.id
                                 GROUP BY user.game ORDER BY id DESC");
         return $games;
     }
 
-    public function calculate() {
+    public function calculate()
+    {
         $first = true;
         foreach ($this->users as $user) {
             $user->calculate_research(); //Начало нового
             $user->calculate_resource();
             $user->calculate_cities();
             $user->calculate_income();
-            if ($this->turn_type == 'byturn' || $this->turn_type == 'onewindow') {
+            if (
+                $this->turn_type == "byturn" ||
+                $this->turn_type == "onewindow"
+            ) {
                 if ($first) {
-                    $user->turn_status = 'play';
+                    $user->turn_status = "play";
                     $first = false;
                 } else {
-                    $user->turn_status = 'wait';
+                    $user->turn_status = "wait";
                 }
             } else {
-                $user->turn_status = 'play';
+                $user->turn_status = "play";
             }
             $user->save();
         }
@@ -163,17 +224,25 @@ class Game {
         $this->save();
     }
 
-    public function all_system_message($text) {
+    public function all_system_message($text)
+    {
         foreach ($this->users as $user) {
-            $message = new Message(['form_id' => false,
-                'to_id' => $user->id,
-                'text' => $text,
-                'type' => 'system']);
+            $message = new Message([
+                "form_id" => false,
+                "to_id" => $user->id,
+                "text" => $text,
+                "type" => "system",
+            ]);
             $message->save();
         }
     }
 
-    public function getActivePlayer() {
-        return MyDB::query("SELECT id FROM user WHERE game = :gid AND turn_status = 'play' LIMIT 1", ['gid' => $this->id], 'elem');
+    public function getActivePlayer()
+    {
+        return MyDB::query(
+            "SELECT id FROM user WHERE game = :gid AND turn_status = 'play' LIMIT 1",
+            ["gid" => $this->id],
+            "elem",
+        );
     }
 }

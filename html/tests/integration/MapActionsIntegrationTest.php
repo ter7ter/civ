@@ -19,7 +19,7 @@ class MapActionsIntegrationTest extends TestBase
         require_once PROJECT_ROOT . "/includes.php";
 
         // Создаем тестовый тип юнита
-        DatabaseTestAdapter::insert("unit_type", [
+        MyDB::insert("unit_type", [
             "id" => 1,
             "name" => "Warrior",
             "points" => 2,
@@ -45,7 +45,7 @@ class MapActionsIntegrationTest extends TestBase
             "health" => 3,
             "points" => 5,
         ];
-        $unitId = DatabaseTestAdapter::insert("unit", $unitData);
+        $unitId = MyDB::insert("unit", $unitData);
 
         // Создаем клетку назначения
         $cellData = [
@@ -54,7 +54,7 @@ class MapActionsIntegrationTest extends TestBase
             "planet" => $gameData["id"],
             "type" => "plains",
         ];
-        DatabaseTestAdapter::insert("cell", $cellData);
+        MyDB::insert("cell", $cellData);
 
         // Получаем юнит и перемещаем
         $unit = Unit::get($unitId);
@@ -104,7 +104,7 @@ class MapActionsIntegrationTest extends TestBase
             "type" => "plains",
             "owner" => $userData["id"],
         ];
-        DatabaseTestAdapter::insert("cell", $cellData);
+        MyDB::insert("cell", $cellData);
 
         // Создаем город
         $user = User::get($userData["id"]);
@@ -185,7 +185,7 @@ class MapActionsIntegrationTest extends TestBase
             "health" => 3,
             "points" => 5,
         ];
-        DatabaseTestAdapter::insert("unit", $unitData);
+        MyDB::insert("unit", $unitData);
 
         // Симулируем сессию
         $this->setSession([
@@ -235,7 +235,7 @@ class MapActionsIntegrationTest extends TestBase
             "title" => "Test City",
             "population" => 1,
         ];
-        DatabaseTestAdapter::insert("city", $cityData);
+        MyDB::insert("city", $cityData);
 
         // Симулируем сессию
         $this->setSession([

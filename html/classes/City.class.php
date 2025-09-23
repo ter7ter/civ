@@ -80,12 +80,19 @@ class City {
      */
     public $is_coastal = false;
 	
-	private static $_all = [];
+	protected static $_all = [];
     /**
      * Владелец города
      * @var User
      */
 	public $user;
+
+    /**
+     * Очистка кэша для тестов
+     */
+    public static function clearCache() {
+        self::$_all = [];
+    }
     /**
      * Ресурсы, доступные в городе
      * @var array

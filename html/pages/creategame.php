@@ -1,12 +1,14 @@
 <?php
 // Helper functions for testability
-if (!function_exists('send_header')) {
-    function send_header($location) {
+if (!function_exists("send_header")) {
+    function send_header($location)
+    {
         Header($location);
     }
 }
-if (!function_exists('terminate_script')) {
-    function terminate_script() {
+if (!function_exists("terminate_script")) {
+    function terminate_script()
+    {
         exit();
     }
 }

@@ -243,18 +243,10 @@ class TestRunner
         $exitCode = 0;
 
         try {
-            // Для headless режима (если поддерживается)
-            if (
-                strpos($browser, "chrome") !== false ||
-                strpos($browser, "chromium") !== false
-            ) {
-                $cmd = "{$browser} --headless --disable-gpu --no-sandbox --run-all-tests --dump-dom {$testFile}";
-            } else {
-                // Для обычных браузеров просто открываем файл
-                $cmd = "{$browser} {$testFile}";
-                echo "🌐 Открываем JavaScript тесты в браузере...\n";
-                echo "   После завершения тестов закройте браузер\n";
-            }
+            // Открываем файл в браузере для ручного запуска тестов
+            $cmd = "{$browser} {$testFile}";
+            echo "🌐 Открываем JavaScript тесты в браузере...\n";
+            echo "   После завершения тестов закройте браузер\n";
 
             if ($this->options["verbose"]) {
                 echo "Выполняем: {$cmd}\n";
@@ -314,7 +306,8 @@ class TestRunner
         }
 
         // 4. Проверяем глобальную установку через PATH
-        $cmd = PHP_OS_FAMILY === "Windows" ? "where phpunit" : "which phpunit";
+        $isWindows = defined('PHP_OS_FAMILY') ? PHP_OS_FAMILY === 'Windows' : strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        $cmd = $isWindows ? "where phpunit" : "which phpunit";
         $output = shell_exec($cmd . " 2>&1");
         if ($output && trim($output) && strpos($output, "not found") === false && strpos($output, "Could not find files") === false) {
             // `where` может вернуть несколько путей, по одному на строку. Берем первый.
@@ -332,7 +325,9 @@ class TestRunner
     {
         $browsers = [];
 
-        if (PHP_OS_FAMILY === "Windows") {
+        $isWindows = defined('PHP_OS_FAMILY') ? PHP_OS_FAMILY === 'Windows' : strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+
+        if ($isWindows) {
             $paths = [
                 "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
                 "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",

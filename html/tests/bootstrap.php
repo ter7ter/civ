@@ -8,21 +8,18 @@
 // Устанавливаем временную зону по умолчанию
 date_default_timezone_set("Europe/Moscow");
 
-// Определяем константы для тестового окружения
-if (!defined("TESTING")) {
-    define("TESTING", true);
-}
-if (!defined("TEST_MODE")) {
-    define("TEST_MODE", true);
-}
-
 // Пути к файлам проекта
 define("PROJECT_ROOT", dirname(__DIR__));
 define("TESTS_ROOT", __DIR__);
 
+// Загружаем основные файлы проекта, но сначала MyDB для тестов
+require_once PROJECT_ROOT . "/classes/MyDB.class.php";
+require_once PROJECT_ROOT . "/includes.php";
+
 // Настройки тестовой базы данных
+// В тестах всегда используем sqlite::memory:, независимо от phpunit.xml
 if (!defined("TEST_DB_HOST")) {
-    define("TEST_DB_HOST", $_ENV["TEST_DB_HOST"] ?? "localhost");
+    define("TEST_DB_HOST", "sqlite::memory:");
 }
 if (!defined("TEST_DB_USER")) {
     define("TEST_DB_USER", $_ENV["TEST_DB_USER"] ?? "test_user");
@@ -37,92 +34,21 @@ if (!defined("TEST_DB_PORT")) {
     define("TEST_DB_PORT", $_ENV["TEST_DB_PORT"] ?? 3306);
 }
 
+// Принудительно устанавливаем sqlite::memory: для тестов
+MyDB::setDBConfig(
+    "sqlite::memory:",
+    TEST_DB_USER,
+    TEST_DB_PASS,
+    TEST_DB_PORT,
+    TEST_DB_NAME,
+);
+
 // Подключаем тестовые классы ДО загрузки основных файлов проекта
+require_once __DIR__ . "/mocks/MockLoader.php";
+
 require_once __DIR__ . "/test_bootstrap_classes.php";
 
-// Подавляем вывод заголовков в тестах
-if (!function_exists("header")) {
-    function header($header, $replace = true, $http_response_code = null)
-    {
-        // Заглушка для функции header в тестах
-        global $test_headers;
-        if (!isset($test_headers)) {
-            $test_headers = [];
-        }
-        $test_headers[] = $header;
-        return true;
-    }
-}
-
-// Мок для функции exit/die в тестах
-if (!function_exists("test_exit")) {
-    function test_exit($message = "")
-    {
-        throw new Exception("Exit called: " . $message);
-    }
-}
-
-
-
-// Автозагрузчик для классов тестов
-spl_autoload_register(function ($className) {
-    $testFile = TESTS_ROOT . "/" . str_replace("\\", "/", $className) . ".php";
-    if (file_exists($testFile)) {
-        require_once $testFile;
-        return true;
-    }
-    return false;
-});
-
-
-
-// Инициализация сессии для тестов
-if (!isset($_SESSION)) {
-    $_SESSION = [];
-}
-
-// Очистка глобальных переменных для чистого состояния тестов
-$_GET = [];
-$_POST = [];
-$_REQUEST = [];
-$_COOKIE = [];
-$_FILES = [];
-$_SERVER = array_merge($_SERVER, [
-    "REQUEST_METHOD" => "GET",
-    "HTTP_HOST" => "localhost",
-    "REQUEST_URI" => "/test",
-    "SCRIPT_NAME" => "/test.php",
-    "SERVER_NAME" => "localhost",
-    "SERVER_PORT" => 80,
-    "HTTPS" => false,
-]);
-
-// Подключаем тестовые моки
-require_once TESTS_ROOT . "/DatabaseMocks.php";
-
-// Инициализируем тестовое окружение
-if (defined("TESTING") && TESTING) {
-    initializeTestEnvironment();
-}
-
-// В тестах НЕ подключаем основные файлы проекта, чтобы избежать переопределения моков
-// Подключаем только config.php для констант
-if (file_exists(PROJECT_ROOT . "/config.php")) {
-    try {
-        require_once PROJECT_ROOT . "/config.php";
-    } catch (Exception $e) {
-        error_log("Warning: Could not include config.php: " . $e->getMessage());
-    }
-}
-
-// Подключаем functions.php для вспомогательных функций
-if (file_exists(PROJECT_ROOT . "/functions.php")) {
-    try {
-        require_once PROJECT_ROOT . "/functions.php";
-    } catch (Exception $e) {
-        error_log("Warning: Could not include functions.php: " . $e->getMessage());
-    }
-}
+DatabaseTestAdapter::createTestTablesStatic();
 
 // Настройка обработки ошибок для тестов
 error_reporting(E_ALL & ~E_NOTICE);
@@ -178,8 +104,6 @@ if (!function_exists("session_start")) {
         return true;
     }
 }
-
-
 
 // Проверка на наличие обязательных расширений PHP
 $requiredExtensions = ["pdo", "json", "mbstring"];

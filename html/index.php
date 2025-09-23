@@ -10,6 +10,8 @@ set_error_handler(function($severity, $message, $file, $line) {
     throw new ErrorException($message, 0, $severity, $file, $line);
 });
 
+MyDB::setDBConfig(DB_HOST, DB_USER, DB_PASS, DB_PORT, DB_NAME);
+
 try {
     session_start();
     if (isset($_REQUEST['method'])) {

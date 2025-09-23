@@ -1,138 +1,471 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="90" assertions="388" errors="5" warnings="0" failures="0" skipped="0" time="0.147509">
-    <testsuite name="Unit Tests" tests="59" assertions="183" errors="5" warnings="0" failures="0" skipped="0" time="0.081108">
-      <testsuite name="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" tests="10" assertions="49" errors="0" warnings="0" failures="0" skipped="0" time="0.011901">
-        <testcase name="testTransactionHandling" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="172" assertions="2" time="0.005718"/>
-        <testcase name="testTestTablesCreation" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="84" assertions="5" time="0.000909"/>
-        <testcase name="testTestDataCleanup" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="134" assertions="4" time="0.001481"/>
-        <testcase name="testQueryLogging" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="197" assertions="4" time="0.000650"/>
-        <testcase name="testTestDataOperations" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="102" assertions="5" time="0.000759"/>
-        <testcase name="testTestDatabaseConnection" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="71" assertions="2" time="0.000421"/>
-        <testcase name="testTestMyDBInitialization" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="55" assertions="6" time="0.000188"/>
-        <testcase name="testTestDatabaseConstants" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="13" assertions="10" time="0.000266"/>
-        <testcase name="testDatabaseConstantsSeparation" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="33" assertions="3" time="0.001144"/>
-        <testcase name="testGameAndUserMocks" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="220" assertions="8" time="0.000365"/>
+  <testsuite name="" tests="93" assertions="212" errors="21" warnings="0" failures="38" skipped="0" time="0.084424">
+    <testsuite name="Unit Tests" tests="56" assertions="115" errors="8" warnings="0" failures="23" skipped="0" time="0.047106">
+      <testsuite name="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" tests="7" assertions="37" errors="0" warnings="0" failures="0" skipped="0" time="0.010033">
+        <testcase name="testTestTablesCreation" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="99" assertions="5" time="0.004813"/>
+        <testcase name="testTestDatabaseConstants" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="13" assertions="10" time="0.000768"/>
+        <testcase name="testTransactionHandling" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="216" assertions="2" time="0.001885"/>
+        <testcase name="testTestDataOperations" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="122" assertions="5" time="0.000397"/>
+        <testcase name="testTestDataCleanup" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="170" assertions="4" time="0.000408"/>
+        <testcase name="testGameAndUserMocks" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="245" assertions="8" time="0.000700"/>
+        <testcase name="testDatabaseConstantsSeparation" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="68" assertions="3" time="0.001062"/>
       </testsuite>
-      <testsuite name="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" tests="17" assertions="54" errors="4" warnings="0" failures="0" skipped="0" time="0.029485">
-        <testcase name="testEditWithEmptyName" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="208" assertions="2" time="0.001555"/>
-        <testcase name="testDataPreservationOnValidationError" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="347" assertions="6" time="0.001664"/>
-        <testcase name="testGameNotChangedOnValidationError" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="485" assertions="5" time="0.001790"/>
-        <testcase name="testEditBasicGameParameters" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="34" assertions="5" time="0.001994"/>
-        <testcase name="testEditGameNameOnly" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="76" assertions="4" time="0.001586"/>
-        <testcase name="testEditMapSize" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="113" assertions="3" time="0.001670"/>
-        <testcase name="testEditWithInvalidMapSize" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="235" assertions="4" time="0.001992"/>
-        <testcase name="testEditWithInvalidTurnType" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="281" assertions="2" time="0.001568"/>
-        <testcase name="testXSSInEditedGameName" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="379" assertions="2" time="0.001609"/>
-        <testcase name="testVeryLongStringsInEdit" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="412" assertions="2" time="0.002096"/>
-        <testcase name="testMultipleValidationErrors" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="460" assertions="3" time="0.001391"/>
-        <testcase name="testEditTurnType" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="143" assertions="6" time="0.003274"/>
-        <testcase name="testLoadGameDataForEditing" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="176" assertions="6" time="0.001617"/>
-        <testcase name="testEditWithoutGameId" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="329" assertions="1" time="0.001894">
-          <error type="PHPUnit\Framework\RiskyTestError">EditGameTest::testEditWithoutGameId
-Test code or tested code did not (only) close its own output buffers
+      <testsuite name="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" tests="17" assertions="16" errors="8" warnings="0" failures="9" skipped="0" time="0.015386">
+        <testcase name="testEditBasicGameParameters" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="34" assertions="1" time="0.001786">
+          <error type="ErrorException">EditGameTest::testEditBasicGameParameters
+ErrorException: Undefined array key "name"
 
-I:\pr1\html\vendor\bin\phpunit:122</error>
+I:\pr1\html\tests\unit\EditGameTest.php:67</error>
         </testcase>
-        <testcase name="testLoadNonExistentGameForEditing" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="445" assertions="1" time="0.001377">
-          <error type="PHPUnit\Framework\RiskyTestError">EditGameTest::testLoadNonExistentGameForEditing
-Test code or tested code did not (only) close its own output buffers
+        <testcase name="testEditGameNameOnly" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="76" assertions="1" time="0.000997">
+          <error type="ErrorException">EditGameTest::testEditGameNameOnly
+ErrorException: Undefined array key "name"
 
-I:\pr1\html\vendor\bin\phpunit:122</error>
+I:\pr1\html\tests\unit\EditGameTest.php:105</error>
         </testcase>
-        <testcase name="testLoadGameWithoutId" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="21" assertions="1" time="0.001169">
-          <error type="PHPUnit\Framework\RiskyTestError">EditGameTest::testLoadGameWithoutId
-Test code or tested code did not (only) close its own output buffers
+        <testcase name="testEditTurnType" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="143" assertions="1" time="0.000871">
+          <error type="ErrorException">EditGameTest::testEditTurnType
+ErrorException: Undefined array key "turn_type"
 
-I:\pr1\html\vendor\bin\phpunit:122</error>
+I:\pr1\html\tests\unit\EditGameTest.php:169</error>
         </testcase>
-        <testcase name="testEditNonExistentGame" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="311" assertions="1" time="0.001239">
-          <error type="PHPUnit\Framework\RiskyTestError">EditGameTest::testEditNonExistentGame
-Test code or tested code did not (only) close its own output buffers
+        <testcase name="testLoadGameDataForEditing" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="176" assertions="0" time="0.000955">
+          <error type="ErrorException">EditGameTest::testLoadGameDataForEditing
+ErrorException: Undefined array key "game_id"
 
-I:\pr1\html\vendor\bin\phpunit:122</error>
+I:\pr1\html\tests\unit\EditGameTest.php:197</error>
+        </testcase>
+        <testcase name="testXSSInEditedGameName" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="379" assertions="1" time="0.000829">
+          <error type="ErrorException">EditGameTest::testXSSInEditedGameName
+ErrorException: Undefined array key "name"
+
+I:\pr1\html\tests\unit\EditGameTest.php:406</error>
+        </testcase>
+        <testcase name="testVeryLongStringsInEdit" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="412" assertions="1" time="0.000818">
+          <error type="ErrorException">EditGameTest::testVeryLongStringsInEdit
+ErrorException: Undefined array key "name"
+
+I:\pr1\html\tests\unit\EditGameTest.php:439</error>
+        </testcase>
+        <testcase name="testEditMapSize" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="113" assertions="1" time="0.000832">
+          <error type="ErrorException">EditGameTest::testEditMapSize
+ErrorException: Undefined array key "map_w"
+
+I:\pr1\html\tests\unit\EditGameTest.php:136</error>
+        </testcase>
+        <testcase name="testEditWithInvalidTurnType" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="281" assertions="1" time="0.000994">
+          <error type="ErrorException">EditGameTest::testEditWithInvalidTurnType
+ErrorException: Undefined array key "turn_type"
+
+I:\pr1\html\tests\unit\EditGameTest.php:305</error>
+        </testcase>
+        <testcase name="testLoadGameWithoutId" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="21" assertions="1" time="0.001292">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameTest::testLoadGameWithoutId
+Failed asserting that exception of type "Exception" is thrown.</failure>
+        </testcase>
+        <testcase name="testEditWithEmptyName" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="208" assertions="1" time="0.000894">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameTest::testEditWithEmptyName
+Должна быть ошибка для пустого названия
+Failed asserting that false is true.
+
+I:\pr1\html\tests\unit\EditGameTest.php:225</failure>
+        </testcase>
+        <testcase name="testEditNonExistentGame" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="311" assertions="1" time="0.000597">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameTest::testEditNonExistentGame
+Failed asserting that exception of type "Exception" is thrown.</failure>
+        </testcase>
+        <testcase name="testEditWithoutGameId" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="329" assertions="1" time="0.000606">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameTest::testEditWithoutGameId
+Failed asserting that exception of type "Exception" is thrown.</failure>
+        </testcase>
+        <testcase name="testMultipleValidationErrors" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="460" assertions="1" time="0.000903">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameTest::testMultipleValidationErrors
+Должны быть ошибки валидации
+Failed asserting that false is true.
+
+I:\pr1\html\tests\unit\EditGameTest.php:477</failure>
+        </testcase>
+        <testcase name="testDataPreservationOnValidationError" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="347" assertions="1" time="0.000771">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameTest::testDataPreservationOnValidationError
+Должна быть ошибка
+Failed asserting that false is true.
+
+I:\pr1\html\tests\unit\EditGameTest.php:368</failure>
+        </testcase>
+        <testcase name="testLoadNonExistentGameForEditing" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="445" assertions="1" time="0.000568">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameTest::testLoadNonExistentGameForEditing
+Failed asserting that exception of type "Exception" is thrown.</failure>
+        </testcase>
+        <testcase name="testGameNotChangedOnValidationError" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="485" assertions="1" time="0.000906">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameTest::testGameNotChangedOnValidationError
+Должна быть ошибка валидации
+Failed asserting that false is true.
+
+I:\pr1\html\tests\unit\EditGameTest.php:508</failure>
+        </testcase>
+        <testcase name="testEditWithInvalidMapSize" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="235" assertions="1" time="0.000766">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameTest::testEditWithInvalidMapSize
+Должна быть ошибка для слишком маленькой ширины карты
+Failed asserting that false is true.
+
+I:\pr1\html\tests\unit\EditGameTest.php:253</failure>
         </testcase>
       </testsuite>
-      <testsuite name="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" tests="13" assertions="32" errors="1" warnings="0" failures="0" skipped="0" time="0.013436">
-        <testcase name="testSuccessfulGameOpening" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="49" assertions="2" time="0.001110"/>
-        <testcase name="testOpenNonExistentGame" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="160" assertions="1" time="0.000397"/>
-        <testcase name="testOpenGameWithNonExistentUser" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="179" assertions="1" time="0.000691"/>
-        <testcase name="testGameListLoading" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="238" assertions="7" time="0.001357"/>
-        <testcase name="testEmptyGameList" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="282" assertions="1" time="0.000577"/>
-        <testcase name="testOpenGameWithoutGameId" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="200" assertions="1" time="0.000239"/>
-        <testcase name="testOpenGameWithoutUserId" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="219" assertions="1" time="0.000222"/>
-        <testcase name="testOpenGameWithUserFromDifferentGame" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="21" assertions="2" time="0.000746">
-          <error type="PHPUnit\Framework\OutputError">OpenGameTest::testOpenGameWithUserFromDifferentGame
-Test code or tested code printed unexpected output: user error
+      <testsuite name="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" tests="13" assertions="31" errors="0" warnings="0" failures="2" skipped="0" time="0.008983">
+        <testcase name="testSuccessfulGameOpening" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="49" assertions="2" time="0.000423"/>
+        <testcase name="testOpenGameWithNonExistentUser" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="179" assertions="1" time="0.000320"/>
+        <testcase name="testOpenGameWithoutGameId" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="200" assertions="1" time="0.000281"/>
+        <testcase name="testOpenGameWithoutUserId" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="219" assertions="1" time="0.000219"/>
+        <testcase name="testSessionStateAfterGameOpening" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="291" assertions="3" time="0.000343"/>
+        <testcase name="testOpenGameWithMultiplePlayers" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="86" assertions="2" time="0.000652"/>
+        <testcase name="testOpenGameWithDifferentTurnTypes" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="122" assertions="6" time="0.000837"/>
+        <testcase name="testGameListLoading" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="238" assertions="7" time="0.001021"/>
+        <testcase name="testReopenGameWithDifferentUser" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="318" assertions="3" time="0.000476"/>
+        <testcase name="testOpenGameWithMaxPlayers" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="365" assertions="2" time="0.001226"/>
+        <testcase name="testOpenNonExistentGame" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="160" assertions="1" time="0.001055">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">OpenGameTest::testOpenNonExistentGame
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'game error'
++'user error'
 
-I:\pr1\html\vendor\bin\phpunit:122</error>
-          <system-out>user error</system-out>
+I:\pr1\html\tests\unit\OpenGameTest.php:173</failure>
         </testcase>
-        <testcase name="testOpenGameWithMultiplePlayers" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="86" assertions="2" time="0.001219"/>
-        <testcase name="testOpenGameWithDifferentTurnTypes" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="122" assertions="6" time="0.001684"/>
-        <testcase name="testSessionStateAfterGameOpening" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="291" assertions="3" time="0.000691"/>
-        <testcase name="testReopenGameWithDifferentUser" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="318" assertions="3" time="0.000809"/>
-        <testcase name="testOpenGameWithMaxPlayers" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="365" assertions="2" time="0.003694"/>
+        <testcase name="testOpenGameWithUserFromDifferentGame" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="21" assertions="1" time="0.001556">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">OpenGameTest::testOpenGameWithUserFromDifferentGame
+Failed asserting that an array does not have the key 'game_id'.
+
+I:\pr1\html\tests\unit\OpenGameTest.php:42</failure>
+        </testcase>
+        <testcase name="testEmptyGameList" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="282" assertions="1" time="0.000576"/>
       </testsuite>
-      <testsuite name="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" tests="19" assertions="48" errors="0" warnings="0" failures="0" skipped="0" time="0.026286">
-        <testcase name="testMaximumMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="115" assertions="1" time="0.002066"/>
-        <testcase name="testEmptyGameName" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="163" assertions="2" time="0.000653"/>
-        <testcase name="testInsufficientPlayers" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="188" assertions="2" time="0.000701"/>
-        <testcase name="testDuplicatePlayerNames" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="211" assertions="2" time="0.000600"/>
-        <testcase name="testXSSInPlayerNames" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="390" assertions="5" time="0.001664"/>
-        <testcase name="testInvalidTurnType" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="515" assertions="1" time="0.001433"/>
-        <testcase name="testCreateBasicGame" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="21" assertions="3" time="0.001584"/>
-        <testcase name="testMinimumMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="93" assertions="1" time="0.001576"/>
-        <testcase name="testXSSInGameName" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="355" assertions="4" time="0.001484"/>
-        <testcase name="testVeryLongStrings" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="430" assertions="5" time="0.001597"/>
-        <testcase name="testPlayerColorGeneration" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="469" assertions="1" time="0.001699"/>
-        <testcase name="testEmptyPlayerFields" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="493" assertions="1" time="0.001515"/>
-        <testcase name="testDifferentTurnTypes" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="137" assertions="3" time="0.003660"/>
-        <testcase name="testMaximumPlayersGame" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="55" assertions="3" time="0.002843"/>
-        <testcase name="testTooSmallMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="234" assertions="2" time="0.000679"/>
-        <testcase name="testTooLargeMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="257" assertions="2" time="0.000599"/>
-        <testcase name="testTooManyPlayers" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="280" assertions="2" time="0.000609"/>
-        <testcase name="testDataPreservationOnError" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="311" assertions="6" time="0.000517"/>
-        <testcase name="testNoPostData" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="538" assertions="2" time="0.000807"/>
+      <testsuite name="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" tests="19" assertions="31" errors="0" warnings="0" failures="12" skipped="0" time="0.012704">
+        <testcase name="testMinimumMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="95" assertions="1" time="0.000352"/>
+        <testcase name="testMaximumMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="118" assertions="1" time="0.000258"/>
+        <testcase name="testDifferentTurnTypes" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="141" assertions="3" time="0.000398"/>
+        <testcase name="testPlayerColorGeneration" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="515" assertions="1" time="0.000237"/>
+        <testcase name="testEmptyPlayerFields" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="540" assertions="1" time="0.000237"/>
+        <testcase name="testInvalidTurnType" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="563" assertions="1" time="0.000234"/>
+        <testcase name="testCreateBasicGame" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="21" assertions="3" time="0.001110">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testCreateBasicGame
+Должно быть создано два пользователя
+Failed asserting that 1 matches expected 2.
+
+I:\pr1\html\tests\unit\CreateGameTest.php:46</failure>
+        </testcase>
+        <testcase name="testMaximumPlayersGame" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="56" assertions="3" time="0.001095">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testMaximumPlayersGame
+Должно быть создано 16 пользователей
+Failed asserting that 1 matches expected 16.
+
+I:\pr1\html\tests\unit\CreateGameTest.php:85</failure>
+        </testcase>
+        <testcase name="testEmptyGameName" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="168" assertions="1" time="0.000738">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testEmptyGameName
+Должна быть ошибка для пустого названия
+Failed asserting that false is true.
+
+I:\pr1\html\tests\unit\CreateGameTest.php:181</failure>
+        </testcase>
+        <testcase name="testInsufficientPlayers" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="191" assertions="1" time="0.000659">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testInsufficientPlayers
+Должна быть ошибка для недостаточного количества игроков
+Failed asserting that false is true.
+
+I:\pr1\html\tests\unit\CreateGameTest.php:204</failure>
+        </testcase>
+        <testcase name="testDuplicatePlayerNames" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="214" assertions="1" time="0.000637">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testDuplicatePlayerNames
+Должна быть ошибка для дублирующихся имен
+Failed asserting that false is true.
+
+I:\pr1\html\tests\unit\CreateGameTest.php:227</failure>
+        </testcase>
+        <testcase name="testTooSmallMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="237" assertions="1" time="0.000786">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testTooSmallMapSize
+Должна быть ошибка для слишком маленькой карты
+Failed asserting that false is true.
+
+I:\pr1\html\tests\unit\CreateGameTest.php:250</failure>
+        </testcase>
+        <testcase name="testTooLargeMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="260" assertions="1" time="0.001012">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testTooLargeMapSize
+Должна быть ошибка для слишком большой карты
+Failed asserting that false is true.
+
+I:\pr1\html\tests\unit\CreateGameTest.php:273</failure>
+        </testcase>
+        <testcase name="testTooManyPlayers" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="283" assertions="1" time="0.000730">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testTooManyPlayers
+Должна быть ошибка для слишком большого количества игроков
+Failed asserting that false is true.
+
+I:\pr1\html\tests\unit\CreateGameTest.php:301</failure>
+        </testcase>
+        <testcase name="testDataPreservationOnError" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="314" assertions="1" time="0.000803">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testDataPreservationOnError
+Должна быть ошибка
+Failed asserting that false is true.
+
+I:\pr1\html\tests\unit\CreateGameTest.php:331</failure>
+        </testcase>
+        <testcase name="testXSSInGameName" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="358" assertions="3" time="0.000790">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testXSSInGameName
+Не удалось получить созданную игру из БД.
+Failed asserting that false is not false.
+
+I:\pr1\html\tests\unit\CreateGameTest.php:391</failure>
+        </testcase>
+        <testcase name="testXSSInPlayerNames" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="405" assertions="2" time="0.001034">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testXSSInPlayerNames
+Должно быть создано два пользователя.
+Failed asserting that 1 matches expected 2.
+
+I:\pr1\html\tests\unit\CreateGameTest.php:428</failure>
+        </testcase>
+        <testcase name="testVeryLongStrings" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="457" assertions="3" time="0.000994">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameTest::testVeryLongStrings
+Пользователи должны быть созданы, включая пользователя с длинным именем.
+Failed asserting that 1 matches expected 2.
+
+I:\pr1\html\tests\unit\CreateGameTest.php:486</failure>
+        </testcase>
+        <testcase name="testNoPostData" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="587" assertions="2" time="0.000601"/>
       </testsuite>
     </testsuite>
-    <testsuite name="Integration Tests" tests="31" assertions="205" errors="0" warnings="0" failures="0" skipped="0" time="0.066401">
-      <testsuite name="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" tests="10" assertions="59" errors="0" warnings="0" failures="0" skipped="0" time="0.023481">
-        <testcase name="testValidationErrorsIntegration" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="211" assertions="6" time="0.001146"/>
-        <testcase name="testGameDataPersistence" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="54" assertions="6" time="0.001802"/>
-        <testcase name="testPlayerTurnOrder" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="153" assertions="7" time="0.001656"/>
-        <testcase name="testInitialPlayerParameters" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="183" assertions="8" time="0.001525"/>
-        <testcase name="testSQLInjectionProtection" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="277" assertions="3" time="0.001796"/>
-        <testcase name="testFullGameCreationProcess" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="22" assertions="5" time="0.002001"/>
-        <testcase name="testUniquePlayerColors" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="118" assertions="9" time="0.002047"/>
-        <testcase name="testPerformanceWithMaxPlayers" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="241" assertions="4" time="0.002921"/>
-        <testcase name="testMultipleGameCreation" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="311" assertions="5" time="0.004287"/>
-        <testcase name="testDifferentTurnTypesIntegration" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="84" assertions="6" time="0.004298"/>
+    <testsuite name="Integration Tests" tests="37" assertions="97" errors="13" warnings="0" failures="15" skipped="0" time="0.037318">
+      <testsuite name="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" tests="10" assertions="21" errors="3" warnings="0" failures="5" skipped="0" time="0.008830">
+        <testcase name="testGameDataPersistence" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="60" assertions="1" time="0.000856">
+          <error type="ErrorException">CreateGameIntegrationTest::testGameDataPersistence
+ErrorException: Undefined array key "name"
+
+I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:77</error>
+        </testcase>
+        <testcase name="testDifferentTurnTypesIntegration" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="94" assertions="1" time="0.000913">
+          <error type="ErrorException">CreateGameIntegrationTest::testDifferentTurnTypesIntegration
+ErrorException: Undefined array key "turn_type"
+
+I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:127</error>
+        </testcase>
+        <testcase name="testFullGameCreationProcess" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="22" assertions="5" time="0.000474"/>
+        <testcase name="testUniquePlayerColors" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="136" assertions="2" time="0.001091">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameIntegrationTest::testUniquePlayerColors
+Должно быть создано столько цветов, сколько игроков
+Failed asserting that 0 matches expected 6.
+
+I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:170</failure>
+        </testcase>
+        <testcase name="testPlayerTurnOrder" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="194" assertions="1" time="0.000996">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameIntegrationTest::testPlayerTurnOrder
+Должно быть 3 игрока
+Failed asserting that 0 matches expected 3.
+
+I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:215</failure>
+        </testcase>
+        <testcase name="testValidationErrorsIntegration" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="274" assertions="1" time="0.001108">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameIntegrationTest::testValidationErrorsIntegration
+Должны быть ошибки валидации
+Failed asserting that false is true.
+
+I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:290</failure>
+        </testcase>
+        <testcase name="testPerformanceWithMaxPlayers" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="315" assertions="4" time="0.001247">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameIntegrationTest::testPerformanceWithMaxPlayers
+Должно быть создано 16 игроков
+Failed asserting that 1 matches expected 16.
+
+I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:357</failure>
+        </testcase>
+        <testcase name="testMultipleGameCreation" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="414" assertions="4" time="0.001378">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CreateGameIntegrationTest::testMultipleGameCreation
+Должно быть создано 3 игры
+Failed asserting that 1 matches expected 3.
+
+I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:446</failure>
+        </testcase>
+        <testcase name="testInitialPlayerParameters" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="234" assertions="0" time="0.000399">
+          <error type="PHPUnit\Framework\RiskyTestError">CreateGameIntegrationTest::testInitialPlayerParameters
+This test did not perform any assertions
+
+I:\pr1\html\tests\integration\CreateGameIntegrationTest.php:234</error>
+        </testcase>
+        <testcase name="testSQLInjectionProtection" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="367" assertions="2" time="0.000368"/>
       </testsuite>
-      <testsuite name="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" tests="11" assertions="93" errors="0" warnings="0" failures="0" skipped="0" time="0.028426">
-        <testcase name="testEditedGameDataPersistence" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="67" assertions="6" time="0.002095"/>
-        <testcase name="testPlayerOrderPreservationOnEdit" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="187" assertions="9" time="0.002238"/>
-        <testcase name="testPlayerParametersPreservationOnEdit" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="231" assertions="9" time="0.002047"/>
-        <testcase name="testValidationErrorsIntegrationOnEdit" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="292" assertions="7" time="0.001512"/>
-        <testcase name="testSQLInjectionProtectionOnEdit" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="386" assertions="3" time="0.001818"/>
-        <testcase name="testFullGameEditProcess" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="22" assertions="6" time="0.002453"/>
-        <testcase name="testPerformanceEditWithMaxPlayers" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="333" assertions="7" time="0.004055"/>
-        <testcase name="testEditDifferentTurnTypesIntegration" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="107" assertions="9" time="0.003373"/>
-        <testcase name="testMultipleGameEdits" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="430" assertions="17" time="0.004850"/>
-        <testcase name="testLoadGameDataForEditingIntegration" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="150" assertions="6" time="0.001916"/>
-        <testcase name="testEditGameWithRelatedDataPreservation" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="485" assertions="14" time="0.002069"/>
+      <testsuite name="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" tests="11" assertions="34" errors="6" warnings="0" failures="3" skipped="0" time="0.011795">
+        <testcase name="testEditDifferentTurnTypesIntegration" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="137" assertions="1" time="0.001342">
+          <error type="ErrorException">EditGameIntegrationTest::testEditDifferentTurnTypesIntegration
+ErrorException: Undefined array key "turn_type"
+
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:178</error>
+        </testcase>
+        <testcase name="testLoadGameDataForEditingIntegration" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="192" assertions="0" time="0.001316">
+          <error type="ErrorException">EditGameIntegrationTest::testLoadGameDataForEditingIntegration
+ErrorException: Undefined array key "game_id"
+
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:218</error>
+        </testcase>
+        <testcase name="testPlayerOrderPreservationOnEdit" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="229" assertions="9" time="0.000683"/>
+        <testcase name="testPlayerParametersPreservationOnEdit" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="284" assertions="9" time="0.000555"/>
+        <testcase name="testSQLInjectionProtectionOnEdit" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="476" assertions="2" time="0.000959">
+          <error type="ErrorException">EditGameIntegrationTest::testSQLInjectionProtectionOnEdit
+ErrorException: Undefined array key "name"
+
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:524</error>
+        </testcase>
+        <testcase name="testEditedGameDataPersistence" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="87" assertions="1" time="0.000949">
+          <error type="ErrorException">EditGameIntegrationTest::testEditedGameDataPersistence
+ErrorException: Undefined array key "name"
+
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:120</error>
+        </testcase>
+        <testcase name="testPerformanceEditWithMaxPlayers" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="408" assertions="2" time="0.001505">
+          <error type="ErrorException">EditGameIntegrationTest::testPerformanceEditWithMaxPlayers
+ErrorException: Undefined array key "name"
+
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:459</error>
+        </testcase>
+        <testcase name="testEditGameWithRelatedDataPreservation" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="601" assertions="1" time="0.000893">
+          <error type="ErrorException">EditGameIntegrationTest::testEditGameWithRelatedDataPreservation
+ErrorException: Undefined array key "name"
+
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:651</error>
+        </testcase>
+        <testcase name="testFullGameEditProcess" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="22" assertions="3" time="0.001008">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameIntegrationTest::testFullGameEditProcess
+Failed asserting that true is false.
+
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:74</failure>
+        </testcase>
+        <testcase name="testValidationErrorsIntegrationOnEdit" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="348" assertions="1" time="0.000964">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameIntegrationTest::testValidationErrorsIntegrationOnEdit
+Должны быть ошибки валидации
+Failed asserting that false is true.
+
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:374</failure>
+        </testcase>
+        <testcase name="testMultipleGameEdits" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="533" assertions="5" time="0.001621">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">EditGameIntegrationTest::testMultipleGameEdits
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'Отредактированная игра 1'
++'Игра 1'
+
+I:\pr1\html\tests\integration\EditGameIntegrationTest.php:581</failure>
+        </testcase>
       </testsuite>
-      <testsuite name="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" tests="10" assertions="53" errors="0" warnings="0" failures="0" skipped="0" time="0.014494">
-        <testcase name="testGameListWithDifferentPlayerCounts" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="143" assertions="5" time="0.001256"/>
-        <testcase name="testSecurityInvalidIds" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="279" assertions="3" time="0.000762"/>
-        <testcase name="testMultipleGameOpenings" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="321" assertions="6" time="0.001800"/>
-        <testcase name="testGameOpeningSessionPersistence" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="64" assertions="7" time="0.000745"/>
-        <testcase name="testErrorHandlingInGameOpening" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="188" assertions="3" time="0.001559"/>
-        <testcase name="testGameOpeningDataIntegrity" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="361" assertions="13" time="0.000838"/>
-        <testcase name="testGameOpeningObjectRelationships" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="416" assertions="3" time="0.001365"/>
-        <testcase name="testFullGameOpeningProcess" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="22" assertions="4" time="0.001402"/>
-        <testcase name="testGameOpeningWithDifferentConfigurations" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="108" assertions="6" time="0.001912"/>
-        <testcase name="testPerformanceGameOpening" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="239" assertions="3" time="0.002854"/>
+      <testsuite name="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" tests="6" assertions="3" errors="3" warnings="0" failures="3" skipped="0" time="0.006422">
+        <testcase name="testUnitMovement" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="32" assertions="0" time="0.000958">
+          <error type="PDOException">MapActionsIntegrationTest::testUnitMovement
+PDOException: SQLSTATE[HY000]: General error: 1 no such table: resource
+
+I:\pr1\html\classes\MyDB.class.php:67
+I:\pr1\html\classes\Resource.class.php:17
+I:\pr1\html\classes\Cell.class.php:99
+I:\pr1\html\classes\Cell.class.php:71
+I:\pr1\html\classes\Cell.class.php:52
+I:\pr1\html\tests\integration\MapActionsIntegrationTest.php:61</error>
+        </testcase>
+        <testcase name="testCityFoundation" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="93" assertions="0" time="0.001469">
+          <error type="PDOException">MapActionsIntegrationTest::testCityFoundation
+PDOException: SQLSTATE[HY000]: General error: 1 no such table: resource
+
+I:\pr1\html\classes\MyDB.class.php:67
+I:\pr1\html\classes\Resource.class.php:17
+I:\pr1\html\classes\Cell.class.php:99
+I:\pr1\html\classes\Cell.class.php:71
+I:\pr1\html\classes\Cell.class.php:52
+I:\pr1\html\classes\Cell.class.php:157
+I:\pr1\html\classes\City.class.php:149
+I:\pr1\html\tests\integration\MapActionsIntegrationTest.php:111</error>
+        </testcase>
+        <testcase name="testMapBoundaries" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="279" assertions="0" time="0.001041">
+          <error type="ErrorException">MapActionsIntegrationTest::testMapBoundaries
+ErrorException: Undefined array key "center_x"
+
+I:\pr1\html\tests\integration\MapActionsIntegrationTest.php:298</error>
+        </testcase>
+        <testcase name="testMapScrolling" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="138" assertions="1" time="0.000994">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">MapActionsIntegrationTest::testMapScrolling
+Должны быть данные карты
+Failed asserting that an array has the key 'mapv'.
+
+I:\pr1\html\tests\integration\MapActionsIntegrationTest.php:160</failure>
+        </testcase>
+        <testcase name="testMapLoadingWithUnits" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="172" assertions="1" time="0.000945">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">MapActionsIntegrationTest::testMapLoadingWithUnits
+Failed asserting that an array has the key 'mapv'.
+
+I:\pr1\html\tests\integration\MapActionsIntegrationTest.php:201</failure>
+        </testcase>
+        <testcase name="testMapLoadingWithCity" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="223" assertions="1" time="0.001014">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">MapActionsIntegrationTest::testMapLoadingWithCity
+Failed asserting that an array has the key 'mapv'.
+
+I:\pr1\html\tests\integration\MapActionsIntegrationTest.php:251</failure>
+        </testcase>
+      </testsuite>
+      <testsuite name="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" tests="10" assertions="39" errors="1" warnings="0" failures="4" skipped="0" time="0.010271">
+        <testcase name="testFullGameOpeningProcess" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="22" assertions="4" time="0.000571"/>
+        <testcase name="testGameOpeningWithDifferentConfigurations" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="127" assertions="6" time="0.000768"/>
+        <testcase name="testGameListWithDifferentPlayerCounts" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="185" assertions="5" time="0.001243"/>
+        <testcase name="testPerformanceGameOpening" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="284" assertions="3" time="0.001088"/>
+        <testcase name="testMultipleGameOpenings" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="370" assertions="2" time="0.001411">
+          <error type="ErrorException">OpenGameIntegrationTest::testMultipleGameOpenings
+ErrorException: Undefined array key "game_id"
+
+I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:402</error>
+          <system-out>user error</system-out>
+        </testcase>
+        <testcase name="testGameOpeningObjectRelationships" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="465" assertions="3" time="0.000539"/>
+        <testcase name="testGameOpeningSessionPersistence" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="77" assertions="6" time="0.001313">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">OpenGameIntegrationTest::testGameOpeningSessionPersistence
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'Тестовый пользователь'
++'MockUser'
+
+I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:120</failure>
+        </testcase>
+        <testcase name="testErrorHandlingInGameOpening" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="233" assertions="1" time="0.001045">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">OpenGameIntegrationTest::testErrorHandlingInGameOpening
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'game error'
++'user error'
+
+I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:245</failure>
+        </testcase>
+        <testcase name="testSecurityInvalidIds" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="328" assertions="1" time="0.000995">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">OpenGameIntegrationTest::testSecurityInvalidIds
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'game error'
++''
+
+I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:340</failure>
+        </testcase>
+        <testcase name="testGameOpeningDataIntegrity" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="410" assertions="8" time="0.001298">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">OpenGameIntegrationTest::testGameOpeningDataIntegrity
+Failed asserting that two strings are equal.
+--- Expected
++++ Actual
+@@ @@
+-'Тестовый игрок'
++'MockUser'
+
+I:\pr1\html\tests\integration\OpenGameIntegrationTest.php:454</failure>
+        </testcase>
       </testsuite>
     </testsuite>
   </testsuite>

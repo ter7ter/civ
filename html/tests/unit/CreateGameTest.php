@@ -29,12 +29,13 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         // Проверяем, что игра создана
         $this->assertFalse(
             $error,
-            "Не должно быть ошибок при создании базовой игры: " . (is_string($error) ? $error : '')
+            "Не должно быть ошибок при создании базовой игры: " .
+                (is_string($error) ? $error : ""),
         );
 
         // Проверяем, что игра создана в БД
@@ -68,11 +69,12 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         $this->assertFalse(
             $error,
-            "Не должно быть ошибок при создании игры с 16 игроками: " . (is_string($error) ? $error : '')
+            "Не должно быть ошибок при создании игры с 16 игроками: " .
+                (is_string($error) ? $error : ""),
         );
 
         // Проверяем создание в БД
@@ -101,11 +103,12 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         $this->assertFalse(
             $error,
-            "Не должно быть ошибок для минимального размера карты: " . (is_string($error) ? $error : '')
+            "Не должно быть ошибок для минимального размера карты: " .
+                (is_string($error) ? $error : ""),
         );
     }
 
@@ -123,11 +126,12 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         $this->assertFalse(
             $error,
-            "Не должно быть ошибок для максимального размера карты: " . (is_string($error) ? $error : '')
+            "Не должно быть ошибок для максимального размера карты: " .
+                (is_string($error) ? $error : ""),
         );
     }
 
@@ -148,11 +152,12 @@ class CreateGameTest extends TestBase
             ]);
 
             $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-            $error = $vars['error'] ?? false;
+            $error = $vars["error"] ?? false;
 
             $this->assertFalse(
                 $error,
-                "Не должно быть ошибок для типа ходов: {$turnType}: " . (is_string($error) ? $error : '')
+                "Не должно быть ошибок для типа ходов: {$turnType}: " .
+                    (is_string($error) ? $error : ""),
             );
         }
     }
@@ -171,15 +176,13 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         $this->assertTrue(
             $error !== false,
             "Должна быть ошибка для пустого названия",
         );
         $this->assertEquals("Название игры не может быть пустым", $error);
-
-
     }
 
     /**
@@ -196,7 +199,7 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         $this->assertTrue(
             $error !== false,
@@ -219,7 +222,7 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         $this->assertTrue(
             $error !== false,
@@ -242,7 +245,7 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         $this->assertTrue(
             $error !== false,
@@ -265,7 +268,7 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         $this->assertTrue(
             $error !== false,
@@ -293,7 +296,7 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         $this->assertTrue(
             $error !== false,
@@ -321,8 +324,8 @@ class CreateGameTest extends TestBase
         $this->simulatePostRequest($testData);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
-        $data = $vars['data'] ?? [];
+        $error = $vars["error"] ?? false;
+        $data = $vars["data"] ?? [];
 
         // Проверяем, что данные сохранились
         $this->assertTrue($error !== false, "Должна быть ошибка");
@@ -365,23 +368,35 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         // 1. Убеждаемся, что скрипт отработал без ошибок валидации.
         $this->assertFalse(
             $error,
-            "Не должно быть ошибок при создании игры с XSS в названии: " . (is_string($error) ? $error : '')
+            "Не должно быть ошибок при создании игры с XSS в названии: " .
+                (is_string($error) ? $error : ""),
         );
 
         // 2. Проверяем, что игра была создана.
-        $this->assertEquals(1, $this->getTableCount("game"), "Игра должна быть создана.");
+        $this->assertEquals(
+            1,
+            $this->getTableCount("game"),
+            "Игра должна быть создана.",
+        );
 
         // 3. Получаем игру из БД и проверяем, что название было очищено.
         $stmt = self::$pdo->query("SELECT name FROM game LIMIT 1");
         $game = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        $this->assertNotFalse($game, "Не удалось получить созданную игру из БД.");
-        $this->assertEquals(htmlspecialchars($maliciousName), $game['name'], "Название игры в БД должно быть экранировано.");
+        $this->assertNotFalse(
+            $game,
+            "Не удалось получить созданную игру из БД.",
+        );
+        $this->assertEquals(
+            htmlspecialchars($maliciousName),
+            $game["name"],
+            "Название игры в БД должно быть экранировано.",
+        );
     }
 
     /**
@@ -400,27 +415,39 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         // 1. Убеждаемся, что скрипт отработал без ошибок валидации.
         $this->assertFalse(
             $error,
-            "Не должно быть ошибок при создании игры с XSS в именах игроков: " . (is_string($error) ? $error : '')
+            "Не должно быть ошибок при создании игры с XSS в именах игроков: " .
+                (is_string($error) ? $error : ""),
         );
 
         // 2. Проверяем, что пользователи были созданы.
-        $this->assertEquals(2, $this->getTableCount("user"), "Должно быть создано два пользователя.");
+        $this->assertEquals(
+            2,
+            $this->getTableCount("user"),
+            "Должно быть создано два пользователя.",
+        );
 
         // 3. Получаем пользователей из БД и проверяем, что имена были очищены.
-        $stmt = self::$pdo->query("SELECT login FROM user");
-        $logins = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        $logins = MyDB::query("SELECT login FROM user", "column");
 
         $sanitizedMaliciousName = htmlspecialchars($maliciousPlayer);
-        $this->assertContains($sanitizedMaliciousName, $logins, "Очищенное имя игрока должно присутствовать в списке логинов.");
+        $this->assertContains(
+            $sanitizedMaliciousName,
+            $logins,
+            "Очищенное имя игрока должно присутствовать в списке логинов.",
+        );
 
         // Дополнительная проверка, что ни в одном имени нет опасных тегов
         foreach ($logins as $login) {
-            $this->assertStringNotContainsString("<img", $login, "Тег <img> не должен присутствовать в имени пользователя.");
+            $this->assertStringNotContainsString(
+                "<img",
+                $login,
+                "Тег <img> не должен присутствовать в имени пользователя.",
+            );
         }
     }
 
@@ -441,26 +468,45 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         // 1. Убеждаемся, что скрипт отработал без ошибок валидации.
         $this->assertFalse(
             $error,
-            "Система не должна выдавать ошибок при обработке длинных строк: " . (is_string($error) ? $error : '')
+            "Система не должна выдавать ошибок при обработке длинных строк: " .
+                (is_string($error) ? $error : ""),
         );
 
         // 2. Проверяем, что игра и пользователи были созданы.
-        $this->assertEquals(1, $this->getTableCount("game"), "Игра должна быть создана с длинным именем.");
-        $this->assertEquals(2, $this->getTableCount("user"), "Пользователи должны быть созданы, включая пользователя с длинным именем.");
+        $this->assertEquals(
+            1,
+            $this->getTableCount("game"),
+            "Игра должна быть создана с длинным именем.",
+        );
+        $this->assertEquals(
+            2,
+            $this->getTableCount("user"),
+            "Пользователи должны быть созданы, включая пользователя с длинным именем.",
+        );
 
         // 3. Проверяем, что данные не были обрезаны (зависит от схемы БД)
         $stmt = self::$pdo->query("SELECT name FROM game LIMIT 1");
         $game = $stmt->fetch(PDO::FETCH_ASSOC);
-        $this->assertEquals($longName, $game['name'], "Длинное имя игры должно быть сохранено полностью.");
+        $this->assertEquals(
+            $longName,
+            $game["name"],
+            "Длинное имя игры должно быть сохранено полностью.",
+        );
 
-        $stmt = self::$pdo->query("SELECT login FROM user WHERE login LIKE 'B%'");
+        $stmt = self::$pdo->query(
+            "SELECT login FROM user WHERE login LIKE 'B%'",
+        );
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-        $this->assertEquals($longPlayerName, $user['login'], "Длинное имя игрока должно быть сохранено полностью.");
+        $this->assertEquals(
+            $longPlayerName,
+            $user["login"],
+            "Длинное имя игрока должно быть сохранено полностью.",
+        );
     }
 
     /**
@@ -479,11 +525,12 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         $this->assertFalse(
             $error,
-            "Не должно быть ошибок при генерации цветов: " . (is_string($error) ? $error : '')
+            "Не должно быть ошибок при генерации цветов: " .
+                (is_string($error) ? $error : ""),
         );
     }
 
@@ -501,11 +548,12 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         $this->assertFalse(
             $error,
-            "Не должно быть ошибок, пустые поля должны игнорироваться: " . (is_string($error) ? $error : '')
+            "Не должно быть ошибок, пустые поля должны игнорироваться: " .
+                (is_string($error) ? $error : ""),
         );
     }
 
@@ -523,12 +571,13 @@ class CreateGameTest extends TestBase
         ]);
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
+        $error = $vars["error"] ?? false;
 
         // Должно использоваться значение по умолчанию
         $this->assertFalse(
             $error,
-            "Неверный тип ходов должен заменяться на значение по умолчанию: " . (is_string($error) ? $error : '')
+            "Неверный тип ходов должен заменяться на значение по умолчанию: " .
+                (is_string($error) ? $error : ""),
         );
     }
 
@@ -540,13 +589,14 @@ class CreateGameTest extends TestBase
         // Не устанавливаем POST данные
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/creategame.php");
-        $error = $vars['error'] ?? false;
-        $data = $vars['data'] ?? [];
+        $error = $vars["error"] ?? false;
+        $data = $vars["data"] ?? [];
 
         // Должны быть установлены значения по умолчанию
         $this->assertFalse(
             $error,
-            "Не должно быть ошибок при отсутствии POST данных: " . (is_string($error) ? $error : '')
+            "Не должно быть ошибок при отсутствии POST данных: " .
+                (is_string($error) ? $error : ""),
         );
         $this->assertIsArray(
             $data,

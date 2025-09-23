@@ -20,16 +20,6 @@ if ($cell) {
 	$data['user_income'] = ($user->income < 0) ? $user->income : '+'.$user->income;
 	$data['turn_status'] = $user->turn_status;
 	$game = Game::get($user->game);
-	$data['players'] = [];
-	foreach ($game->users as $player) {
-	    $data['players'][] = [
-	        'id' => $player->id,
-            'login' => $player->login,
-            'turn_order' => $player->turn_order,
-            'color' => $player->color,
-            'turn_status' => $player->turn_status
-        ];
-    }
     $data['turn_num'] = $game->turn_num;
 	if ($cell->owner) {
         $data['owner_name'] = $cell->owner->login;

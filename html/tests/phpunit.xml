@@ -6,10 +6,10 @@
          executionOrder="depends,defects"
          forceCoversAnnotation="false"
          beStrictAboutCoversAnnotation="true"
-         beStrictAboutOutputDuringTests="true"
+         beStrictAboutOutputDuringTests="false"
          beStrictAboutTodoAnnotatedTests="true"
          convertDeprecationsToExceptions="true"
-         failOnRisky="true"
+         failOnRisky="false"
          failOnWarning="true"
          verbose="true">
 

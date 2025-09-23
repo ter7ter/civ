@@ -2,11 +2,11 @@
 
 // В тестах НЕ подключаем includes.php, чтобы избежать конфликтов с моками
 // require_once __DIR__ . "/../includes.php";
-require_once __DIR__ . "/DatabaseMocks.php";
+require_once __DIR__ . "/mocks/MockLoader.php";
 
 // Предотвращаем подключение includes.php в тестах
-if (!defined('TEST_INCLUDES_LOADED')) {
-    define('TEST_INCLUDES_LOADED', true);
+if (!defined("TEST_INCLUDES_LOADED")) {
+    define("TEST_INCLUDES_LOADED", true);
 }
 
 /**
@@ -70,7 +70,7 @@ class TestBase extends PHPUnit\Framework\TestCase
 
         $gameData = array_merge($defaultData, $data);
 
-        $gameData["id"] = DatabaseTestAdapter::insert("game", $gameData);
+        $gameData["id"] = MyDB::insert("game", $gameData);
         return $gameData;
     }
 
@@ -119,7 +119,7 @@ class TestBase extends PHPUnit\Framework\TestCase
      */
     protected function getTableCount($tableName): int
     {
-        return (int)DatabaseTestAdapter::query(
+        return (int) DatabaseTestAdapter::query(
             "SELECT COUNT(*) FROM {$tableName}",
             [],
             "elem",

@@ -5,22 +5,6 @@
  * Подключается только в тестах для замены основных классов на моки
  */
 
-// Проверяем, что мы в тестовом режиме
-if (!defined('TESTING') || !TESTING) {
-    return;
-}
-
-// Подключаем моки базы данных
-require_once __DIR__ . '/DatabaseMocks.php';
-
-/**
- * Условная замена класса MyDB на тестовую версию
- */
-if (!class_exists('MyDB', false)) {
-    // Если MyDB еще не загружен, создаем его как алиас тестового класса
-    class_alias('MyDBTestWrapper', 'MyDB');
-}
-
 /**
  * Условная замена класса Game на тестовую версию
  */
@@ -165,9 +149,9 @@ function mockIncludeFile($filename, $varsToExtract = []) {
                 return [];
             }
             $content = file_get_contents($filename);
-            $content = preg_replace('/\bexit\s*\(/', 'terminate_script(', $content);
+            /*$content = preg_replace('/\bexit\s*\(/', 'terminate_script(', $content);
             $content = preg_replace('/\bdie\s*\(/', 'terminate_script(', $content);
-            eval('?>' . $content);
+            eval('?>' . $content);*/
         } catch (TestExitException $e) {
             // ignore
         } finally {

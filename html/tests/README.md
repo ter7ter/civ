@@ -349,6 +349,40 @@ Invoke-WebRequest -Uri "https://phar.phpunit.de/phpunit-9.phar" -OutFile "tests\
 | `--filter <pattern>` | Запустить только тесты, соответствующие паттерну |
 | `--help` | Показать справку |
 
+### Примеры использования
+
+```bash
+# Запуск всех тестов
+php tests/run_tests.php
+
+# Только unit тесты с подробным выводом
+php tests/run_tests.php --unit-only --verbose
+
+# Только интеграционные тесты
+php tests/run_tests.php --integration-only
+
+# Тесты с JavaScript
+php tests/run_tests.php --with-js
+
+# Тесты с отчетом покрытия
+php tests/run_tests.php --coverage
+
+# Остановиться при первой ошибке
+php tests/run_tests.php --stop-on-failure
+
+# Запустить только конкретный тест
+php tests/run_tests.php --filter testGameCreation
+
+# Запустить тесты определенного класса
+php tests/run_tests.php --filter CreateGameTest
+
+# Комбинирование параметров
+php tests/run_tests.php --unit-only --verbose --coverage --stop-on-failure
+
+# Запуск только тестов создания игры с подробным выводом
+php tests/run_tests.php --filter CreateGame --verbose
+```
+
 ## Результаты тестов
 
 После запуска тестов генерируются следующие файлы:

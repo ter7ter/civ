@@ -308,9 +308,8 @@ class CreateGameSimpleTest extends TestBase
         $game = new Game($gameData);
         $game->save();
 
-        // Проверяем, что в БД сохранилось экранированное значение
+        // Проверяем, что в БД сохранилось исходное значение (экранирование делает веб-страница)
         $savedGame = $this->getLastRecord("game");
-        $this->assertStringNotContainsString("<script>", $savedGame["name"]);
         $this->assertEquals($maliciousName, $savedGame["name"]); // Game класс не экранирует, это делает веб-страница
     }
 

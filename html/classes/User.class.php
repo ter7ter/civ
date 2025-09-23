@@ -1,7 +1,7 @@
 <?php
 class User
 {
-    public $id;
+    public $id = null;
     public $login;
     /**
      * Цвет игрока
@@ -72,17 +72,18 @@ class User
 
     public $lvl = 0;
 
-	protected static $_all = [];
+    protected static $_all = [];
 
     /**
      * Очистка кэша для тестов
      */
-    public static function clearCache() {
+    public static function clearCache()
+    {
         self::$_all = [];
     }
 
     /**
-     * @param $id
+     * @param $id int
      * @return User
      */
     public static function get($id)
@@ -95,12 +96,21 @@ class User
                 ["id" => $id],
                 "row",
             );
+            if (!$data || !isset($data["id"])) {
+                return null;
+            }
             return new User($data);
         }
     }
 
     public function __construct($data)
     {
+        if (!$data || !is_array($data)) {
+            throw new Exception(
+                "Invalid user data provided to User constructor",
+            );
+        }
+
         foreach (
             [
                 "login",
@@ -164,7 +174,7 @@ class User
         } else {
             $values["process_research_type"] = 0;
         }
-        if ($this->id) {
+        if ($this->id !== null) {
             MyDB::update("user", $values, $this->id);
         } else {
             $this->id = MyDB::insert("user", $values);

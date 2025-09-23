@@ -4,7 +4,7 @@ class Building
     /**
      * @var int
      */
-    public $id;
+    public $id = null;
     /**
      * @var City
      */
@@ -53,7 +53,7 @@ class Building
     public function save()
     {
         $values = ["city_id" => $this->city->id, "type" => $this->type->id];
-        if ($this->id) {
+        if ($this->id !== null) {
             MyDB::update("building", $values, $this->id);
         } else {
             $this->id = MyDB::insert("building", $values);

@@ -9,14 +9,15 @@ class Game
     /**
      * Очистка кэша для тестов
      */
-    public static function clearCache() {
+    public static function clearCache()
+    {
         self::$_all = [];
     }
 
     /**
      * @var int
      */
-    public $id;
+    public $id = null;
     /**
      * @var string
      */
@@ -62,7 +63,7 @@ class Game
                 ["id" => $id],
                 "row",
             );
-            if (!isset($data["id"])) {
+            if (!$data || !isset($data["id"])) {
                 return null;
             }
             return new Game($data);
@@ -71,6 +72,12 @@ class Game
 
     public function __construct($data)
     {
+        if (!$data || !is_array($data)) {
+            throw new Exception(
+                "Invalid game data provided to Game constructor",
+            );
+        }
+
         foreach (
             ["name", "map_w", "map_h", "turn_type", "turn_num"]
             as $field
@@ -85,12 +92,16 @@ class Game
         $this->users = [];
         if (isset($data["id"])) {
             $this->id = $data["id"];
+            Game::$_all[$this->id] = $this;
 
             $users = MyDB::query("SELECT id FROM user WHERE game = :gameid", [
                 "gameid" => $this->id,
             ]);
             foreach ($users as $user) {
-                $this->users[$user["id"]] = User::get($user["id"]);
+                $userObj = User::get($user["id"]);
+                if ($userObj !== null) {
+                    $this->users[$user["id"]] = $userObj;
+                }
             }
         }
     }
@@ -104,7 +115,7 @@ class Game
         ) {
             $values[$field] = $this->$field;
         }
-        if ($this->id) {
+        if ($this->id !== null) {
             MyDB::update("game", $values, $this->id);
         } else {
             $this->id = MyDB::insert("game", $values);
@@ -113,13 +124,23 @@ class Game
 
     public function create_new_game()
     {
+        // Убеждаемся, что типы юнитов инициализированы перед созданием юнитов
+        if (empty(UnitType::$all)) {
+            if (class_exists("TestGameDataInitializer")) {
+                TestGameDataInitializer::initializeUnitTypes();
+            }
+        }
+
         Cell::generate_map($this->id);
         $users = MyDB::query(
             "SELECT id FROM user WHERE game = :gameid ORDER BY turn_order",
             ["gameid" => $this->id],
         );
         foreach ($users as $user) {
-            $this->users[$user["id"]] = User::get($user["id"]);
+            $userObj = User::get($user["id"]);
+            if ($userObj !== null) {
+                $this->users[$user["id"]] = $userObj;
+            }
         }
         $positions = [];
         $i = 0;

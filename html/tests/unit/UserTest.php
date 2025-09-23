@@ -34,8 +34,7 @@ class UserTest extends TestBase
     {
         $user = User::get(999);
 
-        $this->assertInstanceOf(User::class, $user);
-        $this->assertNull($user->id);
+        $this->assertNull($user);
     }
 
     /**

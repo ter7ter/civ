@@ -1,10 +1,10 @@
 Building
- [x] Save new
- [x] Save update
- [x] Building cache
- [x] Building city relation
- [x] Different building types
  [x] Get title
+ [x] Save update
+ [x] Building city relation
+ [x] Building cache
+ [x] Different building types
+ [x] Save new
  [x] Get existing building
  [x] Constructor
  [x] Building type relation
@@ -13,13 +13,13 @@ City
  [x] City resources
  [x] City cache
  [x] New city
- [x] Calculate production
+ [x] Create unit
  [x] Get possible buildings
  [x] Coastal city
- [x] Create unit
- [x] Locate people
+ [x] Calculate production
  [x] Get city cells
  [x] Calculate people
+ [x] Locate people
  [x] Get existing city
  [x] By coords existing
  [x] By coords non existing
@@ -27,6 +27,19 @@ City
  [x] Save new
  [x] Save update
  [x] Get title
+
+Create Game Simple
+ [x] Create basic game class
+ [x] Html escaping in game name
+ [x] Create game with different map sizes
+ [x] Create users for game
+ [x] Game get method
+ [x] Game caching
+ [x] Update game data
+ [x] Html escaping in user login
+ [x] User color generation
+ [x] Game list
+ [x] Create game with different turn types
 
 Create Game
  [x] Duplicate player names
@@ -39,5 +52,165 @@ Create Game
  [x] Create basic game
  [x] Create concurrent game
  [x] Create one window game
- [ ] Player color generation
+ [x] Game initial conditions
+ [x] Empty player fields
+ [x] X s s in player names
+ [x] Player color generation
+ [x] Invalid turn type
+ [x] Very long strings
+ [x] X s s in game name
+ [x] Whitespace game name
+ [x] Minimum players
+
+Edit Game
+ [x] Edit basic game parameters
+ [x] Edit map size
+ [x] Edit non existent game
+ [x] Data preservation on validation error
+ [x] X s s in edited game name
+ [x] Very long strings in edit
+ [x] Multiple validation errors
+ [x] Game not changed on validation error
+ [x] Load game data for editing
+ [x] Edit with empty name
+ [x] Edit with invalid map size
+ [x] Edit with invalid turn type
+ [x] Edit game name only
+ [x] Edit turn type
+ [x] Load game without id
+ [x] Edit without game id
+ [x] Load non existent game for editing
+
+Game
+ [x] Get existing game
+ [x] Get non existing game
+ [x] Construct
+ [x] Save new
+ [x] Save update
+ [x] Game list
+ [x] Get active player by turn
+ [x] Get active player concurrently
+ [x] Get active player no active
+ [x] All system message
+
+Research
+ [x] Save update
+ [x] Save new
+ [x] Different research types
+ [x] Researches for different users
+ [x] Multiple researches for user
+ [x] Get existing research
+ [x] Constructor
+ [x] Constructor without id
+ [x] Research type relation
+ [x] Required fields
+ [x] Research user relation
+
+Resource
+ [x] Save new
+ [x] Save update
+ [x] Get existing resource
+ [x] Construct
+ [x] Get title
+ [x] Get non existing resource
+
+Unit
+ [x] Get existing unit
+ [x] Construct
+ [x] Save new
+ [x] Save update
+ [x] Get title
+ [x] Remove
+ [x] Get non existing unit
+
+User
+ [x] Calculate income
+ [x] Start research already done
+ [x] New system message
+ [x] Get next event no events
+ [x] Get next event with event
+ [x] Get cities
+ [x] Get research
+ [x] Start research
+ [x] Get existing user
+ [x] Get non existing user
+ [x] Construct
+ [x] Save new
+ [x] Save update
+
+Message
+ [x] Construct
+ [x] Construct system message
+ [x] Save new
+ [x] Save system message
+ [x] Save update
+
+Database Config
+ [x] Test database constants
+ [x] Database constants separation
+ [x] Test tables creation
+ [x] Test data operations
+ [x] Test data cleanup
+ [x] Transaction handling
+ [x] Game and user mocks
+
+Open Game
+ [x] Open game with user from different game
+ [x] Successful game opening
+ [x] Open game with multiple players
+ [x] Open game with different turn types
+ [x] Open non existent game
+ [x] Open game with non existent user
+ [x] Open game without game id
+ [x] Open game without user id
+ [x] Game list loading
+ [x] Empty game list
+ [x] Session state after game opening
+ [x] Reopen game with different user
+ [x] Open game with max players
+
+Map Actions Integration
+ [x] Map boundaries
+ [x] City foundation
+ [x] Map loading with city
+ [x] Map loading with units
+ [x] Unit movement
+ [x] Map scrolling
+
+Create Game Integration
+ [x] Initial player parameters
+ [x] Performance with max players
+ [x] Full game creation process
+ [x] Game data persistence
+ [x] Different turn types integration
+ [x] Unique player colors
+ [x] Player turn order
+ [x] Validation errors integration
+ [x] S q l injection protection
+ [x] Multiple game creation
+
+Edit Game Integration
+ [x] Full game edit process
+ [x] Edited game data persistence
+ [x] Edit different turn types integration
+ [x] Load game data for editing integration
+ [x] Player order preservation on edit
+ [x] Player parameters preservation on edit
+ [x] Validation errors integration on edit
+ [x] Performance edit with max players
+ [x] S q l injection protection on edit
+ [x] Multiple game edits
+ [x] Edit game with related data preservation
+
+Open Game Integration
+ [x] Full game opening process
+ [x] Game opening session persistence
+ [x] Game opening with different configurations
+ [x] Game list with different player counts
+ [x] Error handling in game opening
+ [x] Performance game opening
+ [x] Security invalid ids
+ [x] Multiple game openings
+ [x] Game opening data integrity
+ [x] Game opening object relationships
 

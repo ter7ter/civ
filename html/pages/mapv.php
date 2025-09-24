@@ -1,5 +1,6 @@
 <?php
 /** @var User $user */
+/** @var Game $game */
 if (isset($_REQUEST['cx']) && isset($_REQUEST['cy'])) {
     $x = (int)$_REQUEST['cx'];
     $y = (int)$_REQUEST['cy'];
@@ -11,9 +12,8 @@ if (isset($_REQUEST['cx']) && isset($_REQUEST['cy'])) {
     $x = $coords['x'];
     $y = $coords['y'];
 }
-$map_planet = $user->game->get_first_planet()->id;
+$map_planet = $game->get_first_planet()->id;
 $map = Cell::get_cells_around($x, $y, 11, 9, $map_planet);
-$mapv = [];
 $mapv = [];
 foreach ($map as $row) {
     $rowv = [];

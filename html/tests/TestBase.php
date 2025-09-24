@@ -129,21 +129,27 @@ class TestBase extends PHPUnit\Framework\TestCase
         $height,
         $planet
     ): void {
+        $values = [];
+        $params = [];
         for ($x = $startX; $x < $startX + $width; $x++) {
             for ($y = $startY; $y < $startY + $height; $y++) {
-                $cellData = [
-                    "x" => $x,
-                    "y" => $y,
-                    "planet" => $planet,
-                    "type" => "plains",
-                ];
-                // Используем прямой INSERT для таблицы cell (без автоинкрементного id)
-                MyDB::query(
-                    "INSERT INTO cell (x, y, planet, type) VALUES (:x, :y, :planet, :type)",
-                    $cellData
-                );
+                $values[] = "(?, ?, ?, ?)";
+                $params[] = $x;
+                $params[] = $y;
+                $params[] = $planet;
+                $params[] = "plains";
             }
         }
+
+        if (empty($values)) {
+            return;
+        }
+
+        $sql = "INSERT INTO cell (x, y, planet, type) VALUES " .
+            implode(", ", $values) .
+            " ON DUPLICATE KEY UPDATE type = VALUES(type)";
+
+        MyDB::query($sql, $params);
     }
 
     /**

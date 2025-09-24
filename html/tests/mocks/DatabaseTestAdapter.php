@@ -133,7 +133,7 @@ class DatabaseTestAdapter
     }
 
     /**
-     * Очистка всех таблиц
+     * Очистка всех таблиц с использованием TRUNCATE для производительности
      */
     public static function clearAllTables()
     {
@@ -162,7 +162,12 @@ class DatabaseTestAdapter
         ];
 
         foreach ($tables as $table) {
-            $pdo->exec("DELETE FROM {$table}");
+            try {
+                $pdo->exec("TRUNCATE TABLE {$table}");
+            } catch (Exception $e) {
+                // Если TRUNCATE не работает (например, foreign keys), используем DELETE
+                $pdo->exec("DELETE FROM {$table}");
+            }
         }
     }
 
@@ -209,7 +214,7 @@ class DatabaseTestAdapter
     public static function resetTestDatabase()
     {
         self::clearAllTables();
-        self::resetAutoIncrements();
+        // TRUNCATE уже сбрасывает автоинкременты, resetAutoIncrements не нужен
         self::clearQueries();
 
         // Очистка кэшей классов

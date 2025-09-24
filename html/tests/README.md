@@ -18,7 +18,8 @@ tests/
 │   ├── EditGameIntegrationTest.php   # Тесты полного процесса редактирования
 │   └── MapActionsIntegrationTest.php # Тесты действий на карте
 ├── js/                      # JavaScript тесты
-│   └── creategame.test.html # QUnit тесты для UI
+│   ├── creategame.test.html # QUnit тесты для UI
+│   └── map_actions.test.html # QUnit тесты для действий на карте
 ├── results/                 # Результаты тестов (генерируется)
 ├── coverage-html/           # HTML отчет покрытия (генерируется)
 ├── TestBase.php            # Базовый класс для тестов

@@ -39,7 +39,7 @@ class TestRunner
         $this->options = [
             "unit" => true,
             "integration" => true,
-            "js" => false,
+            "js" => true,
             "coverage" => false,
             "verbose" => false,
             "stop-on-failure" => true, // Останавливаться при первой ошибке по умолчанию
@@ -213,10 +213,10 @@ class TestRunner
         echo "🌐 Запуск JavaScript тестов...\n";
         echo str_repeat("=", 50) . "\n";
 
-        $testFile = TESTS_ROOT . "/js/creategame.test.html";
+        $testFiles = glob(TESTS_ROOT . "/js/*.html");
 
-        if (!file_exists($testFile)) {
-            echo "❌ JavaScript тест файл не найден: {$testFile}\n";
+        if (empty($testFiles)) {
+            echo "❌ JavaScript тест файлы не найдены в " . TESTS_ROOT . "/js/\n";
             return 1;
         }
 
@@ -227,7 +227,9 @@ class TestRunner
 
         if (empty($browsers)) {
             echo "⚠️  Браузер не найден. JavaScript тесты нужно запускать вручную.\n";
-            echo "   Откройте в браузере: {$testFile}\n";
+            foreach ($testFiles as $testFile) {
+                echo "   Откройте в браузере: {$testFile}\n";
+            }
 
             $this->results["js"] = [
                 "exit_code" => 0,
@@ -242,23 +244,26 @@ class TestRunner
         $browser = $browsers[0];
         $exitCode = 0;
 
-        try {
-            // Открываем файл в браузере для ручного запуска тестов
-            $cmd = "{$browser} {$testFile}";
-            echo "🌐 Открываем JavaScript тесты в браузере...\n";
-            echo "   После завершения тестов закройте браузер\n";
+        foreach ($testFiles as $testFile) {
+            try {
+                // Открываем файл в браузере для ручного запуска тестов
+                $cmd = "\"{$browser}\" \"{$testFile}\"";
+                echo "🌐 Открываем JavaScript тесты в браузере: {$testFile}\n";
+                echo "   После завершения тестов закройте браузер\n";
 
-            if ($this->options["verbose"]) {
-                echo "Выполняем: {$cmd}\n";
+                if ($this->options["verbose"]) {
+                    echo "Выполняем: {$cmd}\n";
+                }
+
+                exec($cmd, $output, $exitCode);
+            } catch (Exception $e) {
+                echo "❌ Ошибка при запуске JavaScript тестов: " .
+                    $e->getMessage() .
+                    "\n";
+                $exitCode = 1;
             }
-
-            exec($cmd, $output, $exitCode);
-        } catch (Exception $e) {
-            echo "❌ Ошибка при запуске JavaScript тестов: " .
-                $e->getMessage() .
-                "\n";
-            $exitCode = 1;
         }
+
 
         $duration = microtime(true) - $startTime;
 

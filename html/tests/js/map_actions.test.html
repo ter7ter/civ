@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Тесты действий на карте - JavaScript</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.19.4.css">
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture">
+        <div id="mapv"></div>
+    </div>
+
+    <!-- Подключаем библиотеки -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
+
+    <!-- Подключаем тестируемый код -->
+    <script src="../../js/functions.js"></script>
+    <script src="../../js/map.js"></script>
+    <script src="../../js/unit.js"></script>
+    <script src="../../js/events.js"></script>
+
+    <script>
+    QUnit.config.reorder = false;
+
+    QUnit.module("Действия на карте", function(hooks) {
+        hooks.beforeEach(function() {
+            // Reset the fixture
+            $('#qunit-fixture').html('<div id="mapv"></div>');
+            
+            // Mock map.load to avoid real AJAX calls
+            map.load = function() {
+                return $.Deferred().resolve().promise();
+            };
+        });
+
+        QUnit.test("Перемещение юнита с помощью Numpad", function(assert) {
+            var done = assert.async();
+            
+            // 1. Mock $.post
+            var postCalled = false;
+            var postData;
+            var originalPost = $.post;
+            $.post = function(url, data, callback) {
+                postCalled = true;
+                postData = data;
+                // Simulate a successful response
+                var response = {
+                    status: 'ok',
+                    data: {
+                        points: 1
+                    }
+                };
+                callback(JSON.stringify(response));
+                return $.Deferred().resolve().promise();
+            };
+
+            // 2. Set up a selected unit
+            selected_unit = {
+                id: 1,
+                x: 10,
+                y: 10,
+                points: 2,
+                move: Unit.move // Use the real move function
+            };
+            
+            // 3. Simulate a numpad key press
+            var e = $.Event("keydown");
+            e.originalEvent = { code: "Numpad8" };
+            $("body").trigger(e);
+
+            // 4. Assert that $.post was called with the correct parameters
+            assert.ok(postCalled, "$.post должен быть вызван");
+            assert.equal(postData.action, "move", "Действие должно быть 'move'");
+            assert.equal(postData.uid, 1, "ID юнита должен быть 1");
+            assert.equal(postData.x, 10, "Новая координата X должна быть 10");
+            assert.equal(postData.y, 9, "Новая координата Y должна быть 9");
+
+            // Restore original $.post
+            $.post = originalPost;
+            done();
+        });
+    });
+
+    QUnit.start();
+    </script>
+</body>
+</html>

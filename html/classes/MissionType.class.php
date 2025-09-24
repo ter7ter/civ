@@ -66,7 +66,7 @@ class MissionType {
 	    switch ($this->id) {
             case 'build_city':
                 if (!$title) return false;
-                City::new_city($unit->user, $unit->x, $unit->y, $title);
+                City::new_city($unit->user, $unit->x, $unit->y, $title, $unit->planet);
                 return true;
                 break;
             case 'build_road':

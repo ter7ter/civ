@@ -131,7 +131,11 @@ class Game
             }
         }
 
-        Cell::generate_map($this->id);
+        $planet = new Planet(['name' => 'Planet 1', 'game_id' => $this->id]);
+        $planet->save();
+        $planetId = $planet->id;
+
+        Cell::generate_map($planetId, $this->id);
         $users = MyDB::query(
             "SELECT id FROM user WHERE game = :gameid ORDER BY turn_order",
             ["gameid" => $this->id],
@@ -148,7 +152,7 @@ class Game
             $i++;
             $pos_x = mt_rand(0, $this->map_w - 1);
             $pos_y = mt_rand(0, $this->map_h - 1);
-            $cell = Cell::get($pos_x, $pos_y, Cell::$map_planet);
+            $cell = Cell::get($pos_x, $pos_y, $planetId);
             if ($i > 1000) {
                 throw new Exception("Too many iterations");
             }
@@ -164,7 +168,7 @@ class Game
                 continue;
             }
             $around_ok = 0;
-            $cells = Cell::get_cells_around($pos_x, $pos_y, 3, 3);
+            $cells = Cell::get_cells_around($pos_x, $pos_y, 3, 3, $planetId);
             foreach ($cells as $row) {
                 foreach ($row as $item) {
                     if (
@@ -200,7 +204,7 @@ class Game
             $citizen = new Unit([
                 "x" => $position[0],
                 "y" => $position[1],
-                "planet" => Cell::$map_planet,
+                "planet" => $planetId,
                 "health" => 3,
                 "points" => 2,
                 "user_id" => $user->id,

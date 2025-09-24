@@ -37,6 +37,7 @@ class MyDB
             $dsn = "sqlite::memory:";
             MyDB::$_link = new PDO($dsn);
         } else {
+            // Всегда используем MySQL для тестов
             $dsn =
                 "mysql:host=" .
                 MyDB::$dbhost .
@@ -64,12 +65,49 @@ class MyDB
     public static function query($query, $vars = [], $output = "assoc")
     {
         $db = MyDB::get();
-        $stmt = $db->prepare($query);
-        $stmt->execute($vars);
-        if ($stmt->columnCount() == 0) {
-            // Non-SELECT query
+
+        // Проверяем, является ли это запросом, который не возвращает данные
+        $queryStart = strtoupper(substr(trim($query), 0, 10));
+        $isNonSelect = false;
+        foreach (
+            ["INSERT", "UPDATE", "DELETE", "CREATE", "ALTER", "DROP"]
+            as $type
+        ) {
+            if (strpos($queryStart, $type) === 0) {
+                $isNonSelect = true;
+                break;
+            }
+        }
+        if ($isNonSelect) {
+            // Для DDL запросов (CREATE, ALTER, DROP) используем exec
+            if (
+                strpos($queryStart, "CREATE") === 0 ||
+                strpos($queryStart, "ALTER") === 0 ||
+                strpos($queryStart, "DROP") === 0
+            ) {
+                $db->exec($query);
+            } else {
+                $stmt = $db->prepare($query);
+                $stmt->execute($vars);
+            }
             return true;
         }
+
+        // Для запросов, которые могут возвращать данные
+        // Некоторые запросы (DESCRIBE, SHOW TABLES) могут не поддерживаться prepare
+        try {
+            $stmt = $db->prepare($query);
+            $stmt->execute($vars);
+        } catch (Exception $e) {
+            // Если prepare не работает, пробуем выполнить напрямую
+            $stmt = $db->query($query);
+        }
+
+        if ($stmt->columnCount() == 0) {
+            // Запрос не возвращает столбцы
+            return true;
+        }
+
         switch ($output) {
             case "num_rows":
                 $result = $stmt->rowCount();

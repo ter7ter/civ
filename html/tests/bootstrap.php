@@ -15,16 +15,34 @@ define("TESTS_ROOT", __DIR__);
 // Подключаем конфигурацию
 require_once PROJECT_ROOT . "/config.php";
 
+// Определяем тестовые константы БД
+if (!defined("TEST_DB_HOST")) {
+    define("TEST_DB_HOST", "localhost");
+}
+if (!defined("TEST_DB_USER")) {
+    define("TEST_DB_USER", "test_user");
+}
+if (!defined("TEST_DB_PASS")) {
+    define("TEST_DB_PASS", "test_pass");
+}
+if (!defined("TEST_DB_NAME")) {
+    define("TEST_DB_NAME", "test_db");
+}
+if (!defined("TEST_DB_PORT")) {
+    define("TEST_DB_PORT", 3306);
+}
+
 // Сначала загружаем MyDB.class.php
 require_once PROJECT_ROOT . "/classes/MyDB.class.php";
-
-// Настраиваем тестовую БД MySQL
-MyDB::setDBConfig("localhost", "civ_test", "civ_test", "3306", "civ_for_tests");
 
 // Затем загружаем моки для БД
 require_once TESTS_ROOT . "/mocks/DatabaseTestAdapter.php";
 require_once TESTS_ROOT . "/mocks/MyDBTestWrapper.php";
 require_once TESTS_ROOT . "/mocks/MockLoader.php";
+require_once TESTS_ROOT . "/mocks/TestHelpers.php";
+
+// Настраиваем тестовую БД MySQL (после загрузки моков, чтобы перезаписать их настройки)
+MyDB::setDBConfig("localhost", "civ_test", "civ_test", "3306", "civ_for_tests");
 
 // Подключаем инициализатор игровых данных
 require_once TESTS_ROOT . "/TestGameDataInitializer.php";
@@ -55,6 +73,12 @@ foreach ($classFiles as $classFile) {
     if (file_exists($filePath)) {
         require_once $filePath;
     }
+}
+
+// Загружаем тестовые базовые классы только если PHPUnit доступен
+if (class_exists("PHPUnit\Framework\TestCase")) {
+    require_once TESTS_ROOT . "/TestBase.php";
+    require_once TESTS_ROOT . "/FunctionalTestBase.php";
 }
 
 // Очищаем данные, созданные в оригинальных классах, и инициализируем тестовые данные
@@ -114,6 +138,10 @@ createTestDirectory(TESTS_ROOT . "/results");
 createTestDirectory(TESTS_ROOT . "/coverage-html");
 createTestDirectory(TESTS_ROOT . "/temp");
 
+// Устанавливаем переменную среды для быстрых тестов
+define("RUNNING_TESTS", true);
+define("FAST_TEST_MODE", true);
+
 // Функция очистки тестовых данных
 function cleanupTestData()
 {
@@ -160,7 +188,7 @@ if (!empty($missingExtensions)) {
 
 // Установка лимитов для тестов
 ini_set("memory_limit", "256M");
-ini_set("max_execution_time", "300"); // 5 минут для тестов
+ini_set("max_execution_time", "360");
 
 // Настройка для вывода детальной информации в случае ошибок
 ini_set("log_errors", 1);

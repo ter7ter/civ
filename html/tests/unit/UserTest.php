@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../TestBase.php";
-
 /**
  * Тесты для класса User
  */
@@ -138,14 +136,18 @@ class UserTest extends TestBase
      */
     public function testCalculateIncome(): void
     {
-        $userData = $this->createTestUser(["money" => 100]);
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"], "money" => 100]);
+
+        $this->createTestCell(['x' => 10, 'y' => 10, 'planet' => $planetId]);
 
         // Создаем город для пользователя
         $cityData = [
             "user_id" => $userData["id"],
             "x" => 10,
             "y" => 10,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "Test City",
             "pmoney" => 25,
             "presearch" => 5,
@@ -165,14 +167,19 @@ class UserTest extends TestBase
      */
     public function testGetCities(): void
     {
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
+
+        $this->createTestCell(['x' => 5, 'y' => 5, 'planet' => $planetId]);
+        $this->createTestCell(['x' => 15, 'y' => 15, 'planet' => $planetId]);
 
         // Создаем города для пользователя
         $city1Data = [
             "user_id" => $userData["id"],
             "x" => 5,
             "y" => 5,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "City 1",
         ];
         $city1Id = MyDB::insert("city", $city1Data);
@@ -181,7 +188,7 @@ class UserTest extends TestBase
             "user_id" => $userData["id"],
             "x" => 15,
             "y" => 15,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "City 2",
         ];
         $city2Id = MyDB::insert("city", $city2Data);

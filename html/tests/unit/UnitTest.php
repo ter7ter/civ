@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../TestBase.php";
-
 /**
  * Тесты для класса Unit
  */
@@ -12,7 +10,9 @@ class UnitTest extends TestBase
      */
     public function testGetExistingUnit(): void
     {
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем тип юнита
@@ -23,13 +23,15 @@ class UnitTest extends TestBase
         ];
         MyDB::insert("unit_type", $unitTypeData);
 
+        $this->createTestCell(['x' => 10, 'y' => 20, 'planet' => $planetId]);
+
         // Создаем юнит
         $unitData = [
             "user_id" => $user->id,
             "type" => 1,
             "x" => 10,
             "y" => 20,
-            "planet" => 0,
+            "planet" => $planetId,
             "health" => 3,
             "points" => 2,
         ];
@@ -61,7 +63,9 @@ class UnitTest extends TestBase
      */
     public function testConstruct(): void
     {
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем тип юнита
@@ -78,7 +82,7 @@ class UnitTest extends TestBase
             "type" => 2,
             "x" => 5,
             "y" => 15,
-            "planet" => 0,
+            "planet" => $planetId,
             "health" => 2,
             "points" => 1,
             "auto" => "none",
@@ -101,7 +105,9 @@ class UnitTest extends TestBase
      */
     public function testSaveNew(): void
     {
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем тип юнита
@@ -117,11 +123,12 @@ class UnitTest extends TestBase
             "type" => 3,
             "x" => 1,
             "y" => 2,
-            "planet" => 0,
+            "planet" => $planetId,
             "health" => 3,
             "points" => 3,
         ];
 
+        $this->createTestCell(['x' => 1, 'y' => 2, 'planet' => $planetId]);
         $unit = new Unit($data);
         $unit->save();
 
@@ -145,7 +152,9 @@ class UnitTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем тип юнита
@@ -162,10 +171,11 @@ class UnitTest extends TestBase
             "type" => 4,
             "x" => 3,
             "y" => 4,
-            "planet" => 0,
+            "planet" => $planetId,
             "health" => 3,
             "points" => 2,
         ];
+        $this->createTestCell(['x' => 3, 'y' => 4, 'planet' => $planetId]);
         $unit = new Unit($data);
         $unit->save();
         $originalId = $unit->id;
@@ -192,7 +202,9 @@ class UnitTest extends TestBase
      */
     public function testGetTitle(): void
     {
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем тип юнита
@@ -208,7 +220,7 @@ class UnitTest extends TestBase
             "type" => 5,
             "x" => 6,
             "y" => 7,
-            "planet" => 0,
+            "planet" => $planetId,
         ];
 
         $unit = new Unit($data);
@@ -221,7 +233,9 @@ class UnitTest extends TestBase
      */
     public function testRemove(): void
     {
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем тип юнита
@@ -238,8 +252,9 @@ class UnitTest extends TestBase
             "type" => 6,
             "x" => 8,
             "y" => 9,
-            "planet" => 0,
+            "planet" => $planetId,
         ];
+        $this->createTestCell(['x' => 8, 'y' => 9, 'planet' => $planetId]);
         $unit = new Unit($data);
         $unit->save();
         $unitId = $unit->id;

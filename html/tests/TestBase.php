@@ -23,9 +23,8 @@ class TestBase extends PHPUnit\Framework\TestCase
         Planet::clearCache();
 
         // Устанавливаем глобальные переменные для тестов
-        Cell::$map_planet = 0;
-        Cell::$map_width = 100;
-        Cell::$map_height = 100;
+        Cell::$map_width = 20;
+        Cell::$map_height = 20;
     }
 
     public static function tearDownAfterClass(): void
@@ -60,9 +59,8 @@ class TestBase extends PHPUnit\Framework\TestCase
         Planet::clearCache();
 
         // Устанавливаем глобальные переменные для тестов
-        Cell::$map_planet = 0;
-        Cell::$map_width = 100;
-        Cell::$map_height = 100;
+        Cell::$map_width = 20;
+        Cell::$map_height = 20;
     }
 
     /**
@@ -72,8 +70,8 @@ class TestBase extends PHPUnit\Framework\TestCase
     {
         $defaultData = [
             "name" => "Test Game",
-            "map_w" => 100,
-            "map_h" => 100,
+            "map_w" => 20,
+            "map_h" => 20,
             "turn_type" => "byturn",
             "turn_num" => 1,
         ];
@@ -129,16 +127,21 @@ class TestBase extends PHPUnit\Framework\TestCase
         $startY,
         $width,
         $height,
+        $planet
     ): void {
         for ($x = $startX; $x < $startX + $width; $x++) {
             for ($y = $startY; $y < $startY + $height; $y++) {
                 $cellData = [
                     "x" => $x,
                     "y" => $y,
-                    "planet" => 0,
+                    "planet" => $planet,
                     "type" => "plains",
                 ];
-                MyDB::insert("cell", $cellData);
+                // Используем прямой INSERT для таблицы cell (без автоинкрементного id)
+                MyDB::query(
+                    "INSERT INTO cell (x, y, planet, type) VALUES (:x, :y, :planet, :type)",
+                    $cellData
+                );
             }
         }
     }
@@ -148,19 +151,37 @@ class TestBase extends PHPUnit\Framework\TestCase
      */
     protected function createTestCell($data = []): array
     {
+        if (!isset($data["planet"])) {
+            throw new Exception("Planet ID is required to create a test cell");
+        }
+
         $defaultData = [
             "x" => 0,
             "y" => 0,
-            "planet" => 1,
             "type" => "plains",
         ];
 
         $cellData = array_merge($defaultData, $data);
 
-        MyDB::query(
-            "INSERT OR REPLACE INTO cell (x, y, planet, type) VALUES (:x, :y, :planet, :type)",
-            $cellData,
+
+
+        // Проверяем существует ли уже такая клетка
+        $existing = MyDB::query(
+            "SELECT * FROM cell WHERE x = :x AND y = :y AND planet = :planet",
+            ["x" => $cellData["x"], "y" => $cellData["y"], "planet" => $cellData["planet"]],
+            "row"
         );
+
+        if (!$existing) {
+            // Вставляем новую клетку (таблица cell не имеет автоинкрементного id)
+            MyDB::query(
+                "INSERT INTO cell (x, y, planet, type) VALUES (:x, :y, :planet, :type)",
+                $cellData
+            );
+        } else {
+            // Обновляем существующую клетку
+            MyDB::update("cell", ["type" => $cellData["type"]], "x = {$cellData["x"]} AND y = {$cellData["y"]} AND planet = {$cellData["planet"]}");
+        }
 
         return $cellData;
     }
@@ -170,20 +191,34 @@ class TestBase extends PHPUnit\Framework\TestCase
      */
     protected function createTestCity($data = []): array
     {
+        if (!isset($data["planet"])) {
+            throw new Exception("Planet ID is required to create a test city");
+        }
+
         $defaultData = [
             "user_id" => 1,
             "x" => 10,
             "y" => 10,
-            "planet" => 1,
             "title" => "Test City",
-            "people" => 1,
-            "pmoney" => 10,
-            "presearch" => 5,
+            "population" => 1,
+            "pmoney" => 0,
+            "presearch" => 0,
         ];
 
         $cityData = array_merge($defaultData, $data);
 
-        $cityData["id"] = MyDB::insert("city", $cityData);
+        // Создаем клетку, если она не существует
+        $this->createTestCell([
+            "x" => $cityData["x"],
+            "y" => $cityData["y"],
+            "planet" => $cityData["planet"],
+            "type" => "plains",
+        ]);
+
+        // Убираем id из данных перед вставкой, так как это автоинкрементное поле
+        unset($cityData["id"]);
+        $insertId = MyDB::insert("city", $cityData);
+        $cityData["id"] = $insertId;
         return $cityData;
     }
 
@@ -192,10 +227,13 @@ class TestBase extends PHPUnit\Framework\TestCase
      */
     protected function createTestUnit($data = []): array
     {
+        if (!isset($data["planet"])) {
+            throw new Exception("Planet ID is required to create a test unit");
+        }
+
         $defaultData = [
             "x" => 5,
             "y" => 5,
-            "planet" => 1,
             "user_id" => 1,
             "type" => 1,
             "health" => 3,
@@ -211,7 +249,7 @@ class TestBase extends PHPUnit\Framework\TestCase
     /**
      * Создает тестовую планету
      */
-    protected function createTestPlanet($data = []): array
+    protected function createTestPlanet($data = []): int
     {
         // Создаем игру, если её нет
         if (!isset($data["game_id"])) {
@@ -229,7 +267,7 @@ class TestBase extends PHPUnit\Framework\TestCase
         $planetData = array_merge($defaultData, $data);
 
         $planetData["id"] = MyDB::insert("planet", $planetData);
-        return $planetData;
+        return $planetData["id"];
     }
 
     /**

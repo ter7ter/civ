@@ -41,215 +41,94 @@ class DatabaseTestAdapter
      */
     public static function createTestTables()
     {
+        $pdo = MyDB::get();
+        $isMySQL = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === "mysql";
+
+        $autoIncrement = $isMySQL ? "AUTO_INCREMENT" : "AUTOINCREMENT";
+        $unsigned = $isMySQL ? "UNSIGNED" : "";
+
+        $id_column = $isMySQL
+            ? "INT NOT NULL AUTO_INCREMENT PRIMARY KEY"
+            : "INTEGER PRIMARY KEY AUTOINCREMENT";
+
         $tables = [
-            "game" => "
-                CREATE TABLE IF NOT EXISTS game (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(255) NOT NULL,
-                    map_w INT DEFAULT 100,
-                    map_h INT DEFAULT 100,
-                    turn_type VARCHAR(50) DEFAULT 'byturn',
-                    turn_num INT DEFAULT 1,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            ",
-            "planet" => "
-                CREATE TABLE IF NOT EXISTS planet (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(255) NOT NULL,
-                    game_id INT NOT NULL
-                )
-            ",
-            "user" => "
-                CREATE TABLE IF NOT EXISTS user (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    login VARCHAR(255) NOT NULL,
-                    color VARCHAR(10) NOT NULL,
-                    game INT NOT NULL,
-                    turn_order INT DEFAULT 1,
-                    turn_status VARCHAR(10) DEFAULT 'wait',
-                    money INT DEFAULT 50,
-                    age INT DEFAULT 1,
-                    income INT DEFAULT 0,
-                    research_amount INT DEFAULT 0,
-                    research_percent INT DEFAULT 0,
-                    process_research_complete INT DEFAULT 0,
-                    process_research_turns INT DEFAULT 0,
-                    process_research_type INT DEFAULT 0,
-                    pass VARCHAR(255) DEFAULT '',
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            ",
-            "cell" => "
-                CREATE TABLE IF NOT EXISTS cell (
-                    x INT NOT NULL,
-                    y INT NOT NULL,
-                    planet INT NOT NULL,
-                    type VARCHAR(50) DEFAULT 'plains',
-                    owner INT DEFAULT NULL,
-                    owner_culture INT DEFAULT 0,
-                    road VARCHAR(10) DEFAULT 'none',
-                    improvement VARCHAR(20) DEFAULT 'none',
-                    PRIMARY KEY (x, y, planet)
-                )
-            ",
-            "unit_type" => "
-                CREATE TABLE IF NOT EXISTS unit_type (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    title VARCHAR(255) NOT NULL,
-                    points INT DEFAULT 2,
-                    mission_points INT DEFAULT 2
-                )
-            ",
-            "unit" => "
-                CREATE TABLE IF NOT EXISTS unit (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    user_id INT NOT NULL,
-                    type INT NOT NULL,
-                    x INT NOT NULL,
-                    y INT NOT NULL,
-                    planet INT NOT NULL,
-                    health INT NOT NULL,
-                    health_max INT NOT NULL DEFAULT 3,
-                    points DECIMAL(10,2) NOT NULL,
-                    mission_points INT NOT NULL DEFAULT 0,
-                    mission VARCHAR(50) DEFAULT NULL,
-                    auto VARCHAR(20) DEFAULT 'none'
-                )
-            ",
-            "city" => "
-                CREATE TABLE IF NOT EXISTS city (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    title VARCHAR(255) NOT NULL,
-                    x INT NOT NULL,
-                    y INT NOT NULL,
-                    user_id INT NOT NULL,
-                    planet INT NOT NULL,
-                    population INT DEFAULT 1,
-                    pmoney INT DEFAULT 0,
-                    presearch INT DEFAULT 0,
-                    resource_group INT DEFAULT NULL,
-                    eat INT DEFAULT 0,
-                    eat_up INT DEFAULT 20,
-                    culture INT DEFAULT 0,
-                    culture_level INT DEFAULT 0,
-                    production INT DEFAULT NULL,
-                    production_type VARCHAR(20) DEFAULT 'unit',
-                    production_complete INT DEFAULT 0,
-                    people_dis INT DEFAULT 0,
-                    people_norm INT DEFAULT 1,
-                    people_happy INT DEFAULT 0,
-                    people_artist INT DEFAULT 0,
-                    is_coastal TINYINT DEFAULT 0,
-                    pwork INT DEFAULT 1,
-                    peat INT DEFAULT 2
-                )
-            ",
-            "city_people" => "
-                CREATE TABLE IF NOT EXISTS city_people (
-                    x INT NOT NULL,
-                    y INT NOT NULL,
-                    planet INT NOT NULL,
-                    city_id INT NOT NULL,
-                    PRIMARY KEY (x, y, planet)
-                )
-            ",
-            "resource_group" => "
-                CREATE TABLE IF NOT EXISTS resource_group (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    group_id INT NOT NULL,
-                    user_id INT NOT NULL,
-                    resource_id INT NOT NULL
-                )
-            ",
-            "research" => "
-                CREATE TABLE IF NOT EXISTS research (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    type INT NOT NULL,
-                    user_id INT NOT NULL,
-                    completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            ",
-            "message" => "
-                CREATE TABLE IF NOT EXISTS message (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    from_id INT DEFAULT NULL,
-                    to_id INT NOT NULL,
-                    text TEXT NOT NULL,
-                    type VARCHAR(20) DEFAULT 'user',
-                    date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            ",
-            "event" => "
-                CREATE TABLE IF NOT EXISTS event (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    type VARCHAR(50) NOT NULL,
-                    user_id INT NOT NULL,
-                    object VARCHAR(255) DEFAULT NULL,
-                    source INT DEFAULT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            ",
-            "resource_type" => "
-                CREATE TABLE IF NOT EXISTS resource_type (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    title VARCHAR(255) NOT NULL,
-                    type VARCHAR(50) NOT NULL
-                )
-            ",
-            "resource" => "
-                CREATE TABLE IF NOT EXISTS resource (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    x INT NOT NULL,
-                    y INT NOT NULL,
-                    planet INT NOT NULL,
-                    type INT NOT NULL,
-                    amount INT DEFAULT 0
-                )
-            ",
-            "research_type" => "
-                CREATE TABLE IF NOT EXISTS research_type (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    title VARCHAR(255) NOT NULL,
-                    age INT DEFAULT 1,
-                    cost INT DEFAULT 100
-                )
-            ",
-            "building_type" => "
-                CREATE TABLE IF NOT EXISTS building_type (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    title VARCHAR(255) NOT NULL,
-                    cost INT DEFAULT 50
-                )
-            ",
-            "building" => "
-                CREATE TABLE IF NOT EXISTS building (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    type INT NOT NULL,
-                    city_id INT NOT NULL
-                )
-            ",
-            "mission_type" => "
-                CREATE TABLE IF NOT EXISTS mission_type (
-                    id VARCHAR(50) PRIMARY KEY,
-                    title VARCHAR(255) NOT NULL
-                )
-            ",
-            "mission_order" => "
-                CREATE TABLE IF NOT EXISTS mission_order (
-                    id INT AUTO_INCREMENT PRIMARY KEY,
-                    unit_id INT NOT NULL,
-                    mission VARCHAR(50) NOT NULL,
-                    x INT NOT NULL,
-                    y INT NOT NULL,
-                    planet INT NOT NULL,
-                    FOREIGN KEY (unit_id) REFERENCES unit(id) ON DELETE CASCADE
-                )
-            ",
+            "game" => "CREATE TABLE IF NOT EXISTS game (id $id_column, name VARCHAR(255) NOT NULL, map_w INT DEFAULT 100, map_h INT DEFAULT 100, turn_type VARCHAR(50) DEFAULT 'byturn', turn_num INT DEFAULT 1, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
+            "user" => "CREATE TABLE IF NOT EXISTS user (id $id_column, login VARCHAR(255) NOT NULL, color VARCHAR(10) NOT NULL, game INT NOT NULL, turn_order INT DEFAULT 1, turn_status VARCHAR(10) DEFAULT 'wait', money INT DEFAULT 50, age INT DEFAULT 1, income INT DEFAULT 0, research_amount INT DEFAULT 0, research_percent INT DEFAULT 0, process_research_complete INT DEFAULT 0, process_research_turns INT DEFAULT 0, process_research_type INT DEFAULT 0, pass VARCHAR(255) DEFAULT '', created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
+            "planet" => "CREATE TABLE IF NOT EXISTS planet (id $id_column, name VARCHAR(255) NOT NULL, game_id INT NOT NULL)",
+            "cell" =>
+                "CREATE TABLE IF NOT EXISTS cell (x INT NOT NULL, y INT NOT NULL, planet INT NOT NULL, type VARCHAR(50) DEFAULT 'plains', owner INT DEFAULT NULL, owner_culture INT DEFAULT 0, road VARCHAR(10) DEFAULT 'none', improvement VARCHAR(20) DEFAULT 'none', PRIMARY KEY (x, y, planet))",
+            "unit_type" => "CREATE TABLE IF NOT EXISTS unit_type (id $id_column, title VARCHAR(255) NOT NULL, points INT DEFAULT 2, mission_points INT DEFAULT 2)",
+            "unit" => "CREATE TABLE IF NOT EXISTS unit (id INT $unsigned $autoIncrement PRIMARY KEY, user_id INT $unsigned NOT NULL, type INT $unsigned NOT NULL, x INT NOT NULL, y INT NOT NULL, planet INT $unsigned NOT NULL, health INT NOT NULL, health_max INT NOT NULL DEFAULT 3, points DECIMAL(10,2) NOT NULL, mission_points INT NOT NULL DEFAULT 0, mission VARCHAR(50) DEFAULT NULL, auto VARCHAR(20) DEFAULT 'none')",
+            "city" => "CREATE TABLE IF NOT EXISTS city (id $id_column, title VARCHAR(255) NOT NULL, x INT NOT NULL, y INT NOT NULL, user_id INT NOT NULL, planet INT NOT NULL, population INT DEFAULT 1, pmoney INT DEFAULT 0, presearch INT DEFAULT 0, resource_group INT DEFAULT NULL, eat INT DEFAULT 0, eat_up INT DEFAULT 20, culture INT DEFAULT 0, culture_level INT DEFAULT 0, production INT DEFAULT NULL, production_type VARCHAR(20) DEFAULT 'unit', production_complete INT DEFAULT 0, people_dis INT DEFAULT 0, people_norm INT DEFAULT 1, people_happy INT DEFAULT 0, people_artist INT DEFAULT 0, is_coastal TINYINT DEFAULT 0, pwork INT DEFAULT 1, peat INT DEFAULT 2)",
+            "city_people" =>
+                "CREATE TABLE IF NOT EXISTS city_people (x INT NOT NULL, y INT NOT NULL, planet INT NOT NULL, city_id INT NOT NULL, PRIMARY KEY (x, y, planet))",
+            "resource_group" => "CREATE TABLE IF NOT EXISTS resource_group (group_id INT $unsigned NOT NULL, user_id INT $unsigned NOT NULL, resource_id INT $unsigned NOT NULL, PRIMARY KEY (group_id, user_id, resource_id))",
+            "research" => "CREATE TABLE IF NOT EXISTS research (id $id_column, type INT NOT NULL, user_id INT NOT NULL, completed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
+            "message" => "CREATE TABLE IF NOT EXISTS message (id $id_column, from_id INT DEFAULT NULL, to_id INT NOT NULL, text TEXT NOT NULL, type VARCHAR(20) DEFAULT 'user', date TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
+            "event" => "CREATE TABLE IF NOT EXISTS event (id $id_column, type VARCHAR(50) NOT NULL, user_id INT NOT NULL, object VARCHAR(255) DEFAULT NULL, source INT DEFAULT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
+            "resource_type" => "CREATE TABLE IF NOT EXISTS resource_type (id $id_column, title VARCHAR(255) NOT NULL, type VARCHAR(50) NOT NULL)",
+            "resource" => "CREATE TABLE IF NOT EXISTS resource (id $id_column, x INT NOT NULL, y INT NOT NULL, planet INT NOT NULL, type VARCHAR(50) NOT NULL, amount INT DEFAULT 0)",
+            "research_type" => "CREATE TABLE IF NOT EXISTS research_type (id $id_column, title VARCHAR(255) NOT NULL, age INT DEFAULT 1, cost INT DEFAULT 100)",
+            "building_type" => "CREATE TABLE IF NOT EXISTS building_type (id $id_column, title VARCHAR(255) NOT NULL, cost INT DEFAULT 50)",
+            "building" => "CREATE TABLE IF NOT EXISTS building (id $id_column, type INT NOT NULL, city_id INT NOT NULL)",
+            "mission_type" =>
+                "CREATE TABLE IF NOT EXISTS mission_type (id VARCHAR(50) PRIMARY KEY, title VARCHAR(255) NOT NULL)",
+            "mission_order" => "CREATE TABLE IF NOT EXISTS mission_order (unit_id INT $unsigned NOT NULL, number INT $unsigned NOT NULL, type VARCHAR(20) NOT NULL, target_x INT $unsigned NOT NULL, target_y INT $unsigned NOT NULL, PRIMARY KEY (unit_id, number))",
         ];
 
+        $pdo = MyDB::get();
         foreach ($tables as $tableName => $sql) {
-            MyDB::query($sql);
+            // Убираем лишние пробелы и переносы строк
+            $sql = trim(preg_replace("/\s+/", " ", $sql));
+            $pdo->exec($sql);
+        }
+
+        // Добавляем индексы и foreign keys
+        $indexesAndConstraints = [
+            "ALTER TABLE building ADD KEY city_id (city_id)",
+            "ALTER TABLE building ADD CONSTRAINT building_ibfk_1 FOREIGN KEY (city_id) REFERENCES city (id)",
+
+            "ALTER TABLE cell ADD KEY cell_ibfk_1 (owner)",
+            "ALTER TABLE cell ADD CONSTRAINT cell_ibfk_1 FOREIGN KEY (owner) REFERENCES user (id) ON DELETE SET NULL",
+
+            "ALTER TABLE city ADD UNIQUE KEY x (x, y, planet)",
+            "ALTER TABLE city ADD KEY user_id (user_id)",
+            "ALTER TABLE city ADD CONSTRAINT city_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (id)",
+            "ALTER TABLE city ADD CONSTRAINT city_ibfk_2 FOREIGN KEY (x, y, planet) REFERENCES cell (x, y, planet)",
+
+            "ALTER TABLE city_people ADD KEY city_id (city_id)",
+            "ALTER TABLE city_people ADD CONSTRAINT city_people_ibfk_1 FOREIGN KEY (city_id) REFERENCES city (id)",
+            "ALTER TABLE city_people ADD CONSTRAINT city_people_ibfk_2 FOREIGN KEY (x, y, planet) REFERENCES cell (x, y, planet)",
+
+            "ALTER TABLE message ADD KEY from_id (from_id)",
+            "ALTER TABLE message ADD KEY to_id (to_id)",
+            "ALTER TABLE message ADD CONSTRAINT message_ibfk_1 FOREIGN KEY (from_id) REFERENCES user (id)",
+            "ALTER TABLE message ADD CONSTRAINT message_ibfk_2 FOREIGN KEY (to_id) REFERENCES user (id)",
+
+            "ALTER TABLE mission_order ADD CONSTRAINT mission_order_ibfk_1 FOREIGN KEY (unit_id) REFERENCES unit (id)",
+
+            "ALTER TABLE research ADD UNIQUE KEY user_id (user_id, type)",
+            "ALTER TABLE research ADD CONSTRAINT research_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (id)",
+
+            "ALTER TABLE resource ADD KEY type (type)",
+
+            "ALTER TABLE resource_group ADD KEY resource_id (resource_id)",
+            "ALTER TABLE resource_group ADD KEY user_id (user_id)",
+            "ALTER TABLE resource_group ADD CONSTRAINT resource_group_ibfk_1 FOREIGN KEY (resource_id) REFERENCES resource (id)",
+            "ALTER TABLE resource_group ADD CONSTRAINT resource_group_ibfk_2 FOREIGN KEY (user_id) REFERENCES user (id)",
+
+            "ALTER TABLE unit ADD KEY user_id (user_id)",
+            "ALTER TABLE unit ADD KEY x (x, y, planet)",
+            "ALTER TABLE unit ADD CONSTRAINT unit_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (id)",
+            "ALTER TABLE unit ADD CONSTRAINT unit_ibfk_2 FOREIGN KEY (x, y, planet) REFERENCES cell (x, y, planet)",
+        ];
+
+        foreach ($indexesAndConstraints as $sql) {
+            try {
+                MyDB::query($sql);
+            } catch (Exception $e) {
+                // Игнорируем ошибки при добавлении индексов/foreign keys, если они уже существуют
+            }
         }
     }
 
@@ -259,6 +138,7 @@ class DatabaseTestAdapter
     public static function clearAllTables()
     {
         $pdo = MyDB::get();
+        // Порядок важен: сначала таблицы, которые ссылаются на другие (дочерние), потом родительские
         $tables = [
             "event",
             "resource",
@@ -268,17 +148,17 @@ class DatabaseTestAdapter
             "research_type",
             "resource_group",
             "city_people",
-            "city",
-            "building",
+            "building", // Сначала здания
+            "city", // Потом города
             "building_type",
-            "mission_order",
-            "unit",
+            "mission_order", // Сначала миссии
+            "unit", // Потом юниты
             "unit_type",
             "mission_type",
-            "cell",
-            "user",
-            "planet",
-            "game",
+            "cell", // Клетки могут ссылаться на пользователей
+            "user", // Пользователи могут быть в разных таблицах
+            "planet", // Планеты ссылаются на игры
+            "game", // Игры в конце
         ];
 
         foreach ($tables as $table) {

@@ -201,7 +201,9 @@ class User
                 $coords[] = ["x" => $x, "y" => $y];
             }
         }
-        $cells = Cell::load_cells($coords, 0);
+        $game = Game::get($this->game);
+        $planetId = $game->get_first_planet()->id;
+        $cells = Cell::load_cells($coords, $planetId);
         foreach ($cells as $cell) {
             $this->see_map[$cell->x][$cell->y] = $cell;
         }
@@ -233,7 +235,12 @@ class User
         //Пересчёт границ и культурного влияния
         foreach ($culture_cells as $x => $cells) {
             foreach ($cells as $y => $culture) {
-                $cell = Cell::get($x, $y);
+                $game = Game::get($this->game);
+                $planetId = $game->get_first_planet()->id;
+                $cell = Cell::get($x, $y, $planetId);
+                if (!$cell) {
+                    continue;
+                }
                 if (!$cell->owner) {
                     $cell->owner = $this;
                     $cell->owner_culture = (int) $culture;
@@ -458,7 +465,9 @@ class User
                 "resources" => [],
             ];
             $cities_in_group[] = $city->id;
-            $next_cells = [Cell::get($city->x, $city->y)];
+            $game = Game::get($this->game);
+            $planetId = $game->get_first_planet()->id;
+            $next_cells = [Cell::get($city->x, $city->y, $planetId)];
             while (count($next_cells) > 0) {
                 $cell = array_shift($next_cells);
                 if (in_array($cell->x . "_" . $cell->y, $cells_in_group)) {
@@ -477,6 +486,7 @@ class User
                     $cell->y,
                     3,
                     3,
+                    $planetId,
                 );
                 foreach ($cells_around as $row) {
                     foreach ($row as $acell) {
@@ -574,7 +584,7 @@ class User
                 } else {
                     MyDB::update(
                         "city",
-                        ["resource_group" => "NULL"],
+                        ["resource_group" => null],
                         $city->id,
                     );
                 }

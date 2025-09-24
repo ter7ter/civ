@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../TestBase.php";
-
 /**
  * Тесты для класса Resource
  */
@@ -12,6 +10,9 @@ class ResourceTest extends TestBase
      */
     public function testGetExistingResource(): void
     {
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+
         // Создаем тестовый тип ресурса в памяти
         $resourceType = new ResourceType([
             'id' => 1,
@@ -25,13 +26,13 @@ class ResourceTest extends TestBase
         $resourceData = [
             'x' => 10,
             'y' => 20,
-            'planet' => Cell::$map_planet,
+            'planet' => $planetId,
             'type' => 1,
             'amount' => 5
         ];
         $resourceId = MyDB::insert('resource', $resourceData);
 
-        $resource = Resource::get(10, 20);
+        $resource = Resource::get(10, 20, $planetId);
 
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertEquals($resourceId, $resource->id);
@@ -46,7 +47,9 @@ class ResourceTest extends TestBase
      */
     public function testGetNonExistingResource(): void
     {
-        $resource = Resource::get(999, 999);
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $resource = Resource::get(999, 999, $planetId);
 
         $this->assertFalse($resource);
     }
@@ -56,6 +59,9 @@ class ResourceTest extends TestBase
      */
     public function testConstruct(): void
     {
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+
         // Создаем тестовый тип ресурса в памяти
         $resourceType = new ResourceType([
             'id' => 2,
@@ -69,7 +75,7 @@ class ResourceTest extends TestBase
             'id' => 1,
             'x' => 5,
             'y' => 15,
-            'planet' => Cell::$map_planet,
+            'planet' => $planetId,
             'type' => 2,
             'amount' => 10
         ];
@@ -89,6 +95,9 @@ class ResourceTest extends TestBase
      */
     public function testSaveNew(): void
     {
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+
         // Создаем тестовый тип ресурса в памяти (не в БД)
         $resourceType = new ResourceType([
             'id' => 3,
@@ -101,7 +110,7 @@ class ResourceTest extends TestBase
         $data = [
             'x' => 1,
             'y' => 2,
-            'planet' => Cell::$map_planet,
+            'planet' => $planetId,
             'type' => 3,
             'amount' => 7
         ];
@@ -124,6 +133,9 @@ class ResourceTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+
         // Создаем тестовый тип ресурса в памяти
         $resourceType = new ResourceType([
             'id' => 4,
@@ -137,7 +149,7 @@ class ResourceTest extends TestBase
         $data = [
             'x' => 3,
             'y' => 4,
-            'planet' => Cell::$map_planet,
+            'planet' => $planetId,
             'type' => 4,
             'amount' => 8
         ];
@@ -161,6 +173,9 @@ class ResourceTest extends TestBase
      */
     public function testGetTitle(): void
     {
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+
         // Создаем тестовый тип ресурса в памяти
         $resourceType = new ResourceType([
             'id' => 5,
@@ -173,7 +188,7 @@ class ResourceTest extends TestBase
         $data = [
             'x' => 6,
             'y' => 7,
-            'planet' => Cell::$map_planet,
+            'planet' => $planetId,
             'type' => 5,
             'amount' => 1
         ];

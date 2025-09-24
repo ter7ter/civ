@@ -1,96 +1,67 @@
 <?php
 
-require_once __DIR__ . "/../TestBase.php";
-
 /**
  * Тесты для проверки конфигурации базы данных в тестах
  */
 class DatabaseConfigTest extends TestBase
 {
     /**
-     * Тест проверки тестовых констант БД
+     * Тест проверки тестовых настроек БД
      */
-    public function testTestDatabaseConstants(): void
+    public function testTestDatabaseConfiguration(): void
     {
-        // Проверяем, что тестовые константы определены
-        $this->assertTrue(
-            defined("TEST_DB_HOST"),
-            "TEST_DB_HOST должна быть определена",
-        );
-        $this->assertTrue(
-            defined("TEST_DB_USER"),
-            "TEST_DB_USER должна быть определена",
-        );
-        $this->assertTrue(
-            defined("TEST_DB_PASS"),
-            "TEST_DB_PASS должна быть определена",
-        );
-        $this->assertTrue(
-            defined("TEST_DB_NAME"),
-            "TEST_DB_NAME должна быть определена",
-        );
-        $this->assertTrue(
-            defined("TEST_DB_PORT"),
-            "TEST_DB_PORT должна быть определена",
-        );
-
-        // Проверяем значения по умолчанию
+        // Проверяем, что MyDB настроен корректно для тестов
         $this->assertEquals(
             "localhost",
-            TEST_DB_HOST,
-            "TEST_DB_HOST должна иметь значение по умолчанию",
+            MyDB::$dbhost,
+            "Тестовая БД должна использовать localhost",
         );
         $this->assertEquals(
-            "test_user",
-            TEST_DB_USER,
-            "TEST_DB_USER должна иметь значение по умолчанию",
+            "civ_test",
+            MyDB::$dbuser,
+            "Тестовая БД должна использовать тестового пользователя",
         );
         $this->assertEquals(
-            "test_pass",
-            TEST_DB_PASS,
-            "TEST_DB_PASS должна иметь значение по умолчанию",
+            "civ_test",
+            MyDB::$dbpass,
+            "Тестовая БД должна использовать тестовый пароль",
         );
         $this->assertEquals(
-            "test_db",
-            TEST_DB_NAME,
-            "TEST_DB_NAME должна иметь значение по умолчанию",
+            "civ_for_tests",
+            MyDB::$dbname,
+            "Тестовая БД должна использовать тестовую базу данных",
         );
         $this->assertEquals(
-            3306,
-            TEST_DB_PORT,
-            "TEST_DB_PORT должна иметь значение по умолчанию",
+            "3306",
+            MyDB::$dbport,
+            "Тестовая БД должна использовать порт MySQL",
         );
     }
 
     /**
-     * Тест разделения констант основного проекта и тестов
+     * Тест разделения настроек основного проекта и тестов
      */
-    public function testDatabaseConstantsSeparation(): void
+    public function testDatabaseConfigurationSeparation(): void
     {
-        // Если основные константы определены, они должны отличаться от тестовых
-        if (defined("DB_HOST") && defined("TEST_DB_HOST")) {
-            $this->assertNotEquals(
-                DB_HOST,
-                TEST_DB_HOST,
-                "Основные и тестовые константы БД должны различаться",
-            );
-        }
+        // Проверяем, что тестовые настройки отличаются от основных
+        $this->assertNotEquals(
+            DB_HOST,
+            MyDB::$dbhost,
+            "Хост тестовой БД должен отличаться от основной",
+        );
 
-        if (defined("DB_USER") && defined("TEST_DB_USER")) {
-            $this->assertNotEquals(
-                DB_USER,
-                TEST_DB_USER,
-                "Основные и тестовые пользователи БД должны различаться",
-            );
-        }
+        $this->assertNotEquals(
+            DB_NAME,
+            MyDB::$dbname,
+            "Имя тестовой БД должно отличаться от основной",
+        );
 
-        if (defined("DB_NAME") && defined("TEST_DB_NAME")) {
-            $this->assertNotEquals(
-                DB_NAME,
-                TEST_DB_NAME,
-                "Основные и тестовые имена БД должны различаться",
-            );
-        }
+        // Проверяем, что используется тестовая конфигурация
+        $this->assertStringContainsString(
+            "test",
+            MyDB::$dbname,
+            "Имя БД должно содержать 'test'",
+        );
     }
 
     /**
@@ -101,11 +72,7 @@ class DatabaseConfigTest extends TestBase
         // Проверяем основные таблицы
         $expectedTables = ["game", "user", "cell", "unit", "city"];
 
-        $actualTables = MyDB::query(
-            "SELECT name FROM sqlite_master WHERE type='table'",
-            [],
-            "column",
-        );
+        $actualTables = MyDB::query("SHOW TABLES", [], "column");
 
         foreach ($expectedTables as $table) {
             $this->assertContains(

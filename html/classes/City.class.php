@@ -133,11 +133,8 @@ class City
      * @return bool|City
      * @throws Exception
      */
-    public static function by_coords($x, $y, $planet = null)
+    public static function by_coords($x, $y, $planet)
     {
-        if (is_null($planet)) {
-            $planet = Cell::$map_planet;
-        }
         $data = MyDB::query(
             "SELECT * FROM city WHERE x = :x AND y = :y AND planet = :planet",
             ["x" => $x, "y" => $y, "planet" => $planet],
@@ -158,21 +155,28 @@ class City
      * @return City
      * @throws Exception
      */
-    public static function new_city($user, $x, $y, $title)
+    public static function new_city($user, $x, $y, $title, $planetId)
     {
         $city = new City([
             "user_id" => $user->id,
             "x" => $x,
             "y" => $y,
             "title" => $title,
-            "planet" => Cell::$map_planet,
+            "planet" => $planetId,
             "population" => 1,
         ]);
         //Проверяем есть ли вода в соседних клетках
         $city->is_coastal = false;
         for ($ix = -1; $ix < 2; $ix++) {
             for ($iy = -1; $iy < 2; $iy++) {
-                $cell = Cell::d_coord($city->x, $city->y, $ix, $iy);
+                $cell = Cell::d_coord(
+                    $city->x,
+                    $city->y,
+                    $ix,
+                    $iy,
+                    true,
+                    $planetId,
+                );
                 if ($cell && $cell->type->id == "water1") {
                     $city->is_coastal = true;
                 }
@@ -268,30 +272,149 @@ class City
     public function get_city_cells()
     {
         $cells = [];
-        $cells[] = Cell::d_coord($this->x, $this->y, 0, -1);
-        $cells[] = Cell::d_coord($this->x, $this->y, 0, 1);
-        $cells[] = Cell::d_coord($this->x, $this->y, -1, 0);
-        $cells[] = Cell::d_coord($this->x, $this->y, 1, 0);
-        $cells[] = Cell::d_coord($this->x, $this->y, -1, -1);
-        $cells[] = Cell::d_coord($this->x, $this->y, 1, -1);
-        $cells[] = Cell::d_coord($this->x, $this->y, -1, 1);
-        $cells[] = Cell::d_coord($this->x, $this->y, 1, 1);
+        $cells[] = Cell::d_coord(
+            $this->x,
+            $this->y,
+            0,
+            -1,
+            true,
+            $this->planet,
+        );
+        $cells[] = Cell::d_coord($this->x, $this->y, 0, 1, true, $this->planet);
+        $cells[] = Cell::d_coord(
+            $this->x,
+            $this->y,
+            -1,
+            0,
+            true,
+            $this->planet,
+        );
+        $cells[] = Cell::d_coord($this->x, $this->y, 1, 0, true, $this->planet);
+        $cells[] = Cell::d_coord(
+            $this->x,
+            $this->y,
+            -1,
+            -1,
+            true,
+            $this->planet,
+        );
+        $cells[] = Cell::d_coord(
+            $this->x,
+            $this->y,
+            1,
+            -1,
+            true,
+            $this->planet,
+        );
+        $cells[] = Cell::d_coord(
+            $this->x,
+            $this->y,
+            -1,
+            1,
+            true,
+            $this->planet,
+        );
+        $cells[] = Cell::d_coord($this->x, $this->y, 1, 1, true, $this->planet);
         if ($this->culture_level > 0) {
-            $cells[] = Cell::d_coord($this->x, $this->y, -1, -2);
-            $cells[] = Cell::d_coord($this->x, $this->y, 0, -2);
-            $cells[] = Cell::d_coord($this->x, $this->y, 1, -2);
+            $cells[] = Cell::d_coord(
+                $this->x,
+                $this->y,
+                -1,
+                -2,
+                true,
+                $this->planet,
+            );
+            $cells[] = Cell::d_coord(
+                $this->x,
+                $this->y,
+                0,
+                -2,
+                true,
+                $this->planet,
+            );
+            $cells[] = Cell::d_coord(
+                $this->x,
+                $this->y,
+                1,
+                -2,
+                true,
+                $this->planet,
+            );
 
-            $cells[] = Cell::d_coord($this->x, $this->y, -1, 2);
-            $cells[] = Cell::d_coord($this->x, $this->y, 0, 2);
-            $cells[] = Cell::d_coord($this->x, $this->y, 1, 2);
+            $cells[] = Cell::d_coord(
+                $this->x,
+                $this->y,
+                -1,
+                2,
+                true,
+                $this->planet,
+            );
+            $cells[] = Cell::d_coord(
+                $this->x,
+                $this->y,
+                0,
+                2,
+                true,
+                $this->planet,
+            );
+            $cells[] = Cell::d_coord(
+                $this->x,
+                $this->y,
+                1,
+                2,
+                true,
+                $this->planet,
+            );
 
-            $cells[] = Cell::d_coord($this->x, $this->y, -2, -1);
-            $cells[] = Cell::d_coord($this->x, $this->y, -2, 0);
-            $cells[] = Cell::d_coord($this->x, $this->y, -2, 1);
+            $cells[] = Cell::d_coord(
+                $this->x,
+                $this->y,
+                -2,
+                -1,
+                true,
+                $this->planet,
+            );
+            $cells[] = Cell::d_coord(
+                $this->x,
+                $this->y,
+                -2,
+                0,
+                true,
+                $this->planet,
+            );
+            $cells[] = Cell::d_coord(
+                $this->x,
+                $this->y,
+                -2,
+                1,
+                true,
+                $this->planet,
+            );
 
-            $cells[] = Cell::d_coord($this->x, $this->y, 2, -1);
-            $cells[] = Cell::d_coord($this->x, $this->y, 2, 0);
-            $cells[] = Cell::d_coord($this->x, $this->y, 2, 1);
+            $cells[] = Cell::d_coord(
+                $this->x,
+                $this->y,
+                2,
+                -1,
+                true,
+                $this->planet,
+            );
+            $cells[] = Cell::d_coord(
+                $this->x,
+                $this->y,
+                2,
+                0,
+                true,
+                $this->planet,
+            );
+            $cells[] = Cell::d_coord(
+                $this->x,
+                $this->y,
+                2,
+                1,
+                true,
+                $this->planet,
+            );
         }
         $result = [];
         //Проверить не заняты ли кем то ещё
@@ -301,6 +424,9 @@ class City
             $cid = 0;
         }
         foreach ($cells as $cell) {
+            if (!$cell) {
+                continue;
+            }
             if (
                 MyDB::query(
                     "SELECT city_id FROM city_people WHERE x =:x AND y =:y AND planet =:planet AND city_id <>:cid",
@@ -644,7 +770,7 @@ class City
         }
         $values["is_coastal"] = $values["is_coastal"] ? 1 : 0;
         if (!isset($values["production"]) || $values["production"] == false) {
-            $values["production"] = "NULL";
+            $values["production"] = null;
         }
         $values["user_id"] = $this->user->id;
         if ($this->id !== null) {
@@ -653,6 +779,23 @@ class City
             $this->id = MyDB::insert("city", $values);
             City::$_all[$this->id] = $this;
         }
+        // Проверяем, что у города есть ID перед работой с city_people
+        if ($this->id === null) {
+            error_log(
+                "City::save() - Attempting to save city_people but city ID is null",
+            );
+            error_log(
+                "City data: " .
+                    json_encode([
+                        "title" => $this->title,
+                        "x" => $this->x,
+                        "y" => $this->y,
+                        "user_id" => $this->user ? $this->user->id : "null",
+                    ]),
+            );
+            return; // Не можем сохранить city_people без ID города
+        }
+
         MyDB::query("DELETE FROM city_people WHERE city_id =:id", [
             "id" => $this->id,
         ]);

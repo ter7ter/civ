@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../TestBase.php";
-
 /**
  * Тесты для класса Game
  */
@@ -231,14 +229,13 @@ class GameTest extends TestBase
     {
         $gameData = $this->createTestGame(['name' => 'Planet Game']);
 
-        // Создаем планету для игры
-        $planetData = $this->createTestPlanet(['game_id' => $gameData['id'], 'name' => 'First Planet']);
+        $planetId = $this->createTestPlanet(['game_id' => $gameData['id'], 'name' => 'First Planet']);
 
         $game = Game::get($gameData['id']);
         $planet = $game->get_first_planet();
 
         $this->assertInstanceOf(Planet::class, $planet);
-        $this->assertEquals($planetData['id'], $planet->id);
+        $this->assertEquals($planetId, $planet->id);
         $this->assertEquals('First Planet', $planet->name);
         $this->assertEquals($gameData['id'], $planet->game_id);
     }

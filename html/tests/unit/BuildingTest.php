@@ -1,7 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../TestBase.php";
-
 /**
  * Тесты для класса Building
  */
@@ -12,21 +10,21 @@ class BuildingTest extends TestBase
      */
     public function testGetExistingBuilding(): void
     {
-        $this->initializeGameTypes();
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем город
-        $cityData = [
+        $cityData = $this->createTestCity([
             "user_id" => $user->id,
             "x" => 10,
             "y" => 20,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "Test City",
             "population" => 1,
-        ];
-        $cityId = MyDB::insert("city", $cityData);
-        $city = City::get($cityId);
+        ]);
+        $city = City::get($cityData["id"]);
 
         // Создаем здание
         $buildingData = [
@@ -51,23 +49,24 @@ class BuildingTest extends TestBase
     public function testConstructor(): void
     {
         $this->initializeGameTypes();
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем город
-        $cityData = [
+        $cityData = $this->createTestCity([
             "user_id" => $user->id,
             "x" => 5,
             "y" => 15,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "Constructor City",
             "population" => 1,
-        ];
-        $cityId = MyDB::insert("city", $cityData);
+        ]);
 
         $buildingData = [
             "id" => 1,
-            "city_id" => $cityId,
+            "city_id" => $cityData["id"],
             "type" => 2,
         ];
 
@@ -75,7 +74,7 @@ class BuildingTest extends TestBase
 
         $this->assertEquals(1, $building->id);
         $this->assertInstanceOf(City::class, $building->city);
-        $this->assertEquals($cityId, $building->city->id);
+        $this->assertEquals($cityData["id"], $building->city->id);
         $this->assertInstanceOf(BuildingType::class, $building->type);
         $this->assertNotEmpty($building->type->get_title());
     }
@@ -86,23 +85,24 @@ class BuildingTest extends TestBase
     public function testGetTitle(): void
     {
         $this->initializeGameTypes();
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем город
-        $cityData = [
+        $cityData = $this->createTestCity([
             "user_id" => $user->id,
             "x" => 8,
             "y" => 12,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "Title City",
             "population" => 1,
-        ];
-        $cityId = MyDB::insert("city", $cityData);
+        ]);
 
         $buildingData = [
             "id" => 2,
-            "city_id" => $cityId,
+            "city_id" => $cityData["id"],
             "type" => 4,
         ];
 
@@ -121,20 +121,21 @@ class BuildingTest extends TestBase
     public function testSaveNew(): void
     {
         $this->initializeGameTypes();
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем город
-        $cityData = [
+        $cityData = $this->createTestCity([
             "user_id" => $user->id,
             "x" => 3,
             "y" => 7,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "Save City",
             "population" => 1,
-        ];
-        $cityId = MyDB::insert("city", $cityData);
-        $city = City::get($cityId);
+        ]);
+        $city = City::get($cityData["id"]);
 
         $buildingData = [
             "city_id" => $city->id,
@@ -163,20 +164,21 @@ class BuildingTest extends TestBase
     public function testSaveUpdate(): void
     {
         $this->initializeGameTypes();
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем город
-        $cityData = [
+        $cityData = $this->createTestCity([
             "user_id" => $user->id,
             "x" => 6,
             "y" => 9,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "Update City",
             "population" => 1,
-        ];
-        $cityId = MyDB::insert("city", $cityData);
-        $city = City::get($cityId);
+        ]);
+        $city = City::get($cityData["id"]);
 
         // Создаем здание
         $buildingData = [
@@ -209,23 +211,24 @@ class BuildingTest extends TestBase
     public function testBuildingCache(): void
     {
         $this->initializeGameTypes();
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем город
-        $cityData = [
+        $cityData = $this->createTestCity([
             "user_id" => $user->id,
             "x" => 15,
             "y" => 25,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "Cache City",
             "population" => 1,
-        ];
-        $cityId = MyDB::insert("city", $cityData);
+        ]);
 
         // Создаем здание
         $buildingData = [
-            "city_id" => $cityId,
+            "city_id" => $cityData["id"],
             "type" => 5,
         ];
         $buildingId = MyDB::insert("building", $buildingData);
@@ -249,22 +252,23 @@ class BuildingTest extends TestBase
     public function testBuildingCityRelation(): void
     {
         $this->initializeGameTypes();
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем город
-        $cityData = [
+        $cityData = $this->createTestCity([
             "user_id" => $user->id,
             "x" => 20,
             "y" => 30,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "Relation City",
             "population" => 1,
-        ];
-        $cityId = MyDB::insert("city", $cityData);
+        ]);
 
         $buildingData = [
-            "city_id" => $cityId,
+            "city_id" => $cityData["id"],
             "type" => 2,
         ];
 
@@ -272,7 +276,7 @@ class BuildingTest extends TestBase
 
         // Проверяем что здание правильно связано с городом
         $this->assertInstanceOf(City::class, $building->city);
-        $this->assertEquals($cityId, $building->city->id);
+        $this->assertEquals($cityData["id"], $building->city->id);
         $this->assertEquals("Relation City", $building->city->title);
 
         // Проверяем что город принадлежит правильному пользователю
@@ -285,22 +289,23 @@ class BuildingTest extends TestBase
     public function testBuildingTypeRelation(): void
     {
         $this->initializeGameTypes();
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем город
-        $cityData = [
+        $cityData = $this->createTestCity([
             "user_id" => $user->id,
             "x" => 25,
             "y" => 35,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "Type City",
             "population" => 1,
-        ];
-        $cityId = MyDB::insert("city", $cityData);
+        ]);
 
         $buildingData = [
-            "city_id" => $cityId,
+            "city_id" => $cityData["id"],
             "type" => 3,
         ];
 
@@ -321,25 +326,26 @@ class BuildingTest extends TestBase
     public function testDifferentBuildingTypes(): void
     {
         $this->initializeGameTypes();
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $user = User::get($userData["id"]);
 
         // Создаем город
-        $cityData = [
+        $cityData = $this->createTestCity([
             "user_id" => $user->id,
             "x" => 40,
             "y" => 50,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "Types City",
             "population" => 1,
-        ];
-        $cityId = MyDB::insert("city", $cityData);
+        ]);
 
         $buildingTypes = [1, 2, 4, 3, 5];
 
         foreach ($buildingTypes as $type) {
             $buildingData = [
-                "city_id" => $cityId,
+                "city_id" => $cityData["id"],
                 "type" => $type,
             ];
 

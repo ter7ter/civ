@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../TestBase.php";
-require_once __DIR__ . "/../mocks/MockLoader.php";
-
 /**
  * Интеграционные тесты для действий на карте
  */
@@ -26,17 +23,12 @@ class MapActionsIntegrationTest extends TestBase
         ]);
     }
 
-    /**
-     * Тест перемещения юнита
-     */
     public function testUnitMovement(): void
     {
         // Создаем тестовую игру и пользователя
         $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
         $userData = $this->createTestUser(["game" => $gameData["id"]]);
-
-        // Устанавливаем правильный planet для Cell класса (0 - основная планета)
-        Cell::$map_planet = 0;
 
         // Создаем юнит
         $unitData = [
@@ -44,7 +36,7 @@ class MapActionsIntegrationTest extends TestBase
             "type" => 1, // Предполагаем, что тип 1 существует
             "x" => 10,
             "y" => 10,
-            "planet" => 0,
+            "planet" => $planetId,
             "health" => 3,
             "points" => 5,
         ];
@@ -54,14 +46,14 @@ class MapActionsIntegrationTest extends TestBase
         $cellData = [
             "x" => 11,
             "y" => 10,
-            "planet" => 0,
+            "planet" => $planetId,
             "type" => "plains",
         ];
         MyDB::insert("cell", $cellData);
 
         // Получаем юнит и перемещаем
         $unit = Unit::get($unitId);
-        $targetCell = Cell::get(11, 10);
+        $targetCell = Cell::get(11, 10, $planetId);
 
         $this->assertTrue(
             $unit->can_move($targetCell),
@@ -97,30 +89,28 @@ class MapActionsIntegrationTest extends TestBase
     {
         // Создаем тестовую игру и пользователя
         $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
         $userData = $this->createTestUser(["game" => $gameData["id"]]);
 
-        // Устанавливаем правильный planet для Cell класса (0 - основная планета)
-        Cell::$map_planet = 0;
-
         // Создаем тестовые клетки карты для города (расширенная область)
-        $this->createTestMapCells(0, 0, 15, 15);
+        $this->createTestMapCells(0, 0, 15, 15, $planetId);
 
         // Создаем клетку для города с владельцем
         $cellData = [
             "x" => 5,
             "y" => 5,
-            "planet" => 0,
+            "planet" => $planetId,
             "type" => "plains",
             "owner" => $userData["id"],
         ];
         MyDB::query(
-            "UPDATE cell SET owner = :owner WHERE x = 5 AND y = 5 AND planet = 0",
-            ["owner" => $userData["id"]],
+            "UPDATE cell SET owner = :owner WHERE x = 5 AND y = 5 AND planet = :planet",
+            ["owner" => $userData["id"], "planet" => $planetId]
         );
 
         // Создаем город
         $user = User::get($userData["id"]);
-        $city = City::new_city($user, 5, 5, "Test City");
+        $city = City::new_city($user, 5, 5, "Test City", $planetId);
 
         $this->assertNotNull($city, "Город должен быть создан");
         $this->assertEquals(
@@ -151,13 +141,11 @@ class MapActionsIntegrationTest extends TestBase
     {
         // Создаем тестовую игру
         $gameData = $this->createTestGame(["map_w" => 100, "map_h" => 100]);
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
         $userData = $this->createTestUser(["game" => $gameData["id"]]);
 
-        // Устанавливаем правильный planet для Cell класса (0 - основная планета)
-        Cell::$map_planet = 0;
-
         // Создаем тестовые клетки карты для прокрутки (только необходимый участок)
-        $this->createTestMapCells(10, 15, 20, 20);
+        $this->createTestMapCells(10, 15, 20, 20, $planetId);
 
         // Симулируем сессию пользователя
         $this->setSession([
@@ -174,6 +162,7 @@ class MapActionsIntegrationTest extends TestBase
         // Определяем переменные, которые ожидает mapv.php
         $user = User::get($userData["id"]);
         $game = Game::get($gameData["id"]);
+        $user->game = $game;
 
         // Включаем файл mapv.php с передачей переменных
         $vars = mockIncludeFile(__DIR__ . "/../../pages/mapv.php", [
@@ -200,13 +189,11 @@ class MapActionsIntegrationTest extends TestBase
     {
         // Создаем тестовую игру и пользователя
         $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
         $userData = $this->createTestUser(["game" => $gameData["id"]]);
 
-        // Устанавливаем правильный planet для Cell класса (0 - основная планета)
-        Cell::$map_planet = 0;
-
         // Создаем тестовые клетки карты
-        $this->createTestMapCells(5, 5, 15, 15);
+        $this->createTestMapCells(5, 5, 15, 15, $planetId);
 
         // Создаем юнит
         $unitData = [
@@ -214,7 +201,7 @@ class MapActionsIntegrationTest extends TestBase
             "type" => 1,
             "x" => 10,
             "y" => 10,
-            "planet" => 0,
+            "planet" => $planetId,
             "health" => 3,
             "points" => 5,
         ];
@@ -229,6 +216,7 @@ class MapActionsIntegrationTest extends TestBase
         // Определяем переменные, которые ожидает mapv.php
         $user = User::get($userData["id"]);
         $game = Game::get($gameData["id"]);
+        $user->game = $game;
 
         // Загружаем карту
         $this->simulatePostRequest(["cx" => 10, "cy" => 10]);
@@ -266,20 +254,18 @@ class MapActionsIntegrationTest extends TestBase
     {
         // Создаем тестовую игру и пользователя
         $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
         $userData = $this->createTestUser(["game" => $gameData["id"]]);
 
-        // Устанавливаем правильный planet для Cell класса (0 - основная планета)
-        Cell::$map_planet = 0;
-
         // Создаем тестовые клетки карты
-        $this->createTestMapCells(0, 0, 15, 15);
+        $this->createTestMapCells(0, 0, 15, 15, $planetId);
 
         // Создаем город
         $cityData = [
             "user_id" => $userData["id"],
             "x" => 5,
             "y" => 5,
-            "planet" => 0,
+            "planet" => $planetId,
             "title" => "Test City",
             "population" => 1,
         ];
@@ -294,6 +280,7 @@ class MapActionsIntegrationTest extends TestBase
         // Определяем переменные, которые ожидает mapv.php
         $user = User::get($userData["id"]);
         $game = Game::get($gameData["id"]);
+        $user->game = $game;
 
         // Загружаем карту
         $this->simulatePostRequest(["cx" => 5, "cy" => 5]);

@@ -36,8 +36,6 @@ class Cell
     public $improvement = false;
 
     private static $_all = []; // $_all[$planet][$x][$y]
-
-    public static $map_planet = 1;
     public static $map_width = 100;
     public static $map_height = 100;
 
@@ -65,7 +63,11 @@ class Cell
         if (isset(self::$_all[$planet][$x][$y])) {
             return self::$_all[$planet][$x][$y];
         } else {
-            $data = MyDB::query("SELECT * FROM cell WHERE x = :x AND y = :y AND planet = :planet", ["x" => $x, "y" => $y, "planet" => $planet], "row");
+            $data = MyDB::query(
+                "SELECT * FROM cell WHERE x = :x AND y = :y AND planet = :planet",
+                ["x" => $x, "y" => $y, "planet" => $planet],
+                "row",
+            );
             if ($data) {
                 return new Cell($data);
             } else {
@@ -74,7 +76,7 @@ class Cell
         }
     }
 
-    public static function load_cells($coords)
+    public static function load_cells($coords, $planetId)
     {
         $query = [];
         $result = [];
@@ -96,7 +98,7 @@ class Cell
                 "SELECT * FROM `cell` WHERE (" .
                 $query .
                 ") AND planet = " .
-                Cell::$map_planet;
+                $planetId;
             $cells = MyDB::query($query);
             foreach ($cells as $cell) {
                 $result[] = new Cell($cell);
@@ -109,9 +111,10 @@ class Cell
     {
         $this->x = $data["x"];
         $this->y = $data["y"];
-        $this->planet = isset($data["planet"])
-            ? $data["planet"]
-            : Cell::$map_planet;
+        if (!isset($data["planet"])) {
+            throw new Exception("Planet is required for Cell");
+        }
+        $this->planet = $data["planet"];
         $this->type = CellType::get($data["type"]);
         $this->city = City::by_coords($this->x, $this->y, $this->planet);
         if (isset($data["owner"]) && (int) $data["owner"]) {
@@ -167,11 +170,7 @@ class Cell
 
     public function save()
     {
-        if ($this->owner) {
-            $owner_id = $this->owner->id;
-        } else {
-            $owner_id = "NULL";
-        }
+        $owner_id = $this->owner ? $this->owner->id : null;
         $road = $this->road;
         if (!$road) {
             $road = "none";
@@ -188,7 +187,7 @@ class Cell
                 [
                     "x" => $this->x,
                     "y" => $this->y,
-                    "planet" => Cell::$map_planet,
+                    "planet" => $this->planet,
                     "type" => $this->type->id,
                     "owner" => $owner_id,
                     "culture" => $this->owner_culture,
@@ -209,7 +208,7 @@ class Cell
                     [
                         "x" => $this->x,
                         "y" => $this->y,
-                        "planet" => Cell::$map_planet,
+                        "planet" => $this->planet,
                         "type" => $this->type->id,
                         "owner" => $owner_id,
                         "culture" => $this->owner_culture,
@@ -234,10 +233,18 @@ class Cell
      * @param $planet int
      * @return Cell
      */
-    public static function d_coord($x, $y, $dx, $dy, $load = true, $planet = null)
-    {
+    public static function d_coord(
+        $x,
+        $y,
+        $dx,
+        $dy,
+        $load = true,
+        $planet = null,
+    ) {
         Cell::calc_coord($x, $y, $dx, $dy);
-        $planet = $planet ?? Cell::$map_planet;
+        if ($planet === null) {
+            throw new Exception("Planet ID is required in d_coord");
+        }
         if (isset(self::$_all[$planet][$x][$y])) {
             return self::$_all[$planet][$x][$y];
         } elseif ($load) {
@@ -303,24 +310,30 @@ class Cell
         return max($dx, $dy);
     }
 
-    public static function generate_map($game_id = null)
+    public static function generate_map($planetId, $game_id = null)
     {
         if ($game_id === null) {
-            $game_id = Cell::$map_planet;
+            throw new Exception("game_id is required for generate_map");
         }
-        $planet = Planet::get(Cell::$map_planet);
+        $planet = Planet::get($planetId);
         if (!$planet) {
-            $planet = new Planet(["name" => "Planet " . Cell::$map_planet, "game_id" => $game_id]);
+            $planet = new Planet([
+                "name" => "Planet " . $planetId,
+                "game_id" => $game_id,
+            ]);
             $planet->save();
         }
-        MyDB::query("DELETE FROM `mission_order` WHERE `unit_id` IN (SELECT id FROM `unit` WHERE `planet` = :planet)", [
-            "planet" => Cell::$map_planet,
-        ]);
+        MyDB::query(
+            "DELETE FROM `mission_order` WHERE `unit_id` IN (SELECT id FROM `unit` WHERE `planet` = :planet)",
+            [
+                "planet" => $planetId,
+            ],
+        );
         MyDB::query("DELETE FROM `unit` WHERE `planet` = :planet", [
-            "planet" => Cell::$map_planet,
+            "planet" => $planetId,
         ]);
         $data = MyDB::query("SELECT id FROM city WHERE planet =:planet", [
-            "planet" => Cell::$map_planet,
+            "planet" => $planetId,
         ]);
         foreach ($data as $row) {
             MyDB::query("DELETE FROM `building` WHERE `city_id` = :cid", [
@@ -328,10 +341,10 @@ class Cell
             ]);
         }
         MyDB::query("DELETE FROM `city_people` WHERE `planet` = :planet", [
-            "planet" => Cell::$map_planet,
+            "planet" => $planetId,
         ]);
         MyDB::query("DELETE FROM `city` WHERE `planet` = :planet", [
-            "planet" => Cell::$map_planet,
+            "planet" => $planetId,
         ]);
         $data = MyDB::query("SELECT id FROM user WHERE game =:game", [
             "game" => $game_id,
@@ -342,43 +355,69 @@ class Cell
             ]);
         }
         MyDB::query("DELETE FROM `resource` WHERE `planet` = :planet", [
-            "planet" => Cell::$map_planet,
+            "planet" => $planetId,
         ]);
         MyDB::query("DELETE FROM `cell` WHERE `planet` = :planet", [
-            "planet" => Cell::$map_planet,
+            "planet" => $planetId,
         ]);
+
+        // Оптимизированная генерация карты с batch INSERT
+        $cellsData = [];
+        $resourcesData = [];
 
         for ($x = 0; $x < Cell::$map_width; $x++) {
             for ($y = 0; $y < Cell::$map_height; $y++) {
-                $cell_type = Cell::generate_type($x, $y);
-                $cell = new Cell([
-                    "x" => $x,
-                    "y" => $y,
-                    "planet" => Cell::$map_planet,
-                    "type" => $cell_type->id,
-                ]);
-                $cell->save();
+                $cell_type = Cell::generate_type($x, $y, $planetId);
+
+                // Собираем данные клеток для batch INSERT
+                $cellsData[] =
+                    "($x, $y, $planetId, '" .
+                    $cell_type->id .
+                    "', NULL, 0, 'none', 'none')";
+
+                // Генерируем ресурсы
                 foreach (ResourceType::$all as $resource_type) {
                     if (in_array($cell_type, $resource_type->cell_types)) {
                         if (
                             mt_rand(0, 10000) <
                             $resource_type->chance * 10000
                         ) {
-                            $resource = new Resource([
-                                "x" => $x,
-                                "y" => $y,
-                                "planet" => Cell::$map_planet,
-                                "type" => $resource_type->id,
-                                "amount" => mt_rand(
-                                    $resource_type->min_amount,
-                                    $resource_type->max_amount,
-                                ),
-                            ]);
-                            $resource->save();
+                            $amount = mt_rand(
+                                $resource_type->min_amount,
+                                $resource_type->max_amount,
+                            );
+                            $resourcesData[] =
+                                "($x, $y, $planetId, '" .
+                                $resource_type->id .
+                                "', $amount)";
                             break;
                         }
                     }
                 }
+            }
+        }
+
+        // Массовая вставка клеток одним запросом
+        if (!empty($cellsData)) {
+            $batchSize = 1000; // Вставляем порциями по 1000 записей
+            for ($i = 0; $i < count($cellsData); $i += $batchSize) {
+                $batch = array_slice($cellsData, $i, $batchSize);
+                $sql =
+                    "INSERT INTO cell (x, y, planet, type, owner, owner_culture, road, improvement) VALUES " .
+                    implode(", ", $batch);
+                MyDB::query($sql);
+            }
+        }
+
+        // Массовая вставка ресурсов одним запросом
+        if (!empty($resourcesData)) {
+            $batchSize = 1000; // Вставляем порциями по 1000 записей
+            for ($i = 0; $i < count($resourcesData); $i += $batchSize) {
+                $batch = array_slice($resourcesData, $i, $batchSize);
+                $sql =
+                    "INSERT INTO resource (x, y, planet, type, amount) VALUES " .
+                    implode(", ", $batch);
+                MyDB::query($sql);
             }
         }
     }
@@ -388,7 +427,7 @@ class Cell
      * @param $y
      * @return CellType
      */
-    public static function generate_type($x, $y)
+    public static function generate_type($x, $y, $planetId)
     {
         $c1 = [];
         $c2 = [];
@@ -396,14 +435,14 @@ class Cell
         foreach (CellType::$all as $ctype) {
             $chance[$ctype->id] = $ctype->base_chance;
         }
-        $c1[] = Cell::d_coord($x, $y, 0, -1, false);
-        $c1[] = Cell::d_coord($x, $y, 0, 1, false);
-        $c1[] = Cell::d_coord($x, $y, -1, 0, false);
-        $c1[] = Cell::d_coord($x, $y, 1, 0, false);
-        $c2[] = Cell::d_coord($x, $y, -1, -1, false);
-        $c2[] = Cell::d_coord($x, $y, 1, -1, false);
-        $c2[] = Cell::d_coord($x, $y, -1, 1, false);
-        $c2[] = Cell::d_coord($x, $y, 1, 1, false);
+        $c1[] = Cell::d_coord($x, $y, 0, -1, false, $planetId);
+        $c1[] = Cell::d_coord($x, $y, 0, 1, false, $planetId);
+        $c1[] = Cell::d_coord($x, $y, -1, 0, false, $planetId);
+        $c1[] = Cell::d_coord($x, $y, 1, 0, false, $planetId);
+        $c2[] = Cell::d_coord($x, $y, -1, -1, false, $planetId);
+        $c2[] = Cell::d_coord($x, $y, 1, -1, false, $planetId);
+        $c2[] = Cell::d_coord($x, $y, -1, 1, false, $planetId);
+        $c2[] = Cell::d_coord($x, $y, 1, 1, false, $planetId);
         foreach (CellType::$all as $ctype) {
             $next = false;
             foreach ($c1 as $cell) {

@@ -25,8 +25,8 @@ class MissionType {
 		return $this->title;
 	}
 	
-	function check_cell($x, $y) {
-		$cell = Cell::get($x, $y);
+	function check_cell($x, $y, $planet_id) {
+		$cell = Cell::get($x, $y, $planet_id);
 		if (!in_array($cell->type->id, $this->cell_types)) {
 			return false;
 		}
@@ -70,7 +70,7 @@ class MissionType {
                 return true;
                 break;
             case 'build_road':
-                $cell = Cell::get($unit->x, $unit->y);
+                $cell = Cell::get($unit->x, $unit->y, $unit->planet);
                 if (!$cell->road) {
                     $cell->road = 'road';
                     $cell->save();
@@ -79,7 +79,7 @@ class MissionType {
                 break;
             case 'irrigation':
             case 'mine':
-                $cell = Cell::get($unit->x, $unit->y);
+                $cell = Cell::get($unit->x, $unit->y, $unit->planet);
                 $cell->improvement = $this->id;
                 $cell->save();
                 return true;

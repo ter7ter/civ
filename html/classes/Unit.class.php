@@ -204,7 +204,7 @@ class Unit
         $result = [];
         foreach ($this->type->missions as $mission_id) {
             $mtype = MissionType::get($mission_id);
-            if ($mtype->check_cell($x, $y)) {
+            if ($mtype->check_cell($x, $y, $this->planet)) {
                 $result[$mtype->id] = $mtype;
             }
         }

@@ -16,24 +16,50 @@
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <script src="https://code.jquery.com/qunit/qunit-2.19.4.js"></script>
 
+    <script>
+        // Prevent all AJAX requests in the test environment
+        $.post = function() {
+            return $.Deferred().resolve().promise();
+        };
+    </script>
+
     <!-- Подключаем тестируемый код -->
     <script src="../../js/functions.js"></script>
     <script src="../../js/map.js"></script>
     <script src="../../js/unit.js"></script>
+    <script src="../../js/messages.js"></script>
+    <script>
+        // Overwrite functions to prevent real AJAX calls
+        map.load = function() {};
+        messages.load = function() {};
+        var get_next_event = function() {};
+    </script>
     <script src="../../js/events.js"></script>
 
     <script>
+    // Prevent document.ready from firing
+    jQuery.fn.ready = function() {};
+
     QUnit.config.reorder = false;
 
     QUnit.module("Действия на карте", function(hooks) {
-        hooks.beforeEach(function() {
-            // Reset the fixture
-            $('#qunit-fixture').html('<div id="mapv"></div>');
-            
-            // Mock map.load to avoid real AJAX calls
+        hooks.before(function() {
+            // Unbind the ready event handler
+            $(document).off("ready");
+
+            // Mock global functions to avoid real AJAX calls
             map.load = function() {
                 return $.Deferred().resolve().promise();
             };
+            window.messages = {
+                load: function() {}
+            };
+            window.get_next_event = function() {};
+        });
+
+        hooks.beforeEach(function() {
+            // Reset the fixture
+            $('#qunit-fixture').html('<div id="mapv"></div>');
         });
 
         QUnit.test("Перемещение юнита с помощью Numpad", function(assert) {
@@ -46,39 +72,66 @@
             $.post = function(url, data, callback) {
                 postCalled = true;
                 postData = data;
-                // Simulate a successful response
                 var response = {
                     status: 'ok',
                     data: {
                         points: 1
                     }
                 };
-                callback(JSON.stringify(response));
+                if (callback) {
+                    callback(JSON.stringify(response));
+                }
                 return $.Deferred().resolve().promise();
             };
 
-            // 2. Set up a selected unit
-            selected_unit = {
+            // 2. Set up a selected unit and mock map functions
+            var selected_unit_obj = {
                 id: 1,
                 x: 10,
                 y: 10,
                 points: 2,
-                move: Unit.move // Use the real move function
+                move: Unit.move
             };
+            selected_unit = selected_unit_obj;
             
+            var cell_from = { x: 10, y: 10, units: [selected_unit], __proto__: Map_cell, show_unit: function() {} };
+            var cell_to = { x: 10, y: 9, units: [], __proto__: Map_cell, show_unit: function() {} };
+            map.get_cell = function(x, y) {
+                if (x == 10 && y == 10) {
+                    return cell_from;
+                }
+                if (x == 10 && y == 9) {
+                    return cell_to;
+                }
+                return undefined;
+            };
+            map.show_cell_info = function() {};
+            map.cells = [[{x:0, y:0}]];
+            map.width = 1;
+            map.height = 1;
+            map.max_x = 100;
+            map.max_y = 100;
+
+
             // 3. Simulate a numpad key press
-            var e = $.Event("keydown");
-            e.originalEvent = { code: "Numpad8" };
-            $("body").trigger(e);
+            try {
+                var e = $.Event("keydown");
+                e.originalEvent = { code: "Numpad8" };
+                $("body").trigger(e);
 
-            // 4. Assert that $.post was called with the correct parameters
-            assert.ok(postCalled, "$.post должен быть вызван");
-            assert.equal(postData.action, "move", "Действие должно быть 'move'");
-            assert.equal(postData.uid, 1, "ID юнита должен быть 1");
-            assert.equal(postData.x, 10, "Новая координата X должна быть 10");
-            assert.equal(postData.y, 9, "Новая координата Y должна быть 9");
+                // 4. Assert that $.post was called with the correct parameters
+                assert.ok(postCalled, "$.post должен быть вызван");
+                assert.equal(postData.action, "move", "Действие должно быть 'move'");
+                assert.equal(postData.uid, 1, "ID юнита должен быть 1");
+                assert.equal(postData.x, 10, "Новая координата X должна быть 10");
+                assert.equal(postData.y, 9, "Новая координата Y должна быть 9");
+            } catch (e) {
+                console.log(e);
+                assert.ok(false, "Произошла ошибка в тесте: " + e.message);
+            }
 
-            // Restore original $.post
+
+            // Restore original functions
             $.post = originalPost;
             done();
         });

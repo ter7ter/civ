@@ -55,6 +55,11 @@ class TestRunner
                 case "--integration-only":
                     $this->options["unit"] = false;
                     break;
+                case "--js-only":
+                    $this->options["unit"] = false;
+                    $this->options["integration"] = false;
+                    $this->options["js"] = true;
+                    break;
                 case "--with-js":
                     $this->options["js"] = true;
                     break;
@@ -598,6 +603,7 @@ class TestRunner
         echo "ОПЦИИ:\n";
         echo "  --unit-only         Запуск только unit тестов\n";
         echo "  --integration-only  Запуск только integration тестов\n";
+        echo "  --js-only           Запуск только JavaScript тестов\n";
         echo "  --with-js           Включить JavaScript тесты\n";
         echo "  --coverage          Генерировать отчет о покрытии кода\n";
         echo "  --verbose, -v       Подробный вывод\n";

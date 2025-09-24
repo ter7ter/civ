@@ -126,7 +126,7 @@ var map = {
 			} else {
 				window.alert(resp.error);
 			}
-		        }).error(function(jqXHR, textStatus, errorThrown) {
+		        }).fail(function(jqXHR, textStatus, errorThrown) {
 		            var error_msg = "AJAX Error: " + textStatus + "\n" + errorThrown;
 		            if (jqXHR.responseText) {
 		                try {

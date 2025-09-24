@@ -67,6 +67,7 @@ include 'partials/header.php';
 <?php 
 ob_start(); 
 ?>
+<script src="js/functions.js"></script>
 <script src="js/map.js"></script>
 <script src="js/unit.js"></script>
 <script src="js/city.js"></script>

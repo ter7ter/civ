@@ -1,7 +1,14 @@
 <?php
+/**
+ * Скрипт для создания новой игры.
+ * Обрабатывает форму создания игры, валидирует данные, создает игру, пользователей и карту.
+ */
+
 // Helper functions for testability
 if (!function_exists("send_header")) {
     function send_header($location)
+
+
     {
         Header($location);
     }

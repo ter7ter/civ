@@ -6,53 +6,81 @@
 class MessageTest extends TestBase
 {
     /**
-     * Тест конструктора
+     * Тест конструктора Message с полными данными
      */
-    public function testConstruct(): void
+    public function testConstructorWithFullData(): void
     {
-        $userData1 = $this->createTestUser(['login' => 'User1']);
-        $userData2 = $this->createTestUser(['login' => 'User2']);
+        $gameData = $this->createTestGame();
+        $userFromData = $this->createTestUser(['game' => $gameData['id']]);
+        $userToData = $this->createTestUser(['game' => $gameData['id']]);
 
         $data = [
             'id' => 1,
-            'from_id' => $userData1['id'],
-            'to_id' => $userData2['id'],
+            'from_id' => $userFromData['id'],
+            'to_id' => $userToData['id'],
             'text' => 'Test message',
-            'type' => 'chat'
+            'type' => 'chat',
         ];
 
         $message = new Message($data);
 
         $this->assertEquals(1, $message->id);
+        $this->assertInstanceOf(User::class, $message->from);
+        $this->assertEquals($userFromData['id'], $message->from->id);
+        $this->assertInstanceOf(User::class, $message->to);
+        $this->assertEquals($userToData['id'], $message->to->id);
         $this->assertEquals('Test message', $message->text);
         $this->assertEquals('chat', $message->type);
-        $this->assertInstanceOf(User::class, $message->from);
-        $this->assertInstanceOf(User::class, $message->to);
-        $this->assertEquals('User1', $message->from->login);
-        $this->assertEquals('User2', $message->to->login);
     }
 
     /**
-     * Тест конструктора с системным сообщением
+     * Тест конструктора Message без отправителя
      */
-    public function testConstructSystemMessage(): void
+    public function testConstructorWithoutFrom(): void
     {
-        $userData = $this->createTestUser();
+        $gameData = $this->createTestGame();
+        $userToData = $this->createTestUser(['game' => $gameData['id']]);
 
         $data = [
             'id' => 2,
-            'to_id' => $userData['id'],
+            'to_id' => $userToData['id'],
             'text' => 'System message',
-            'type' => 'system'
+            'type' => 'system',
         ];
 
         $message = new Message($data);
 
         $this->assertEquals(2, $message->id);
-        $this->assertEquals('System message', $message->text);
-        $this->assertEquals('system', $message->type);
         $this->assertFalse($message->from);
         $this->assertInstanceOf(User::class, $message->to);
+        $this->assertEquals($userToData['id'], $message->to->id);
+        $this->assertEquals('System message', $message->text);
+        $this->assertEquals('system', $message->type);
+    }
+
+    /**
+     * Тест конструктора Message без получателя
+     */
+    public function testConstructorWithoutTo(): void
+    {
+        $gameData = $this->createTestGame();
+        $userFromData = $this->createTestUser(['game' => $gameData['id']]);
+
+        $data = [
+            'id' => 3,
+            'from_id' => $userFromData['id'],
+            'text' => 'Broadcast message',
+            'type' => 'broadcast',
+        ];
+
+        $message = new Message($data);
+
+        $this->assertEquals(3, $message->id);
+        $this->assertInstanceOf(User::class, $message->from);
+        $this->assertEquals($userFromData['id'], $message->from->id);
+        $this->assertFalse($message->to);
+        $this->assertEquals('Broadcast message', $message->text);
+        $this->assertEquals('broadcast', $message->type);
     }
 
     /**
@@ -60,14 +88,15 @@ class MessageTest extends TestBase
      */
     public function testSaveNew(): void
     {
-        $userData1 = $this->createTestUser(['login' => 'Sender']);
-        $userData2 = $this->createTestUser(['login' => 'Receiver']);
+        $gameData = $this->createTestGame();
+        $userFromData = $this->createTestUser(['game' => $gameData['id']]);
+        $userToData = $this->createTestUser(['game' => $gameData['id']]);
 
         $data = [
-            'from_id' => $userData1['id'],
-            'to_id' => $userData2['id'],
-            'text' => 'New message',
-            'type' => 'chat'
+            'from_id' => $userFromData['id'],
+            'to_id' => $userToData['id'],
+            'text' => 'New message to save',
+            'type' => 'chat',
         ];
 
         $message = new Message($data);
@@ -76,37 +105,16 @@ class MessageTest extends TestBase
         $this->assertNotNull($message->id);
 
         // Проверяем сохранение в БД
-        $savedData = MyDB::query("SELECT * FROM message WHERE id = :id", ['id' => $message->id], 'row');
-        $this->assertEquals('New message', $savedData['text']);
+        $savedData = MyDB::query(
+            "SELECT * FROM message WHERE id = :id",
+            ["id" => $message->id],
+            "row"
+        );
+        $this->assertNotNull($savedData);
+        $this->assertEquals($userFromData['id'], $savedData['from_id']);
+        $this->assertEquals($userToData['id'], $savedData['to_id']);
+        $this->assertEquals('New message to save', $savedData['text']);
         $this->assertEquals('chat', $savedData['type']);
-        $this->assertEquals($userData1['id'], $savedData['from_id']);
-        $this->assertEquals($userData2['id'], $savedData['to_id']);
-    }
-
-    /**
-     * Тест сохранения системного сообщения
-     */
-    public function testSaveSystemMessage(): void
-    {
-        $userData = $this->createTestUser();
-
-        $data = [
-            'to_id' => $userData['id'],
-            'text' => 'System alert',
-            'type' => 'system'
-        ];
-
-        $message = new Message($data);
-        $message->save();
-
-        $this->assertNotNull($message->id);
-
-        // Проверяем сохранение в БД
-        $savedData = MyDB::query("SELECT * FROM message WHERE id = :id", ['id' => $message->id], 'row');
-        $this->assertEquals('System alert', $savedData['text']);
-        $this->assertEquals('system', $savedData['type']);
-        $this->assertNull($savedData['from_id']);
-        $this->assertEquals($userData['id'], $savedData['to_id']);
     }
 
     /**
@@ -114,28 +122,88 @@ class MessageTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $userData1 = $this->createTestUser(['login' => 'Sender']);
-        $userData2 = $this->createTestUser(['login' => 'Receiver']);
+        $gameData = $this->createTestGame();
+        $userFromData = $this->createTestUser(['game' => $gameData['id']]);
+        $userToData = $this->createTestUser(['game' => $gameData['id']]);
 
-        // Создаем сообщение
-        $data = [
-            'from_id' => $userData1['id'],
-            'to_id' => $userData2['id'],
+        // Создаем сообщение через БД
+        $messageId = MyDB::insert('message', [
+            'from_id' => $userFromData['id'],
+            'to_id' => $userToData['id'],
             'text' => 'Original message',
-            'type' => 'chat'
-        ];
-        $message = new Message($data);
-        $message->save();
-        $originalId = $message->id;
+            'type' => 'chat',
+        ]);
 
-        // Обновляем
+        $data = [
+            'id' => $messageId,
+            'from_id' => $userFromData['id'],
+            'to_id' => $userToData['id'],
+            'text' => 'Original message',
+            'type' => 'chat',
+        ];
+
+        $message = new Message($data);
         $message->text = 'Updated message';
         $message->save();
 
-        $this->assertEquals($originalId, $message->id);
-
         // Проверяем обновление в БД
-        $updatedData = MyDB::query("SELECT * FROM message WHERE id = :id", ['id' => $message->id], 'row');
+        $updatedData = MyDB::query(
+            "SELECT * FROM message WHERE id = :id",
+            ["id" => $message->id],
+            "row"
+        );
         $this->assertEquals('Updated message', $updatedData['text']);
+        $this->assertEquals($userFromData['id'], $updatedData['from_id']);
+        $this->assertEquals($userToData['id'], $updatedData['to_id']);
+    }
+
+    /**
+     * Тест сохранения системного сообщения без отправителя
+     */
+    public function testSaveSystemMessage(): void
+    {
+        $gameData = $this->createTestGame();
+        $userToData = $this->createTestUser(['game' => $gameData['id']]);
+
+        $data = [
+            'to_id' => $userToData['id'],
+            'text' => 'System notification',
+            'type' => 'system',
+        ];
+
+        $message = new Message($data);
+        $message->save();
+
+        $this->assertNotNull($message->id);
+
+        // Проверяем сохранение в БД
+        $savedData = MyDB::query(
+            "SELECT * FROM message WHERE id = :id",
+            ["id" => $message->id],
+            "row"
+        );
+        $this->assertNull($savedData['from_id']);
+        $this->assertEquals($userToData['id'], $savedData['to_id']);
+        $this->assertEquals('System notification', $savedData['text']);
+        $this->assertEquals('system', $savedData['type']);
+    }
+
+    /**
+     * Тест конструктора с минимальными данными
+     */
+    public function testConstructorMinimalData(): void
+    {
+        $data = [
+            'text' => 'Minimal message',
+            'type' => 'info',
+        ];
+
+        $message = new Message($data);
+
+        $this->assertNull($message->id);
+        $this->assertFalse($message->from);
+        $this->assertFalse($message->to);
+        $this->assertEquals('Minimal message', $message->text);
+        $this->assertEquals('info', $message->type);
     }
 }

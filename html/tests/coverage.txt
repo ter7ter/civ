@@ -1,0 +1,30 @@
+
+
+Code Coverage Report:       
+  2025-09-24 18:36:22       
+                            
+ Summary:                   
+  Classes:  0.00% (0/18)    
+  Methods: 11.35% (16/141)  
+  Lines:   16.11% (365/2265)
+
+Building
+  Methods:   0.00% ( 0/ 4)   Lines:  38.89% (  7/ 18)
+BuildingType
+  Methods:  25.00% ( 1/ 4)   Lines:  15.56% (  7/ 45)
+Cell
+  Methods:   5.56% ( 1/18)   Lines:   2.04% (  7/343)
+City
+  Methods:  39.13% ( 9/23)   Lines:  31.93% (174/545)
+Game
+  Methods:  10.00% ( 1/10)   Lines:   0.70% (  1/142)
+MyDB
+  Methods:  12.50% ( 1/ 8)   Lines:  48.33% ( 58/120)
+Planet
+  Methods:  20.00% ( 1/ 5)   Lines:   3.57% (  1/ 28)
+Unit
+  Methods:   6.67% ( 1/15)   Lines:   9.43% ( 43/456)
+UnitType
+  Methods:   0.00% ( 0/ 3)   Lines:  73.68% ( 28/ 38)
+User
+  Methods:   5.26% ( 1/19)   Lines:  11.44% ( 39/341)

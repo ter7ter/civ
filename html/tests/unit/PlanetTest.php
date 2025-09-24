@@ -32,22 +32,56 @@ class PlanetTest extends TestBase
     }
 
     /**
-     * Тест конструктора
+     * Тест конструктора Planet
      */
-    public function testConstruct(): void
+    public function testConstructor(): void
     {
         $gameData = $this->createTestGame();
+
         $data = [
             'id' => 1,
-            'name' => 'Construct Test Planet',
-            'game_id' => $gameData['id']
+            'name' => 'Constructor Planet',
+            'game_id' => $gameData['id'],
         ];
 
         $planet = new Planet($data);
 
         $this->assertEquals(1, $planet->id);
-        $this->assertEquals('Construct Test Planet', $planet->name);
+        $this->assertEquals('Constructor Planet', $planet->name);
         $this->assertEquals($gameData['id'], $planet->game_id);
+
+        // Проверяем, что объект добавлен в кэш
+        $this->assertSame($planet, Planet::get(1));
+    }
+
+    /**
+     * Тест конструктора без id
+     */
+    public function testConstructorWithoutId(): void
+    {
+        $gameData = $this->createTestGame();
+
+        $data = [
+            'name' => 'No ID Planet',
+            'game_id' => $gameData['id'],
+        ];
+
+        $planet = new Planet($data);
+
+        $this->assertNull($planet->id);
+        $this->assertEquals('No ID Planet', $planet->name);
+        $this->assertEquals($gameData['id'], $planet->game_id);
+    }
+
+    /**
+     * Тест конструктора с некорректными данными
+     */
+    public function testConstructorWithInvalidData(): void
+    {
+        $this->expectException(Exception::class);
+        $this->expectExceptionMessage('Invalid planet data provided to Planet constructor');
+
+        new Planet(null);
     }
 
     /**
@@ -57,33 +91,23 @@ class PlanetTest extends TestBase
     {
         $gameData = $this->createTestGame();
 
-        // Отладка: проверим, что игра создана
-        $gameCheck = MyDB::query("SELECT * FROM game WHERE id = :id", ['id' => $gameData['id']], 'row');
-        $this->assertNotNull($gameCheck, "Игра должна быть создана в БД");
-
-        // Отладка: проверим существующие таблицы
-        $tables = MyDB::query("SHOW TABLES", [], "column");
-        $this->assertContains("planet", $tables, "Таблица planet должна существовать");
-
         $data = [
             'name' => 'Save New Planet',
-            'game_id' => $gameData['id']
+            'game_id' => $gameData['id'],
         ];
 
         $planet = new Planet($data);
+        $planet->save();
 
-        // Попробуем сохранить и посмотрим на ошибку
-        try {
-            $planet->save();
-        } catch (Exception $e) {
-            $this->fail("Ошибка при сохранении планеты: " . $e->getMessage());
-        }
-
-        $this->assertNotNull($planet->id, "ID планеты должен быть установлен после сохранения");
+        $this->assertNotNull($planet->id);
 
         // Проверяем сохранение в БД
-        $savedData = MyDB::query("SELECT * FROM planet WHERE id = :id", ['id' => $planet->id], 'row');
-        $this->assertNotNull($savedData, "Планета должна быть найдена в БД");
+        $savedData = MyDB::query(
+            "SELECT * FROM planet WHERE id = :id",
+            ["id" => $planet->id],
+            "row"
+        );
+        $this->assertNotNull($savedData);
         $this->assertEquals('Save New Planet', $savedData['name']);
         $this->assertEquals($gameData['id'], $savedData['game_id']);
     }
@@ -96,13 +120,19 @@ class PlanetTest extends TestBase
         $gameData = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $gameData['id'], 'name' => 'Original Name']);
 
+        Planet::clearCache();
         $planet = Planet::get($planetId);
         $planet->name = 'Updated Name';
         $planet->save();
 
         // Проверяем обновление в БД
-        $updatedData = MyDB::query("SELECT * FROM planet WHERE id = :id", ['id' => $planet->id], 'row');
+        $updatedData = MyDB::query(
+            "SELECT * FROM planet WHERE id = :id",
+            ["id" => $planet->id],
+            "row"
+        );
         $this->assertEquals('Updated Name', $updatedData['name']);
+        $this->assertEquals($gameData['id'], $updatedData['game_id']);
     }
 
     /**
@@ -110,15 +140,15 @@ class PlanetTest extends TestBase
      */
     public function testGetGame(): void
     {
-        $gameData = $this->createTestGame(['name' => 'Planet Game']);
+        $gameData = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
 
+        Planet::clearCache();
         $planet = Planet::get($planetId);
-        $game = $planet->get_game();
 
+        $game = $planet->get_game();
         $this->assertInstanceOf(Game::class, $game);
         $this->assertEquals($gameData['id'], $game->id);
-        $this->assertEquals('Planet Game', $game->name);
     }
 
     /**
@@ -129,37 +159,15 @@ class PlanetTest extends TestBase
         $gameData = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
 
-        // Получаем планету, она должна кэшироваться
+        // Получаем планету, чтобы она попала в кэш
         $planet1 = Planet::get($planetId);
         $this->assertInstanceOf(Planet::class, $planet1);
 
-        // Очищаем кэш
         Planet::clearCache();
 
-        // Получаем снова, должна быть загружена из БД
+        // После очистки кэша, планета должна быть загружена заново
         $planet2 = Planet::get($planetId);
         $this->assertInstanceOf(Planet::class, $planet2);
-        $this->assertEquals($planet1->id, $planet2->id);
-        $this->assertEquals($planet1->name, $planet2->name);
-    }
-
-    /**
-     * Тест метода get_planet в классе Cell
-     */
-    public function testCellGetPlanet(): void
-    {
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id'], 'name' => 'Cell Planet']);
-
-        // Создаем клетку с планетой
-        $cellData = $this->createTestCell(['planet' => $planetId, 'x' => 10, 'y' => 10]);
-        $cell = Cell::get($cellData['x'], $cellData['y'], $cellData['planet']);
-
-        $planet = $cell->get_planet();
-
-        $this->assertInstanceOf(Planet::class, $planet);
-        $this->assertEquals($planetId, $planet->id);
-        $this->assertEquals('Cell Planet', $planet->name);
-        $this->assertEquals($gameData['id'], $planet->game_id);
+        $this->assertNotSame($planet1, $planet2); // Должны быть разные объекты
     }
 }

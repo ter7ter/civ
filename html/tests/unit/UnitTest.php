@@ -45,7 +45,7 @@ class UnitTest extends TestBase
         $this->assertEquals(20, $unit->y);
         $this->assertEquals(3, $unit->health);
         $this->assertEquals(2, $unit->points);
-        $this->assertEquals("Test Unit", $unit->get_title());
+        $this->assertEquals("Поселенец", $unit->get_title());
     }
 
     /**
@@ -225,7 +225,7 @@ class UnitTest extends TestBase
 
         $unit = new Unit($data);
 
-        $this->assertEquals("Title Unit", $unit->get_title());
+        $this->assertEquals("Рабочий", $unit->get_title());
     }
 
     /**

@@ -1,13 +1,31 @@
 <?php
+/**
+ * Класс, представляющий пользователя в игре Civilization.
+ * Управляет ресурсами, исследованиями, городами и юнитами игрока.
+ */
 class User
 {
+    /**
+     * Идентификатор пользователя
+     * @var int|null
+     */
     public $id = null;
+
+    /**
+     * Логин пользователя
+     * @var string
+     */
     public $login;
     /**
      * Цвет игрока
      * @var string
      */
     public $color;
+
+    /**
+     * Пароль пользователя
+     * @var string
+     */
     public $pass = "";
     /**
      * Текущее кол-во денег
@@ -51,9 +69,14 @@ class User
      */
     public $age = 1;
 
+    /**
+     * Видимая карта пользователя
+     * @var array
+     */
     public $see_map = [];
 
     /**
+     * Игра, в которой участвует пользователь
      * @var Game
      */
     public $game;
@@ -70,8 +93,16 @@ class User
      */
     public $turn_order;
 
+    /**
+     * Уровень пользователя
+     * @var int
+     */
     public $lvl = 0;
 
+    /**
+     * Кэш всех загруженных пользователей
+     * @var array
+     */
     protected static $_all = [];
 
     /**
@@ -83,8 +114,9 @@ class User
     }
 
     /**
-     * @param $id int
-     * @return User
+     * Получить пользователя по идентификатору
+     * @param int $id Идентификатор пользователя
+     * @return User|null Пользователь или null, если не найден
      */
     public static function get($id)
     {
@@ -103,6 +135,11 @@ class User
         }
     }
 
+    /**
+     * Конструктор пользователя
+     * @param array $data Данные пользователя
+     * @throws Exception
+     */
     public function __construct($data)
     {
         if (!$data || !is_array($data)) {
@@ -146,6 +183,9 @@ class User
         }
     }
 
+    /**
+     * Сохранить пользователя в базу данных
+     */
     public function save()
     {
         $values = [];
@@ -182,6 +222,10 @@ class User
         }
     }
 
+    /**
+     * Получить видимую карту пользователя
+     * @return array Массив клеток
+     */
     public function get_map()
     {
         if (count($this->buildings) == 0) {
@@ -210,6 +254,9 @@ class User
         return $cells;
     }
 
+    /**
+     * Рассчитать города пользователя
+     */
     public function calculate_cities()
     {
         $cities = $this->get_cities();
@@ -219,6 +266,9 @@ class User
         $this->caclulate_culture();
     }
 
+    /**
+     * Рассчитать культурное влияние городов пользователя
+     */
     public function caclulate_culture()
     {
         $cities = $this->get_cities();
@@ -262,6 +312,9 @@ class User
         }
     }
 
+    /**
+     * Рассчитать юниты пользователя
+     */
     public function calculate_units()
     {
         $rows = MyDB::query("SELECT * FROM unit WHERE user_id = :id", [
@@ -275,6 +328,10 @@ class User
         }
     }
 
+    /**
+     * Рассчитать доход пользователя
+     * @return int Доход
+     */
     public function calculate_income()
     {
         $this->income = 0;
@@ -288,6 +345,10 @@ class User
         return $this->income;
     }
 
+    /**
+     * Рассчитать исследования пользователя
+     * @return Research|false Завершенное исследование или false
+     */
     public function calculate_research()
     {
         if (!$this->process_research_type || !$this->research_amount) {
@@ -400,8 +461,8 @@ class User
 
     /**
      * Начало нового исследования
-     * @param $type ResearchType
-     * @return bool
+     * @param ResearchType $type Тип исследования
+     * @return bool Успешно ли начато исследование
      */
     public function start_research($type)
     {
@@ -415,8 +476,8 @@ class User
 
     /**
      * Возвращает сколько осталось ходов исследовать
-     * @param bool | ResearchType $research
-     * @return bool|int
+     * @param ResearchType|bool $research Тип исследования или false для текущего
+     * @return int|bool Количество ходов или false
      */
     public function get_research_need_turns($research = false)
     {
@@ -444,7 +505,7 @@ class User
     }
 
     /**
-     * Расчитывает группы доступности ресурсов по городам
+     * Рассчитывает группы доступности ресурсов по городам
      * @throws Exception
      */
     public function calculate_resource()
@@ -594,7 +655,9 @@ class User
     }
 
     /**
-     * @return Message[]
+     * Получить сообщения пользователя
+     * @param int $last Идентификатор последнего сообщения
+     * @return Message[] Массив сообщений
      * @throws Exception
      */
     public function get_messages($last = 0)
@@ -611,8 +674,9 @@ class User
     }
 
     /**
-     * @param $text string
-     * @return Message
+     * Создать новое системное сообщение
+     * @param string $text Текст сообщения
+     * @return Message Созданное сообщение
      */
     public function new_system_message($text)
     {
@@ -626,6 +690,10 @@ class User
         return $message;
     }
 
+    /**
+     * Получить следующее событие пользователя
+     * @return Event|false Событие или false, если нет
+     */
     public function get_next_event()
     {
         $data = MyDB::query(

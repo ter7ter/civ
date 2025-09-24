@@ -1,5 +1,10 @@
 <?php
-/** @var User $user */
+/**
+ * Скрипт для обработки страницы города.
+ * Получает данные о городе, позволяет изменять размещение жителей и производство.
+ */
+
+/** @var User $user Текущий пользователь */
 if (!isset($_REQUEST['cid']) || !$cid = (int)$_REQUEST['cid']) {
 	$error = "City not found";
 } elseif (!$city = City::get($cid)) {

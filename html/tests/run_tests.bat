@@ -1,4 +1,5 @@
 @echo off
+set XDEBUG_MODE=coverage
 chcp 65001 >nul
 setlocal enabledelayedexpansion
 

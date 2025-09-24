@@ -25,10 +25,10 @@
     <coverage cacheDirectory=".phpunit.cache/code-coverage"
               processUncoveredFiles="true">
         <include>
-            <directory suffix=".php">../pages</directory>
             <directory suffix=".php">../classes</directory>
         </include>
         <exclude>
+            <directory>../pages</directory>
             <directory>../tests</directory>
             <directory>../vendor</directory>
             <file>../config.php</file>

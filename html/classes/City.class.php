@@ -1,8 +1,32 @@
 <?php
+/**
+ * Класс, представляющий город в игре Civilization.
+ * Город управляет населением, производством, ресурсами и зданиями.
+ */
 class City
 {
-    //int
-    public $id, $x, $y;
+    /**
+     * Идентификатор города
+     * @var int|null
+     */
+    public $id;
+
+    /**
+     * Координата X города на карте
+     * @var int
+     */
+    public $x;
+
+    /**
+     * Координата Y города на карте
+     * @var int
+     */
+    public $y;
+
+    /**
+     * Идентификатор планеты, на которой находится город
+     * @var int
+     */
     public $planet = 0;
     /**
      * Население города
@@ -59,11 +83,41 @@ class City
      * @var int
      */
     public $production = false;
+
+    /**
+     * Тип текущего производства (unit или buil)
+     * @var string
+     */
     public $production_type = "unit";
+
+    /**
+     * Прогресс текущего производства
+     * @var int
+     */
     public $production_complete = 0;
-    public $pwork = 1; //Производство за ход в городе
-    public $peat = 2; //Добыча еды за ход в городе
-    public $pmoney = 1; //Добыча денег за ход в городе
+
+    /**
+     * Производство за ход в городе
+     * @var int
+     */
+    public $pwork = 1;
+
+    /**
+     * Добыча еды за ход в городе
+     * @var int
+     */
+    public $peat = 2;
+
+    /**
+     * Добыча денег за ход в городе
+     * @var int
+     */
+    public $pmoney = 1;
+
+    /**
+     * Добыча очков исследований за ход
+     * @var int
+     */
     public $presearch = 0;
     /**
      * В каких клетках размещены жители
@@ -81,7 +135,12 @@ class City
      */
     public $is_coastal = false;
 
+    /**
+     * Кэш всех загруженных городов
+     * @var array
+     */
     protected static $_all = [];
+
     /**
      * Владелец города
      * @var User
@@ -95,17 +154,23 @@ class City
     {
         self::$_all = [];
     }
+
     /**
      * Ресурсы, доступные в городе
      * @var array
      */
     public $resources = [];
 
+    /**
+     * Группа ресурсов города
+     * @var int|null
+     */
     public $resource_group;
 
     /**
-     * @param $id int
-     * @return City
+     * Получить город по идентификатору
+     * @param int $id Идентификатор города
+     * @return City|null Город или null, если не найден
      * @throws Exception
      */
     public static function get($id)
@@ -126,11 +191,11 @@ class City
     }
 
     /**
-     * @description Возвращает город по координатам, если  такой есть
-     * @param $x int
-     * @param $y int
-     * @param null $planet int
-     * @return bool|City
+     * Возвращает город по координатам, если такой есть
+     * @param int $x Координата X
+     * @param int $y Координата Y
+     * @param int $planet Идентификатор планеты
+     * @return City|false Город или false, если не найден
      * @throws Exception
      */
     public static function by_coords($x, $y, $planet)
@@ -148,11 +213,13 @@ class City
     }
 
     /**
-     * @param $user User
-     * @param $x int
-     * @param $y int
-     * @param $title string
-     * @return City
+     * Создает новый город
+     * @param User $user Владелец города
+     * @param int $x Координата X
+     * @param int $y Координата Y
+     * @param string $title Название города
+     * @param int $planetId Идентификатор планеты
+     * @return City Новый город
      * @throws Exception
      */
     public static function new_city($user, $x, $y, $title, $planetId)
@@ -189,6 +256,11 @@ class City
         return $city;
     }
 
+    /**
+     * Конструктор города
+     * @param array $data Данные города
+     * @throws Exception
+     */
     public function __construct($data)
     {
         if (!$data || !is_array($data)) {
@@ -268,7 +340,10 @@ class City
         return $this->title;
     }
 
-    //Возвращает клетки, на которых могут жить жители города
+    /**
+     * Возвращает клетки, на которых могут жить жители города
+     * @return array Массив клеток
+     */
     public function get_city_cells()
     {
         $cells = [];
@@ -454,7 +529,9 @@ class City
         return $result;
     }
 
-    //Размещает имеющихся в городе жителей по клеткам(автоматически)
+    /**
+     * Размещает имеющихся в городе жителей по клеткам автоматически
+     */
     public function locate_people()
     {
         $this->people_cells = [];
@@ -488,7 +565,10 @@ class City
         }
     }
 
-    //Размещает жителей на указанных клетках
+    /**
+     * Размещает жителей на указанных клетках
+     * @param array $people_cells Массив клеток с жителями
+     */
     public function set_people($people_cells)
     {
         $this->people_cells = [];
@@ -507,6 +587,9 @@ class City
         }
     }
 
+    /**
+     * Рассчитывает параметры жителей и производства
+     */
     public function calculate_people()
     {
         $this->pwork = 1;
@@ -535,6 +618,10 @@ class City
         $this->people_happy += $add_happy;
     }
 
+    /**
+     * Возвращает возможные для постройки юниты
+     * @return array Массив типов юнитов
+     */
     public function get_possible_units()
     {
         $units = UnitType::$all;
@@ -563,6 +650,10 @@ class City
         return $result;
     }
 
+    /**
+     * Возвращает возможные для постройки здания
+     * @return array Массив типов зданий
+     */
     public function get_possible_buildings()
     {
         $buildings = BuildingType::$all;
@@ -591,7 +682,10 @@ class City
         return $result;
     }
 
-    //Расчёт производства в этой постройке
+    /**
+     * Расчет производства в городе
+     * @return bool|void
+     */
     public function calculate_production()
     {
         if (!$this->production) {
@@ -668,7 +762,9 @@ class City
         }
     }
 
-    //Пересчёт нового хода для города
+    /**
+     * Пересчет нового хода для города
+     */
     public function calculate()
     {
         $this->check_mood();
@@ -699,9 +795,8 @@ class City
 
     /**
      * Постройка нового юнита в этом городе
-     *
-     * @param $type UnitType
-     * @return Unit
+     * @param UnitType $type Тип юнита
+     * @return Unit Созданный юнит
      */
     public function create_unit($type)
     {
@@ -720,9 +815,8 @@ class City
 
     /**
      * Постройка нового здания в этом городе
-     *
-     * @param $type BuildingType
-     * @return Building
+     * @param BuildingType $type Тип здания
+     * @return Building Созданное здание
      */
     public function create_building($type)
     {
@@ -806,6 +900,26 @@ class City
                 "planet" => $cell->planet,
                 "city_id" => $this->id,
             ]);
+        }
+    }
+
+    /**
+     * Добавляет жителя в город
+     */
+    public function add_people()
+    {
+        $this->population++;
+        $this->save();
+    }
+
+    /**
+     * Удаляет жителя из города
+     */
+    public function remove_people()
+    {
+        if ($this->population > 1) {
+            $this->population--;
+            $this->save();
         }
     }
 

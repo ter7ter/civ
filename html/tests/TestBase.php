@@ -37,6 +37,7 @@ class TestBase extends PHPUnit\Framework\TestCase
     {
         parent::setUp();
         $this->clearTestData();
+        TestGameDataInitializer::initializeAll();
     }
 
     protected function tearDown(): void
@@ -225,6 +226,7 @@ class TestBase extends PHPUnit\Framework\TestCase
         unset($cityData["id"]);
         $insertId = MyDB::insert("city", $cityData);
         $cityData["id"] = $insertId;
+        Cell::clearCache(); // Clear the cell cache
         return $cityData;
     }
 
@@ -492,5 +494,15 @@ class TestBase extends PHPUnit\Framework\TestCase
         foreach ($requiredProperties as $property) {
             $this->assertObjectHasAttribute($property, $object);
         }
+    }
+
+    protected function assertDatabaseHas($tableName, $conditions)
+    {
+        $this->assertTrue($this->recordExists($tableName, $conditions));
+    }
+
+    protected function assertDatabaseMissing($tableName, $conditions)
+    {
+        $this->assertFalse($this->recordExists($tableName, $conditions));
     }
 }

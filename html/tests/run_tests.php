@@ -47,8 +47,10 @@ class TestRunner
             "help" => false,
         ];
 
-        for ($i = 1; $i < count($argv); $i++) {
-            switch ($argv[$i]) {
+        $i = 1;
+        while ($i < count($argv)) {
+            $arg = $argv[$i];
+            switch ($arg) {
                 case "--unit-only":
                     $this->options["integration"] = false;
                     break;
@@ -56,6 +58,11 @@ class TestRunner
                     $this->options["unit"] = false;
                     break;
                 case "--with-js":
+                    $this->options["js"] = true;
+                    break;
+                case "--js-only":
+                    $this->options["unit"] = false;
+                    $this->options["integration"] = false;
                     $this->options["js"] = true;
                     break;
                 case "--coverage":
@@ -71,6 +78,7 @@ class TestRunner
                 case "--filter":
                     if (isset($argv[$i + 1])) {
                         $this->options["filter"] = $argv[$i + 1];
+                        $this->options["js"] = false; // Disable JS tests when filtering
                         $i++;
                     }
                     break;
@@ -78,7 +86,13 @@ class TestRunner
                 case "-h":
                     $this->options["help"] = true;
                     break;
+                default:
+                    echo
+                        "Неизвестный параметр: " . $arg . "\n";
+                    $this->options["help"] = true;
+                    return;
             }
+            $i++;
         }
     }
 
@@ -158,6 +172,7 @@ class TestRunner
         if ($this->options["coverage"]) {
             $cmd[] = "--coverage-html";
             $cmd[] = TESTS_ROOT . "/coverage-html";
+            $cmd[] = "--coverage-text=coverage.txt";
         }
 
         if ($this->options["filter"]) {
@@ -598,6 +613,7 @@ class TestRunner
         echo "ОПЦИИ:\n";
         echo "  --unit-only         Запуск только unit тестов\n";
         echo "  --integration-only  Запуск только integration тестов\n";
+        echo "  --js-only           Запуск только JavaScript тестов\n";
         echo "  --with-js           Включить JavaScript тесты\n";
         echo "  --coverage          Генерировать отчет о покрытии кода\n";
         echo "  --verbose, -v       Подробный вывод\n";

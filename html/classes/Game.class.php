@@ -1,7 +1,12 @@
 <?php
+/**
+ * Класс, представляющий игру в Civilization.
+ * Управляет пользователями, картой, ходами и общими механиками игры.
+ */
 class Game
 {
     /**
+     * Кэш всех загруженных игр
      * @var Game[]
      */
     protected static $_all = [];
@@ -15,22 +20,29 @@ class Game
     }
 
     /**
-     * @var int
+     * Идентификатор игры
+     * @var int|null
      */
     public $id = null;
+
     /**
+     * Название игры
      * @var string
      */
     public $name;
+
     /**
+     * Пользователи в игре
      * @var User[]
      */
     public $users = [];
+
     /**
      * Ширина карты
      * @var int
      */
     public $map_w;
+
     /**
      * Высота карты
      * @var int
@@ -50,8 +62,9 @@ class Game
     public $turn_num;
 
     /**
-     * @param $id
-     * @return Game
+     * Получить игру по идентификатору
+     * @param int $id Идентификатор игры
+     * @return Game|null Игра или null, если не найдена
      */
     public static function get($id)
     {
@@ -70,6 +83,11 @@ class Game
         }
     }
 
+    /**
+     * Конструктор игры
+     * @param array $data Данные игры
+     * @throws Exception
+     */
     public function __construct($data)
     {
         if (!$data || !is_array($data)) {
@@ -106,6 +124,9 @@ class Game
         }
     }
 
+    /**
+     * Сохранить игру в базу данных
+     */
     public function save()
     {
         $values = [];
@@ -122,6 +143,10 @@ class Game
         }
     }
 
+    /**
+     * Создать новую игру с генерацией карты и размещением игроков
+     * @throws Exception
+     */
     public function create_new_game()
     {
         // Убеждаемся, что типы юнитов инициализированы перед созданием юнитов
@@ -214,6 +239,10 @@ class Game
         }
     }
 
+    /**
+     * Получить список всех игр
+     * @return array Список игр с количеством пользователей
+     */
     public static function game_list()
     {
         $games = MyDB::query("SELECT game.*, count(user.id) as ucount FROM game
@@ -222,6 +251,9 @@ class Game
         return $games;
     }
 
+    /**
+     * Рассчитать новый ход для всех пользователей в игре
+     */
     public function calculate()
     {
         $first = true;
@@ -249,6 +281,10 @@ class Game
         $this->save();
     }
 
+    /**
+     * Отправить системное сообщение всем пользователям в игре
+     * @param string $text Текст сообщения
+     */
     public function all_system_message($text)
     {
         foreach ($this->users as $user) {
@@ -262,6 +298,10 @@ class Game
         }
     }
 
+    /**
+     * Получить активного игрока в игре
+     * @return int|null Идентификатор активного игрока или null
+     */
     public function getActivePlayer()
     {
         return MyDB::query(
@@ -272,7 +312,8 @@ class Game
     }
 
     /**
-     * @return Planet
+     * Получить первую планету в игре
+     * @return Planet|null Первая планета или null, если не найдена
      */
     public function get_first_planet()
     {

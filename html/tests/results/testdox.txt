@@ -1,64 +1,110 @@
 Building
- [x] Get title
- [x] Building city relation
- [x] Save new
  [x] Building cache
- [x] Save update
  [x] Different building types
+ [x] Get title
+ [x] Save new
+ [x] Building city relation
+ [x] Save update
  [x] Building type relation
  [x] Constructor
  [x] Get existing building
 
-City
- [x] By coords existing
+Building Type
+ [x] City effect coliseum
+ [x] City effect market
+ [x] Get title
+ [x] City effect temple negative norm
+ [x] All predefined building types
+ [x] Get existing building type
+ [x] City effect coliseum negative dis
+ [x] Get non existing building type
+ [x] Constructor
+ [x] City effect granary
+ [x] City effect temple
+ [x] City effect library
+ [x] City effect no effect
+
+Cell
+ [x] Clear cache
+ [x] Get mission need points
+ [x] Get existing cell
+ [x] Get non existing cell
+ [x] Constructor
+ [x] Constructor without owner
+ [x] Get title
+ [x] Get planet
  [x] Save new
  [x] Save update
- [x] Get existing city
- [x] Coastal city
- [x] Calculate people
- [x] Get possible buildings
- [x] Locate people
- [x] Calculate production
- [x] Create unit
- [x] Get city cells
- [x] New city
+ [x] Calc coord
+ [x] Calc distance
+ [x] D coord
+ [x] Get cells around
+ [x] Get work
+ [x] Get eat
+ [x] Get money
+ [x] Get units
+ [x] Load cells
+
+Cell Type
+ [x] Complex properties
+ [x] Get existing cell type
  [x] Get title
- [x] City resources
- [x] City cache
- [x] By coords non existing
- [x] Construct
+ [x] All predefined cell types
+ [x] Get non existing cell type
+ [x] Constructor
+ [x] Constructor without id
+
+City
+ [x] Create building
+ [x] Add people
+ [x] Create unit
+ [x] Calculate money
+ [x] Calculate research
+ [x] Calculate work
+ [x] Get title
+ [x] Constructor
+ [x] By coords
+ [x] Get culture cells
+ [x] Get possible units
+ [x] Calculate eat
+ [x] Calculate culture
+ [x] Remove people
+ [x] Save
+ [x] Calculate buildings
+ [x] Check mood
+ [x] Select next production
 
 Create Game Simple
  [x] Create basic game class
  [x] Html escaping in game name
  [x] Game caching
- [x] Create users for game
+ [x] User color generation
  [x] Game get method
  [x] Update game data
+ [x] Create users for game
  [x] Html escaping in user login
  [x] Game list
  [x] Create game with different turn types
- [x] User color generation
  [x] Create game with different map sizes
 
 Create Game
  [x] Too small map size
- [x] Empty game name
- [x] Too large map size
- [x] Duplicate player names
  [x] No post data
- [x] Data preservation on error
- [x] Too many players
  [x] Very long strings
- [x] X s s in game name
- [x] Create concurrent game
- [x] Create one window game
+ [x] Duplicate player names
+ [x] Data preservation on error
+ [x] Empty game name
+ [x] Too many players
+ [x] Too large map size
+ [x] Game initial conditions
  [x] Empty player fields
  [x] Player color generation
- [x] Invalid turn type
+ [x] Create concurrent game
+ [x] Create one window game
  [x] Create basic game
  [x] X s s in player names
- [x] Game initial conditions
+ [x] Invalid turn type
+ [x] X s s in game name
  [x] Whitespace game name
  [x] Minimum players
 
@@ -72,99 +118,143 @@ Database Config
  [x] Game and user mocks
 
 Edit Game
- [x] Edit non existent game
- [x] Edit game name only
- [x] X s s in edited game name
- [x] Multiple validation errors
  [x] Edit basic game parameters
+ [x] Load game data for editing
  [x] Edit with invalid map size
+ [x] Very long strings in edit
  [x] Edit with empty name
+ [x] Edit game name only
+ [x] Edit turn type
+ [x] Edit with invalid turn type
+ [x] Edit non existent game
+ [x] X s s in edited game name
+ [x] Game not changed on validation error
+ [x] Multiple validation errors
  [x] Edit map size
  [x] Data preservation on validation error
- [x] Load game data for editing
- [x] Game not changed on validation error
- [x] Edit with invalid turn type
- [x] Edit turn type
- [x] Very long strings in edit
- [x] Load game without id
- [x] Edit without game id
  [x] Load non existent game for editing
+ [x] Edit without game id
+ [x] Load game without id
+
+Event
+ [x] Get title
+ [x] Save with source
+ [x] Get text
+ [x] Constructor city building
+ [x] Constructor city unit
+ [x] Remove
+ [x] Get
+ [x] Constructor research
+ [x] Save new
+ [x] Save update
 
 Game
  [x] Get first planet
  [x] Get existing game
- [x] Get active player no active
- [x] Get active player concurrently
- [x] All system message
- [x] Get non existing game
  [x] Save new
- [x] Construct
+ [x] Get non existing game
+ [x] All system message
  [x] Save update
+ [x] Construct
  [x] Get active player by turn
+ [x] Get active player concurrently
  [x] Game list
+ [x] Get active player no active
  [x] Get first planet no planets
 
+Mission Type
+ [x] Complete
+ [x] Get
+ [x] Check cell
+ [x] Constructor
+ [x] Get title
+
 Planet
- [x] Clear cache
+ [x] Get non existing planet
  [x] Get existing planet
  [x] Save new
- [x] Get non existing planet
- [x] Get game
- [x] Cell get planet
  [x] Save update
- [x] Construct
+ [x] Get game
+ [x] Clear cache
+ [x] Constructor
+ [x] Constructor without id
+ [x] Constructor with invalid data
 
 Research
+ [x] Save new
+ [x] Save update
  [x] Multiple researches for user
  [x] Different research types
- [x] Save update
  [x] Researches for different users
- [x] Save new
- [x] Constructor without id
- [x] Research type relation
  [x] Get existing research
  [x] Required fields
+ [x] Constructor without id
+ [x] Research type relation
  [x] Constructor
  [x] Research user relation
 
 Resource
+ [x] Save update
+ [x] Get non existing resource
  [x] Get existing resource
  [x] Save new
- [x] Get non existing resource
- [x] Save update
  [x] Construct
  [x] Get title
 
-Unit
- [x] Save new
- [x] Remove
- [x] Get existing unit
+Resource Type
  [x] Get title
- [x] Save update
+ [x] Can use with required research available
+ [x] Can use with required research unavailable
+ [x] Can use without required research
+ [x] Complex properties
+ [x] Get existing resource type
+ [x] All predefined resource types
+ [x] Get non existing resource type
+ [x] Constructor
+
+Unit
  [x] Construct
+ [x] Remove
+ [x] Save new
+ [x] Save update
+ [x] Get title
+ [x] Get existing unit
  [x] Get non existing unit
 
 User
- [x] Get next event no events
- [x] New system message
+ [x] Get next event with event
  [x] Get research
  [x] Calculate income
- [x] Start research
- [x] Get next event with event
- [x] Get cities
+ [x] Get next event no events
  [x] Start research already done
+ [x] Get cities
+ [x] Start research
+ [x] New system message
  [x] Get non existing user
  [x] Get existing user
  [x] Construct
  [x] Save new
  [x] Save update
 
+Research Type
+ [x] Get existing research type
+ [x] Get title
+ [x] Get turn count
+ [x] Get need age ids
+ [x] All predefined research types
+ [x] Research requirements
+ [x] Get non existing research type
+ [x] Constructor
+ [x] Constructor without id
+
 Message
- [x] Construct
- [x] Construct system message
+ [x] Constructor with full data
+ [x] Constructor without from
+ [x] Constructor without to
  [x] Save new
- [x] Save system message
  [x] Save update
+ [x] Save system message
+ [x] Constructor minimal data
 
 Open Game
  [x] Open game with user from different game
@@ -183,10 +273,10 @@ Open Game
 
 Create Game Integration
  [x] S q l injection protection
- [x] Validation errors via web
+ [x] Player count validation
  [x] Success redirect
  [x] Multiple game creation
- [x] Player count validation
+ [x] Validation errors via web
  [x] Performance with max players
  [x] Game creation and data persistence
  [x] Settler units creation
@@ -197,12 +287,15 @@ Create Game Integration
  [x] X s s protection via web
 
 Map Actions Integration
- [x] Map boundaries
  [x] Unit movement
- [x] Map loading with units
- [x] Map loading with city
+ [x] Map boundaries
  [x] City foundation
  [x] Map scrolling
+ [x] Map loading with city
+ [x] Map loading with units
+
+Map VPage
+ [x] Map v page loads without errors
 
 Open Game Integration
  [x] Full game opening process
@@ -218,4 +311,8 @@ Open Game Integration
 
 Edit Game Integration
  [x] Full game edit process
+
+Page Info
+ [x] Cell info page
+ [x] Turn info page
 

@@ -3,6 +3,7 @@ tests/results/
 tests/coverage-html/
 tests/out.txt
 tests/.phpunit.result.cache
+tests/.phpunit.cache/
 
 # Vendor directory
 vendor/

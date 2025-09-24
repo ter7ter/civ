@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . "/../bootstrap.php";
+
 class CityTest extends TestBase
 {
     protected function setUp(): void

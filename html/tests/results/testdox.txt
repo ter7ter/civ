@@ -1,22 +1,22 @@
 Building
- [x] Building cache
- [x] Different building types
  [x] Get title
  [x] Save new
- [x] Building city relation
  [x] Save update
- [x] Building type relation
+ [x] Different building types
  [x] Constructor
- [x] Get existing building
+ [x] City effect
+ [x] Get
+ [x] Constructor without id
+ [x] Caching
 
 Building Type
  [x] City effect coliseum
  [x] City effect market
+ [x] Get existing building type
  [x] Get title
+ [x] City effect coliseum negative dis
  [x] City effect temple negative norm
  [x] All predefined building types
- [x] Get existing building type
- [x] City effect coliseum negative dis
  [x] Get non existing building type
  [x] Constructor
  [x] City effect granary
@@ -25,8 +25,8 @@ Building Type
  [x] City effect no effect
 
 Cell
- [x] Clear cache
  [x] Get mission need points
+ [x] Clear cache
  [x] Get existing cell
  [x] Get non existing cell
  [x] Constructor
@@ -55,12 +55,12 @@ Cell Type
  [x] Constructor without id
 
 City
- [x] Create building
  [x] Add people
  [x] Create unit
- [x] Calculate money
+ [x] Create building
  [x] Calculate research
  [x] Calculate work
+ [x] Calculate money
  [x] Get title
  [x] Constructor
  [x] By coords
@@ -77,31 +77,31 @@ City
 Create Game Simple
  [x] Create basic game class
  [x] Html escaping in game name
- [x] Game caching
- [x] User color generation
- [x] Game get method
  [x] Update game data
  [x] Create users for game
- [x] Html escaping in user login
  [x] Game list
+ [x] Html escaping in user login
+ [x] User color generation
+ [x] Game get method
+ [x] Game caching
  [x] Create game with different turn types
  [x] Create game with different map sizes
 
 Create Game
- [x] Too small map size
  [x] No post data
+ [x] Too large map size
+ [x] Too small map size
  [x] Very long strings
+ [x] Empty game name
  [x] Duplicate player names
  [x] Data preservation on error
- [x] Empty game name
  [x] Too many players
- [x] Too large map size
- [x] Game initial conditions
- [x] Empty player fields
  [x] Player color generation
  [x] Create concurrent game
  [x] Create one window game
  [x] Create basic game
+ [x] Empty player fields
+ [x] Game initial conditions
  [x] X s s in player names
  [x] Invalid turn type
  [x] X s s in game name
@@ -118,30 +118,30 @@ Database Config
  [x] Game and user mocks
 
 Edit Game
- [x] Edit basic game parameters
- [x] Load game data for editing
- [x] Edit with invalid map size
- [x] Very long strings in edit
- [x] Edit with empty name
- [x] Edit game name only
- [x] Edit turn type
- [x] Edit with invalid turn type
  [x] Edit non existent game
+ [x] Edit with invalid turn type
  [x] X s s in edited game name
+ [x] Load game data for editing
+ [x] Data preservation on validation error
+ [x] Edit turn type
  [x] Game not changed on validation error
  [x] Multiple validation errors
  [x] Edit map size
- [x] Data preservation on validation error
- [x] Load non existent game for editing
+ [x] Edit basic game parameters
+ [x] Very long strings in edit
+ [x] Edit with empty name
+ [x] Edit game name only
+ [x] Edit with invalid map size
  [x] Edit without game id
  [x] Load game without id
+ [x] Load non existent game for editing
 
 Event
- [x] Get title
- [x] Save with source
- [x] Get text
- [x] Constructor city building
  [x] Constructor city unit
+ [x] Get title
+ [x] Constructor city building
+ [x] Get text
+ [x] Save with source
  [x] Remove
  [x] Get
  [x] Constructor research
@@ -151,16 +151,18 @@ Event
 Game
  [x] Get first planet
  [x] Get existing game
- [x] Save new
- [x] Get non existing game
- [x] All system message
- [x] Save update
  [x] Construct
  [x] Get active player by turn
+ [x] Save new
  [x] Get active player concurrently
+ [x] All system message
  [x] Game list
  [x] Get active player no active
+ [x] Save update
+ [x] Get non existing game
  [x] Get first planet no planets
+ [x] Calculate by turn
+ [x] Calculate concurrently
 
 Mission Type
  [x] Complete
@@ -169,43 +171,58 @@ Mission Type
  [x] Constructor
  [x] Get title
 
+My DB
+ [x] Query select output types
+ [x] Query select
+ [x] Update with where
+ [x] Transactions
+ [x] Update
+ [x] Null handling
+ [x] Set d b config
+ [x] Get
+ [x] Insert
+ [x] Insert multiple
+ [x] D d l queries
+ [x] Error handling
+
 Planet
  [x] Get non existing planet
- [x] Get existing planet
- [x] Save new
- [x] Save update
- [x] Get game
  [x] Clear cache
+ [x] Save update
+ [x] Save new
+ [x] Get existing planet
+ [x] Get game
  [x] Constructor
  [x] Constructor without id
  [x] Constructor with invalid data
 
 Research
  [x] Save new
- [x] Save update
- [x] Multiple researches for user
  [x] Different research types
- [x] Researches for different users
- [x] Get existing research
- [x] Required fields
+ [x] Save update
  [x] Constructor without id
- [x] Research type relation
  [x] Constructor
- [x] Research user relation
+ [x] Get
+ [x] Research user relationship
 
 Resource
+ [x] Resource coordinates uniqueness
  [x] Save update
- [x] Get non existing resource
- [x] Get existing resource
  [x] Save new
- [x] Construct
  [x] Get title
+ [x] Get
+ [x] Constructor without id
+ [x] Different resource types
+ [x] Constructor
+ [x] Get non existing
+ [x] Get title without type
+ [x] Save without type
 
 Resource Type
  [x] Get title
+ [x] Can use without required research
  [x] Can use with required research available
  [x] Can use with required research unavailable
- [x] Can use without required research
  [x] Complex properties
  [x] Get existing resource type
  [x] All predefined resource types
@@ -213,36 +230,36 @@ Resource Type
  [x] Constructor
 
 Unit
+ [x] Save update
+ [x] Save new
  [x] Construct
  [x] Remove
- [x] Save new
- [x] Save update
+ [x] Get non existing unit
  [x] Get title
  [x] Get existing unit
- [x] Get non existing unit
 
 User
- [x] Get next event with event
- [x] Get research
- [x] Calculate income
  [x] Get next event no events
- [x] Start research already done
- [x] Get cities
  [x] Start research
+ [x] Get next event with event
+ [x] Calculate income
  [x] New system message
- [x] Get non existing user
+ [x] Get cities
+ [x] Start research already done
+ [x] Get research
  [x] Get existing user
+ [x] Get non existing user
  [x] Construct
  [x] Save new
  [x] Save update
 
 Research Type
- [x] Get existing research type
  [x] Get title
  [x] Get turn count
- [x] Get need age ids
  [x] All predefined research types
+ [x] Get need age ids
  [x] Research requirements
+ [x] Get existing research type
  [x] Get non existing research type
  [x] Constructor
  [x] Constructor without id
@@ -271,12 +288,21 @@ Open Game
  [x] Reopen game with different user
  [x] Open game with max players
 
+Unit Type
+ [x] Get existing unit type
+ [x] Get non existing unit type
+ [x] Construct basic
+ [x] Construct with can move
+ [x] Get title
+ [x] Caching
+ [x] Default properties
+
 Create Game Integration
  [x] S q l injection protection
  [x] Player count validation
+ [x] Validation errors via web
  [x] Success redirect
  [x] Multiple game creation
- [x] Validation errors via web
  [x] Performance with max players
  [x] Game creation and data persistence
  [x] Settler units creation
@@ -287,12 +313,12 @@ Create Game Integration
  [x] X s s protection via web
 
 Map Actions Integration
- [x] Unit movement
  [x] Map boundaries
+ [x] Unit movement
  [x] City foundation
- [x] Map scrolling
  [x] Map loading with city
  [x] Map loading with units
+ [x] Map scrolling
 
 Map VPage
  [x] Map v page loads without errors

@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . "/../bootstrap.php";
+
 /**
  * Тесты для класса Game
  */
@@ -251,5 +253,89 @@ class GameTest extends TestBase
         $planet = $game->get_first_planet();
 
         $this->assertNull($planet);
+    }
+
+    /**
+     * Тест метода calculate для игры byturn
+     */
+    public function testCalculateByTurn(): void
+    {
+        $gameData = $this->createTestGame(['turn_type' => 'byturn', 'turn_num' => 1]);
+        $user1 = $this->createTestUser(['game' => $gameData['id'], 'turn_order' => 1]);
+        $user2 = $this->createTestUser(['game' => $gameData['id'], 'turn_order' => 2]);
+
+        $game = Game::get($gameData['id']);
+        $game->calculate();
+
+        // Проверяем, что turn_num увеличился
+        $this->assertEquals(2, $game->turn_num);
+
+        // Проверяем статусы пользователей
+        $user1Updated = User::get($user1['id']);
+        $user2Updated = User::get($user2['id']);
+
+        $this->assertEquals('play', $user1Updated->turn_status);
+        $this->assertEquals('wait', $user2Updated->turn_status);
+    }
+
+    /**
+     * Тест метода calculate для игры concurrently
+     */
+    public function testCalculateConcurrently(): void
+    {
+        $gameData = $this->createTestGame(['turn_type' => 'concurrently', 'turn_num' => 1]);
+        $user1 = $this->createTestUser(['game' => $gameData['id']]);
+        $user2 = $this->createTestUser(['game' => $gameData['id']]);
+
+        $game = Game::get($gameData['id']);
+        $game->calculate();
+
+        // Проверяем, что turn_num увеличился
+        $this->assertEquals(2, $game->turn_num);
+
+        // Проверяем статусы пользователей
+        $user1Updated = User::get($user1['id']);
+        $user2Updated = User::get($user2['id']);
+
+        $this->assertEquals('play', $user1Updated->turn_status);
+        $this->assertEquals('play', $user2Updated->turn_status);
+    }
+
+    /**
+     * Тест метода create_new_game
+     */
+    public function testCreateNewGame(): void
+    {
+        $this->initializeGameTypes();
+        $gameData = $this->createTestGame([
+            'name' => 'New Game Test',
+            'map_w' => 20,
+            'map_h' => 20,
+            'turn_type' => 'byturn'
+        ]);
+
+        // Добавляем пользователей
+        $user1 = $this->createTestUser(['game' => $gameData['id'], 'turn_order' => 1]);
+        $user2 = $this->createTestUser(['game' => $gameData['id'], 'turn_order' => 2]);
+
+        $game = Game::get($gameData['id']);
+
+        // Метод create_new_game должен выполняться без ошибок
+        $game->create_new_game();
+
+        // Проверяем, что планета создана
+        $planet = $game->get_first_planet();
+        $this->assertNotNull($planet);
+        $this->assertInstanceOf(Planet::class, $planet);
+
+        // Проверяем, что пользователи загружены в игру
+        $this->assertCount(2, $game->users);
+
+        // Проверяем, что юниты созданы для пользователей
+        $units1 = MyDB::query("SELECT COUNT(*) as count FROM unit WHERE user_id = :uid", ['uid' => $user1['id']], 'elem');
+        $units2 = MyDB::query("SELECT COUNT(*) as count FROM unit WHERE user_id = :uid", ['uid' => $user2['id']], 'elem');
+
+        $this->assertGreaterThan(0, $units1, "Должен быть создан хотя бы один юнит для первого пользователя");
+        $this->assertGreaterThan(0, $units2, "Должен быть создан хотя бы один юнит для второго пользователя");
     }
 }

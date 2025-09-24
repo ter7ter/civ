@@ -40,7 +40,8 @@ class TestRunner
             "unit" => true,
             "integration" => true,
             "js" => true,
-            "coverage" => false,
+            "coverage" => true,
+            "generate-coverage-report-only" => false, // NEW: Option to only generate coverage report
             "verbose" => false,
             "stop-on-failure" => true, // Останавливаться при первой ошибке по умолчанию
             "filter" => null,
@@ -67,6 +68,13 @@ class TestRunner
                     break;
                 case "--coverage":
                     $this->options["coverage"] = true;
+                    break;
+                case "--generate-coverage-report-only": // NEW: Handle new option
+                    $this->options["generate-coverage-report-only"] = true;
+                    // If we are only generating reports, we don't need to run tests
+                    $this->options["unit"] = false;
+                    $this->options["integration"] = false;
+                    $this->options["js"] = false;
                     break;
                 case "--verbose":
                 case "-v":
@@ -111,7 +119,14 @@ class TestRunner
         $exitCode = 0;
 
         // Запускаем PHP тесты
-        if ($this->options["unit"] || $this->options["integration"]) {
+        // Only run PHP tests if not in "generate-coverage-report-only" mode
+        if (!$this->options["generate-coverage-report-only"] && ($this->options["unit"] || $this->options["integration"])) {
+            $phpResult = $this->runPhpTests();
+            if ($phpResult !== 0) {
+                $exitCode = $phpResult;
+            }
+        } elseif ($this->options["generate-coverage-report-only"]) {
+            // If only generating coverage report, directly call runPhpTests for report generation
             $phpResult = $this->runPhpTests();
             if ($phpResult !== 0) {
                 $exitCode = $phpResult;
@@ -169,10 +184,23 @@ class TestRunner
             $cmd[] = "--stop-on-failure";
         }
 
-        if ($this->options["coverage"]) {
+        // NEW: Logic for coverage generation
+        if ($this->options["generate-coverage-report-only"]) {
+            echo "Генерация отчета о покрытии кода из ранее собранных данных...\n";
+            $generateCoverageScript = TESTS_ROOT . "/generate_coverage_report.php";
+            if (!file_exists($generateCoverageScript)) {
+                die("❌ Скрипт для генерации отчетов о покрытии ({$generateCoverageScript}) не найден.\n");
+            }
+            $fullCmd = "php " . escapeshellarg($generateCoverageScript);
+            // Execute the new script and return its exit code
+            return $this->runCommand($fullCmd);
+        } elseif ($this->options["coverage"]) {
+            echo "Запуск тестов и генерация отчета о покрытии кода...\n";
             $cmd[] = "--coverage-html";
             $cmd[] = TESTS_ROOT . "/coverage-html";
             $cmd[] = "--coverage-text=coverage.txt";
+            $cmd[] = "--coverage-php"; // Also save raw coverage data
+            $cmd[] = TESTS_ROOT . "/coverage.php";
         }
 
         if ($this->options["filter"]) {
@@ -180,11 +208,13 @@ class TestRunner
             $cmd[] = $this->options["filter"];
         }
 
-        // Определяем какие тесты запускать
-        if ($this->options["unit"] && !$this->options["integration"]) {
-            $cmd[] = TESTS_ROOT . "/unit";
-        } elseif ($this->options["integration"] && !$this->options["unit"]) {
-            $cmd[] = TESTS_ROOT . "/integration";
+        // Определяем какие тесты запускать, только если не в режиме генерации отчета
+        if (!$this->options["generate-coverage-report-only"]) {
+            if ($this->options["unit"] && !$this->options["integration"]) {
+                $cmd[] = TESTS_ROOT . "/unit";
+            } elseif ($this->options["integration"] && !$this->options["unit"]) {
+                $cmd[] = TESTS_ROOT . "/integration";
+            }
         }
 
         $fullCmd = implode(" ", array_map("escapeshellarg", $cmd));
@@ -209,6 +239,9 @@ class TestRunner
             echo "\n✅ PHP тесты завершены успешно (" .
                 number_format($duration, 2) .
                 "s)\n";
+            if ($this->options["coverage"]) {
+                echo "Отчет о покрытии кода сгенерирован в " . TESTS_ROOT . "/coverage-html и coverage.txt.\n";
+            }
         } else {
             echo "\n❌ PHP тесты завершились с ошибками (" .
                 number_format($duration, 2) .
@@ -615,7 +648,8 @@ class TestRunner
         echo "  --integration-only  Запуск только integration тестов\n";
         echo "  --js-only           Запуск только JavaScript тестов\n";
         echo "  --with-js           Включить JavaScript тесты\n";
-        echo "  --coverage          Генерировать отчет о покрытии кода\n";
+        echo "  --coverage          Запуск тестов и генерация отчета о покрытии кода (HTML и текстовый)\n"; // UPDATED
+        echo "  --generate-coverage-report-only  Генерация отчета о покрытии кода из ранее собранных данных (из coverage.php) без запуска тестов\n"; // NEW
         echo "  --verbose, -v       Подробный вывод\n";
         echo "  --stop-on-failure   Остановиться при первой ошибке\n";
         echo "  --filter <pattern>  Фильтр тестов по имени/паттерну\n";
@@ -624,7 +658,8 @@ class TestRunner
         echo "  php run_tests.php                    # Все PHP тесты\n";
         echo "  php run_tests.php --with-js          # Все тесты включая JS\n";
         echo "  php run_tests.php --unit-only -v     # Только unit тесты, подробно\n";
-        echo "  php run_tests.php --coverage         # С отчетом покрытия\n";
+        echo "  php run_tests.php --coverage         # Запуск тестов и генерация отчета о покрытии\n"; // UPDATED
+        echo "  php run_tests.php --generate-coverage-report-only # Генерация отчета о покрытии\n"; // NEW
         echo "  php run_tests.php --filter CreateGame # Только тесты CreateGame\n";
         echo str_repeat("=", 60) . "\n";
     }

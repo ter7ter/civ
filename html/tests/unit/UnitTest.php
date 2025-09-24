@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . "/../bootstrap.php";
+
 /**
  * Тесты для класса Unit
  */
@@ -269,5 +271,185 @@ class UnitTest extends TestBase
             "row",
         );
         $this->assertFalse($deletedData);
+    }
+
+    /**
+     * Тест метода get_mission_types
+     */
+    public function testGetMissionTypes(): void
+    {
+        $this->initializeGameTypes();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
+        $user = User::get($userData["id"]);
+
+        // Создаем тип юнита с миссиями
+        $unitTypeData = [
+            "id" => 7,
+            "title" => "Mission Unit",
+            "points" => 1,
+        ];
+        MyDB::insert("unit_type", $unitTypeData);
+
+        // Создаем объект UnitType с миссиями
+        new UnitType([
+            "id" => 7,
+            "title" => "Mission Unit",
+            "points" => 1,
+            "missions" => ["move_to"], // Только move_to, так как MissionType не определен
+        ]);
+
+        $this->createTestCell(['x' => 10, 'y' => 10, 'planet' => $planetId, 'type' => 'plains']);
+
+        $data = [
+            "user_id" => $user->id,
+            "type" => 7,
+            "x" => 10,
+            "y" => 10,
+            "planet" => $planetId,
+        ];
+
+        $unit = new Unit($data);
+
+        $missionTypes = $unit->get_mission_types();
+
+        $this->assertIsArray($missionTypes);
+        $this->assertArrayHasKey('move_to', $missionTypes);
+        // Проверяем, что возвращается массив с миссиями
+        $this->assertGreaterThanOrEqual(1, count($missionTypes));
+    }
+
+    /**
+     * Тест метода can_move
+     */
+    public function testCanMove(): void
+    {
+        $this->initializeGameTypes();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
+        $user = User::get($userData["id"]);
+
+        // Создаем тип юнита
+        $unitTypeData = [
+            "id" => 8,
+            "title" => "Move Unit",
+            "points" => 2,
+        ];
+        MyDB::insert("unit_type", $unitTypeData);
+
+        $this->createTestCell(['x' => 5, 'y' => 5, 'planet' => $planetId, 'type' => 'plains']);
+        $this->createTestCell(['x' => 6, 'y' => 5, 'planet' => $planetId, 'type' => 'plains']);
+
+        $data = [
+            "user_id" => $user->id,
+            "type" => 8,
+            "x" => 5,
+            "y" => 5,
+            "planet" => $planetId,
+            "points" => 2,
+        ];
+
+        $unit = new Unit($data);
+        $targetCell = Cell::get(6, 5, $planetId);
+
+        $canMove = $unit->can_move($targetCell);
+
+        $this->assertTrue($canMove);
+    }
+
+    /**
+     * Тест метода move_to
+     */
+    public function testMoveTo(): void
+    {
+        $this->initializeGameTypes();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
+        $user = User::get($userData["id"]);
+
+        // Создаем тип юнита
+        $unitTypeData = [
+            "id" => 9,
+            "title" => "Move To Unit",
+            "points" => 2,
+        ];
+        MyDB::insert("unit_type", $unitTypeData);
+
+        $this->createTestCell(['x' => 7, 'y' => 7, 'planet' => $planetId, 'type' => 'plains']);
+        $this->createTestCell(['x' => 8, 'y' => 7, 'planet' => $planetId, 'type' => 'plains']);
+
+        $data = [
+            "user_id" => $user->id,
+            "type" => 9,
+            "x" => 7,
+            "y" => 7,
+            "planet" => $planetId,
+            "points" => 2,
+        ];
+
+        $unit = new Unit($data);
+        $targetCell = Cell::get(8, 7, $planetId);
+
+        $moved = $unit->move_to($targetCell);
+
+        $this->assertTrue($moved);
+        $this->assertEquals(8, $unit->x);
+        $this->assertEquals(7, $unit->y);
+        $this->assertLessThan(2, $unit->points); // Очки уменьшились
+    }
+
+    /**
+     * Тест метода get_all
+     */
+    public function testGetAll(): void
+    {
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
+        $userData = $this->createTestUser(["game" => $gameData["id"]]);
+        $user = User::get($userData["id"]);
+
+        // Создаем тип юнита
+        $unitTypeData = [
+            "id" => 10,
+            "title" => "Get All Unit",
+            "points" => 1,
+        ];
+        MyDB::insert("unit_type", $unitTypeData);
+
+        $this->createTestCell(['x' => 11, 'y' => 11, 'planet' => $planetId]);
+
+        // Создаем несколько юнитов
+        $unitData1 = [
+            "user_id" => $user->id,
+            "type" => 10,
+            "x" => 11,
+            "y" => 11,
+            "planet" => $planetId,
+            "health" => 3,
+            "points" => 1,
+        ];
+        MyDB::insert("unit", $unitData1);
+
+        $unitData2 = [
+            "user_id" => $user->id,
+            "type" => 10,
+            "x" => 11,
+            "y" => 11,
+            "planet" => $planetId,
+            "health" => 3,
+            "points" => 1,
+        ];
+        MyDB::insert("unit", $unitData2);
+
+        $allUnits = Unit::get_all();
+
+        $this->assertIsArray($allUnits);
+        $this->assertGreaterThanOrEqual(2, count($allUnits));
+        foreach ($allUnits as $unit) {
+            $this->assertInstanceOf(Unit::class, $unit);
+        }
     }
 }

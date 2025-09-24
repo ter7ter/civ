@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__ . "/../bootstrap.php";
+
 /**
  * Тесты для класса Cell
  */
@@ -472,5 +474,63 @@ class CellTest extends TestBase
         $cell2 = Cell::get(0, 0, $planetId);
         $this->assertInstanceOf(Cell::class, $cell2);
         $this->assertNotSame($cell1, $cell2); // Должны быть разные объекты
+    }
+
+    /**
+     * Тест метода generate_type
+     */
+    public function testGenerateType(): void
+    {
+        $this->initializeGameTypes();
+        $gameData = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+
+        // Устанавливаем маленький размер карты для теста
+        Cell::$map_width = 10;
+        Cell::$map_height = 10;
+
+        // Создаем несколько клеток вокруг для тестирования соседей
+        for ($x = 0; $x < 10; $x++) {
+            for ($y = 0; $y < 10; $y++) {
+                $this->createTestCell(['x' => $x, 'y' => $y, 'planet' => $planetId, 'type' => 'plains']);
+            }
+        }
+
+        $cellType = Cell::generate_type(5, 5, $planetId);
+
+        $this->assertInstanceOf(CellType::class, $cellType);
+        $this->assertIsString($cellType->id);
+        $this->assertNotEmpty($cellType->id);
+    }
+
+    /**
+     * Тест метода generate_map (упрощенная версия)
+     */
+    public function testGenerateMap(): void
+    {
+        $this->initializeGameTypes();
+        $gameData = $this->createTestGame(['map_w' => 5, 'map_h' => 5]);
+        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+
+        // Устанавливаем маленький размер карты для быстрого теста
+        Cell::$map_width = 5;
+        Cell::$map_height = 5;
+
+        // Очищаем существующие клетки
+        MyDB::query("DELETE FROM cell WHERE planet = :planet", ['planet' => $planetId]);
+        MyDB::query("DELETE FROM resource WHERE planet = :planet", ['planet' => $planetId]);
+
+        Cell::generate_map($planetId, $gameData['id']);
+
+        // Проверяем, что клетки созданы
+        $cellCount = MyDB::query("SELECT COUNT(*) FROM cell WHERE planet = :planet", ['planet' => $planetId], 'elem');
+        $this->assertEquals(25, $cellCount); // 5x5 = 25 клеток
+
+        // Проверяем, что некоторые клетки имеют типы
+        $cells = MyDB::query("SELECT * FROM cell WHERE planet = :planet LIMIT 5", ['planet' => $planetId]);
+        $this->assertCount(5, $cells);
+        foreach ($cells as $cell) {
+            $this->assertNotEmpty($cell['type']);
+        }
     }
 }

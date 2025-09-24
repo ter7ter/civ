@@ -426,21 +426,57 @@ class TestBase extends PHPUnit\Framework\TestCase
     ): array {
         $game = $this->createTestGame($gameData);
 
-        $users = [];
+        $usersData = [];
         for ($i = 0; $i < $userCount; $i++) {
-            $userData = [
+            $usersData[] = [
                 "game" => $game["id"],
                 "login" => "TestUser" . ($i + 1),
                 "turn_order" => $i + 1,
                 "color" => "#ff000" . $i,
+                "money" => 50,
+                "age" => 1,
+                "turn_status" => "wait",
             ];
-            $users[] = $this->createTestUser($userData);
         }
+        $users = $this->createTestUsers($usersData);
 
         return [
             "game" => $game,
             "users" => $users,
         ];
+    }
+
+    protected function createTestUsers(array $usersData): array
+    {
+        if (empty($usersData)) {
+            return [];
+        }
+
+        $keys = array_keys($usersData[0]);
+        
+        $values = [];
+        $params = [];
+        foreach($usersData as $userData) {
+            $values[] = "(" . implode(", ", array_fill(0, count($keys), "?")) . ")";
+            foreach($userData as $value) {
+                $params[] = $value;
+            }
+        }
+
+        $sql = "INSERT INTO user (" . implode(", ", array_map(fn($k) => "`$k`", $keys)) . ") VALUES " .
+            implode(", ", $values);
+
+        MyDB::query($sql, $params);
+
+        $firstId = MyDB::get()->lastInsertId();
+
+        $result = [];
+        for ($i = 0; $i < count($usersData); $i++) {
+            $usersData[$i]['id'] = $firstId + $i;
+            $result[] = $usersData[$i];
+        }
+
+        return $result;
     }
 
     /**

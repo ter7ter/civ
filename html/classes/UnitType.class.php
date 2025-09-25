@@ -16,7 +16,7 @@ class UnitType
      */
     public $points;
     /**
-     * стоимость постройки, производство
+     * Cтоимость постройки, производство
      * @var int
      */
     public $cost;
@@ -105,6 +105,11 @@ class UnitType
             $result[] = new UnitType($row);
         }
         return $result;
+    }
+
+    public static function clearAll()
+    {
+        UnitType::$all = [];
     }
 
     public function save()

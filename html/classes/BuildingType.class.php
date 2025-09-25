@@ -39,7 +39,7 @@ class BuildingType
     public $money_bonus = 0;
     public $description = "";
 
-    public static $all = [];
+    protected static $all = [];
 
     public static function get($id)
     {
@@ -68,6 +68,11 @@ class BuildingType
             $result[] = new BuildingType($row);
         }
         return $result;
+    }
+
+    public static function clearAll()
+    {
+        BuildingType::$all = [];
     }
 
     public function save()

@@ -339,6 +339,8 @@ class TestGameDataInitializer
             return; // Уже инициализированы
         }
 
+        ResearchType::clearAll(); // Очищаем кэш
+
         $researchTypes = [
             [
                 "id" => 1,
@@ -398,6 +400,26 @@ class TestGameDataInitializer
                 "requirements" => [],
                 "m_top" => 530,
                 "m_left" => 30,
+                "age_need" => true,
+            ],
+            [
+                "id" => 7,
+                "title" => "Обработка железа",
+                "age" => 1,
+                "cost" => 150,
+                "requirements" => [1],
+                "m_top" => 30,
+                "m_left" => 300,
+                "age_need" => true,
+            ],
+            [
+                "id" => 8,
+                "title" => "Математика",
+                "age" => 1,
+                "cost" => 150,
+                "requirements" => [2, 3],
+                "m_top" => 130,
+                "m_left" => 300,
                 "age_need" => true,
             ],
             [
@@ -462,8 +484,24 @@ class TestGameDataInitializer
             ],
         ];
 
+        // First create all research types
         foreach ($researchTypes as $type) {
-            new ResearchType($type);
+            $rt = new ResearchType($type);
+            $rt->save();
+        }
+
+        // Then add requirements
+        foreach ($researchTypes as $type) {
+            if (isset($type['requirements']) && !empty($type['requirements'])) {
+                $rt = ResearchType::get($type['id']);
+                foreach ($type['requirements'] as $reqId) {
+                    $req = ResearchType::get($reqId);
+                    if ($req) {
+                        $rt->addRequirement($req);
+                    }
+                }
+                $rt->save(); // Save with requirements
+            }
         }
     }
 
@@ -774,16 +812,16 @@ class TestGameDataInitializer
             CellType::$all = [];
         }
         if (class_exists("ResourceType")) {
-            ResourceType::$all = [];
+            ResourceType::clearAll();
         }
         if (class_exists("ResearchType")) {
-            ResearchType::$all = [];
+            ResearchType::clearAll();
         }
         if (class_exists("BuildingType")) {
-            BuildingType::$all = [];
+            BuildingType::clearAll();
         }
         if (class_exists("UnitType")) {
-            UnitType::$all = [];
+            UnitType::clearAll();
         }
     }
 

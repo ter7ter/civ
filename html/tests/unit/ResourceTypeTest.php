@@ -185,7 +185,7 @@ class ResourceTypeTest extends TestBase
     }
 
     /**
-     * Тест свойств req_research и cell_types
+     * Тест свойства req_research и cell_types
      */
     public function testComplexProperties(): void
     {
@@ -202,5 +202,33 @@ class ResourceTypeTest extends TestBase
         $this->assertIsArray($coal->cell_types);
         $this->assertEmpty($coal->req_research); // Уголь не требует исследований
         $this->assertNotEmpty($coal->cell_types);
+    }
+
+    /**
+     * Тест метода getAll
+     */
+    public function testGetAll(): void
+    {
+        $this->initializeGameTypes();
+
+        $allResourceTypes = ResourceType::getAll();
+
+        $this->assertIsArray($allResourceTypes);
+        $this->assertNotEmpty($allResourceTypes);
+
+        // Проверяем, что все предопределенные типы присутствуют
+        $expectedIds = [
+            'iron', 'horse', 'coal', 'oil', 'saltpetre', 'rubber', 'uranium',
+            'vine', 'ivory', 'silk', 'furs', 'fish', 'whale'
+        ];
+
+        foreach ($expectedIds as $id) {
+            $this->assertArrayHasKey($id, $allResourceTypes);
+            $this->assertInstanceOf(ResourceType::class, $allResourceTypes[$id]);
+            $this->assertEquals($id, $allResourceTypes[$id]->id);
+        }
+
+        // Проверяем, что количество соответствует ожидаемому (может быть больше из-за тестов)
+        $this->assertGreaterThanOrEqual(count($expectedIds), count($allResourceTypes));
     }
 }

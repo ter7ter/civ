@@ -45,7 +45,6 @@ class ResearchTypeTest extends TestBase
             'cost' => 200,
             'age' => 2,
             'age_need' => false,
-            'requirements' => [1, 2],
             'm_top' => 50,
             'm_left' => 100,
         ];
@@ -60,11 +59,8 @@ class ResearchTypeTest extends TestBase
         $this->assertEquals(50, $researchType->m_top);
         $this->assertEquals(100, $researchType->m_left);
         $this->assertIsArray($researchType->requirements);
-        $this->assertCount(2, $researchType->requirements);
-        // Проверяем, что requirements содержит объекты ResearchType
-        foreach ($researchType->requirements as $req) {
-            $this->assertInstanceOf(ResearchType::class, $req);
-        }
+        // В данном случае requirements еще не загружены из БД (пустой список)
+        $this->assertEmpty($researchType->requirements);
 
         // Проверяем, что объект добавлен в кэш
         $this->assertSame($researchType, ResearchType::get(100));
@@ -170,7 +166,7 @@ class ResearchTypeTest extends TestBase
         $this->initializeGameTypes();
 
         // Проверяем, что все исследования загружены
-        $this->assertGreaterThan(10, count(ResearchType::$all));
+        $this->assertGreaterThan(10, count(ResearchType::getAllCached()));
 
         // Проверяем некоторые конкретные
         $research1 = ResearchType::get(1);
@@ -192,10 +188,10 @@ class ResearchTypeTest extends TestBase
         $this->initializeGameTypes();
 
         // Проверяем статический кэш
-        $this->assertGreaterThan(10, count(ResearchType::$all));
+        $this->assertGreaterThan(10, count(ResearchType::getAllCached()));
 
         // Проверяем, что все элементы являются экземплярами ResearchType
-        foreach (ResearchType::$all as $researchType) {
+        foreach (ResearchType::getAllCached() as $researchType) {
             $this->assertInstanceOf(ResearchType::class, $researchType);
             $this->assertIsInt($researchType->id);
             $this->assertIsString($researchType->title);
@@ -218,7 +214,7 @@ class ResearchTypeTest extends TestBase
         $researchType = new ResearchType([]);
         $researchType->title = 'Unit Test Research';
         $researchType->cost = 300;
-        $researchType->requirements = [1, 2];
+        $researchType->requirements = [ResearchType::get(1), ResearchType::get(2)];
         $researchType->m_top = 150;
         $researchType->m_left = 250;
         $researchType->age = 1;
@@ -311,54 +307,30 @@ class ResearchTypeTest extends TestBase
     }
 
     /**
-     * Тест обработки JSON полей в конструкторе
+     * Тест обработки требований исследований
      */
-    public function testJsonFieldsHandling(): void
+    public function testResearchRequirementsObjects(): void
     {
         $this->initializeGameTypes();
 
-        // Создаем запись в БД с JSON полем
-        $id = MyDB::insert('research_type', [
-            'title' => 'JSON Test Research',
-            'cost' => 150,
-            'requirements' => '[1, 2, 3]',
-            'age' => 1,
-        ]);
-
-        $researchType = ResearchType::get($id);
-
-        // Проверяем, что JSON правильно распарсился
+        $researchType = ResearchType::get(1); // Гончарное дело
         $this->assertIsArray($researchType->requirements);
-        // Проверяем, что requirements содержит 3 объекта (JSON распарсился)
-        $this->assertCount(3, $researchType->requirements);
-        // Проверяем, что значения - объекты ResearchType
-        foreach ($researchType->requirements as $req) {
-            $this->assertInstanceOf(ResearchType::class, $req);
-        }
+        $this->assertEmpty($researchType->requirements); // Нет требований
 
-        // Очищаем
-        $researchType->delete();
-    }
-
-    /**
-     * Тест обработки некорректного JSON в конструкторе
-     */
-    public function testInvalidJsonHandling(): void
-    {
-        // Создаем запись с некорректным JSON
-        $id = MyDB::insert('research_type', [
-            'title' => 'Invalid JSON Test',
-            'cost' => 100,
-            'requirements' => 'invalid json',
-        ]);
-
-        $researchType = ResearchType::get($id);
-
-        // Должен корректно обработать - некорректный JSON должен стать пустым массивом
+        $researchType = ResearchType::get(7); // Обработка железа, требует 1
         $this->assertIsArray($researchType->requirements);
-        $this->assertEquals([], $researchType->requirements);
+        $this->assertCount(1, $researchType->requirements);
+        $this->assertInstanceOf(ResearchType::class, $researchType->requirements[0]);
+        $this->assertEquals(1, $researchType->requirements[0]->id);
 
-        // Очищаем
-        $researchType->delete();
+        $researchType = ResearchType::get(8); // Математика, требует 2,3
+        $this->assertIsArray($researchType->requirements);
+        $this->assertCount(2, $researchType->requirements);
+        $this->assertInstanceOf(ResearchType::class, $researchType->requirements[0]);
+        $this->assertInstanceOf(ResearchType::class, $researchType->requirements[1]);
+        // IDs могут быть не упорядочены, проверяем наличие
+        $reqIds = array_map(fn($r) => $r->id, $researchType->requirements);
+        $this->assertContains(2, $reqIds);
+        $this->assertContains(3, $reqIds);
     }
 }

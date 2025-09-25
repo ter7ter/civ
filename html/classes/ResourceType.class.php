@@ -58,7 +58,7 @@ class ResourceType {
      */
     public $max_amount = 500;
 
-	public static $all;
+	protected static $all;
 	
 	public static function get($id) {
 		if (isset(ResourceType::$all[$id])) {
@@ -66,6 +66,14 @@ class ResourceType {
 		} else {
 			return false;
 		}
+	}
+
+	public static function getAll() {
+		return ResourceType::$all;
+	}
+
+	public static function clearAll() {
+		ResourceType::$all = [];
 	}
 	
 	public function __construct($data) {

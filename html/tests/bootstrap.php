@@ -87,9 +87,6 @@ if (class_exists("PHPUnit\Framework\TestCase")) {
     require_once TESTS_ROOT . "/FunctionalTestBase.php";
 }
 
-// Создаем тестовые таблицы БД
-DatabaseTestAdapter::createTestTables();
-
 // Очищаем данные, созданные в оригинальных классах, и инициализируем тестовые данные
 TestGameDataInitializer::clearAll();
 TestGameDataInitializer::initializeAll();

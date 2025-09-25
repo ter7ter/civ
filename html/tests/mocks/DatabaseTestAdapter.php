@@ -62,7 +62,15 @@ class DatabaseTestAdapter
         // Пересоздаем research_type таблицу
         try {
             $pdo->exec("DROP TABLE IF EXISTS research_type");
-            $pdo->exec("CREATE TABLE research_type (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, title VARCHAR(100) NOT NULL, cost INT DEFAULT 0, requirements TEXT, m_top INT DEFAULT 30, m_left INT DEFAULT 0, age INT DEFAULT 1, age_need TINYINT DEFAULT 1)");
+            $pdo->exec("CREATE TABLE research_type (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, title VARCHAR(100) NOT NULL, cost INT DEFAULT 0, m_top INT DEFAULT 30, m_left INT DEFAULT 0, age INT DEFAULT 1, age_need TINYINT DEFAULT 1)");
+        } catch (Exception $e) {
+            // Игнорируем ошибки
+        }
+
+        // Пересоздаем research_requirements таблицу
+        try {
+            $pdo->exec("DROP TABLE IF EXISTS research_requirements");
+            $pdo->exec("CREATE TABLE research_requirements (research_type_id INT NOT NULL, required_research_type_id INT NOT NULL, PRIMARY KEY (research_type_id, required_research_type_id))");
         } catch (Exception $e) {
             // Игнорируем ошибки
         }
@@ -118,7 +126,8 @@ class DatabaseTestAdapter
             "event" => "CREATE TABLE IF NOT EXISTS event (id $id_column, type VARCHAR(50) NOT NULL, user_id INT NOT NULL, object VARCHAR(255) DEFAULT NULL, source INT DEFAULT NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
             "resource_type" => "CREATE TABLE IF NOT EXISTS resource_type (id $id_column, title VARCHAR(255) NOT NULL, type VARCHAR(50) NOT NULL)",
             "resource" => "CREATE TABLE IF NOT EXISTS resource (id $id_column, x INT NOT NULL, y INT NOT NULL, planet INT NOT NULL, type VARCHAR(50) NOT NULL, amount INT DEFAULT 0)",
-            "research_type" => "CREATE TABLE IF NOT EXISTS research_type (id $id_column, title VARCHAR(100) NOT NULL, cost INT DEFAULT 0, requirements TEXT, m_top INT DEFAULT 30, m_left INT DEFAULT 0, age INT DEFAULT 1, age_need TINYINT DEFAULT 1)",
+            "research_type" => "CREATE TABLE IF NOT EXISTS research_type (id $id_column, title VARCHAR(100) NOT NULL, cost INT DEFAULT 0, m_top INT DEFAULT 30, m_left INT DEFAULT 0, age INT DEFAULT 1, age_need TINYINT DEFAULT 1)",
+            "research_requirements" => "CREATE TABLE IF NOT EXISTS research_requirements (research_type_id INT NOT NULL, required_research_type_id INT NOT NULL, PRIMARY KEY (research_type_id, required_research_type_id))",
             "building_type" => "CREATE TABLE IF NOT EXISTS building_type (id $id_column, title VARCHAR(100) NOT NULL, cost INT DEFAULT 0, req_research TEXT, req_resources TEXT, need_coastal TINYINT DEFAULT 0, culture INT DEFAULT 0, upkeep INT DEFAULT 0, need_research TEXT, culture_bonus INT DEFAULT 0, research_bonus INT DEFAULT 0, money_bonus INT DEFAULT 0, description TEXT)",
             "building" => "CREATE TABLE IF NOT EXISTS building (id $id_column, type INT NOT NULL, city_id INT NOT NULL)",
             "mission_type" =>

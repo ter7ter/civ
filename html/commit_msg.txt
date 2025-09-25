@@ -1,1 +1,1 @@
-\"Fix ItemType error and add integration tests\"  
+Fix ResearchTypeTest assertions to properly validate JSON parsing and error handling

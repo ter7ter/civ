@@ -6,8 +6,11 @@ class ResearchType {
 	//Стоимость исследования
 	public $cost;
 	
-	//Требуемые исследования
-	public $requirements = [];
+	/**
+	 * Требуемые исследования
+	 * @var ResearchType[]
+	 */
+//	public $requirements = [];
 	
 	//Визуальное расположение на карте исследований
 	public $m_top = 30;
@@ -25,7 +28,7 @@ class ResearchType {
     /**
      * @var ResearchType[]
      */
-	public static $all = [];
+	protected static $all = [];
 	
 	public static function get($id) {
 		if (isset(ResearchType::$all[$id])) {
@@ -37,7 +40,9 @@ class ResearchType {
 				"row",
 			);
 			if ($data) {
-				return new ResearchType($data);
+				$rt = new ResearchType($data);
+				ResearchType::$all[$id] = $rt;
+				return $rt;
 			} else {
 				return false;
 			}
@@ -48,7 +53,8 @@ class ResearchType {
 		$data = MyDB::query("SELECT * FROM research_type ORDER BY id");
 		$result = [];
 		foreach ($data as $row) {
-			$result[] = new ResearchType($row);
+			$rt = new ResearchType($row);
+			$result[] = $rt;
 		}
 		return $result;
 	}
@@ -83,20 +89,7 @@ class ResearchType {
 			}
 		}
 
-		// Обрабатываем JSON поля
-		if (isset($data['requirements'])) {
-			if (is_string($data['requirements'])) {
-				$decoded = json_decode($data['requirements'], true);
-				$this->requirements = $decoded !== null ? $decoded : [];
-			} else {
-				$this->requirements = $data['requirements'];
-			}
-			$resolvedRequirements = [];
-			foreach ($this->requirements as $resId) {
-				$resolvedRequirements[$resId] = ResearchType::get($resId);
-			}
-			$this->requirements = $resolvedRequirements;
-		}
+        $this->loadRequirements();
 
 		if (isset($data['id'])) {
 			ResearchType::$all[$this->id] = $this;
@@ -127,7 +120,7 @@ class ResearchType {
      * @param $age int
      * @return array
      */
-	public static function get_need_age_ids($age) {
+    public static function get_need_age_ids($age) {
 	    $result = [];
 	    foreach (ResearchType::$all as $research) {
 	        if ($research->age == $age && $research->age_need) {
@@ -137,11 +130,18 @@ class ResearchType {
 	    return $result;
     }
 
+    public function loadRequirements() {
+        $this->requirements = [];
+        $data = MyDB::query("SELECT required_research_type_id FROM research_requirements WHERE research_type_id = :id ORDER BY required_research_type_id", ["id" => $this->id]);
+        foreach ($data as $row) {
+            $this->requirements[] = ResearchType::get($row['required_research_type_id']);
+        }
+    }
+
 	public function save() {
 		$data = [
 			'title' => $this->title,
 			'cost' => $this->cost,
-			'requirements' => json_encode(array_keys($this->requirements)),
 			'm_top' => $this->m_top,
 			'm_left' => $this->m_left,
 			'age' => $this->age,
@@ -152,6 +152,11 @@ class ResearchType {
 		} else {
 			$this->id = (int)MyDB::insert('research_type', $data);
 		}
+		// Update requirements in join table
+		MyDB::query("DELETE FROM research_requirements WHERE research_type_id = :id", ["id" => $this->id]);
+		foreach ($this->requirements as $req) {
+			MyDB::query("INSERT INTO research_requirements (research_type_id, required_research_type_id) VALUES (:rid, :rreq)", ["rid" => $this->id, "rreq" => $req->id]);
+		}
 		ResearchType::$all[$this->id] = $this;
 	}
 
@@ -159,6 +164,20 @@ class ResearchType {
 		if (isset($this->id)) {
 			MyDB::query("DELETE FROM research_type WHERE id = :id", ["id" => $this->id]);
 			unset(ResearchType::$all[$this->id]);
+		}
+	}
+
+	public static function clearAll() {
+		ResearchType::$all = [];
+	}
+
+	public static function getAllCached() {
+		return ResearchType::$all;
+	}
+
+	public function addRequirement($researchType) {
+		if (!in_array($researchType, $this->requirements, true)) {
+			$this->requirements[] = $researchType;
 		}
 	}
 }

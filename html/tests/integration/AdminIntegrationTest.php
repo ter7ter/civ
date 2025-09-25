@@ -63,7 +63,7 @@ class AdminIntegrationTest extends FunctionalTestBase
         $researchType = new ResearchType([]);
         $researchType->title = "Integration Test Research";
         $researchType->cost = 150;
-        $researchType->requirements = [1, 2];
+        $researchType->requirements = [ResearchType::get(1), ResearchType::get(2)];
         $researchType->m_top = 100;
         $researchType->m_left = 200;
         $researchType->age = 1;
@@ -78,7 +78,7 @@ class AdminIntegrationTest extends FunctionalTestBase
         $retrieved = ResearchType::get($researchType->id);
         $this->assertNotNull($retrieved);
         $this->assertEquals("Integration Test Research", $retrieved->title);
-        $this->assertEquals([1, 2], $retrieved->requirements);
+        $this->assertEquals([1, 2], array_map(fn($r) => $r->id, $retrieved->requirements));
         $this->assertEquals(100, $retrieved->m_top);
         $this->assertEquals(200, $retrieved->m_left);
         $this->assertEquals(1, $retrieved->age);

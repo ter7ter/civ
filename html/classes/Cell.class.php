@@ -376,7 +376,7 @@ class Cell
                     "', NULL, 0, 'none', 'none')";
 
                 // Генерируем ресурсы
-                foreach (ResourceType::$all as $resource_type) {
+                foreach (ResourceType::getAll() as $resource_type) {
                     if (in_array($cell_type, $resource_type->cell_types)) {
                         if (
                             mt_rand(0, 10000) <

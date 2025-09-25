@@ -33,6 +33,17 @@ if ($action == 'save') {
             $researchType->title = trim($_POST['title']);
             $researchType->cost = (int)($_POST['cost'] ?? 0);
             $researchType->requirements = isset($_POST['requirements']) ? json_decode($_POST['requirements'], true) ?: [] : [];
+            // Convert to objects
+            $reqObjs = [];
+            foreach ($researchType->requirements as $reqId) {
+                if ($reqId && is_numeric($reqId)) {
+                    $obj = ResearchType::get($reqId);
+                    if ($obj) {
+                        $reqObjs[] = $obj;
+                    }
+                }
+            }
+            $researchType->requirements = $reqObjs;
             $researchType->m_top = (int)($_POST['m_top'] ?? 30);
             $researchType->m_left = (int)($_POST['m_left'] ?? 0);
             $researchType->age = (int)($_POST['age'] ?? 1);

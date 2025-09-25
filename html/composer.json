@@ -1,6 +1,7 @@
 {
     "require-dev": {
-        "phpunit/phpunit": "^9.0"
+        "phpunit/phpunit": "^9.0",
+        "brianium/paratest": "^6.11"
     },
     "name": "local/game-project",
     "type": "project"

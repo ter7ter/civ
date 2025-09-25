@@ -448,7 +448,9 @@ class TestGameDataInitializer
      */
     public static function initializeBuildingTypes(): void
     {
-        if (!empty(BuildingType::$all)) {
+        // Проверяем, есть ли уже данные в БД
+        $existing = MyDB::query("SELECT COUNT(*) FROM building_type", [], "elem");
+        if ($existing > 0) {
             return; // Уже инициализированы
         }
 
@@ -458,6 +460,15 @@ class TestGameDataInitializer
                 "title" => "бараки",
                 "cost" => 30,
                 "upkeep" => 1,
+                "req_research" => [],
+                "req_resources" => [],
+                "need_coastal" => false,
+                "culture" => 0,
+                "culture_bonus" => 0,
+                "research_bonus" => 0,
+                "money_bonus" => 0,
+                "need_research" => [],
+                "description" => "Базовое здание для размещения юнитов",
             ],
             [
                 "id" => 2,
@@ -465,6 +476,14 @@ class TestGameDataInitializer
                 "cost" => 30,
                 "upkeep" => 1,
                 "req_research" => [5], // Гончарное дело
+                "req_resources" => [],
+                "need_coastal" => false,
+                "culture" => 0,
+                "culture_bonus" => 0,
+                "research_bonus" => 0,
+                "money_bonus" => 0,
+                "need_research" => [],
+                "description" => "Увеличивает производство еды",
             ],
             [
                 "id" => 3,
@@ -473,6 +492,13 @@ class TestGameDataInitializer
                 "culture" => 2,
                 "upkeep" => 1,
                 "req_research" => [6], // Мистицизм
+                "req_resources" => [],
+                "need_coastal" => false,
+                "culture_bonus" => 0,
+                "research_bonus" => 0,
+                "money_bonus" => 0,
+                "need_research" => [],
+                "description" => "Увеличивает культуру и счастье",
             ],
             [
                 "id" => 4,
@@ -481,24 +507,55 @@ class TestGameDataInitializer
                 "culture" => 3,
                 "upkeep" => 1,
                 "req_research" => [15], // Литература
+                "req_resources" => [],
+                "need_coastal" => false,
+                "culture_bonus" => 0,
+                "research_bonus" => 50,
+                "money_bonus" => 0,
+                "need_research" => [],
+                "description" => "Увеличивает производство науки",
             ],
             [
                 "id" => 5,
                 "title" => "стены",
                 "cost" => 30,
                 "req_research" => [12], // Строительство
+                "req_resources" => [],
+                "need_coastal" => false,
+                "culture" => 0,
+                "culture_bonus" => 0,
+                "research_bonus" => 0,
+                "money_bonus" => 0,
+                "need_research" => [],
+                "description" => "Защищает город",
             ],
             [
                 "id" => 6,
                 "title" => "рынок",
                 "cost" => 50,
                 "req_research" => [19], // Деньги
+                "req_resources" => [],
+                "need_coastal" => false,
+                "culture" => 0,
+                "culture_bonus" => 0,
+                "research_bonus" => 0,
+                "money_bonus" => 50,
+                "need_research" => [],
+                "description" => "Увеличивает производство золота",
             ],
             [
                 "id" => 7,
                 "title" => "суд",
                 "cost" => 60,
                 "req_research" => [13], // Свод законов
+                "req_resources" => [],
+                "need_coastal" => false,
+                "culture" => 0,
+                "culture_bonus" => 0,
+                "research_bonus" => 0,
+                "money_bonus" => 0,
+                "need_research" => [],
+                "description" => "Увеличивает довольство граждан",
             ],
             [
                 "id" => 8,
@@ -506,6 +563,14 @@ class TestGameDataInitializer
                 "cost" => 60,
                 "upkeep" => 1,
                 "req_research" => [16], // Создание карт
+                "req_resources" => [],
+                "need_coastal" => true,
+                "culture" => 0,
+                "culture_bonus" => 0,
+                "research_bonus" => 0,
+                "money_bonus" => 0,
+                "need_research" => [],
+                "description" => "Позволяет строить морские юниты",
             ],
             [
                 "id" => 9,
@@ -513,6 +578,14 @@ class TestGameDataInitializer
                 "cost" => 80,
                 "upkeep" => 1,
                 "req_research" => [18], // Конструкции
+                "req_resources" => [],
+                "need_coastal" => false,
+                "culture" => 0,
+                "culture_bonus" => 0,
+                "research_bonus" => 0,
+                "money_bonus" => 0,
+                "need_research" => [],
+                "description" => "Увеличивает рост населения",
             ],
             [
                 "id" => 10,
@@ -520,11 +593,20 @@ class TestGameDataInitializer
                 "cost" => 80,
                 "upkeep" => 2,
                 "req_research" => [18], // Конструкции
+                "req_resources" => [],
+                "need_coastal" => false,
+                "culture" => 0,
+                "culture_bonus" => 0,
+                "research_bonus" => 0,
+                "money_bonus" => 0,
+                "need_research" => [],
+                "description" => "Увеличивает довольство граждан",
             ],
         ];
 
         foreach ($buildingTypes as $type) {
-            new BuildingType($type);
+            $buildingType = new BuildingType($type);
+            $buildingType->save();
         }
     }
 
@@ -533,7 +615,9 @@ class TestGameDataInitializer
      */
     public static function initializeUnitTypes(): void
     {
-        if (!empty(UnitType::$all)) {
+        // Проверяем, есть ли уже данные в БД
+        $existing = MyDB::query("SELECT COUNT(*) FROM unit_type", [], "elem");
+        if ($existing > 0) {
             return; // Уже инициализированы
         }
 
@@ -550,6 +634,8 @@ class TestGameDataInitializer
                 "can_found_city" => true,
                 "need_research" => [],
                 "description" => "Основывает новые города",
+                "missions" => ["move_to", "build_city"],
+                "can_move" => ["plains" => 1, "plains2" => 1, "forest" => 1, "hills" => 1, "mountains" => 2, "desert" => 1, "city" => 1],
             ],
             [
                 "id" => 2,
@@ -563,6 +649,8 @@ class TestGameDataInitializer
                 "can_found_city" => false,
                 "need_research" => [],
                 "description" => "Базовый боевой юнит",
+                "missions" => ["move_to"],
+                "can_move" => ["plains" => 1, "plains2" => 1, "forest" => 1, "hills" => 1, "mountains" => 2, "desert" => 1, "city" => 1],
             ],
             [
                 "id" => 3,
@@ -576,6 +664,8 @@ class TestGameDataInitializer
                 "can_found_city" => false,
                 "need_research" => [2], // Бронзовое дело
                 "description" => "Воин с копьем",
+                "missions" => ["move_to"],
+                "can_move" => ["plains" => 1, "plains2" => 1, "forest" => 1, "hills" => 1, "mountains" => 2, "desert" => 1, "city" => 1],
             ],
             [
                 "id" => 4,
@@ -589,6 +679,8 @@ class TestGameDataInitializer
                 "can_found_city" => false,
                 "need_research" => [3], // Животноводство
                 "description" => "Дальнобойный боевой юнит",
+                "missions" => ["move_to"],
+                "can_move" => ["plains" => 1, "plains2" => 1, "forest" => 1, "hills" => 1, "mountains" => 2, "desert" => 1, "city" => 1],
             ],
             [
                 "id" => 5,
@@ -603,11 +695,14 @@ class TestGameDataInitializer
                 "can_build" => true,
                 "need_research" => [],
                 "description" => "Строит улучшения на клетках",
+                "missions" => ["move_to", "build_road", "mine", "irrigation"],
+                "can_move" => ["plains" => 1, "plains2" => 1, "forest" => 1, "hills" => 1, "mountains" => 2, "desert" => 1, "city" => 1],
             ],
         ];
 
         foreach ($unitTypes as $type) {
-            new UnitType($type);
+            $unitType = new UnitType($type);
+            $unitType->save();
         }
     }
 

@@ -14,6 +14,8 @@ if (isset($_REQUEST['page'])) {
 
 <div id="admin_menu" style="clear: both;">
 <a href="index.php?page=production">ProductionType</a>
+<a href="index.php?page=unit_types">Unit Types</a>
+<a href="index.php?page=building_types">Building Types</a>
 </div>
 
 <div>

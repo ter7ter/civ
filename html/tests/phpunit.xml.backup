@@ -48,21 +48,20 @@
     <php>
         <!-- Переменные окружения для тестов -->
         <env name="APP_ENV" value="testing"/>
-        <env name="DB_CONNECTION" value="mysql"/>
-        <!-- Для ParaTest используем уникальную БД для каждого процесса -->
-        <env name="DB_DATABASE" value="test_db" force="true"/>
-        <env name="TEST_TOKEN" value="" force="true"/>
+        <env name="DB_CONNECTION" value="sqlite"/>
+        <env name="DB_DATABASE" value=":memory:"/>
 
         <!-- Константы для тестового окружения -->
         <const name="TESTING" value="true"/>
         <const name="TEST_DB_HOST" value="localhost"/>
-        <const name="TEST_DB_USER" value="root"/>
-        <const name="TEST_DB_PASS" value=""/>
+        <const name="TEST_DB_USER" value="test_user"/>
+        <const name="TEST_DB_PASS" value="test_pass"/>
         <const name="TEST_DB_NAME" value="test_db"/>
         <const name="TEST_DB_PORT" value="3306"/>
     </php>
 
     <extensions>
-        <!-- ParaTest extension removed - using direct command -->
+        <!-- Параллельное выполнение тестов для повышения производительности -->
+        <extension class="ParaTest\WrapperRunner"/>
     </extensions>
 </phpunit>

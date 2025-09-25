@@ -7,6 +7,7 @@ class MapActionsIntegrationTest extends TestBase
 {
     protected function setUp(): void
     {
+        DatabaseTestAdapter::resetTestDatabase();
         parent::setUp();
         $this->clearRequest();
         $this->clearSession();

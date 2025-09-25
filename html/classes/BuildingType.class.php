@@ -43,7 +43,63 @@ class BuildingType
 
     public static function get($id)
     {
-        return isset(BuildingType::$all[$id]) ? BuildingType::$all[$id] : false;
+        $id = (int)$id;
+        if (isset(BuildingType::$all[$id])) {
+            return BuildingType::$all[$id];
+        } else {
+            $data = MyDB::query(
+                "SELECT * FROM building_type WHERE id = :id",
+                ["id" => $id],
+                "row",
+            );
+            if ($data) {
+                return new BuildingType($data);
+            } else {
+                return false;
+            }
+        }
+    }
+
+    public static function getAll()
+    {
+        $data = MyDB::query("SELECT * FROM building_type ORDER BY id");
+        $result = [];
+        foreach ($data as $row) {
+            $result[] = new BuildingType($row);
+        }
+        return $result;
+    }
+
+    public function save()
+    {
+        $data = [
+            'title' => $this->title,
+            'cost' => $this->cost,
+            'req_research' => json_encode($this->req_research),
+            'req_resources' => json_encode($this->req_resources),
+            'need_coastal' => (int)$this->need_coastal,
+            'culture' => $this->culture,
+            'upkeep' => $this->upkeep,
+            'need_research' => json_encode($this->need_research),
+            'culture_bonus' => $this->culture_bonus,
+            'research_bonus' => $this->research_bonus,
+            'money_bonus' => $this->money_bonus,
+            'description' => $this->description,
+        ];
+        if (isset($this->id)) {
+            MyDB::update('building_type', $data, $this->id);
+        } else {
+            $this->id = MyDB::insert('building_type', $data);
+            BuildingType::$all[$this->id] = $this;
+        }
+    }
+
+    public function delete()
+    {
+        if (isset($this->id)) {
+            MyDB::query("DELETE FROM building_type WHERE id = :id", ["id" => $this->id]);
+            unset(BuildingType::$all[$this->id]);
+        }
     }
 
     public function __construct($data)
@@ -53,12 +109,9 @@ class BuildingType
             "id",
             "title",
             "cost",
-            "req_research",
-            "req_resources",
             "need_coastal",
             "culture",
             "upkeep",
-            "need_research",
             "culture_bonus",
             "research_bonus",
             "money_bonus",
@@ -67,11 +120,34 @@ class BuildingType
 
         foreach ($data as $field => $value) {
             if (in_array($field, $allowedProperties)) {
-                $this->$field = $value;
+                if ($field === 'id') {
+                    $this->$field = (int)$value;
+                } else {
+                    $this->$field = $value;
+                }
             }
         }
 
-        BuildingType::$all[$data["id"]] = $this;
+        // Обрабатываем JSON поля
+        $jsonFields = [
+            "req_research",
+            "req_resources",
+            "need_research",
+        ];
+
+        foreach ($jsonFields as $field) {
+            if (isset($data[$field])) {
+                if (is_string($data[$field])) {
+                    $this->$field = json_decode($data[$field], true);
+                } else {
+                    $this->$field = $data[$field];
+                }
+            }
+        }
+
+        if (isset($data["id"])) {
+            BuildingType::$all[$data["id"]] = $this;
+        }
     }
 
     function get_title()
@@ -114,85 +190,3 @@ class BuildingType
         }
     }
 }
-
-new BuildingType(["id" => 1, "title" => "бараки", "upkeep" => 1, "cost" => 30]);
-new BuildingType([
-    "id" => 2,
-    "title" => "амбар",
-    "cost" => 30,
-    "upkeep" => 1,
-    "req_research" => [
-        ResearchType::get(5), //Гончарное дело
-    ],
-]);
-new BuildingType([
-    "id" => 3,
-    "title" => "храм",
-    "cost" => 30,
-    "culture" => 2,
-    "upkeep" => 1,
-    "req_research" => [
-        ResearchType::get(6), //Мистицизм
-    ],
-]);
-new BuildingType([
-    "id" => 4,
-    "title" => "библиотека",
-    "cost" => 50,
-    "culture" => 3,
-    "upkeep" => 1,
-    "req_research" => [
-        ResearchType::get(15), //Литература
-    ],
-]);
-new BuildingType([
-    "id" => 5,
-    "title" => "стены",
-    "cost" => 30,
-    "req_research" => [
-        ResearchType::get(12), //Строительство
-    ],
-]);
-new BuildingType([
-    "id" => 6,
-    "title" => "рынок",
-    "cost" => 50,
-    "req_research" => [
-        ResearchType::get(19), //Деньги
-    ],
-]);
-new BuildingType([
-    "id" => 7,
-    "title" => "суд",
-    "cost" => 60,
-    "req_research" => [
-        ResearchType::get(13), //Свод законов
-    ],
-]);
-new BuildingType([
-    "id" => 8,
-    "title" => "гавань",
-    "cost" => 60,
-    "upkeep" => 1,
-    "req_research" => [
-        ResearchType::get(16), //Создание карт
-    ],
-]);
-new BuildingType([
-    "id" => 9,
-    "title" => "акведук",
-    "cost" => 80,
-    "upkeep" => 1,
-    "req_research" => [
-        ResearchType::get(18), //Конструкции
-    ],
-]);
-new BuildingType([
-    "id" => 10,
-    "title" => "колизей",
-    "cost" => 80,
-    "upkeep" => 2,
-    "req_research" => [
-        ResearchType::get(18), //Конструкции
-    ],
-]);

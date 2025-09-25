@@ -142,6 +142,12 @@ class City
     protected static $_all = [];
 
     /**
+     * Идентификатор владельца города
+     * @var int
+     */
+    public $user_id;
+
+    /**
      * Владелец города
      * @var User
      */
@@ -280,6 +286,7 @@ class City
             throw new Exception("user_id is required for City constructor");
         }
 
+        $this->user_id = $data["user_id"];
         $this->user = User::get($data["user_id"]);
         if ($this->user === null) {
             throw new Exception(

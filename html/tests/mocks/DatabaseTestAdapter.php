@@ -37,6 +37,30 @@ class DatabaseTestAdapter
     }
 
     /**
+     * Обновление тестовых таблиц
+     */
+    public static function updateTestTables()
+    {
+        $pdo = MyDB::get();
+
+        // Пересоздаем unit_type таблицу
+        try {
+            $pdo->exec("DROP TABLE IF EXISTS unit_type");
+            $pdo->exec("CREATE TABLE unit_type (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, title VARCHAR(100) NOT NULL, points INT DEFAULT 1, cost INT DEFAULT 0, population_cost INT DEFAULT 0, type ENUM('land','water','air') DEFAULT 'land', attack INT DEFAULT 0, defence INT DEFAULT 0, health INT DEFAULT 1, movement INT DEFAULT 1, upkeep INT DEFAULT 0, can_found_city TINYINT DEFAULT 0, can_build TINYINT DEFAULT 0, need_research TEXT, description TEXT, mission_points TEXT, age INT DEFAULT 1, missions TEXT, req_research TEXT, req_resources TEXT, can_move TEXT)");
+        } catch (Exception $e) {
+            // Игнорируем ошибки
+        }
+
+        // Пересоздаем building_type таблицу
+        try {
+            $pdo->exec("DROP TABLE IF EXISTS building_type");
+            $pdo->exec("CREATE TABLE building_type (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, title VARCHAR(100) NOT NULL, cost INT DEFAULT 0, req_research TEXT, req_resources TEXT, need_coastal TINYINT DEFAULT 0, culture INT DEFAULT 0, upkeep INT DEFAULT 0, need_research TEXT, culture_bonus INT DEFAULT 0, research_bonus INT DEFAULT 0, money_bonus INT DEFAULT 0, description TEXT)");
+        } catch (Exception $e) {
+            // Игнорируем ошибки
+        }
+    }
+
+    /**
      * Создание тестовых таблиц
      */
     public static function createTestTables()
@@ -61,7 +85,9 @@ class DatabaseTestAdapter
         try {
             $result = $pdo->query("SHOW TABLES LIKE 'game'");
             if ($result && $result->rowCount() > 0) {
-                return; // Таблицы уже созданы
+                // Таблицы существуют, но могут быть устаревшими. Обновляем unit_type и building_type
+                self::updateTestTables();
+                return;
             }
         } catch (Exception $e) {
             // Продолжаем создание таблиц
@@ -73,7 +99,7 @@ class DatabaseTestAdapter
             "planet" => "CREATE TABLE IF NOT EXISTS planet (id $id_column, name VARCHAR(255) NOT NULL, game_id INT NOT NULL)",
             "cell" =>
                 "CREATE TABLE IF NOT EXISTS cell (x INT NOT NULL, y INT NOT NULL, planet INT NOT NULL, type VARCHAR(50) DEFAULT 'plains', owner INT DEFAULT NULL, owner_culture INT DEFAULT 0, road VARCHAR(10) DEFAULT 'none', improvement VARCHAR(20) DEFAULT 'none', PRIMARY KEY (x, y, planet))",
-            "unit_type" => "CREATE TABLE IF NOT EXISTS unit_type (id $id_column, title VARCHAR(255) NOT NULL, points INT DEFAULT 2, mission_points INT DEFAULT 2)",
+            "unit_type" => "CREATE TABLE IF NOT EXISTS unit_type (id $id_column, title VARCHAR(100) NOT NULL, points INT DEFAULT 1, cost INT DEFAULT 0, population_cost INT DEFAULT 0, type ENUM('land','water','air') DEFAULT 'land', attack INT DEFAULT 0, defence INT DEFAULT 0, health INT DEFAULT 1, movement INT DEFAULT 1, upkeep INT DEFAULT 0, can_found_city TINYINT DEFAULT 0, can_build TINYINT DEFAULT 0, need_research TEXT, description TEXT, mission_points TEXT, age INT DEFAULT 1, missions TEXT, req_research TEXT, req_resources TEXT, can_move TEXT)",
             "unit" => "CREATE TABLE IF NOT EXISTS unit (id INT $unsigned $autoIncrement PRIMARY KEY, user_id INT $unsigned NOT NULL, type INT $unsigned NOT NULL, x INT NOT NULL, y INT NOT NULL, planet INT $unsigned NOT NULL, health INT NOT NULL, health_max INT NOT NULL DEFAULT 3, points DECIMAL(10,2) NOT NULL, mission_points INT NOT NULL DEFAULT 0, mission VARCHAR(50) DEFAULT NULL, auto VARCHAR(20) DEFAULT 'none')",
             "city" => "CREATE TABLE IF NOT EXISTS city (id $id_column, title VARCHAR(255) NOT NULL, x INT NOT NULL, y INT NOT NULL, user_id INT NOT NULL, planet INT NOT NULL, population INT DEFAULT 1, pmoney INT DEFAULT 0, presearch INT DEFAULT 0, resource_group INT DEFAULT NULL, eat INT DEFAULT 0, eat_up INT DEFAULT 20, culture INT DEFAULT 0, culture_level INT DEFAULT 0, production INT DEFAULT NULL, production_type VARCHAR(20) DEFAULT 'unit', production_complete INT DEFAULT 0, people_dis INT DEFAULT 0, people_norm INT DEFAULT 1, people_happy INT DEFAULT 0, people_artist INT DEFAULT 0, is_coastal TINYINT DEFAULT 0, pwork INT DEFAULT 1, peat INT DEFAULT 2)",
             "city_people" =>
@@ -85,7 +111,7 @@ class DatabaseTestAdapter
             "resource_type" => "CREATE TABLE IF NOT EXISTS resource_type (id $id_column, title VARCHAR(255) NOT NULL, type VARCHAR(50) NOT NULL)",
             "resource" => "CREATE TABLE IF NOT EXISTS resource (id $id_column, x INT NOT NULL, y INT NOT NULL, planet INT NOT NULL, type VARCHAR(50) NOT NULL, amount INT DEFAULT 0)",
             "research_type" => "CREATE TABLE IF NOT EXISTS research_type (id $id_column, title VARCHAR(255) NOT NULL, age INT DEFAULT 1, cost INT DEFAULT 100)",
-            "building_type" => "CREATE TABLE IF NOT EXISTS building_type (id $id_column, title VARCHAR(255) NOT NULL, cost INT DEFAULT 50)",
+            "building_type" => "CREATE TABLE IF NOT EXISTS building_type (id $id_column, title VARCHAR(100) NOT NULL, cost INT DEFAULT 0, req_research TEXT, req_resources TEXT, need_coastal TINYINT DEFAULT 0, culture INT DEFAULT 0, upkeep INT DEFAULT 0, need_research TEXT, culture_bonus INT DEFAULT 0, research_bonus INT DEFAULT 0, money_bonus INT DEFAULT 0, description TEXT)",
             "building" => "CREATE TABLE IF NOT EXISTS building (id $id_column, type INT NOT NULL, city_id INT NOT NULL)",
             "mission_type" =>
                 "CREATE TABLE IF NOT EXISTS mission_type (id VARCHAR(50) PRIMARY KEY, title VARCHAR(255) NOT NULL)",

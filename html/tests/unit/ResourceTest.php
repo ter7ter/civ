@@ -15,7 +15,7 @@ class ResourceTest extends TestBase
         $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
 
         // Создаем ресурс через БД
-        MyDB::insert('resource', [
+        $resourceId = MyDB::insert('resource', [
             'x' => 5,
             'y' => 5,
             'planet' => $planetId,
@@ -23,9 +23,12 @@ class ResourceTest extends TestBase
             'amount' => 100,
         ]);
 
+        // Resource::clearCache(); // Нет такого метода
         $resource = Resource::get(5, 5, $planetId);
 
         $this->assertInstanceOf(Resource::class, $resource);
+        $this->assertIsInt($resource->id);
+        $this->assertGreaterThan(0, $resource->id);
         $this->assertEquals(5, $resource->x);
         $this->assertEquals(5, $resource->y);
         $this->assertEquals($planetId, $resource->planet);

@@ -5,6 +5,12 @@
  */
 class CreateGameTest extends FunctionalTestBase
 {
+    protected function setUp(): void
+    {
+        DatabaseTestAdapter::resetTestDatabase();
+        parent::setUp();
+    }
+
     /**
      * Тест 1.1: Создание базовой игры
      */

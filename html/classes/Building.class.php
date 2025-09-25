@@ -17,12 +17,21 @@ class Building
     private static $_all = [];
 
     /**
+     * Очищает кэш зданий
+     */
+    public static function clearCache()
+    {
+        Building::$_all = [];
+    }
+
+    /**
      * @param $id
      * @return Building
      * @throws Exception
      */
     public static function get($id)
     {
+        $id = (int)$id;
         if (isset(Building::$_all[$id])) {
             return Building::$_all[$id];
         } else {
@@ -37,7 +46,7 @@ class Building
 
     public function __construct($data)
     {
-        $this->id = isset($data["id"]) ? $data["id"] : null;
+        $this->id = isset($data["id"]) ? (int)$data["id"] : null;
         $this->type = BuildingType::get($data["type"]);
         $this->city = City::get($data["city_id"]);
         if ($this->id) {

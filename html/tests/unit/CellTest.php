@@ -392,7 +392,7 @@ class CellTest extends TestBase
         $this->createTestCell(['x' => 0, 'y' => 0, 'planet' => $planetId, 'type' => 'plains']);
 
         // Создаем юнит на клетке
-        $this->createTestUnit(['x' => 0, 'y' => 0, 'planet' => $planetId, 'user_id' => $userData['id']]);
+        $unitData = $this->createTestUnit(['x' => 0, 'y' => 0, 'planet' => $planetId, 'user_id' => $userData['id']]);
 
         Cell::clearCache();
         $cell = Cell::get(0, 0, $planetId);
@@ -401,6 +401,7 @@ class CellTest extends TestBase
         $this->assertIsArray($units);
         $this->assertCount(1, $units);
         $this->assertInstanceOf(Unit::class, $units[0]);
+        $this->assertEquals($unitData['id'], $units[0]->id);
     }
 
     /**

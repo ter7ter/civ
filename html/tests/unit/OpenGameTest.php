@@ -7,6 +7,7 @@ class OpenGameTest extends TestBase
 {
     protected function setUp(): void
     {
+        DatabaseTestAdapter::resetTestDatabase();
         parent::setUp();
         $this->clearRequest();
         $this->clearSession();
@@ -34,9 +35,13 @@ class OpenGameTest extends TestBase
             'uid' => $userFromGame2['id'] // пользователем из игры 2
         ]);
 
+        ob_start();
         $this->simulateGameOpening();
+        $output = ob_get_clean();
 
-        // Проверяем, что сессия НЕ установлена (пользователь из другой игры)
+        // Проверяем, что возвращена ошибка (пользователь из другой игры)
+        $this->assertEquals('user error', $output);
+        // Сессия не должна быть установлена
         $this->assertArrayNotHasKey('game_id', $_SESSION);
         $this->assertArrayNotHasKey('user_id', $_SESSION);
     }
@@ -110,6 +115,8 @@ class OpenGameTest extends TestBase
 
         $this->assertEquals($game['id'], $_SESSION['game_id']);
         $this->assertEquals($players[1]['id'], $_SESSION['user_id']);
+        $this->assertIsInt($_SESSION['game_id']);
+        $this->assertIsInt($_SESSION['user_id']);
 
         $this->clearSession(); // Очищаем сессию после теста
     }

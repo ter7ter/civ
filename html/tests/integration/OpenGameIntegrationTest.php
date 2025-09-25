@@ -7,6 +7,7 @@ class OpenGameIntegrationTest extends FunctionalTestBase
 {
     protected function setUp(): void
     {
+        DatabaseTestAdapter::resetTestDatabase();
         parent::setUp();
         $this->clearRequest();
         $this->clearSession();

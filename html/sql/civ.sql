@@ -30,9 +30,9 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `building`;
 CREATE TABLE IF NOT EXISTS `building` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `type` varchar(50) NOT NULL,
-  `city_id` int(10) UNSIGNED NOT NULL,
+  `city_id` int UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   KEY `city_id` (`city_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -46,12 +46,12 @@ CREATE TABLE IF NOT EXISTS `building` (
 
 DROP TABLE IF EXISTS `cell`;
 CREATE TABLE IF NOT EXISTS `cell` (
-  `x` int(5) UNSIGNED NOT NULL,
-  `y` int(5) UNSIGNED NOT NULL,
-  `planet` int(11) UNSIGNED NOT NULL DEFAULT '0',
+  `x` int UNSIGNED NOT NULL,
+  `y` int UNSIGNED NOT NULL,
+  `planet` int UNSIGNED NOT NULL DEFAULT '0',
   `type` enum('plains','plains2','forest','hills','mountains','desert','water1','water2','water3') NOT NULL,
-  `owner` int(10) UNSIGNED DEFAULT NULL,
-  `owner_culture` int(11) NOT NULL DEFAULT '0',
+  `owner` int UNSIGNED DEFAULT NULL,
+  `owner_culture` int NOT NULL DEFAULT '0',
   `road` enum('none','road','iron') NOT NULL DEFAULT 'none',
   `improvement` enum('none','mine','irrigation') NOT NULL DEFAULT 'none',
   PRIMARY KEY (`x`,`y`,`planet`) USING BTREE,
@@ -70,30 +70,30 @@ CREATE TABLE IF NOT EXISTS `cell` (
 
 DROP TABLE IF EXISTS `city`;
 CREATE TABLE IF NOT EXISTS `city` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int UNSIGNED NOT NULL,
   `title` varchar(40) NOT NULL,
-  `x` int(5) UNSIGNED NOT NULL,
-  `y` int(5) UNSIGNED NOT NULL,
-  `planet` int(10) UNSIGNED NOT NULL,
-  `population` int(3) UNSIGNED NOT NULL DEFAULT '1',
-  `people_dis` int(3) UNSIGNED NOT NULL DEFAULT '0',
-  `people_norm` int(3) UNSIGNED NOT NULL DEFAULT '1',
-  `people_happy` int(3) UNSIGNED NOT NULL DEFAULT '0',
-  `people_artist` int(3) NOT NULL DEFAULT '0',
-  `eat` int(11) NOT NULL DEFAULT '0',
-  `eat_up` int(11) NOT NULL DEFAULT '20',
-  `culture` int(11) NOT NULL DEFAULT '0',
-  `culture_level` int(11) NOT NULL DEFAULT '0',
-  `production` int(5) DEFAULT NULL,
+  `x` int UNSIGNED NOT NULL,
+  `y` int UNSIGNED NOT NULL,
+  `planet` int UNSIGNED NOT NULL,
+  `population` int UNSIGNED NOT NULL DEFAULT '1',
+  `people_dis` int UNSIGNED NOT NULL DEFAULT '0',
+  `people_norm` int UNSIGNED NOT NULL DEFAULT '1',
+  `people_happy` int UNSIGNED NOT NULL DEFAULT '0',
+  `people_artist` int NOT NULL DEFAULT '0',
+  `eat` int NOT NULL DEFAULT '0',
+  `eat_up` int NOT NULL DEFAULT '20',
+  `culture` int NOT NULL DEFAULT '0',
+  `culture_level` int NOT NULL DEFAULT '0',
+  `production` int DEFAULT NULL,
   `production_type` enum('unit','buil') NOT NULL,
-  `production_complete` int(10) UNSIGNED NOT NULL DEFAULT '0',
-  `pwork` int(5) UNSIGNED NOT NULL DEFAULT '1',
-  `peat` int(5) UNSIGNED NOT NULL DEFAULT '3',
-  `pmoney` int(5) NOT NULL DEFAULT '1',
-  `presearch` int(11) NOT NULL DEFAULT '0',
-  `is_coastal` tinyint(1) NOT NULL DEFAULT '0',
-  `resource_group` int(10) UNSIGNED DEFAULT NULL,
+  `production_complete` int UNSIGNED NOT NULL DEFAULT '0',
+  `pwork` int UNSIGNED NOT NULL DEFAULT '1',
+  `peat` int UNSIGNED NOT NULL DEFAULT '3',
+  `pmoney` int NOT NULL DEFAULT '1',
+  `presearch` int NOT NULL DEFAULT '0',
+  `is_coastal` tinyint NOT NULL DEFAULT '0',
+  `resource_group` int UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `x` (`x`,`y`,`planet`),
   KEY `user_id` (`user_id`)
@@ -108,10 +108,10 @@ CREATE TABLE IF NOT EXISTS `city` (
 
 DROP TABLE IF EXISTS `city_people`;
 CREATE TABLE IF NOT EXISTS `city_people` (
-  `x` int(5) UNSIGNED NOT NULL,
-  `y` int(5) UNSIGNED NOT NULL,
-  `planet` int(11) UNSIGNED NOT NULL,
-  `city_id` int(10) UNSIGNED NOT NULL,
+  `x` int UNSIGNED NOT NULL,
+  `y` int UNSIGNED NOT NULL,
+  `planet` int UNSIGNED NOT NULL,
+  `city_id` int UNSIGNED NOT NULL,
   PRIMARY KEY (`x`,`y`,`planet`) USING BTREE,
   KEY `city_id` (`city_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -125,11 +125,11 @@ CREATE TABLE IF NOT EXISTS `city_people` (
 
 DROP TABLE IF EXISTS `event`;
 CREATE TABLE IF NOT EXISTS `event` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int UNSIGNED NOT NULL,
   `type` enum('research','city_building','city_unit') NOT NULL,
-  `source` int(10) UNSIGNED DEFAULT NULL,
-  `object` int(10) UNSIGNED NOT NULL,
+  `source` int UNSIGNED DEFAULT NULL,
+  `object` int UNSIGNED NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
@@ -140,12 +140,12 @@ CREATE TABLE IF NOT EXISTS `event` (
 
 DROP TABLE IF EXISTS `game`;
 CREATE TABLE IF NOT EXISTS `game` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL,
-  `map_w` int(5) UNSIGNED NOT NULL,
-  `map_h` int(5) UNSIGNED NOT NULL,
+  `map_w` int UNSIGNED NOT NULL,
+  `map_h` int UNSIGNED NOT NULL,
   `turn_type` enum('concurrently','byturn','onewindow') NOT NULL,
-  `turn_num` int(11) NOT NULL DEFAULT '1',
+  `turn_num` int NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
@@ -155,10 +155,10 @@ CREATE TABLE IF NOT EXISTS `game` (
 
 DROP TABLE IF EXISTS `message`;
 CREATE TABLE IF NOT EXISTS `message` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL AUTO_INCREMENT,
   `type` enum('system','chat') NOT NULL,
-  `from_id` int(10) UNSIGNED DEFAULT NULL,
-  `to_id` int(10) UNSIGNED DEFAULT NULL,
+  `from_id` int UNSIGNED DEFAULT NULL,
+  `to_id` int UNSIGNED DEFAULT NULL,
   `text` varchar(2000) NOT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -176,11 +176,11 @@ CREATE TABLE IF NOT EXISTS `message` (
 
 DROP TABLE IF EXISTS `mission_order`;
 CREATE TABLE IF NOT EXISTS `mission_order` (
-  `unit_id` int(10) UNSIGNED NOT NULL,
-  `number` int(5) UNSIGNED NOT NULL,
+  `unit_id` int UNSIGNED NOT NULL,
+  `number` int UNSIGNED NOT NULL,
   `type` varchar(20) NOT NULL,
-  `target_x` int(5) UNSIGNED NOT NULL,
-  `target_y` int(5) UNSIGNED NOT NULL,
+  `target_x` int UNSIGNED NOT NULL,
+  `target_y` int UNSIGNED NOT NULL,
   PRIMARY KEY (`unit_id`,`number`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -193,9 +193,9 @@ CREATE TABLE IF NOT EXISTS `mission_order` (
 
 DROP TABLE IF EXISTS `research`;
 CREATE TABLE IF NOT EXISTS `research` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) UNSIGNED NOT NULL,
-  `type` int(10) UNSIGNED NOT NULL,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int UNSIGNED NOT NULL,
+  `type` int UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `user_id` (`user_id`,`type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8;
@@ -208,10 +208,10 @@ CREATE TABLE IF NOT EXISTS `research` (
 
 DROP TABLE IF EXISTS `resource`;
 CREATE TABLE IF NOT EXISTS `resource` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `x` int(5) NOT NULL,
-  `y` int(5) NOT NULL,
-  `planet` int(11) NOT NULL,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `x` int NOT NULL,
+  `y` int NOT NULL,
+  `planet` int NOT NULL,
   `amount` float UNSIGNED NOT NULL,
   `type` varchar(20) NOT NULL,
   PRIMARY KEY (`id`),
@@ -224,9 +224,9 @@ CREATE TABLE IF NOT EXISTS `resource` (
 
 DROP TABLE IF EXISTS `resource_group`;
 CREATE TABLE IF NOT EXISTS `resource_group` (
-  `group_id` int(11) UNSIGNED NOT NULL,
-  `user_id` int(10) UNSIGNED NOT NULL,
-  `resource_id` int(11) UNSIGNED NOT NULL,
+  `group_id` int UNSIGNED NOT NULL,
+  `user_id` int UNSIGNED NOT NULL,
+  `resource_id` int UNSIGNED NOT NULL,
   PRIMARY KEY (`group_id`,`user_id`,`resource_id`),
   KEY `resource_id` (`resource_id`),
   KEY `user_id` (`user_id`)
@@ -249,16 +249,16 @@ INSERT INTO `resource_group` (`group_id`, `user_id`, `resource_id`) VALUES
 
 DROP TABLE IF EXISTS `unit`;
 CREATE TABLE IF NOT EXISTS `unit` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) UNSIGNED NOT NULL,
-  `type` int(10) UNSIGNED NOT NULL,
-  `x` int(5) UNSIGNED NOT NULL,
-  `y` int(5) UNSIGNED NOT NULL,
-  `planet` int(10) UNSIGNED NOT NULL,
-  `health` int(10) UNSIGNED NOT NULL,
-  `health_max` int(11) NOT NULL DEFAULT '3',
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` int UNSIGNED NOT NULL,
+  `type` int UNSIGNED NOT NULL,
+  `x` int UNSIGNED NOT NULL,
+  `y` int UNSIGNED NOT NULL,
+  `planet` int UNSIGNED NOT NULL,
+  `health` int UNSIGNED NOT NULL,
+  `health_max` int NOT NULL DEFAULT '3',
   `points` float UNSIGNED NOT NULL,
-  `mission_points` int(10) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Сколько уже вложено очков в выполнение текущей миссии',
+  `mission_points` int UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Сколько уже вложено очков в выполнение текущей миссии',
   `mission` varchar(20) DEFAULT NULL,
   `auto` enum('none','work') NOT NULL DEFAULT 'none',
   PRIMARY KEY (`id`),
@@ -273,21 +273,21 @@ CREATE TABLE IF NOT EXISTS `unit` (
 
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `login` varchar(30) NOT NULL,
   `color` varchar(20) NOT NULL,
   `pass` varchar(30) NOT NULL,
-  `game` int(10) UNSIGNED NOT NULL,
-  `money` int(11) NOT NULL DEFAULT '0' COMMENT 'Общее число денег в наличии',
-  `income` int(11) NOT NULL DEFAULT '0',
-  `research_amount` int(11) NOT NULL COMMENT 'Сколько денег за ход идёт на науку',
-  `research_percent` int(2) UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Выставленный % на науку *10',
-  `process_research_type` int(10) UNSIGNED NOT NULL COMMENT 'Какое исследование сейчас ведётся',
-  `process_research_complete` int(10) UNSIGNED NOT NULL COMMENT 'Сколько едениц исследования уже завершено',
-  `process_research_turns` int(3) UNSIGNED NOT NULL COMMENT 'Сколько ходов уже идёт исследование',
-  `age` int(2) NOT NULL DEFAULT '1',
+  `game` int UNSIGNED NOT NULL,
+  `money` int NOT NULL DEFAULT '0' COMMENT 'Общее число денег в наличии',
+  `income` int NOT NULL DEFAULT '0',
+  `research_amount` int NOT NULL COMMENT 'Сколько денег за ход идёт на науку',
+  `research_percent` int UNSIGNED NOT NULL DEFAULT '0' COMMENT 'Выставленный % на науку *10',
+  `process_research_type` int UNSIGNED NOT NULL COMMENT 'Какое исследование сейчас ведётся',
+  `process_research_complete` int UNSIGNED NOT NULL COMMENT 'Сколько едениц исследования уже завершено',
+  `process_research_turns` int UNSIGNED NOT NULL COMMENT 'Сколько ходов уже идёт исследование',
+  `age` int NOT NULL DEFAULT '1',
   `turn_status` enum('play','end','wait') NOT NULL DEFAULT 'wait',
-  `turn_order` int(5) NOT NULL DEFAULT '0',
+  `turn_order` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
 

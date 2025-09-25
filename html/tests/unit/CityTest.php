@@ -2,6 +2,9 @@
 
 require_once __DIR__ . "/../bootstrap.php";
 
+/**
+ * @covers City
+ */
 class CityTest extends TestBase
 {
     protected function setUp(): void
@@ -15,13 +18,32 @@ class CityTest extends TestBase
         require_once PROJECT_ROOT . "/includes.php";
     }
 
-    public function testConstructor()
+    /**
+     * Быстро создает тестовые данные для города
+     * @param array $cityOverrides
+     * @return array [gameData, userData, planetId, cityData]
+     */
+    private function setUpTestCity(array $cityOverrides = [])
     {
         $gameData = $this->createTestGame();
         $userData = $this->createTestUser(["game" => $gameData["id"]]);
         $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
         $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        
+        $cityData = $this->createTestCity(array_merge([
+            "planet" => $planetId,
+            "user_id" => $userData["id"],
+            "x" => 10,
+            "y" => 10,
+        ], $cityOverrides));
+        return [$gameData, $userData, $planetId, $cityData];
+    }
+
+    /**
+     * @covers City::__construct
+     */
+    public function testConstructor()
+    {
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         $data = [
             'user_id' => $userData["id"],
             'planet' => $planetId,
@@ -33,221 +55,180 @@ class CityTest extends TestBase
         $this->assertEquals('Test City', $city->title);
         $this->assertEquals(10, $city->x);
         $this->assertEquals(10, $city->y);
+        $this->assertEquals($userData["id"], $city->user->id);
     }
 
+    /**
+     * @covers City::by_coords
+     */
     public function testByCoords()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         $city = City::by_coords(10, 10, $planetId);
         $this->assertInstanceOf(City::class, $city);
         $this->assertEquals($cityData["id"], $city->id);
     }
 
+    /**
+     * @covers City::get_title
+     */
     public function testGetTitle()
     {
-
-
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData["id"]);
-
         $this->assertEquals('Test City', $city->get_title());
     }
 
+    /**
+     * @covers City::get_culture_cells
+     */
     public function testGetCultureCells()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 3, 3, $planetId); // Create a 3x3 map
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 11, "y" => 11]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity([
+            'x' => 11,
+            'y' => 11
+        ]);
+        $this->createTestMapCells(10, 10, 3, 3, $planetId); // 3x3 карта
         City::clearCache();
         $city = City::get($cityData["id"]);
-
         $cells = $city->get_culture_cells();
         $this->assertIsArray($cells);
-        $this->assertCount(8, $cells); // 8 cells around the city
+        $this->assertCount(8, $cells); // 8 клеток вокруг города
     }
 
+    /**
+     * @covers City::get_possible_units
+     */
     public function testGetPossibleUnits()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData["id"]);
-
         $units = $city->get_possible_units();
         $this->assertIsArray($units);
         $this->assertGreaterThan(0, count($units));
     }
 
+    /**
+     * @covers City::calculate_eat
+     */
     public function testCalculateEat()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData["id"]);
-
-        $city->peat = 5; // Set some value
+        $city->peat = 5;
         $city->population = 2;
         $city->eat = 0;
-        $city->calculate(); // This will call calculate_eat implicitly
-
+        $city->calculate();
         $this->assertEquals(1, $city->eat); // 0 + 5 - (2 * 2) = 1
     }
 
+    /**
+     * @covers City::calculate_work
+     */
     public function testCalculateWork()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData["id"]);
-
-        $city->pwork = 5; // Set some value
-        $city->calculate(); // This will call calculate_work implicitly
-
-        $this->assertEquals(1, $city->pwork); // Should be reset to 1 by calculate_people
+        $city->pwork = 5;
+        $city->calculate();
+        $this->assertEquals(1, $city->pwork); // Должно сбрасываться до 1
     }
 
+    /**
+     * @covers City::calculate_money
+     */
     public function testCalculateMoney()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData["id"]);
-
-        $city->pmoney = 10; // Set some value
-        $city->calculate(); // This will call calculate_money implicitly
-
-        $this->assertEquals(1, $city->pmoney); // Should be reset to 1 by calculate_people
+        $city->pmoney = 10;
+        $city->calculate();
+        $this->assertEquals(1, $city->pmoney); // Должно сбрасываться до 1
     }
 
+    /**
+     * @covers City::calculate_research
+     */
     public function testCalculateResearch()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData["id"]);
-
-        $city->presearch = 5; // Set some value
-        $city->calculate(); // This will call calculate_people implicitly, which resets presearch to 0
-
-        $this->assertEquals(0, $city->presearch); // Should be reset to 0 by calculate_people
+        $city->presearch = 5;
+        $city->calculate();
+        $this->assertEquals(0, $city->presearch); // Должно сбрасываться до 0
     }
 
+    /**
+     * @covers City::calculate_culture
+     */
     public function testCalculateCulture()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData["id"]);
-
         $city->culture = 0;
         $city->culture_level = 0;
-        $city->calculate(); // This will call calculate_culture implicitly
-
-        $this->assertEquals(0, $city->culture); // Should remain 0 if no buildings affect it
-        $this->assertEquals(0, $city->culture_level); // Should remain 0 if no buildings affect it
+        $city->calculate();
+        $this->assertEquals(0, $city->culture);
+        $this->assertEquals(0, $city->culture_level);
     }
 
+    /**
+     * @covers City::add_people
+     */
     public function testAddPeople()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10, "population" => 1]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity(["population" => 1]);
         City::clearCache();
         $city = City::get($cityData["id"]);
-
         $city->add_people();
         $this->assertEquals(2, $city->population);
     }
 
+    /**
+     * @covers City::remove_people
+     */
     public function testRemovePeople()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10, "population" => 2]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity(["population" => 2]);
         City::clearCache();
         $city = City::get($cityData["id"]);
-
         $city->remove_people();
         $this->assertEquals(1, $city->population);
     }
 
+    /**
+     * @covers City::save
+     */
     public function testSave()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10, "title" => "Original Title"]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity(["title" => "Original Title"]);
         City::clearCache();
         $city = City::get($cityData["id"]);
         $city->title = "New Title";
         $city->save();
-
         City::clearCache();
         $updatedCity = City::get($cityData["id"]);
         $this->assertEquals("New Title", $updatedCity->title);
     }
 
+    /**
+     * @covers City::create_unit
+     */
     public function testCreateUnit()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData["id"]);
-
         TestGameDataInitializer::initializeUnitTypes();
         $unitType = UnitType::get(1); // Settler
         $unit = $city->create_unit($unitType);
-
         $this->assertInstanceOf(Unit::class, $unit);
         $this->assertEquals($unitType->id, $unit->type->id);
         $this->assertEquals($city->x, $unit->x);
@@ -255,86 +236,68 @@ class CityTest extends TestBase
         $this->assertEquals($city->user->id, $unit->user->id);
     }
 
+    /**
+     * @covers City::create_building
+     */
     public function testCreateBuilding()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData["id"]);
-
         TestGameDataInitializer::initializeBuildingTypes();
         $buildingType = BuildingType::get(1); // Granary
         $building = $city->create_building($buildingType);
-
         $this->assertInstanceOf(Building::class, $building);
         $this->assertEquals($buildingType->id, $building->type->id);
         $this->assertEquals($city->id, $building->city->id);
     }
 
+    /**
+     * @covers City::calculate_buildings
+     */
     public function testCalculateBuildings()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData["id"]);
-
         TestGameDataInitializer::initializeBuildingTypes();
         $buildingType = BuildingType::get(1); // Granary
         $city->create_building($buildingType);
-
         $originalPmoney = $city->pmoney;
         $city->calculate_buildings();
-
         $this->assertEquals($originalPmoney - $buildingType->upkeep, $city->pmoney);
     }
 
+    /**
+     * @covers City::check_mood
+     */
     public function testCheckMood()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData["id"]);
-
         $city->people_dis = 10;
         $city->people_happy = 0;
         $city->pwork = 5;
         $city->pmoney = 5;
         $city->check_mood();
-
         $this->assertEquals(0, $city->pwork);
         $this->assertEquals(0, $city->pmoney);
     }
 
+    /**
+     * @covers City::select_next_production
+     */
     public function testSelectNextProduction()
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(["planet" => $planetId, "user_id" => $userData["id"], "x" => 10, "y" => 10]);
-        
+        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData["id"]);
-
         TestGameDataInitializer::initializeUnitTypes();
         $unitType = UnitType::get(1); // Settler
         $city->production_type = "buil";
-        $city->production = 1; // Some building ID
-
+        $city->production = 1; // Некоторый building ID
         $city->select_next_production();
-
         $this->assertEquals("unit", $city->production_type);
         $this->assertEquals($unitType->id, $city->production);
     }

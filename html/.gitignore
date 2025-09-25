@@ -28,4 +28,4 @@ nginx_logs/
 
 # Database files
 *.sql
-!civ.sql
+!sql/civ.sql

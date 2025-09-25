@@ -97,6 +97,56 @@ class UnitType
         }
     }
 
+    public static function getAll()
+    {
+        $data = MyDB::query("SELECT * FROM unit_type ORDER BY id");
+        $result = [];
+        foreach ($data as $row) {
+            $result[] = new UnitType($row);
+        }
+        return $result;
+    }
+
+    public function save()
+    {
+        $data = [
+            'title' => $this->title,
+            'points' => $this->points,
+            'cost' => $this->cost,
+            'population_cost' => $this->population_cost,
+            'type' => $this->type,
+            'attack' => $this->attack,
+            'defence' => $this->defence,
+            'health' => $this->health,
+            'movement' => $this->movement,
+            'upkeep' => $this->upkeep,
+            'can_found_city' => (int)$this->can_found_city,
+            'can_build' => (int)$this->can_build,
+            'need_research' => json_encode($this->need_research),
+            'description' => $this->description,
+            'mission_points' => json_encode($this->mission_points),
+            'age' => $this->age,
+            'missions' => json_encode($this->missions),
+            'req_research' => json_encode($this->req_research),
+            'req_resources' => json_encode($this->req_resources),
+            'can_move' => json_encode($this->can_move),
+        ];
+        if (isset($this->id)) {
+            MyDB::update('unit_type', $data, $this->id);
+        } else {
+            $this->id = MyDB::insert('unit_type', $data);
+            UnitType::$all[$this->id] = $this;
+        }
+    }
+
+    public function delete()
+    {
+        if (isset($this->id)) {
+            MyDB::query("DELETE FROM unit_type WHERE id = :id", ["id" => $this->id]);
+            unset(UnitType::$all[$this->id]);
+        }
+    }
+
     public function __construct($data)
     {
         if (isset($data["id"])) {
@@ -117,9 +167,7 @@ class UnitType
             "upkeep",
             "can_found_city",
             "can_build",
-            "need_research",
             "description",
-            "mission_points",
             "age",
         ];
 
@@ -129,9 +177,24 @@ class UnitType
             }
         }
 
-        // Обрабатываем массив can_move отдельно
-        if (isset($data["can_move"]) && is_array($data["can_move"])) {
-            $this->can_move = $data["can_move"];
+        // Обрабатываем JSON поля
+        $jsonFields = [
+            "need_research",
+            "mission_points",
+            "missions",
+            "req_research",
+            "req_resources",
+            "can_move",
+        ];
+
+        foreach ($jsonFields as $field) {
+            if (isset($data[$field])) {
+                if (is_string($data[$field])) {
+                    $this->$field = json_decode($data[$field], true);
+                } else {
+                    $this->$field = $data[$field];
+                }
+            }
         }
 
         if (isset($data["id"])) {
@@ -145,101 +208,5 @@ class UnitType
     }
 }
 
-new UnitType([
-    "id" => 1,
-    "type" => "land",
-    "cost" => 20,
-    "population_cost" => 2,
-    "title" => "поселенец",
-    "points" => 1,
-    "attack" => 0,
-    "defence" => 0,
-    "missions" => ["move_to", "build_city"],
-]);
-new UnitType([
-    "id" => 2,
-    "type" => "land",
-    "cost" => 5,
-    "population_cost" => 0,
-    "title" => "воин",
-    "points" => 1,
-    "attack" => 1,
-    "defence" => 1,
-]);
-new UnitType([
-    "id" => 3,
-    "type" => "land",
-    "cost" => 10,
-    "population_cost" => 1,
-    "title" => "рабочий",
-    "points" => 1,
-    "attack" => 0,
-    "defence" => 0,
-    "missions" => ["move_to", "build_road", "mine", "irrigation"],
-]);
-new UnitType([
-    "id" => 4,
-    "type" => "land",
-    "cost" => 10,
-    "population_cost" => 0,
-    "title" => "лучник",
-    "points" => 1,
-    "attack" => 2,
-    "defence" => 1,
-    "req_research" => [
-        ResearchType::get(1), // Обработка бронзы
-    ],
-]);
-new UnitType([
-    "id" => 5,
-    "type" => "land",
-    "cost" => 10,
-    "population_cost" => 0,
-    "title" => "воин с копьём",
-    "points" => 1,
-    "attack" => 1,
-    "defence" => 2,
-]);
-new UnitType([
-    "id" => 6,
-    "type" => "land",
-    "cost" => 20,
-    "population_cost" => 0,
-    "title" => "воин с мечём",
-    "points" => 1,
-    "attack" => 3,
-    "defence" => 2,
-    "req_research" => [
-        ResearchType::get(7), // Обработка железа
-    ],
-    "req_resources" => [ResourceType::get("iron")],
-]);
-new UnitType([
-    "id" => 7,
-    "type" => "water",
-    "cost" => 20,
-    "population_cost" => 0,
-    "title" => "лодка",
-    "points" => 2,
-    "attack" => 0,
-    "defence" => 1,
-    "req_research" => [
-        ResearchType::get(3), // Алфавит
-    ],
-    "can_move" => ["water1" => 1, "water2" => 1, "water3" => 1, "city" => 1],
-]);
-new UnitType([
-    "id" => 8,
-    "type" => "water",
-    "cost" => 40,
-    "population_cost" => 0,
-    "title" => "галера",
-    "points" => 3,
-    "attack" => 1,
-    "defence" => 1,
-    "req_research" => [
-        ResearchType::get(16), // Создание карт
-    ],
-    "can_move" => ["water1" => 1, "water2" => 1, "water3" => 1, "city" => 1],
-]);
+
 ?>

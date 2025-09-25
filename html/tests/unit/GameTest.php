@@ -7,6 +7,12 @@ require_once __DIR__ . "/../bootstrap.php";
  */
 class GameTest extends TestBase
 {
+    protected function setUp(): void
+    {
+        DatabaseTestAdapter::resetTestDatabase();
+        parent::setUp();
+    }
+
     /**
      * Тест получения существующей игры
      */
@@ -233,7 +239,9 @@ class GameTest extends TestBase
 
         $planetId = $this->createTestPlanet(['game_id' => $gameData['id'], 'name' => 'First Planet']);
 
+        Game::clearCache();
         $game = Game::get($gameData['id']);
+        $this->assertNotNull($game, 'Game should be found');
         $planet = $game->get_first_planet();
 
         $this->assertInstanceOf(Planet::class, $planet);

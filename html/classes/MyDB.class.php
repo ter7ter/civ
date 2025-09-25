@@ -6,6 +6,11 @@ class MyDB
      */
     private static $_link = false;
 
+    /**
+     * @var string
+     */
+    private static $_tablePrefix = '';
+
     public static $dbhost;
     public static $dbuser;
     public static $dbpass;
@@ -32,26 +37,12 @@ class MyDB
             MyDB::$_link = null;
         }
 
-        if (MyDB::$dbhost === "sqlite::memory:") {
-            // Для тестов используем SQLite в памяти
-            $dsn = "sqlite::memory:";
-            MyDB::$_link = new PDO($dsn);
-        } else {
-            // Всегда используем MySQL для тестов
-            $dsn =
-                "mysql:host=" .
-                MyDB::$dbhost .
-                ";dbname=" .
-                MyDB::$dbname .
-                ";charset=utf8;port=" .
-                MyDB::$dbport;
-            MyDB::$_link = new PDO($dsn, MyDB::$dbuser, MyDB::$dbpass);
-        }
+        // Используем MySQL
+        $dsn = "mysql:host=" . MyDB::$dbhost . ";dbname=" . MyDB::$dbname . ";charset=utf8;port=" . MyDB::$dbport;
+        MyDB::$_link = new PDO($dsn, MyDB::$dbuser, MyDB::$dbpass);
+
         MyDB::$_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        MyDB::$_link->setAttribute(
-            PDO::ATTR_DEFAULT_FETCH_MODE,
-            PDO::FETCH_ASSOC,
-        );
+        MyDB::$_link->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
     }
 
     public static function get()
@@ -99,8 +90,19 @@ class MyDB
             $stmt = $db->prepare($query);
             $stmt->execute($vars);
         } catch (Exception $e) {
-            // Если prepare не работает, пробуем выполнить напрямую
-            $stmt = $db->query($query);
+            // Если prepare не работает, заменяем параметры и выполняем напрямую
+            $queryWithVars = $query;
+            foreach ($vars as $key => $value) {
+                if ($value === null) {
+                    $replacement = 'NULL';
+                } elseif (is_numeric($value)) {
+                    $replacement = $value;
+                } else {
+                    $replacement = "'" . addslashes($value) . "'";
+                }
+                $queryWithVars = str_replace(":$key", $replacement, $queryWithVars);
+            }
+            $stmt = $db->query($queryWithVars);
         }
 
         if ($stmt->columnCount() == 0) {
@@ -212,6 +214,22 @@ class MyDB
         if ($db->inTransaction()) {
             $db->commit();
         }
+    }
+
+    public static function rollback_transaction()
+    {
+        $db = MyDB::get();
+        if ($db->inTransaction()) {
+            $db->rollBack();
+        }
+    }
+
+    /**
+     * Сброс соединения с базой данных (для тестов)
+     */
+    public static function resetConnection()
+    {
+        MyDB::$_link = null;
     }
 }
 ?>

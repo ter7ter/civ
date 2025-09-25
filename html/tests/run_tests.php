@@ -40,12 +40,14 @@ class TestRunner
             "unit" => true,
             "integration" => true,
             "js" => true,
-            "coverage" => true,
+            "coverage" => false,
             "generate-coverage-report-only" => false, // NEW: Option to only generate coverage report
             "verbose" => false,
             "stop-on-failure" => true, // Останавливаться при первой ошибке по умолчанию
             "filter" => null,
             "help" => false,
+            "no-parallel" => false, // По умолчанию используем параллелизм
+            "processes" => null,
         ];
 
         $i = 1;
@@ -93,6 +95,15 @@ class TestRunner
                 case "--help":
                 case "-h":
                     $this->options["help"] = true;
+                    break;
+                case "--no-parallel":
+                    $this->options["no-parallel"] = true;
+                    break;
+                case "--processes":
+                    if (isset($argv[$i + 1])) {
+                        $this->options["processes"] = (int)$argv[$i + 1];
+                        $i++;
+                    }
                     break;
                 default:
                     echo
@@ -156,6 +167,9 @@ class TestRunner
 
         $phpunitConfig = TESTS_ROOT . "/phpunit.xml";
         $phpunitPath = $this->findPhpUnit();
+        $paratestPath = $this->findParaTest();
+        $useParatest = $paratestPath && !$this->options["no-parallel"];
+        $processes = $this->options["processes"] ?? 4;
 
         if (!$phpunitPath) {
             echo "❌ PHPUnit не найден. Установите PHPUnit:\n";
@@ -164,92 +178,95 @@ class TestRunner
             return 1;
         }
 
-        // Формируем команду для запуска PHPUnit
         $cmd = [];
-        if (substr($phpunitPath, -5) === '.phar') {
-            $cmd[] = 'php';
+        $isWindows = defined('PHP_OS_FAMILY') ? PHP_OS_FAMILY === 'Windows' : strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        if ($useParatest && $this->options["coverage"] && $isWindows) {
+            echo "⚠️  На Windows покрытие кода через Paratest не поддерживается. Будет использован обычный phpunit.\n";
+            $useParatest = false;
         }
-        $cmd[] = $phpunitPath;
-
-        if (file_exists($phpunitConfig)) {
-            $cmd[] = "--configuration";
-            $cmd[] = $phpunitConfig;
-        }
-
-        if ($this->options["verbose"]) {
-            $cmd[] = "--verbose";
-        }
-
-        if ($this->options["stop-on-failure"]) {
-            $cmd[] = "--stop-on-failure";
-        }
-
-        // NEW: Logic for coverage generation
-        if ($this->options["generate-coverage-report-only"]) {
-            echo "Генерация отчета о покрытии кода из ранее собранных данных...\n";
-            $generateCoverageScript = TESTS_ROOT . "/generate_coverage_report.php";
-            if (!file_exists($generateCoverageScript)) {
-                die("❌ Скрипт для генерации отчетов о покрытии ({$generateCoverageScript}) не найден.\n");
+        if ($useParatest) {
+            $cmd[] = $paratestPath;
+            if ($this->options["coverage"]) {
+                $cmd[] = "--processes=1";
+                $cmd[] = "--coverage-html=" . TESTS_ROOT . "/coverage-html";
+                $cmd[] = "--coverage-text=" . TESTS_ROOT . "/coverage.txt";
+                $cmd[] = "--coverage-php=" . TESTS_ROOT . "/coverage.php";
+            } else {
+                $cmd[] = "--processes=" . $processes;
+                $cmd[] = "--no-coverage";
             }
-            $fullCmd = "php " . escapeshellarg($generateCoverageScript);
-            // Execute the new script and return its exit code
-            return $this->runCommand($fullCmd);
-        } elseif ($this->options["coverage"]) {
-            echo "Запуск тестов и генерация отчета о покрытии кода...\n";
-            $cmd[] = "--coverage-html";
-            $cmd[] = TESTS_ROOT . "/coverage-html";
-            $cmd[] = "--coverage-text=coverage.txt";
-            $cmd[] = "--coverage-php"; // Also save raw coverage data
-            $cmd[] = TESTS_ROOT . "/coverage.php";
-        }
-
-        if ($this->options["filter"]) {
-            $cmd[] = "--filter";
-            $cmd[] = $this->options["filter"];
-        }
-
-        // Определяем какие тесты запускать, только если не в режиме генерации отчета
-        if (!$this->options["generate-coverage-report-only"]) {
+            $cmd[] = "--configuration=" . $phpunitConfig;
+            if ($this->options["verbose"]) {
+                $cmd[] = "--verbose";
+            }
+            if ($this->options["stop-on-failure"]) {
+                $cmd[] = "--stop-on-failure";
+            }
+            if ($this->options["filter"]) {
+                $cmd[] = "--filter=" . $this->options["filter"];
+            }
+            // Добавляем директории тестов
+            if ($this->options["unit"] && !$this->options["integration"]) {
+                $cmd[] = TESTS_ROOT . "/unit";
+            } elseif ($this->options["integration"] && !$this->options["unit"]) {
+                $cmd[] = TESTS_ROOT . "/integration";
+            } elseif ($this->options["unit"] && $this->options["integration"]) {
+                $cmd[] = TESTS_ROOT;
+            }
+        } else {
+            if (substr($phpunitPath, -5) === '.phar') {
+                $cmd[] = 'php';
+            }
+            $cmd[] = $phpunitPath;
+            if (file_exists($phpunitConfig)) {
+                $cmd[] = "--configuration";
+                $cmd[] = $phpunitConfig;
+            }
+            if ($this->options["coverage"]) {
+                $cmd[] = "--coverage-html";
+                $cmd[] = TESTS_ROOT . "/coverage-html";
+                $cmd[] = "--coverage-text=" . TESTS_ROOT . "/coverage.txt";
+                $cmd[] = "--coverage-php";
+                $cmd[] = TESTS_ROOT . "/coverage.php";
+            }
+            if ($this->options["verbose"]) {
+                $cmd[] = "--verbose";
+                $cmd[] = "--debug";
+            }
+            if ($this->options["stop-on-failure"]) {
+                $cmd[] = "--stop-on-failure";
+            }
+            if ($this->options["filter"]) {
+                $cmd[] = "--filter";
+                $cmd[] = $this->options["filter"];
+            }
             if ($this->options["unit"] && !$this->options["integration"]) {
                 $cmd[] = TESTS_ROOT . "/unit";
             } elseif ($this->options["integration"] && !$this->options["unit"]) {
                 $cmd[] = TESTS_ROOT . "/integration";
             }
         }
-
         $fullCmd = implode(" ", array_map("escapeshellarg", $cmd));
-
         if ($this->options["verbose"]) {
             echo "Выполняем: {$fullCmd}\n\n";
         }
-
         $startTime = microtime(true);
-
-        // Запускаем PHPUnit без таймаута, чтобы ошибки выводились сразу
         $exitCode = $this->runCommand($fullCmd);
-
         $duration = microtime(true) - $startTime;
-
         $this->results["php"] = [
             "exit_code" => $exitCode,
             "duration" => $duration,
         ];
-
         if ($exitCode === 0) {
             echo "\n✅ PHP тесты завершены успешно (" .
                 number_format($duration, 2) .
                 "s)\n";
-            if ($this->options["coverage"]) {
-                echo "Отчет о покрытии кода сгенерирован в " . TESTS_ROOT . "/coverage-html и coverage.txt.\n";
-            }
         } else {
             echo "\n❌ PHP тесты завершились с ошибками (" .
                 number_format($duration, 2) .
                 "s)\n";
         }
-
         echo str_repeat("-", 50) . "\n\n";
-
         return $exitCode;
     }
 
@@ -368,6 +385,22 @@ class TestRunner
             return trim($lines[0]);
         }
 
+        return null;
+    }
+
+    private function findParaTest()
+    {
+        $paths = [
+            PROJECT_ROOT . "/vendor/bin/paratest",
+            PROJECT_ROOT . "/vendor/bin/paratest.bat",
+            TESTS_ROOT . "/../vendor/bin/paratest",
+            TESTS_ROOT . "/../vendor/bin/paratest.bat",
+        ];
+        foreach ($paths as $path) {
+            if (file_exists($path)) {
+                return $path;
+            }
+        }
         return null;
     }
 
@@ -648,13 +681,16 @@ class TestRunner
         echo "  --integration-only  Запуск только integration тестов\n";
         echo "  --js-only           Запуск только JavaScript тестов\n";
         echo "  --with-js           Включить JavaScript тесты\n";
-        echo "  --coverage          Запуск тестов и генерация отчета о покрытии кода (HTML и текстовый)\n"; // UPDATED
+        echo "  --coverage           Покрытие кода (только 1 процесс, медленнее, но корректно)\n";
+        echo "                      Без --coverage тесты идут параллельно и быстро (по умолчанию 4 процесса)\n";
         echo "  --generate-coverage-report-only  Генерация отчета о покрытии кода из ранее собранных данных (из coverage.php) без запуска тестов\n"; // NEW
         echo "  --verbose, -v       Подробный вывод\n";
         echo "  --stop-on-failure   Остановиться при первой ошибке\n";
         echo "  --filter <pattern>  Фильтр тестов по имени/паттерну\n";
-        echo "  --help, -h          Показать эту справку\n\n";
-        echo "ПРИМЕРЫ:\n";
+        echo "  --help, -h          Показать эту справку\n";
+        echo "  --no-parallel         Запускать тесты без параллелизма (только через phpunit)\n";
+        echo "  --processes <n>       Количество процессов для параллельного запуска (по умолчанию 4)\n";
+        echo "\nПРИМЕРЫ:\n";
         echo "  php run_tests.php                    # Все PHP тесты\n";
         echo "  php run_tests.php --with-js          # Все тесты включая JS\n";
         echo "  php run_tests.php --unit-only -v     # Только unit тесты, подробно\n";

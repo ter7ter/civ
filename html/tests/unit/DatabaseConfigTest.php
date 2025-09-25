@@ -26,11 +26,31 @@ class DatabaseConfigTest extends TestBase
             MyDB::$dbpass,
             "Тестовая БД должна использовать тестовый пароль",
         );
-        $this->assertEquals(
-            "civ_for_tests",
-            MyDB::$dbname,
-            "Тестовая БД должна использовать тестовую базу данных",
-        );
+        // Проверяем имя базы данных
+        $testToken = getenv('TEST_TOKEN');
+        $paraTestFlag = getenv('PARATEST');
+        $isParaTest = !empty($testToken) || $paraTestFlag === '1';
+
+        if ($isParaTest) {
+            // В ParaTest имя базы данных содержит токен
+            $this->assertStringStartsWith(
+                "civ_for_tests",
+                MyDB::$dbname,
+                "Тестовая БД в ParaTest должна начинаться с 'civ_for_tests'",
+            );
+            $this->assertStringContainsString(
+                $testToken ?: getmypid(),
+                MyDB::$dbname,
+                "Тестовая БД в ParaTest должна содержать TEST_TOKEN или PID",
+            );
+        } else {
+            // В обычных тестах имя базы данных фиксированное
+            $this->assertEquals(
+                "civ_for_tests",
+                MyDB::$dbname,
+                "Тестовая БД должна использовать тестовую базу данных",
+            );
+        }
         $this->assertEquals(
             "3306",
             MyDB::$dbport,

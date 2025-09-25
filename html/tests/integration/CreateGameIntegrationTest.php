@@ -7,6 +7,7 @@ class CreateGameIntegrationTest extends FunctionalTestBase
 {
     protected function setUp(): void
     {
+        DatabaseTestAdapter::resetTestDatabase();
         parent::setUp();
         $this->clearRequest();
         $this->clearSession();
@@ -282,8 +283,12 @@ class CreateGameIntegrationTest extends FunctionalTestBase
         ];
 
         $this->executePage(PROJECT_ROOT . "/pages/creategame.php", $maliciousData);
-        
-        $tables = array_column(MyDB::query("SHOW TABLES"), "Tables_in_civ_for_tests");
+
+        // Получаем имя текущей базы данных
+        $currentDb = MyDB::query("SELECT DATABASE()", [], "elem");
+        $tableColumn = "Tables_in_{$currentDb}";
+
+        $tables = array_column(MyDB::query("SHOW TABLES"), $tableColumn);
         $this->assertContains("game", $tables);
         $this->assertContains("user", $tables);
     }

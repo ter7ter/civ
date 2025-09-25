@@ -44,12 +44,28 @@ class DatabaseTestAdapter
         $pdo = MyDB::get();
         $isMySQL = $pdo->getAttribute(PDO::ATTR_DRIVER_NAME) === "mysql";
 
+        // Отладочный вывод для проверки используемой базы данных
+        $testToken = getenv('TEST_TOKEN');
+        if (!empty($testToken)) {
+            echo "\n[DEBUG] DatabaseTestAdapter using TEST_TOKEN: {$testToken}\n";
+        }
+
         $autoIncrement = $isMySQL ? "AUTO_INCREMENT" : "AUTOINCREMENT";
         $unsigned = $isMySQL ? "UNSIGNED" : "";
 
         $id_column = $isMySQL
             ? "INT NOT NULL AUTO_INCREMENT PRIMARY KEY"
             : "INTEGER PRIMARY KEY AUTOINCREMENT";
+
+        // Проверяем, созданы ли уже таблицы
+        try {
+            $result = $pdo->query("SHOW TABLES LIKE 'game'");
+            if ($result && $result->rowCount() > 0) {
+                return; // Таблицы уже созданы
+            }
+        } catch (Exception $e) {
+            // Продолжаем создание таблиц
+        }
 
         $tables = [
             "game" => "CREATE TABLE IF NOT EXISTS game (id $id_column, name VARCHAR(255) NOT NULL, map_w INT DEFAULT 100, map_h INT DEFAULT 100, turn_type VARCHAR(50) DEFAULT 'byturn', turn_num INT DEFAULT 1, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)",
@@ -83,53 +99,61 @@ class DatabaseTestAdapter
             $pdo->exec($sql);
         }
 
-        // Добавляем индексы и foreign keys
+        // Добавляем индексы и foreign keys только если они не существуют
         $indexesAndConstraints = [
-            "ALTER TABLE building ADD KEY city_id (city_id)",
-            "ALTER TABLE building ADD CONSTRAINT building_ibfk_1 FOREIGN KEY (city_id) REFERENCES city (id)",
+            // Индексы
+            ["table" => "building", "index" => "city_id", "sql" => "ALTER TABLE building ADD KEY city_id (city_id)"],
+            ["table" => "cell", "index" => "cell_ibfk_1", "sql" => "ALTER TABLE cell ADD KEY cell_ibfk_1 (owner)"],
+            ["table" => "city", "index" => "x", "sql" => "ALTER TABLE city ADD UNIQUE KEY x (x, y, planet)"],
+            ["table" => "city", "index" => "user_id", "sql" => "ALTER TABLE city ADD KEY user_id (user_id)"],
+            ["table" => "city_people", "index" => "city_id", "sql" => "ALTER TABLE city_people ADD KEY city_id (city_id)"],
+            ["table" => "message", "index" => "from_id", "sql" => "ALTER TABLE message ADD KEY from_id (from_id)"],
+            ["table" => "message", "index" => "to_id", "sql" => "ALTER TABLE message ADD KEY to_id (to_id)"],
+            ["table" => "research", "index" => "user_id", "sql" => "ALTER TABLE research ADD UNIQUE KEY user_id (user_id, type)"],
+            ["table" => "resource", "index" => "type", "sql" => "ALTER TABLE resource ADD KEY type (type)"],
+            ["table" => "resource_group", "index" => "resource_id", "sql" => "ALTER TABLE resource_group ADD KEY resource_id (resource_id)"],
+            ["table" => "resource_group", "index" => "user_id", "sql" => "ALTER TABLE resource_group ADD KEY user_id (user_id)"],
+            ["table" => "unit", "index" => "user_id", "sql" => "ALTER TABLE unit ADD KEY user_id (user_id)"],
+            ["table" => "unit", "index" => "x", "sql" => "ALTER TABLE unit ADD KEY x (x, y, planet)"],
 
-            "ALTER TABLE cell ADD KEY cell_ibfk_1 (owner)",
-            "ALTER TABLE cell ADD CONSTRAINT cell_ibfk_1 FOREIGN KEY (owner) REFERENCES user (id) ON DELETE SET NULL",
-
-            "ALTER TABLE city ADD UNIQUE KEY x (x, y, planet)",
-            "ALTER TABLE city ADD KEY user_id (user_id)",
-            "ALTER TABLE city ADD CONSTRAINT city_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (id)",
-            "ALTER TABLE city ADD CONSTRAINT city_ibfk_2 FOREIGN KEY (x, y, planet) REFERENCES cell (x, y, planet)",
-
-            "ALTER TABLE city_people ADD KEY city_id (city_id)",
-            "ALTER TABLE city_people ADD CONSTRAINT city_people_ibfk_1 FOREIGN KEY (city_id) REFERENCES city (id)",
-            "ALTER TABLE city_people ADD CONSTRAINT city_people_ibfk_2 FOREIGN KEY (x, y, planet) REFERENCES cell (x, y, planet)",
-
-            "ALTER TABLE message ADD KEY from_id (from_id)",
-            "ALTER TABLE message ADD KEY to_id (to_id)",
-            "ALTER TABLE message ADD CONSTRAINT message_ibfk_1 FOREIGN KEY (from_id) REFERENCES user (id)",
-            "ALTER TABLE message ADD CONSTRAINT message_ibfk_2 FOREIGN KEY (to_id) REFERENCES user (id)",
-
-            "ALTER TABLE mission_order ADD CONSTRAINT mission_order_ibfk_1 FOREIGN KEY (unit_id) REFERENCES unit (id)",
-
-            "ALTER TABLE research ADD UNIQUE KEY user_id (user_id, type)",
-            "ALTER TABLE research ADD CONSTRAINT research_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (id)",
-
-            "ALTER TABLE resource ADD KEY type (type)",
-
-            "ALTER TABLE resource_group ADD KEY resource_id (resource_id)",
-            "ALTER TABLE resource_group ADD KEY user_id (user_id)",
-            "ALTER TABLE resource_group ADD CONSTRAINT resource_group_ibfk_1 FOREIGN KEY (resource_id) REFERENCES resource (id)",
-            "ALTER TABLE resource_group ADD CONSTRAINT resource_group_ibfk_2 FOREIGN KEY (user_id) REFERENCES user (id)",
-
-            "ALTER TABLE unit ADD KEY user_id (user_id)",
-            "ALTER TABLE unit ADD KEY x (x, y, planet)",
-            "ALTER TABLE unit ADD CONSTRAINT unit_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (id)",
-            "ALTER TABLE unit ADD CONSTRAINT unit_ibfk_2 FOREIGN KEY (x, y, planet) REFERENCES cell (x, y, planet)",
+            // Foreign keys
+            ["table" => "building", "constraint" => "building_ibfk_1", "sql" => "ALTER TABLE building ADD CONSTRAINT building_ibfk_1 FOREIGN KEY (city_id) REFERENCES city (id)"],
+            ["table" => "cell", "constraint" => "cell_ibfk_1", "sql" => "ALTER TABLE cell ADD CONSTRAINT cell_ibfk_1 FOREIGN KEY (owner) REFERENCES user (id) ON DELETE SET NULL"],
+            ["table" => "city", "constraint" => "city_ibfk_1", "sql" => "ALTER TABLE city ADD CONSTRAINT city_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (id)"],
+            ["table" => "city", "constraint" => "city_ibfk_2", "sql" => "ALTER TABLE city ADD CONSTRAINT city_ibfk_2 FOREIGN KEY (x, y, planet) REFERENCES cell (x, y, planet)"],
+            ["table" => "city_people", "constraint" => "city_people_ibfk_1", "sql" => "ALTER TABLE city_people ADD CONSTRAINT city_people_ibfk_1 FOREIGN KEY (city_id) REFERENCES city (id)"],
+            ["table" => "city_people", "constraint" => "city_people_ibfk_2", "sql" => "ALTER TABLE city_people ADD CONSTRAINT city_people_ibfk_2 FOREIGN KEY (x, y, planet) REFERENCES cell (x, y, planet)"],
+            ["table" => "message", "constraint" => "message_ibfk_1", "sql" => "ALTER TABLE message ADD CONSTRAINT message_ibfk_1 FOREIGN KEY (from_id) REFERENCES user (id)"],
+            ["table" => "message", "constraint" => "message_ibfk_2", "sql" => "ALTER TABLE message ADD CONSTRAINT message_ibfk_2 FOREIGN KEY (to_id) REFERENCES user (id)"],
+            ["table" => "mission_order", "constraint" => "mission_order_ibfk_1", "sql" => "ALTER TABLE mission_order ADD CONSTRAINT mission_order_ibfk_1 FOREIGN KEY (unit_id) REFERENCES unit (id)"],
+            ["table" => "research", "constraint" => "research_ibfk_1", "sql" => "ALTER TABLE research ADD CONSTRAINT research_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (id)"],
+            ["table" => "resource_group", "constraint" => "resource_group_ibfk_1", "sql" => "ALTER TABLE resource_group ADD CONSTRAINT resource_group_ibfk_1 FOREIGN KEY (resource_id) REFERENCES resource (id)"],
+            ["table" => "resource_group", "constraint" => "resource_group_ibfk_2", "sql" => "ALTER TABLE resource_group ADD CONSTRAINT resource_group_ibfk_2 FOREIGN KEY (user_id) REFERENCES user (id)"],
+            ["table" => "unit", "constraint" => "unit_ibfk_1", "sql" => "ALTER TABLE unit ADD CONSTRAINT unit_ibfk_1 FOREIGN KEY (user_id) REFERENCES user (id)"],
+            ["table" => "unit", "constraint" => "unit_ibfk_2", "sql" => "ALTER TABLE unit ADD CONSTRAINT unit_ibfk_2 FOREIGN KEY (x, y, planet) REFERENCES cell (x, y, planet)"],
         ];
 
-        foreach ($indexesAndConstraints as $sql) {
+        foreach ($indexesAndConstraints as $item) {
             try {
-                MyDB::query($sql);
+                // Проверяем, существует ли индекс или constraint
+                $exists = false;
+                if (isset($item["index"])) {
+                    $result = $pdo->query("SHOW INDEX FROM `{$item["table"]}` WHERE Key_name = '{$item["index"]}'");
+                    $exists = $result && $result->rowCount() > 0;
+                } elseif (isset($item["constraint"])) {
+                    $result = $pdo->query("SELECT CONSTRAINT_NAME FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_NAME = '{$item["table"]}' AND CONSTRAINT_NAME = '{$item["constraint"]}'");
+                    $exists = $result && $result->rowCount() > 0;
+                }
+
+                if (!$exists) {
+                    $pdo->exec($item["sql"]);
+                }
             } catch (Exception $e) {
-                // Игнорируем ошибки при добавлении индексов/foreign keys, если они уже существуют
+                // Игнорируем ошибки при добавлении индексов/foreign keys
             }
         }
+
+        // Блокировка файла не используется в тестах
     }
 
     /**
@@ -138,6 +162,7 @@ class DatabaseTestAdapter
     public static function clearAllTables()
     {
         $pdo = MyDB::get();
+
         // Порядок важен: сначала таблицы, которые ссылаются на другие (дочерние), потом родительские
         $tables = [
             "event",
@@ -161,14 +186,26 @@ class DatabaseTestAdapter
             "game", // Игры в конце
         ];
 
+        // Сначала отключаем foreign key checks
+        $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
+
         foreach ($tables as $table) {
             try {
-                $pdo->exec("TRUNCATE TABLE {$table}");
+                echo "\nTruncating table: {$table}\n";
+                $pdo->exec("TRUNCATE TABLE `{$table}`");
             } catch (Exception $e) {
-                // Если TRUNCATE не работает (например, foreign keys), используем DELETE
-                $pdo->exec("DELETE FROM {$table}");
+                // Если TRUNCATE не работает, используем DELETE
+                try {
+                    echo "\nDeleting from table: {$table}\n";
+                    $pdo->exec("DELETE FROM `{$table}`");
+                } catch (Exception $e2) {
+                    // Игнорируем ошибки при очистке
+                }
             }
         }
+
+        // Включаем foreign key checks обратно
+        $pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
     }
 
     /**
@@ -213,7 +250,12 @@ class DatabaseTestAdapter
      */
     public static function resetTestDatabase()
     {
+        // Сначала создаем таблицы, если их нет
+        self::createTestTables();
+
+        // Потом очищаем их
         self::clearAllTables();
+
         // TRUNCATE уже сбрасывает автоинкременты, resetAutoIncrements не нужен
         self::clearQueries();
 

@@ -6,14 +6,46 @@
  */
 class TestBase extends PHPUnit\Framework\TestCase
 {
-    protected static $pdo;
 
     public static function setUpBeforeClass(): void
     {
-        // Сохраняем ссылку на тестовую БД
-        self::$pdo = DatabaseTestAdapter::getConnection();
+        // Проверяем, используется ли ParaTest
+        $testToken = getenv('TEST_TOKEN');
+        $paraTestFlag = getenv('PARATEST');
+        $isParaTest = !empty($testToken) || $paraTestFlag === '1';
 
-        // Очищаем БД перед запуском тестов класса
+        // Для ParaTest устанавливаем уникальную базу данных
+        if ($isParaTest) {
+            if (empty($testToken)) {
+                // Если TEST_TOKEN не установлен, используем PID
+                $testToken = getmypid();
+            }
+
+            // Создаем уникальную базу данных для ParaTest
+            $uniqueDbName = MyDB::$dbname . '_' . $testToken;
+
+            // Подключаемся к MySQL без указания базы данных для проверки
+            $tempDsn = "mysql:host=" . MyDB::$dbhost . ";port=" . MyDB::$dbport . ";charset=utf8";
+            $tempPdo = new PDO($tempDsn, MyDB::$dbuser, MyDB::$dbpass);
+            $tempPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Проверяем, существует ли база данных
+            $result = $tempPdo->query("SHOW DATABASES LIKE '{$uniqueDbName}'");
+            $dbExists = $result && $result->rowCount() > 0;
+
+            if (!$dbExists) {
+                // Создаем уникальную базу данных
+                $tempPdo->exec("CREATE DATABASE `{$uniqueDbName}`");
+            }
+
+            // Устанавливаем уникальное имя базы данных
+            MyDB::$dbname = $uniqueDbName;
+
+            // Переподключаемся к новой базе данных
+            MyDB::resetConnection();
+        }
+
+        // Очищаем БД один раз перед всеми тестами класса
         DatabaseTestAdapter::resetTestDatabase();
 
         // Очищаем кэши реальных классов
@@ -21,6 +53,7 @@ class TestBase extends PHPUnit\Framework\TestCase
         User::clearCache();
         Cell::clearCache();
         Planet::clearCache();
+        Building::clearCache();
 
         // Устанавливаем глобальные переменные для тестов
         Cell::$map_width = 20;
@@ -29,36 +62,68 @@ class TestBase extends PHPUnit\Framework\TestCase
 
     public static function tearDownAfterClass(): void
     {
-        self::$pdo = null;
-        // Очистка происходит автоматически при завершении тестов
+        // Ничего не делаем, данные остаются для отладки если нужно
     }
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->clearTestData();
-        TestGameDataInitializer::initializeAll();
-    }
 
-    protected function tearDown(): void
-    {
-        $this->clearTestData();
-        parent::tearDown();
-    }
+        // Проверяем, используется ли ParaTest
+        $testToken = getenv('TEST_TOKEN');
+        $isParaTest = !empty($testToken);
 
-    /**
-     * Очищает тестовые данные
-     */
-    protected function clearTestData(): void
-    {
-        DatabaseTestAdapter::resetTestDatabase();
-
-        // Очищаем кэши реальных классов
+        if (!$isParaTest) {
+            // Для обычных тестов используем транзакции
+            MyDB::get()->beginTransaction();
+        }
+        // Только кэши и переменные, не всю БД
         Game::clearCache();
         User::clearCache();
         Cell::clearCache();
         Planet::clearCache();
+        Building::clearCache();
+        TestGameDataInitializer::initializeAll();
+        Cell::$map_width = 20;
+        Cell::$map_height = 20;
+    }
 
+    protected function tearDown(): void
+    {
+        // Проверяем, используется ли ParaTest
+        $testToken = getenv('TEST_TOKEN');
+        $isParaTest = !empty($testToken);
+
+        if (!$isParaTest) {
+            // Для обычных тестов откатываем транзакцию
+            if (MyDB::get()->inTransaction()) {
+                MyDB::get()->rollBack();
+            }
+        }
+        // Для ParaTest не очищаем таблицы в tearDown, поскольку каждый процесс имеет свою базу данных
+        // и данные будут очищены в следующем setUp()
+
+        // Только кэши и переменные, не всю БД
+        Game::clearCache();
+        User::clearCache();
+        Cell::clearCache();
+        Planet::clearCache();
+        Building::clearCache();
+        Cell::$map_width = 20;
+        Cell::$map_height = 20;
+        parent::tearDown();
+    }
+
+    /**
+     * Очищает тестовые данные (оставлено для совместимости, но не вызывает resetTestDatabase)
+     */
+    protected function clearTestData(): void
+    {
+        // Не вызываем DatabaseTestAdapter::resetTestDatabase();
+        Game::clearCache();
+        User::clearCache();
+        Cell::clearCache();
+        Planet::clearCache();
         // Устанавливаем глобальные переменные для тестов
         Cell::$map_width = 20;
         Cell::$map_height = 20;

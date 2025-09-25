@@ -28,24 +28,76 @@ class ResearchType {
 	public static $all = [];
 	
 	public static function get($id) {
-		return (isset(ResearchType::$all[$id])) ? ResearchType::$all[$id] : false;
+		if (isset(ResearchType::$all[$id])) {
+			return ResearchType::$all[$id];
+		} else {
+			$data = MyDB::query(
+				"SELECT * FROM research_type WHERE id = :id",
+				["id" => $id],
+				"row",
+			);
+			if ($data) {
+				return new ResearchType($data);
+			} else {
+				return false;
+			}
+		}
+	}
+
+	public static function getAll() {
+		$data = MyDB::query("SELECT * FROM research_type ORDER BY id");
+		$result = [];
+		foreach ($data as $row) {
+			$result[] = new ResearchType($row);
+		}
+		return $result;
 	}
 	
 	public function __construct($data) {
 		if (isset($data['id'])) {
-			$this->id = $data['id'];
+			$this->id = (int)$data['id'];
 		}
-		foreach ($data as $field => $value) {
-            $this->$field = $value;
-		}
-		
+
+		// Устанавливаем значения по умолчанию
+		$this->title = '';
+		$this->cost = 0;
 		$this->requirements = [];
-		if (isset($data['requirements'])) {
-			foreach ($data['requirements'] as $res) {
-				$this->requirements[$res] = ResearchType::get($res);
+		$this->m_top = 30;
+		$this->m_left = 0;
+		$this->age = 1;
+		$this->age_need = true;
+
+		// Явно устанавливаем известные свойства
+		$knownFields = [
+			"title",
+			"cost",
+			"m_top",
+			"m_left",
+			"age",
+			"age_need",
+		];
+
+		foreach ($knownFields as $field) {
+			if (isset($data[$field])) {
+				$this->$field = $data[$field];
 			}
 		}
-			
+
+		// Обрабатываем JSON поля
+		if (isset($data['requirements'])) {
+			if (is_string($data['requirements'])) {
+				$decoded = json_decode($data['requirements'], true);
+				$this->requirements = $decoded !== null ? $decoded : [];
+			} else {
+				$this->requirements = $data['requirements'];
+			}
+			$resolvedRequirements = [];
+			foreach ($this->requirements as $resId) {
+				$resolvedRequirements[$resId] = ResearchType::get($resId);
+			}
+			$this->requirements = $resolvedRequirements;
+		}
+
 		if (isset($data['id'])) {
 			ResearchType::$all[$this->id] = $this;
 		}
@@ -84,6 +136,31 @@ class ResearchType {
         }
 	    return $result;
     }
+
+	public function save() {
+		$data = [
+			'title' => $this->title,
+			'cost' => $this->cost,
+			'requirements' => json_encode(array_keys($this->requirements)),
+			'm_top' => $this->m_top,
+			'm_left' => $this->m_left,
+			'age' => $this->age,
+			'age_need' => (int)$this->age_need,
+		];
+		if (isset($this->id)) {
+			MyDB::update('research_type', $data, $this->id);
+		} else {
+			$this->id = (int)MyDB::insert('research_type', $data);
+		}
+		ResearchType::$all[$this->id] = $this;
+	}
+
+	public function delete() {
+		if (isset($this->id)) {
+			MyDB::query("DELETE FROM research_type WHERE id = :id", ["id" => $this->id]);
+			unset(ResearchType::$all[$this->id]);
+		}
+	}
 }
 
 new ResearchType(['id' => 1,

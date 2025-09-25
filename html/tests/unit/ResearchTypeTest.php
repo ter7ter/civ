@@ -61,6 +61,10 @@ class ResearchTypeTest extends TestBase
         $this->assertEquals(100, $researchType->m_left);
         $this->assertIsArray($researchType->requirements);
         $this->assertCount(2, $researchType->requirements);
+        // Проверяем, что requirements содержит объекты ResearchType
+        foreach ($researchType->requirements as $req) {
+            $this->assertInstanceOf(ResearchType::class, $req);
+        }
 
         // Проверяем, что объект добавлен в кэш
         $this->assertSame($researchType, ResearchType::get(100));
@@ -178,5 +182,183 @@ class ResearchTypeTest extends TestBase
         $this->assertEquals('Бронзовое дело', $research2->title);
         $this->assertEquals(80, $research2->cost);
         $this->assertEquals(1, $research2->age);
+    }
+
+    /**
+     * Тест метода getAll
+     */
+    public function testGetAll(): void
+    {
+        $this->initializeGameTypes();
+
+        // Проверяем статический кэш
+        $this->assertGreaterThan(10, count(ResearchType::$all));
+
+        // Проверяем, что все элементы являются экземплярами ResearchType
+        foreach (ResearchType::$all as $researchType) {
+            $this->assertInstanceOf(ResearchType::class, $researchType);
+            $this->assertIsInt($researchType->id);
+            $this->assertIsString($researchType->title);
+            $this->assertIsInt($researchType->cost);
+        }
+
+        // Проверяем метод getAll (должен возвращать данные из БД, но для статических данных может быть пустым)
+        $allResearchTypes = ResearchType::getAll();
+        $this->assertIsArray($allResearchTypes);
+        // Не проверяем count, так как статические данные могут не быть в БД
+    }
+
+    /**
+     * Тест метода save для нового объекта
+     */
+    public function testSaveNewResearchType(): void
+    {
+        $this->initializeGameTypes();
+
+        $researchType = new ResearchType([]);
+        $researchType->title = 'Unit Test Research';
+        $researchType->cost = 300;
+        $researchType->requirements = [1, 2];
+        $researchType->m_top = 150;
+        $researchType->m_left = 250;
+        $researchType->age = 1;
+        $researchType->age_need = true;
+
+        $researchType->save();
+
+        // Проверяем, что ID был присвоен
+        $this->assertIsInt($researchType->id);
+        $this->assertGreaterThan(0, $researchType->id);
+
+        // Проверяем, что объект сохранен в БД
+        $this->assertDatabaseHas('research_type', [
+            'id' => $researchType->id,
+            'title' => 'Unit Test Research',
+            'cost' => 300,
+            'age' => 1,
+            'age_need' => 1,
+        ]);
+
+        // Проверяем, что объект в кэше
+        $this->assertSame($researchType, ResearchType::get($researchType->id));
+
+        // Очищаем
+        $researchType->delete();
+    }
+
+    /**
+     * Тест метода save для обновления существующего объекта
+     */
+    public function testSaveExistingResearchType(): void
+    {
+        $this->initializeGameTypes();
+
+        // Создаем новый объект
+        $researchType = new ResearchType([]);
+        $researchType->title = 'Update Test Research';
+        $researchType->cost = 200;
+        $researchType->save();
+
+        $originalId = $researchType->id;
+
+        // Обновляем
+        $researchType->title = 'Updated Research';
+        $researchType->cost = 250;
+        $researchType->age = 2;
+        $researchType->save();
+
+        // Проверяем, что ID не изменился
+        $this->assertEquals($originalId, $researchType->id);
+
+        // Проверяем обновление в БД
+        $this->assertDatabaseHas('research_type', [
+            'id' => $originalId,
+            'title' => 'Updated Research',
+            'cost' => 250,
+            'age' => 2,
+        ]);
+
+        // Очищаем
+        $researchType->delete();
+    }
+
+    /**
+     * Тест метода delete
+     */
+    public function testDeleteResearchType(): void
+    {
+        $this->initializeGameTypes();
+
+        // Создаем объект
+        $researchType = new ResearchType([]);
+        $researchType->title = 'Delete Test Research';
+        $researchType->cost = 100;
+        $researchType->save();
+
+        $id = $researchType->id;
+
+        // Проверяем, что объект существует
+        $this->assertDatabaseHas('research_type', ['id' => $id]);
+
+        // Удаляем
+        $researchType->delete();
+
+        // Проверяем, что объект удален из БД
+        $this->assertDatabaseMissing('research_type', ['id' => $id]);
+
+        // Проверяем, что объект удален из кэша
+        $this->assertFalse(ResearchType::get($id));
+    }
+
+    /**
+     * Тест обработки JSON полей в конструкторе
+     */
+    public function testJsonFieldsHandling(): void
+    {
+        $this->initializeGameTypes();
+
+        // Создаем запись в БД с JSON полем
+        $id = MyDB::insert('research_type', [
+            'title' => 'JSON Test Research',
+            'cost' => 150,
+            'requirements' => '[1, 2, 3]',
+            'age' => 1,
+        ]);
+
+        $researchType = ResearchType::get($id);
+
+        // Проверяем, что JSON правильно распарсился
+        $this->assertIsArray($researchType->requirements);
+        // Проверяем, что requirements не пустой (JSON распарсился)
+        $this->assertNotEmpty($researchType->requirements);
+        // Проверяем, что значения - объекты ResearchType
+        foreach ($researchType->requirements as $req) {
+            $this->assertInstanceOf(ResearchType::class, $req);
+        }
+
+        // Очищаем
+        $researchType->delete();
+    }
+
+    /**
+     * Тест обработки некорректного JSON в конструкторе
+     */
+    public function testInvalidJsonHandling(): void
+    {
+        // Создаем запись с некорректным JSON
+        $id = MyDB::insert('research_type', [
+            'title' => 'Invalid JSON Test',
+            'cost' => 100,
+            'requirements' => 'invalid json',
+        ]);
+
+        $researchType = ResearchType::get($id);
+
+        // Должен корректно обработать - некорректный JSON должен стать пустым массивом
+        $this->assertIsArray($researchType->requirements);
+        $this->assertEquals([], $researchType->requirements);
+
+        // Очищаем
+        $researchType->delete();
     }
 }

@@ -41,8 +41,14 @@ require_once TESTS_ROOT . "/mocks/MyDBTestWrapper.php";
 require_once TESTS_ROOT . "/mocks/MockLoader.php";
 require_once TESTS_ROOT . "/mocks/TestHelpers.php";
 
-// Настраиваем тестовую БД MySQL (после загрузки моков, чтобы перезаписать их настройки)
-MyDB::setDBConfig("localhost", "civ_test", "civ_test", "3306", "civ_for_tests");
+// Настраиваем тестовую БД MySQL
+$testToken = getenv('TEST_TOKEN');
+if (!empty($testToken)) {
+    $dbName = "civ_for_tests_{$testToken}";
+} else {
+    $dbName = "civ_for_tests";
+}
+MyDB::setDBConfig("localhost", "civ_test", "civ_test", "3306", $dbName);
 
 // Подключаем инициализатор игровых данных
 require_once TESTS_ROOT . "/TestGameDataInitializer.php";
@@ -81,12 +87,12 @@ if (class_exists("PHPUnit\Framework\TestCase")) {
     require_once TESTS_ROOT . "/FunctionalTestBase.php";
 }
 
+// Создаем тестовые таблицы БД
+DatabaseTestAdapter::createTestTables();
+
 // Очищаем данные, созданные в оригинальных классах, и инициализируем тестовые данные
 TestGameDataInitializer::clearAll();
 TestGameDataInitializer::initializeAll();
-
-// Создаем тестовые таблицы БД
-DatabaseTestAdapter::createTestTables();
 
 // Настройка обработки ошибок для тестов
 error_reporting(E_ALL & ~E_NOTICE);

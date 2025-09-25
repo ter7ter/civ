@@ -14,6 +14,7 @@ class AdminIntegrationTest extends FunctionalTestBase
         // Очищаем кэш моделей
         UnitType::$all = [];
         BuildingType::$all = [];
+        ResearchType::$all = [];
     }
 
     /**
@@ -51,6 +52,48 @@ class AdminIntegrationTest extends FunctionalTestBase
         // Удаляем
         $retrieved->delete();
         $this->assertDatabaseMissing("unit_type", ["id" => $unitType->id]);
+    }
+
+    /**
+     * Тест создания типа исследования через прямой вызов функций
+     */
+    public function testResearchTypeCreationWorkflow(): void
+    {
+        // Создаем новый тип исследования
+        $researchType = new ResearchType([]);
+        $researchType->title = "Integration Test Research";
+        $researchType->cost = 150;
+        $researchType->requirements = [1, 2];
+        $researchType->m_top = 100;
+        $researchType->m_left = 200;
+        $researchType->age = 1;
+        $researchType->age_need = true;
+
+        $researchType->save();
+
+        // Проверяем, что он сохранен
+        $this->assertDatabaseHas("research_type", ["title" => "Integration Test Research"]);
+
+        // Получаем его из БД
+        $retrieved = ResearchType::get($researchType->id);
+        $this->assertNotNull($retrieved);
+        $this->assertEquals("Integration Test Research", $retrieved->title);
+        $this->assertEquals([1, 2], $retrieved->requirements);
+        $this->assertEquals(100, $retrieved->m_top);
+        $this->assertEquals(200, $retrieved->m_left);
+        $this->assertEquals(1, $retrieved->age);
+        $this->assertTrue($retrieved->age_need);
+
+        // Обновляем
+        $retrieved->cost = 200;
+        $retrieved->save();
+
+        $updated = ResearchType::get($researchType->id);
+        $this->assertEquals(200, $updated->cost);
+
+        // Удаляем
+        $retrieved->delete();
+        $this->assertDatabaseMissing("research_type", ["id" => $researchType->id]);
     }
 
     /**
@@ -309,5 +352,20 @@ class AdminIntegrationTest extends FunctionalTestBase
         $this->assertPageHasNoError($result);
         // Проверяем наличие элементов страницы building_types
         $this->assertStringContainsString("building_types", $result["output"]); // Или другой маркер
+    }
+
+    /**
+     * Тест загрузки страницы research_types в админке
+     */
+    public function testResearchTypesPageLoad(): void
+    {
+        $this->initializeGameTypes();
+
+        // Проверяем, что страница research_types загружается без ошибок
+        $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", ["page" => "research_types"]);
+
+        $this->assertPageHasNoError($result);
+        // Проверяем наличие элементов страницы research_types
+        $this->assertStringContainsString("research_types", $result["output"]); // Или другой маркер
     }
 }

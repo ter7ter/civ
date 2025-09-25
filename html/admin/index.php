@@ -8,7 +8,7 @@ if (isset($_REQUEST['page'])) {
 }
 error_log("admin/index.php loaded, page: $page, REQUEST: " . json_encode($_REQUEST));
 $page_title = 'Админка - ' . ucfirst($page);
-include '../templ/partials/header.php';
+include __DIR__ . '/../templ/partials/header.php';
 ?>
 
 <div class="container-fluid">
@@ -20,6 +20,7 @@ include '../templ/partials/header.php';
                         <a class="nav-link <?php echo ($page == 'production') ? 'active' : ''; ?>" href="index.php?page=production">ProductionType</a>
                         <a class="nav-link <?php echo ($page == 'unit_types') ? 'active' : ''; ?>" href="index.php?page=unit_types">Unit Types</a>
                         <a class="nav-link <?php echo ($page == 'building_types') ? 'active' : ''; ?>" href="index.php?page=building_types">Building Types</a>
+                        <a class="nav-link <?php echo ($page == 'research_types') ? 'active' : ''; ?>" href="index.php?page=research_types">Research Types</a>
                     </div>
                 </div>
             </nav>
@@ -32,5 +33,5 @@ include '../templ/partials/header.php';
 </div>
 
 <?php
-include '../templ/partials/footer.php';
+include __DIR__ . '/../templ/partials/footer.php';
 ?>

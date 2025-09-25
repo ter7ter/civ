@@ -243,18 +243,11 @@ class AdminIntegrationTest extends FunctionalTestBase
             "type" => "water",
         ];
 
-        error_log("Test: executing edit");
         $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", $editData);
-        if (isset($result["error"]) && $result["error"]) {
-            echo "ExecutePage error: " . $result["error"] . "\n";
-        }
         $this->assertPageHasNoError($result);
 
         // Проверяем изменения в БД
-        $debugLog = file_get_contents(TESTS_ROOT . "/debug.log");
-        echo "Debug log: " . $debugLog . "\n";
         $editedUnit = MyDB::query("SELECT * FROM unit_type WHERE id = ?", [$unitId], "row");
-        echo "Edited unit: " . json_encode($editedUnit) . "\n";
         $this->assertEquals("CRUD Test Unit Edited", $editedUnit["title"]);
         $this->assertEquals(25, $editedUnit["cost"]);
         $this->assertEquals("water", $editedUnit["type"]);
@@ -271,5 +264,50 @@ class AdminIntegrationTest extends FunctionalTestBase
 
         // Проверяем, что юнит удален
         $this->assertDatabaseMissing("unit_type", ["id" => $unitId]);
+    }
+
+    /**
+     * Тест загрузки страницы production в админке
+     */
+    public function testProductionPageLoad(): void
+    {
+        $this->initializeGameTypes();
+
+        // Проверяем, что страница production загружается без ошибок
+        $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", ["page" => "production"]);
+
+        $this->assertPageHasNoError($result);
+        $this->assertStringContainsString("Название", $result["output"]); // Проверяем наличие формы
+        $this->assertStringContainsString("Время производства", $result["output"]); // Проверяем наличие поля времени
+    }
+
+    /**
+     * Тест загрузки страницы unit_types в админке
+     */
+    public function testUnitTypesPageLoad(): void
+    {
+        $this->initializeGameTypes();
+
+        // Проверяем, что страница unit_types загружается без ошибок
+        $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", ["page" => "unit_types"]);
+
+        $this->assertPageHasNoError($result);
+        // Проверяем наличие элементов страницы unit_types
+        $this->assertStringContainsString("unit_types", $result["output"]); // Или другой маркер
+    }
+
+    /**
+     * Тест загрузки страницы building_types в админке
+     */
+    public function testBuildingTypesPageLoad(): void
+    {
+        $this->initializeGameTypes();
+
+        // Проверяем, что страница building_types загружается без ошибок
+        $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", ["page" => "building_types"]);
+
+        $this->assertPageHasNoError($result);
+        // Проверяем наличие элементов страницы building_types
+        $this->assertStringContainsString("building_types", $result["output"]); // Или другой маркер
     }
 }

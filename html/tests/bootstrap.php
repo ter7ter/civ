@@ -188,7 +188,7 @@ if (!empty($missingExtensions)) {
 
 // Установка лимитов для тестов
 ini_set("memory_limit", "256M");
-ini_set("max_execution_time", "360");
+ini_set("max_execution_time", "240");
 
 // Настройка для вывода детальной информации в случае ошибок
 ini_set("log_errors", 1);

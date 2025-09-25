@@ -253,7 +253,7 @@ class TestRunner
             echo "Выполняем: {$fullCmd}\n\n";
         }
         $startTime = microtime(true);
-        $exitCode = $this->runCommand($fullCmd);
+        $exitCode = $this->runCommandWithTimeout($fullCmd, 240); // 4 minutes timeout
         $duration = microtime(true) - $startTime;
         $this->results["php"] = [
             "exit_code" => $exitCode,

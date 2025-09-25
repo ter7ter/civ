@@ -56,9 +56,11 @@ class TestRunner
             switch ($arg) {
                 case "--unit-only":
                     $this->options["integration"] = false;
+                    $this->options["js"] = false;
                     break;
                 case "--integration-only":
                     $this->options["unit"] = false;
+                    $this->options["js"] = false;
                     break;
                 case "--with-js":
                     $this->options["js"] = true;

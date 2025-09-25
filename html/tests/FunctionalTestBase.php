@@ -148,7 +148,7 @@ class FunctionalTestBase extends TestBase
     {
         $hasError =
             isset($result["variables"]["error"]) &&
-            $result["variables"]["error"];
+            (bool)$result["variables"]["error"];
         $this->assertFalse(
             $hasError,
             "Страница не должна содержать ошибок: " .

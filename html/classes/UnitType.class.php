@@ -135,8 +135,9 @@ class UnitType
             MyDB::update('unit_type', $data, $this->id);
         } else {
             $this->id = MyDB::insert('unit_type', $data);
-            UnitType::$all[$this->id] = $this;
         }
+        UnitType::$all[$this->id] = $this;
+        error_log("Edited unit: " . json_encode($this->toArray()));
     }
 
     public function delete()
@@ -235,6 +236,11 @@ class UnitType
     public function get_title()
     {
         return $this->title;
+    }
+
+    public function toArray()
+    {
+        return get_object_vars($this);
     }
 }
 

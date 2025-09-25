@@ -217,7 +217,7 @@ class DatabaseTestAdapter
 
         foreach ($tables as $table) {
             try {
-                echo "\nTruncating table: {$table}\n";
+                //echo "\nTruncating table: {$table}\n";
                 $pdo->exec("TRUNCATE TABLE `{$table}`");
             } catch (Exception $e) {
                 // Если TRUNCATE не работает, используем DELETE

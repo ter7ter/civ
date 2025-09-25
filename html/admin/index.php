@@ -1,26 +1,36 @@
 <?php
-require_once("../includes.php");
+require_once(__DIR__ . "/../includes.php");
+MyDB::setDBConfig(DB_HOST, DB_USER, DB_PASS, DB_PORT, DB_NAME);
 if (isset($_REQUEST['page'])) {
 	$page = $_REQUEST['page'];
 } else {
 	$page = 'production';
-}?>
-<html>
-<head>
-<script src="../js/jquery.min.js"></script>
-<title><?=$page?></title>
-</head>
-<body>
+}
+error_log("admin/index.php loaded, page: $page, REQUEST: " . json_encode($_REQUEST));
+$page_title = 'Админка - ' . ucfirst($page);
+include '../templ/partials/header.php';
+?>
 
-<div id="admin_menu" style="clear: both;">
-<a href="index.php?page=production">ProductionType</a>
-<a href="index.php?page=unit_types">Unit Types</a>
-<a href="index.php?page=building_types">Building Types</a>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-auto">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+                <div class="container-fluid">
+                    <div class="navbar-nav">
+                        <a class="nav-link <?php echo ($page == 'production') ? 'active' : ''; ?>" href="index.php?page=production">ProductionType</a>
+                        <a class="nav-link <?php echo ($page == 'unit_types') ? 'active' : ''; ?>" href="index.php?page=unit_types">Unit Types</a>
+                        <a class="nav-link <?php echo ($page == 'building_types') ? 'active' : ''; ?>" href="index.php?page=building_types">Building Types</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div>
+                <?php include(__DIR__ . "/$page.php"); ?>
+            </div>
+        </div>
+    </div>
 </div>
 
-<div>
-<?require_once "$page.php";?>
-</div>
-
-</body>
-</html>
+<?php
+include '../templ/partials/footer.php';
+?>

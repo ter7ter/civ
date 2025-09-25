@@ -1,390 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="I:\pr1\html\tests" tests="323" assertions="1403" errors="0" warnings="0" failures="0" skipped="0" time="434.669897">
-    <testsuite name="PageInfoTest" file="I:\pr1\html\tests\integration\PageInfoTest.php" tests="2" assertions="2" errors="0" warnings="0" failures="0" skipped="0" time="0.085039">
-      <testcase name="testCellInfoPage" class="PageInfoTest" classname="PageInfoTest" file="I:\pr1\html\tests\integration\PageInfoTest.php" line="16" assertions="1" time="0.058881"/>
-      <testcase name="testTurnInfoPage" class="PageInfoTest" classname="PageInfoTest" file="I:\pr1\html\tests\integration\PageInfoTest.php" line="46" assertions="1" time="0.026157"/>
+  <testsuite name="I:\pr1\html\tests\integration" tests="39" assertions="193" errors="0" warnings="0" failures="0" skipped="0" time="80.052894">
+    <testsuite name="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" tests="13" assertions="77" errors="0" warnings="0" failures="0" skipped="0" time="28.388821">
+      <testcase name="testSQLInjectionProtection" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="276" assertions="2" time="0.994190"/>
+      <testcase name="testValidationErrorsViaWeb" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="214" assertions="7" time="0.905742"/>
+      <testcase name="testSuccessRedirect" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="340" assertions="2" time="1.335533"/>
+      <testcase name="testXSSProtectionViaWeb" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="299" assertions="1" time="0.848085"/>
+      <testcase name="testPlayerTurnOrderViaWeb" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="163" assertions="8" time="1.224669"/>
+      <testcase name="testMultipleGameCreation" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="320" assertions="3" time="1.363379"/>
+      <testcase name="testUniquePlayerColorsViaWeb" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="141" assertions="3" time="1.415105"/>
+      <testcase name="testInitialPlayerParametersViaWeb" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="189" assertions="9" time="1.566786"/>
+      <testcase name="testPlayerCountValidation" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="235" assertions="2" time="1.213234"/>
+      <testcase name="testPerformanceWithMaxPlayers" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="252" assertions="4" time="8.788004"/>
+      <testcase name="testGameCreationAndDataPersistence" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="22" assertions="16" time="1.517910"/>
+      <testcase name="testSettlerUnitsCreation" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="69" assertions="14" time="1.772737"/>
+      <testcase name="testDifferentTurnTypesViaWeb" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="111" assertions="6" time="5.443446"/>
     </testsuite>
-    <testsuite name="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" tests="13" assertions="53" errors="0" warnings="0" failures="0" skipped="0" time="0.405175">
-      <testcase name="testGetAllBuildingTypes" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="7" assertions="6" time="0.039055"/>
-      <testcase name="testBuildingTypeCityEffect" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="228" assertions="1" time="0.042848"/>
-      <testcase name="testSaveNewBuildingType" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="45" assertions="2" time="0.023530"/>
-      <testcase name="testUpdateBuildingType" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="61" assertions="2" time="0.022455"/>
-      <testcase name="testDeleteBuildingType" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="81" assertions="1" time="0.024081"/>
-      <testcase name="testGetBuildingTypeById" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="96" assertions="3" time="0.028362"/>
-      <testcase name="testJsonFieldsHandling" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="110" assertions="3" time="0.023545"/>
-      <testcase name="testBuildingTypeProperties" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="126" assertions="8" time="0.035958"/>
-      <testcase name="testGetNonExistentBuildingType" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="152" assertions="1" time="0.032039"/>
-      <testcase name="testBuildingTypeConstructorWithInvalidJson" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="158" assertions="2" time="0.030564"/>
-      <testcase name="testBuildingTypeDefaultValues" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="174" assertions="11" time="0.029053"/>
-      <testcase name="testBuildingTypeWithComplexData" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="195" assertions="12" time="0.026325"/>
-      <testcase name="testBuildingTypeGetTitle" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="I:\pr1\html\tests\unit\AdminBuildingTypeTest.php" line="248" assertions="1" time="0.047358"/>
+    <testsuite name="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" tests="6" assertions="36" errors="0" warnings="0" failures="0" skipped="0" time="19.691204">
+      <testcase name="testUnitMovement" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="27" assertions="5" time="1.173680"/>
+      <testcase name="testMapBoundaries" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="324" assertions="10" time="1.135679"/>
+      <testcase name="testCityFoundation" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="89" assertions="6" time="1.393165"/>
+      <testcase name="testMapScrolling" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="141" assertions="6" time="11.441052"/>
+      <testcase name="testMapLoadingWithCity" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="254" assertions="5" time="2.732771"/>
+      <testcase name="testMapLoadingWithUnits" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="189" assertions="4" time="1.814857"/>
     </testsuite>
-    <testsuite name="MapVPageTest" file="I:\pr1\html\tests\integration\MapVPageTest.php" tests="1" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.605753">
-      <testcase name="testMapVPageLoadsWithoutErrors" class="MapVPageTest" classname="MapVPageTest" file="I:\pr1\html\tests\integration\MapVPageTest.php" line="16" assertions="3" time="0.605753"/>
+    <testsuite name="MapVPageTest" file="I:\pr1\html\tests\integration\MapVPageTest.php" tests="1" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.674901">
+      <testcase name="testMapVPageLoadsWithoutErrors" class="MapVPageTest" classname="MapVPageTest" file="I:\pr1\html\tests\integration\MapVPageTest.php" line="16" assertions="3" time="0.674901"/>
     </testsuite>
-    <testsuite name="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" tests="9" assertions="44" errors="0" warnings="0" failures="0" skipped="0" time="0.588718">
-      <testcase name="testSaveNew" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="115" assertions="4" time="0.078005"/>
-      <testcase name="testCityEffect" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="237" assertions="8" time="0.064123"/>
-      <testcase name="testGetTitle" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="94" assertions="1" time="0.048950"/>
-      <testcase name="testCaching" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="183" assertions="1" time="0.054572"/>
-      <testcase name="testDifferentBuildingTypes" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="209" assertions="12" time="0.057386"/>
-      <testcase name="testSaveUpdate" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="147" assertions="1" time="0.096210"/>
-      <testcase name="testConstructor" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="42" assertions="6" time="0.058911"/>
-      <testcase name="testGet" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="13" assertions="8" time="0.072947"/>
-      <testcase name="testConstructorWithoutId" class="BuildingTest" classname="BuildingTest" file="I:\pr1\html\tests\unit\BuildingTest.php" line="71" assertions="3" time="0.057616"/>
+    <testsuite name="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" tests="10" assertions="29" errors="0" warnings="0" failures="0" skipped="0" time="19.991599">
+      <testcase name="testGameOpeningSessionPersistence" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="45" assertions="6" time="1.364835"/>
+      <testcase name="testFullGameOpeningProcess" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="22" assertions="4" time="1.220276"/>
+      <testcase name="testGameListWithDifferentPlayerCounts" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="102" assertions="1" time="4.388091"/>
+      <testcase name="testGameOpeningWithDifferentConfigurations" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="73" assertions="2" time="1.457625"/>
+      <testcase name="testErrorHandlingInGameOpening" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="123" assertions="3" time="4.995272"/>
+      <testcase name="testPerformanceGameOpening" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="154" assertions="2" time="1.228282"/>
+      <testcase name="testSecurityInvalidIds" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="172" assertions="3" time="1.272809"/>
+      <testcase name="testMultipleGameOpenings" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="196" assertions="2" time="1.293127"/>
+      <testcase name="testGameOpeningDataIntegrity" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="216" assertions="3" time="1.258977"/>
+      <testcase name="testGameOpeningObjectRelationships" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="235" assertions="3" time="1.512305"/>
     </testsuite>
-    <testsuite name="AdminUnitTypeTest" file="I:\pr1\html\tests\unit\AdminUnitTypeTest.php" tests="10" assertions="47" errors="0" warnings="0" failures="0" skipped="0" time="0.25707">
-      <testcase name="testGetUnitTypeById" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="I:\pr1\html\tests\unit\AdminUnitTypeTest.php" line="105" assertions="3" time="0.035772"/>
-      <testcase name="testGetAllUnitTypes" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="I:\pr1\html\tests\unit\AdminUnitTypeTest.php" line="7" assertions="6" time="0.030301"/>
-      <testcase name="testJsonFieldsHandling" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="I:\pr1\html\tests\unit\AdminUnitTypeTest.php" line="119" assertions="3" time="0.029848"/>
-      <testcase name="testSaveNewUnitType" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="I:\pr1\html\tests\unit\AdminUnitTypeTest.php" line="53" assertions="2" time="0.024584"/>
-      <testcase name="testUpdateUnitType" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="I:\pr1\html\tests\unit\AdminUnitTypeTest.php" line="71" assertions="2" time="0.029719"/>
-      <testcase name="testDeleteUnitType" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="I:\pr1\html\tests\unit\AdminUnitTypeTest.php" line="90" assertions="1" time="0.020248"/>
-      <testcase name="testUnitTypeConstructorWithInvalidJson" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="I:\pr1\html\tests\unit\AdminUnitTypeTest.php" line="141" assertions="2" time="0.023146"/>
-      <testcase name="testUnitTypeDefaultValues" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="I:\pr1\html\tests\unit\AdminUnitTypeTest.php" line="157" assertions="8" time="0.021280"/>
-      <testcase name="testGetNonExistentUnitType" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="I:\pr1\html\tests\unit\AdminUnitTypeTest.php" line="135" assertions="1" time="0.021088"/>
-      <testcase name="testUnitTypeWithComplexData" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="I:\pr1\html\tests\unit\AdminUnitTypeTest.php" line="175" assertions="19" time="0.021082"/>
+    <testsuite name="AdminIntegrationTest" file="I:\pr1\html\tests\integration\AdminIntegrationTest.php" tests="6" assertions="42" errors="0" warnings="0" failures="0" skipped="0" time="11.075965">
+      <testcase name="testFullCrudScenario" class="AdminIntegrationTest" classname="AdminIntegrationTest" file="I:\pr1\html\tests\integration\AdminIntegrationTest.php" line="215" assertions="9" time="1.525737">
+        <system-out>Debug log: POST data: {"page":"unit_types","action":"save","title":"CRUD Test Unit","cost":20,"type":"land"}
+POST data: {"page":"unit_types","action":"save","title":"CRUD Test Unit","cost":20,"type":"land"}
+
+Edited unit: {"id":1,"title":"CRUD Test Unit Edited","points":1,"cost":25,"population_cost":0,"type":"water","attack":0,"defence":0,"health":1,"movement":1,"upkeep":0,"can_found_city":0,"can_build":0,"need_research":"[]","description":"","mission_points":"[]","age":1,"missions":"[\"move_to\"]","req_research":"[]","req_resources":"[]","can_move":"{\"plains\":1,\"plains2\":1,\"forest\":1,\"hills\":1,\"mountains\":2,\"desert\":1,\"city\":1}"}
+</system-out>
+      </testcase>
+      <testcase name="testInvalidDataHandling" class="AdminIntegrationTest" classname="AdminIntegrationTest" file="I:\pr1\html\tests\integration\AdminIntegrationTest.php" line="132" assertions="4" time="1.256802"/>
+      <testcase name="testUnitTypeCreationWorkflow" class="AdminIntegrationTest" classname="AdminIntegrationTest" file="I:\pr1\html\tests\integration\AdminIntegrationTest.php" line="22" assertions="6" time="1.138692"/>
+      <testcase name="testBuildingTypeCreationWorkflow" class="AdminIntegrationTest" classname="AdminIntegrationTest" file="I:\pr1\html\tests\integration\AdminIntegrationTest.php" line="59" assertions="8" time="2.322989"/>
+      <testcase name="testGetAllTypes" class="AdminIntegrationTest" classname="AdminIntegrationTest" file="I:\pr1\html\tests\integration\AdminIntegrationTest.php" line="98" assertions="7" time="3.542790"/>
+      <testcase name="testComplexScenario" class="AdminIntegrationTest" classname="AdminIntegrationTest" file="I:\pr1\html\tests\integration\AdminIntegrationTest.php" line="157" assertions="8" time="1.288956"/>
     </testsuite>
-    <testsuite name="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" tests="13" assertions="79" errors="0" warnings="0" failures="0" skipped="0" time="0.788292">
-      <testcase name="testCityEffectMarket" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="212" assertions="1" time="0.104652"/>
-      <testcase name="testCityEffectColiseum" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="239" assertions="3" time="0.162744"/>
-      <testcase name="testAllPredefinedBuildingTypes" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="342" assertions="39" time="0.047471"/>
-      <testcase name="testGetExistingBuildingType" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="13" assertions="5" time="0.039235"/>
-      <testcase name="testGetTitle" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="82" assertions="1" time="0.040054"/>
-      <testcase name="testCityEffectTempleNegativeNorm" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="155" assertions="2" time="0.059499"/>
-      <testcase name="testCityEffectColiseumNegativeDis" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="271" assertions="3" time="0.051384"/>
-      <testcase name="testGetNonExistingBuildingType" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="29" assertions="1" time="0.043699"/>
-      <testcase name="testConstructor" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="41" assertions="14" time="0.022266"/>
-      <testcase name="testCityEffectGranary" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="94" assertions="1" time="0.051451"/>
-      <testcase name="testCityEffectTemple" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="125" assertions="2" time="0.047053"/>
-      <testcase name="testCityEffectLibrary" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="185" assertions="1" time="0.060149"/>
-      <testcase name="testCityEffectNoEffect" class="BuildingTypeTest" classname="BuildingTypeTest" file="I:\pr1\html\tests\unit\BuildingTypeTest.php" line="303" assertions="6" time="0.058635"/>
+    <testsuite name="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" tests="1" assertions="4" errors="0" warnings="0" failures="0" skipped="0" time="0.126252">
+      <testcase name="testFullGameEditProcess" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="21" assertions="4" time="0.126252"/>
     </testsuite>
-    <testsuite name="CellTypeTest" file="I:\pr1\html\tests\unit\CellTypeTest.php" tests="7" assertions="75" errors="0" warnings="0" failures="0" skipped="0" time="0.278013">
-      <testcase name="testComplexProperties" class="CellTypeTest" classname="CellTypeTest" file="I:\pr1\html\tests\unit\CellTypeTest.php" line="138" assertions="5" time="0.054421"/>
-      <testcase name="testGetExistingCellType" class="CellTypeTest" classname="CellTypeTest" file="I:\pr1\html\tests\unit\CellTypeTest.php" line="13" assertions="9" time="0.042729"/>
-      <testcase name="testGetTitle" class="CellTypeTest" classname="CellTypeTest" file="I:\pr1\html\tests\unit\CellTypeTest.php" line="97" assertions="1" time="0.041471"/>
-      <testcase name="testAllPredefinedCellTypes" class="CellTypeTest" classname="CellTypeTest" file="I:\pr1\html\tests\unit\CellTypeTest.php" line="109" assertions="45" time="0.041902"/>
-      <testcase name="testGetNonExistingCellType" class="CellTypeTest" classname="CellTypeTest" file="I:\pr1\html\tests\unit\CellTypeTest.php" line="33" assertions="1" time="0.052658"/>
-      <testcase name="testConstructor" class="CellTypeTest" classname="CellTypeTest" file="I:\pr1\html\tests\unit\CellTypeTest.php" line="45" assertions="11" time="0.021809"/>
-      <testcase name="testConstructorWithoutId" class="CellTypeTest" classname="CellTypeTest" file="I:\pr1\html\tests\unit\CellTypeTest.php" line="80" assertions="3" time="0.023023"/>
-    </testsuite>
-    <testsuite name="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" tests="21" assertions="84" errors="0" warnings="0" failures="0" skipped="0" time="1.69201">
-      <testcase name="testGetMissionNeedPoints" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="435" assertions="1" time="0.084817"/>
-      <testcase name="testGetMoney" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="363" assertions="4" time="0.055857"/>
-      <testcase name="testGetExistingCell" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="13" assertions="6" time="0.033378"/>
-      <testcase name="testGetEat" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="340" assertions="4" time="0.055480"/>
-      <testcase name="testClearCache" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="461" assertions="3" time="0.056894"/>
-      <testcase name="testGetCellsAround" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="291" assertions="4" time="0.144465"/>
-      <testcase name="testGetNonExistingCell" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="32" assertions="1" time="0.025909"/>
-      <testcase name="testConstructor" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="45" assertions="9" time="0.055197"/>
-      <testcase name="testConstructorWithoutOwner" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="81" assertions="4" time="0.052177"/>
-      <testcase name="testGetTitle" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="109" assertions="2" time="0.057322"/>
-      <testcase name="testGetPlanet" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="126" assertions="2" time="0.043249"/>
-      <testcase name="testSaveNew" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="144" assertions="6" time="0.053232"/>
-      <testcase name="testSaveUpdate" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="182" assertions="4" time="0.085926"/>
-      <testcase name="testCalcCoord" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="215" assertions="6" time="0.031988"/>
-      <testcase name="testCalcDistance" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="250" assertions="3" time="0.032172"/>
-      <testcase name="testDCoord" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="271" assertions="4" time="0.071240"/>
-      <testcase name="testGetWork" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="317" assertions="4" time="0.101947"/>
-      <testcase name="testGetUnits" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="386" assertions="4" time="0.069170"/>
-      <testcase name="testLoadCells" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="410" assertions="3" time="0.055549"/>
-      <testcase name="testGenerateType" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="483" assertions="3" time="0.380910"/>
-      <testcase name="testGenerateMap" class="CellTest" classname="CellTest" file="I:\pr1\html\tests\unit\CellTest.php" line="510" assertions="7" time="0.145134"/>
-    </testsuite>
-    <testsuite name="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" tests="18" assertions="33" errors="0" warnings="0" failures="0" skipped="0" time="1.228813">
-      <testcase name="testAddPeople" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="185" assertions="1" time="0.104918"/>
-      <testcase name="testCreateUnit" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="224" assertions="5" time="0.070669"/>
-      <testcase name="testCreateBuilding" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="242" assertions="3" time="0.063059"/>
-      <testcase name="testCheckMood" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="274" assertions="2" time="0.062098"/>
-      <testcase name="testConstructor" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="44" assertions="4" time="0.088778"/>
-      <testcase name="testCalculateWork" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="131" assertions="1" time="0.061378"/>
-      <testcase name="testCalculateMoney" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="144" assertions="1" time="0.090978"/>
-      <testcase name="testCalculateResearch" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="157" assertions="1" time="0.097516"/>
-      <testcase name="testGetTitle" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="75" assertions="1" time="0.035916"/>
-      <testcase name="testByCoords" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="64" assertions="2" time="0.053310"/>
-      <testcase name="testGetCultureCells" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="86" assertions="2" time="0.066204"/>
-      <testcase name="testGetPossibleUnits" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="103" assertions="2" time="0.057921"/>
-      <testcase name="testCalculateEat" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="116" assertions="1" time="0.075077"/>
-      <testcase name="testCalculateCulture" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="170" assertions="2" time="0.053338"/>
-      <testcase name="testRemovePeople" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="197" assertions="1" time="0.065673"/>
-      <testcase name="testSave" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="209" assertions="1" time="0.072319"/>
-      <testcase name="testCalculateBuildings" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="258" assertions="1" time="0.048446"/>
-      <testcase name="testSelectNextProduction" class="CityTest" classname="CityTest" file="I:\pr1\html\tests\unit\CityTest.php" line="291" assertions="2" time="0.061215"/>
-    </testsuite>
-    <testsuite name="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" tests="17" assertions="58" errors="0" warnings="0" failures="0" skipped="0" time="0.889108">
-      <testcase name="testEditWithEmptyName" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="234" assertions="2" time="0.056692"/>
-      <testcase name="testDataPreservationOnValidationError" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="396" assertions="6" time="0.177440"/>
-      <testcase name="testEditGameNameOnly" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="84" assertions="4" time="0.052723"/>
-      <testcase name="testMultipleValidationErrors" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="544" assertions="3" time="0.036397"/>
-      <testcase name="testGameNotChangedOnValidationError" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="572" assertions="5" time="0.068317"/>
-      <testcase name="testEditWithInvalidTurnType" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="307" assertions="2" time="0.061768"/>
-      <testcase name="testEditNonExistentGame" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="338" assertions="2" time="0.056844"/>
-      <testcase name="testEditBasicGameParameters" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="32" assertions="6" time="0.044595"/>
-      <testcase name="testLoadGameDataForEditing" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="187" assertions="6" time="0.036994"/>
-      <testcase name="testEditWithInvalidMapSize" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="261" assertions="4" time="0.034358"/>
-      <testcase name="testVeryLongStringsInEdit" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="490" assertions="4" time="0.041077"/>
-      <testcase name="testEditMapSize" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="122" assertions="3" time="0.035500"/>
-      <testcase name="testXSSInEditedGameName" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="452" assertions="2" time="0.033300"/>
-      <testcase name="testEditTurnType" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="153" assertions="6" time="0.071060"/>
-      <testcase name="testEditWithoutGameId" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="378" assertions="1" time="0.020376"/>
-      <testcase name="testLoadGameWithoutId" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="19" assertions="1" time="0.029143"/>
-      <testcase name="testLoadNonExistentGameForEditing" class="EditGameTest" classname="EditGameTest" file="I:\pr1\html\tests\unit\EditGameTest.php" line="531" assertions="1" time="0.032525"/>
-    </testsuite>
-    <testsuite name="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" tests="6" assertions="36" errors="0" warnings="0" failures="0" skipped="0" time="19.529677">
-      <testcase name="testMapBoundaries" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="324" assertions="10" time="1.558025"/>
-      <testcase name="testCityFoundation" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="89" assertions="6" time="5.281754"/>
-      <testcase name="testMapScrolling" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="141" assertions="6" time="2.660744"/>
-      <testcase name="testMapLoadingWithUnits" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="189" assertions="4" time="2.310611"/>
-      <testcase name="testMapLoadingWithCity" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="254" assertions="5" time="5.838215"/>
-      <testcase name="testUnitMovement" class="MapActionsIntegrationTest" classname="MapActionsIntegrationTest" file="I:\pr1\html\tests\integration\MapActionsIntegrationTest.php" line="27" assertions="5" time="1.880327"/>
-    </testsuite>
-    <testsuite name="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" tests="7" assertions="33" errors="0" warnings="0" failures="0" skipped="0" time="1.964239">
-      <testcase name="testTestTablesCreation" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="90" assertions="5" time="0.041906"/>
-      <testcase name="testTestDatabaseConfiguration" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="11" assertions="6" time="0.025664"/>
-      <testcase name="testDatabaseConfigurationSeparation" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="64" assertions="3" time="0.035550"/>
-      <testcase name="testTestDataOperations" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="109" assertions="5" time="0.075403"/>
-      <testcase name="testTestDataCleanup" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="157" assertions="4" time="1.634296"/>
-      <testcase name="testTransactionHandling" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="203" assertions="2" time="0.116186"/>
-      <testcase name="testGameAndUserMocks" class="DatabaseConfigTest" classname="DatabaseConfigTest" file="I:\pr1\html\tests\unit\DatabaseConfigTest.php" line="232" assertions="8" time="0.035235"/>
-    </testsuite>
-    <testsuite name="EventTest" file="I:\pr1\html\tests\unit\EventTest.php" tests="10" assertions="56" errors="0" warnings="0" failures="0" skipped="0" time="0.632463">
-      <testcase name="testGetTitle" class="EventTest" classname="EventTest" file="I:\pr1\html\tests\unit\EventTest.php" line="269" assertions="4" time="0.083342"/>
-      <testcase name="testGetText" class="EventTest" classname="EventTest" file="I:\pr1\html\tests\unit\EventTest.php" line="315" assertions="7" time="0.053597"/>
-      <testcase name="testConstructorCityBuilding" class="EventTest" classname="EventTest" file="I:\pr1\html\tests\unit\EventTest.php" line="66" assertions="8" time="0.047004"/>
-      <testcase name="testSaveWithSource" class="EventTest" classname="EventTest" file="I:\pr1\html\tests\unit\EventTest.php" line="161" assertions="6" time="0.177775"/>
-      <testcase name="testConstructorCityUnit" class="EventTest" classname="EventTest" file="I:\pr1\html\tests\unit\EventTest.php" line="97" assertions="8" time="0.069307"/>
-      <testcase name="testRemove" class="EventTest" classname="EventTest" file="I:\pr1\html\tests\unit\EventTest.php" line="234" assertions="1" time="0.035976"/>
-      <testcase name="testGet" class="EventTest" classname="EventTest" file="I:\pr1\html\tests\unit\EventTest.php" line="11" assertions="8" time="0.023604"/>
-      <testcase name="testConstructorResearch" class="EventTest" classname="EventTest" file="I:\pr1\html\tests\unit\EventTest.php" line="39" assertions="7" time="0.042381"/>
-      <testcase name="testSaveNew" class="EventTest" classname="EventTest" file="I:\pr1\html\tests\unit\EventTest.php" line="128" assertions="6" time="0.049276"/>
-      <testcase name="testSaveUpdate" class="EventTest" classname="EventTest" file="I:\pr1\html\tests\unit\EventTest.php" line="197" assertions="1" time="0.050202"/>
-    </testsuite>
-    <testsuite name="MessageTest" file="I:\pr1\html\tests\unit\MessageTest.php" tests="7" assertions="38" errors="0" warnings="0" failures="0" skipped="0" time="0.346159">
-      <testcase name="testConstructorWithFullData" class="MessageTest" classname="MessageTest" file="I:\pr1\html\tests\unit\MessageTest.php" line="11" assertions="7" time="0.093215"/>
-      <testcase name="testConstructorWithoutFrom" class="MessageTest" classname="MessageTest" file="I:\pr1\html\tests\unit\MessageTest.php" line="39" assertions="6" time="0.058810"/>
-      <testcase name="testConstructorWithoutTo" class="MessageTest" classname="MessageTest" file="I:\pr1\html\tests\unit\MessageTest.php" line="64" assertions="6" time="0.074909"/>
-      <testcase name="testSaveNew" class="MessageTest" classname="MessageTest" file="I:\pr1\html\tests\unit\MessageTest.php" line="89" assertions="6" time="0.037178"/>
-      <testcase name="testSaveUpdate" class="MessageTest" classname="MessageTest" file="I:\pr1\html\tests\unit\MessageTest.php" line="123" assertions="3" time="0.033560"/>
-      <testcase name="testSaveSystemMessage" class="MessageTest" classname="MessageTest" file="I:\pr1\html\tests\unit\MessageTest.php" line="163" assertions="5" time="0.029384"/>
-      <testcase name="testConstructorMinimalData" class="MessageTest" classname="MessageTest" file="I:\pr1\html\tests\unit\MessageTest.php" line="194" assertions="5" time="0.019104"/>
-    </testsuite>
-    <testsuite name="MissionTypeTest" file="I:\pr1\html\tests\unit\MissionTypeTest.php" tests="5" assertions="13" errors="0" warnings="0" failures="0" skipped="0" time="0.261618">
-      <testcase name="testComplete" class="MissionTypeTest" classname="MissionTypeTest" file="I:\pr1\html\tests\unit\MissionTypeTest.php" line="63" assertions="5" time="0.117852"/>
-      <testcase name="testGet" class="MissionTypeTest" classname="MissionTypeTest" file="I:\pr1\html\tests\unit\MissionTypeTest.php" line="30" assertions="2" time="0.023686"/>
-      <testcase name="testCheckCell" class="MissionTypeTest" classname="MissionTypeTest" file="I:\pr1\html\tests\unit\MissionTypeTest.php" line="43" assertions="3" time="0.048075"/>
-      <testcase name="testConstructor" class="MissionTypeTest" classname="MissionTypeTest" file="I:\pr1\html\tests\unit\MissionTypeTest.php" line="16" assertions="2" time="0.032361"/>
-      <testcase name="testGetTitle" class="MissionTypeTest" classname="MissionTypeTest" file="I:\pr1\html\tests\unit\MissionTypeTest.php" line="37" assertions="1" time="0.039643"/>
-    </testsuite>
-    <testsuite name="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" tests="12" assertions="36" errors="0" warnings="0" failures="0" skipped="0" time="3.932037">
-      <testcase name="testQuerySelect" class="MyDBTest" classname="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" line="38" assertions="4" time="0.096448"/>
-      <testcase name="testQuerySelectOutputTypes" class="MyDBTest" classname="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" line="62" assertions="7" time="0.082807"/>
-      <testcase name="testNullHandling" class="MyDBTest" classname="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" line="186" assertions="1" time="0.093652"/>
-      <testcase name="testUpdate" class="MyDBTest" classname="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" line="135" assertions="2" time="0.132182"/>
-      <testcase name="testUpdateWithWhere" class="MyDBTest" classname="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" line="158" assertions="3" time="0.345037"/>
-      <testcase name="testTransactions" class="MyDBTest" classname="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" line="237" assertions="2" time="0.230426"/>
-      <testcase name="testSetDBConfig" class="MyDBTest" classname="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" line="13" assertions="5" time="0.048286"/>
-      <testcase name="testGet" class="MyDBTest" classname="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" line="27" assertions="2" time="0.037614"/>
-      <testcase name="testInsert" class="MyDBTest" classname="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" line="94" assertions="3" time="0.793663"/>
-      <testcase name="testInsertMultiple" class="MyDBTest" classname="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" line="113" assertions="3" time="1.280784"/>
-      <testcase name="testDDLQueries" class="MyDBTest" classname="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" line="206" assertions="3" time="0.769214"/>
-      <testcase name="testErrorHandling" class="MyDBTest" classname="MyDBTest" file="I:\pr1\html\tests\unit\MyDBTest.php" line="227" assertions="1" time="0.021924"/>
-    </testsuite>
-    <testsuite name="PlanetTest" file="I:\pr1\html\tests\unit\PlanetTest.php" tests="9" assertions="25" errors="0" warnings="0" failures="0" skipped="0" time="0.418642">
-      <testcase name="testGetNonExistingPlanet" class="PlanetTest" classname="PlanetTest" file="I:\pr1\html\tests\unit\PlanetTest.php" line="29" assertions="1" time="0.056292"/>
-      <testcase name="testSaveNew" class="PlanetTest" classname="PlanetTest" file="I:\pr1\html\tests\unit\PlanetTest.php" line="92" assertions="4" time="0.041379"/>
-      <testcase name="testSaveUpdate" class="PlanetTest" classname="PlanetTest" file="I:\pr1\html\tests\unit\PlanetTest.php" line="120" assertions="2" time="0.090470"/>
-      <testcase name="testGetExistingPlanet" class="PlanetTest" classname="PlanetTest" file="I:\pr1\html\tests\unit\PlanetTest.php" line="13" assertions="4" time="0.060113"/>
-      <testcase name="testGetGame" class="PlanetTest" classname="PlanetTest" file="I:\pr1\html\tests\unit\PlanetTest.php" line="143" assertions="2" time="0.047454"/>
-      <testcase name="testClearCache" class="PlanetTest" classname="PlanetTest" file="I:\pr1\html\tests\unit\PlanetTest.php" line="159" assertions="3" time="0.042596"/>
-      <testcase name="testConstructor" class="PlanetTest" classname="PlanetTest" file="I:\pr1\html\tests\unit\PlanetTest.php" line="39" assertions="4" time="0.028022"/>
-      <testcase name="testConstructorWithoutId" class="PlanetTest" classname="PlanetTest" file="I:\pr1\html\tests\unit\PlanetTest.php" line="62" assertions="3" time="0.028390"/>
-      <testcase name="testConstructorWithInvalidData" class="PlanetTest" classname="PlanetTest" file="I:\pr1\html\tests\unit\PlanetTest.php" line="81" assertions="2" time="0.023926"/>
-    </testsuite>
-    <testsuite name="ResearchTest" file="I:\pr1\html\tests\unit\ResearchTest.php" tests="7" assertions="36" errors="0" warnings="0" failures="0" skipped="0" time="0.351183">
-      <testcase name="testSaveNew" class="ResearchTest" classname="ResearchTest" file="I:\pr1\html\tests\unit\ResearchTest.php" line="82" assertions="4" time="0.088317"/>
-      <testcase name="testSaveUpdate" class="ResearchTest" classname="ResearchTest" file="I:\pr1\html\tests\unit\ResearchTest.php" line="112" assertions="1" time="0.051246"/>
-      <testcase name="testDifferentResearchTypes" class="ResearchTest" classname="ResearchTest" file="I:\pr1\html\tests\unit\ResearchTest.php" line="146" assertions="12" time="0.044476"/>
-      <testcase name="testConstructor" class="ResearchTest" classname="ResearchTest" file="I:\pr1\html\tests\unit\ResearchTest.php" line="36" assertions="5" time="0.041348"/>
-      <testcase name="testConstructorWithoutId" class="ResearchTest" classname="ResearchTest" file="I:\pr1\html\tests\unit\ResearchTest.php" line="60" assertions="4" time="0.040905"/>
-      <testcase name="testGet" class="ResearchTest" classname="ResearchTest" file="I:\pr1\html\tests\unit\ResearchTest.php" line="11" assertions="6" time="0.046691"/>
-      <testcase name="testResearchUserRelationship" class="ResearchTest" classname="ResearchTest" file="I:\pr1\html\tests\unit\ResearchTest.php" line="172" assertions="4" time="0.038201"/>
-    </testsuite>
-    <testsuite name="ResearchTypeTest" file="I:\pr1\html\tests\unit\ResearchTypeTest.php" tests="9" assertions="41" errors="0" warnings="0" failures="0" skipped="0" time="1.596892">
-      <testcase name="testGetTurnCount" class="ResearchTypeTest" classname="ResearchTypeTest" file="I:\pr1\html\tests\unit\ResearchTypeTest.php" line="101" assertions="4" time="0.206477"/>
-      <testcase name="testResearchRequirements" class="ResearchTypeTest" classname="ResearchTypeTest" file="I:\pr1\html\tests\unit\ResearchTypeTest.php" line="149" assertions="2" time="0.210016"/>
-      <testcase name="testAllPredefinedResearchTypes" class="ResearchTypeTest" classname="ResearchTypeTest" file="I:\pr1\html\tests\unit\ResearchTypeTest.php" line="164" assertions="7" time="0.315631"/>
-      <testcase name="testGetTitle" class="ResearchTypeTest" classname="ResearchTypeTest" file="I:\pr1\html\tests\unit\ResearchTypeTest.php" line="89" assertions="1" time="0.079249"/>
-      <testcase name="testGetNeedAgeIds" class="ResearchTypeTest" classname="ResearchTypeTest" file="I:\pr1\html\tests\unit\ResearchTypeTest.php" line="127" assertions="7" time="0.138382"/>
-      <testcase name="testGetExistingResearchType" class="ResearchTypeTest" classname="ResearchTypeTest" file="I:\pr1\html\tests\unit\ResearchTypeTest.php" line="11" assertions="6" time="0.272181"/>
-      <testcase name="testGetNonExistingResearchType" class="ResearchTypeTest" classname="ResearchTypeTest" file="I:\pr1\html\tests\unit\ResearchTypeTest.php" line="28" assertions="1" time="0.153748"/>
-      <testcase name="testConstructor" class="ResearchTypeTest" classname="ResearchTypeTest" file="I:\pr1\html\tests\unit\ResearchTypeTest.php" line="40" assertions="10" time="0.078458"/>
-      <testcase name="testConstructorWithoutId" class="ResearchTypeTest" classname="ResearchTypeTest" file="I:\pr1\html\tests\unit\ResearchTypeTest.php" line="72" assertions="3" time="0.142751"/>
-    </testsuite>
-    <testsuite name="CreateGameSimpleTest" file="I:\pr1\html\tests\unit\CreateGameSimpleTest.php" tests="11" assertions="55" errors="0" warnings="0" failures="0" skipped="0" time="44.058153">
-      <testcase name="testCreateBasicGameClass" class="CreateGameSimpleTest" classname="CreateGameSimpleTest" file="I:\pr1\html\tests\unit\CreateGameSimpleTest.php" line="17" assertions="6" time="1.747328"/>
-      <testcase name="testCreateUsersForGame" class="CreateGameSimpleTest" classname="CreateGameSimpleTest" file="I:\pr1\html\tests\unit\CreateGameSimpleTest.php" line="99" assertions="6" time="4.368205"/>
-      <testcase name="testCreateGameWithDifferentTurnTypes" class="CreateGameSimpleTest" classname="CreateGameSimpleTest" file="I:\pr1\html\tests\unit\CreateGameSimpleTest.php" line="46" assertions="3" time="6.925737"/>
-      <testcase name="testGameList" class="CreateGameSimpleTest" classname="CreateGameSimpleTest" file="I:\pr1\html\tests\unit\CreateGameSimpleTest.php" line="205" assertions="7" time="1.917408"/>
-      <testcase name="testHtmlEscapingInGameName" class="CreateGameSimpleTest" classname="CreateGameSimpleTest" file="I:\pr1\html\tests\unit\CreateGameSimpleTest.php" line="300" assertions="1" time="3.812855"/>
-      <testcase name="testUserColorGeneration" class="CreateGameSimpleTest" classname="CreateGameSimpleTest" file="I:\pr1\html\tests\unit\CreateGameSimpleTest.php" line="157" assertions="15" time="3.917846"/>
-      <testcase name="testCreateGameWithDifferentMapSizes" class="CreateGameSimpleTest" classname="CreateGameSimpleTest" file="I:\pr1\html\tests\unit\CreateGameSimpleTest.php" line="72" assertions="8" time="2.162268"/>
-      <testcase name="testHtmlEscapingInUserLogin" class="CreateGameSimpleTest" classname="CreateGameSimpleTest" file="I:\pr1\html\tests\unit\CreateGameSimpleTest.php" line="323" assertions="1" time="1.443589"/>
-      <testcase name="testGameGetMethod" class="CreateGameSimpleTest" classname="CreateGameSimpleTest" file="I:\pr1\html\tests\unit\CreateGameSimpleTest.php" line="239" assertions="3" time="6.871821"/>
-      <testcase name="testUpdateGameData" class="CreateGameSimpleTest" classname="CreateGameSimpleTest" file="I:\pr1\html\tests\unit\CreateGameSimpleTest.php" line="274" assertions="2" time="4.169959"/>
-      <testcase name="testGameCaching" class="CreateGameSimpleTest" classname="CreateGameSimpleTest" file="I:\pr1\html\tests\unit\CreateGameSimpleTest.php" line="253" assertions="3" time="6.721138"/>
-    </testsuite>
-    <testsuite name="ResourceTest" file="I:\pr1\html\tests\unit\ResourceTest.php" tests="11" assertions="53" errors="0" warnings="0" failures="0" skipped="0" time="0.444987">
-      <testcase name="testConstructorWithoutId" class="ResourceTest" classname="ResourceTest" file="I:\pr1\html\tests\unit\ResourceTest.php" line="85" assertions="7" time="0.052239"/>
-      <testcase name="testResourceCoordinatesUniqueness" class="ResourceTest" classname="ResourceTest" file="I:\pr1\html\tests\unit\ResourceTest.php" line="274" assertions="5" time="0.056000"/>
-      <testcase name="testSaveUpdate" class="ResourceTest" classname="ResourceTest" file="I:\pr1\html\tests\unit\ResourceTest.php" line="187" assertions="1" time="0.043759"/>
-      <testcase name="testGet" class="ResourceTest" classname="ResourceTest" file="I:\pr1\html\tests\unit\ResourceTest.php" line="11" assertions="9" time="0.050274"/>
-      <testcase name="testSaveNew" class="ResourceTest" classname="ResourceTest" file="I:\pr1\html\tests\unit\ResourceTest.php" line="151" assertions="7" time="0.043190"/>
-      <testcase name="testGetTitle" class="ResourceTest" classname="ResourceTest" file="I:\pr1\html\tests\unit\ResourceTest.php" line="113" assertions="1" time="0.047877"/>
-      <testcase name="testConstructor" class="ResourceTest" classname="ResourceTest" file="I:\pr1\html\tests\unit\ResourceTest.php" line="56" assertions="7" time="0.046238"/>
-      <testcase name="testDifferentResourceTypes" class="ResourceTest" classname="ResourceTest" file="I:\pr1\html\tests\unit\ResourceTest.php" line="245" assertions="12" time="0.043226"/>
-      <testcase name="testGetNonExisting" class="ResourceTest" classname="ResourceTest" file="I:\pr1\html\tests\unit\ResourceTest.php" line="43" assertions="1" time="0.023302"/>
-      <testcase name="testGetTitleWithoutType" class="ResourceTest" classname="ResourceTest" file="I:\pr1\html\tests\unit\ResourceTest.php" line="135" assertions="1" time="0.019242"/>
-      <testcase name="testSaveWithoutType" class="ResourceTest" classname="ResourceTest" file="I:\pr1\html\tests\unit\ResourceTest.php" line="227" assertions="2" time="0.019639"/>
-    </testsuite>
-    <testsuite name="ResourceTypeTest" file="I:\pr1\html\tests\unit\ResourceTypeTest.php" tests="9" assertions="97" errors="0" warnings="0" failures="0" skipped="0" time="0.441646">
-      <testcase name="testGetTitle" class="ResourceTypeTest" classname="ResourceTypeTest" file="I:\pr1\html\tests\unit\ResourceTypeTest.php" line="78" assertions="1" time="0.037137"/>
-      <testcase name="testCanUseWithRequiredResearchAvailable" class="ResourceTypeTest" classname="ResourceTypeTest" file="I:\pr1\html\tests\unit\ResourceTypeTest.php" line="106" assertions="1" time="0.053186"/>
-      <testcase name="testCanUseWithRequiredResearchUnavailable" class="ResourceTypeTest" classname="ResourceTypeTest" file="I:\pr1\html\tests\unit\ResourceTypeTest.php" line="131" assertions="1" time="0.047923"/>
-      <testcase name="testCanUseWithoutRequiredResearch" class="ResourceTypeTest" classname="ResourceTypeTest" file="I:\pr1\html\tests\unit\ResourceTypeTest.php" line="90" assertions="1" time="0.074867"/>
-      <testcase name="testAllPredefinedResourceTypes" class="ResourceTypeTest" classname="ResourceTypeTest" file="I:\pr1\html\tests\unit\ResourceTypeTest.php" line="147" assertions="65" time="0.050249"/>
-      <testcase name="testGetExistingResourceType" class="ResourceTypeTest" classname="ResourceTypeTest" file="I:\pr1\html\tests\unit\ResourceTypeTest.php" line="11" assertions="7" time="0.067079"/>
-      <testcase name="testComplexProperties" class="ResourceTypeTest" classname="ResourceTypeTest" file="I:\pr1\html\tests\unit\ResourceTypeTest.php" line="190" assertions="8" time="0.048698"/>
-      <testcase name="testGetNonExistingResourceType" class="ResourceTypeTest" classname="ResourceTypeTest" file="I:\pr1\html\tests\unit\ResourceTypeTest.php" line="29" assertions="1" time="0.038942"/>
-      <testcase name="testConstructor" class="ResourceTypeTest" classname="ResourceTypeTest" file="I:\pr1\html\tests\unit\ResourceTypeTest.php" line="41" assertions="12" time="0.023565"/>
-    </testsuite>
-    <testsuite name="UnitTest" file="I:\pr1\html\tests\unit\UnitTest.php" tests="11" assertions="41" errors="0" warnings="0" failures="0" skipped="0" time="0.583829">
-      <testcase name="testSaveNew" class="UnitTest" classname="UnitTest" file="I:\pr1\html\tests\unit\UnitTest.php" line="108" assertions="6" time="0.088165"/>
-      <testcase name="testRemove" class="UnitTest" classname="UnitTest" file="I:\pr1\html\tests\unit\UnitTest.php" line="236" assertions="1" time="0.042289"/>
-      <testcase name="testSaveUpdate" class="UnitTest" classname="UnitTest" file="I:\pr1\html\tests\unit\UnitTest.php" line="155" assertions="3" time="0.032318"/>
-      <testcase name="testConstruct" class="UnitTest" classname="UnitTest" file="I:\pr1\html\tests\unit\UnitTest.php" line="66" assertions="8" time="0.026185"/>
-      <testcase name="testGetAll" class="UnitTest" classname="UnitTest" file="I:\pr1\html\tests\unit\UnitTest.php" line="407" assertions="5" time="0.054986"/>
-      <testcase name="testGetNonExistingUnit" class="UnitTest" classname="UnitTest" file="I:\pr1\html\tests\unit\UnitTest.php" line="56" assertions="1" time="0.023466"/>
-      <testcase name="testGetTitle" class="UnitTest" classname="UnitTest" file="I:\pr1\html\tests\unit\UnitTest.php" line="205" assertions="1" time="0.026152"/>
-      <testcase name="testGetExistingUnit" class="UnitTest" classname="UnitTest" file="I:\pr1\html\tests\unit\UnitTest.php" line="13" assertions="7" time="0.066891"/>
-      <testcase name="testGetMissionTypes" class="UnitTest" classname="UnitTest" file="I:\pr1\html\tests\unit\UnitTest.php" line="279" assertions="4" time="0.107872"/>
-      <testcase name="testCanMove" class="UnitTest" classname="UnitTest" file="I:\pr1\html\tests\unit\UnitTest.php" line="326" assertions="1" time="0.061376"/>
-      <testcase name="testMoveTo" class="UnitTest" classname="UnitTest" file="I:\pr1\html\tests\unit\UnitTest.php" line="365" assertions="4" time="0.054131"/>
-    </testsuite>
-    <testsuite name="UnitTypeTest" file="I:\pr1\html\tests\unit\UnitTypeTest.php" tests="7" assertions="34" errors="0" warnings="0" failures="0" skipped="0" time="0.413006">
-      <testcase name="testGetExistingUnitType" class="UnitTypeTest" classname="UnitTypeTest" file="I:\pr1\html\tests\unit\UnitTypeTest.php" line="13" assertions="7" time="0.280016"/>
-      <testcase name="testGetNonExistingUnitType" class="UnitTypeTest" classname="UnitTypeTest" file="I:\pr1\html\tests\unit\UnitTypeTest.php" line="29" assertions="1" time="0.026642"/>
-      <testcase name="testConstructBasic" class="UnitTypeTest" classname="UnitTypeTest" file="I:\pr1\html\tests\unit\UnitTypeTest.php" line="39" assertions="7" time="0.027126"/>
-      <testcase name="testConstructWithCanMove" class="UnitTypeTest" classname="UnitTypeTest" file="I:\pr1\html\tests\unit\UnitTypeTest.php" line="65" assertions="6" time="0.023223"/>
-      <testcase name="testGetTitle" class="UnitTypeTest" classname="UnitTypeTest" file="I:\pr1\html\tests\unit\UnitTypeTest.php" line="90" assertions="1" time="0.018266"/>
-      <testcase name="testCaching" class="UnitTypeTest" classname="UnitTypeTest" file="I:\pr1\html\tests\unit\UnitTypeTest.php" line="100" assertions="1" time="0.017683"/>
-      <testcase name="testDefaultProperties" class="UnitTypeTest" classname="UnitTypeTest" file="I:\pr1\html\tests\unit\UnitTypeTest.php" line="113" assertions="11" time="0.020050"/>
-    </testsuite>
-    <testsuite name="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" tests="20" assertions="72" errors="0" warnings="0" failures="0" skipped="0" time="4.357322">
-      <testcase name="testNewSystemMessage" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="298" assertions="4" time="0.196620"/>
-      <testcase name="testStartResearch" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="241" assertions="2" time="0.086455"/>
-      <testcase name="testStartResearchAlreadyDone" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="266" assertions="2" time="0.065665"/>
-      <testcase name="testGetNextEventWithEvent" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="332" assertions="4" time="0.039986"/>
-      <testcase name="testGetNextEventNoEvents" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="319" assertions="1" time="0.051862"/>
-      <testcase name="testGetMessages" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="506" assertions="3" time="0.066177"/>
-      <testcase name="testGetResearch" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="211" assertions="5" time="0.065748"/>
-      <testcase name="testGetCities" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="170" assertions="5" time="1.825195"/>
-      <testcase name="testCalculateIncome" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="139" assertions="3" time="0.049934"/>
-      <testcase name="testGetNonExistingUser" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="33" assertions="1" time="0.022337"/>
-      <testcase name="testGetExistingUser" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="13" assertions="5" time="0.044312"/>
-      <testcase name="testGetResearchNeedTurns" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="455" assertions="1" time="0.043326"/>
-      <testcase name="testGetAvailableResearch" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="439" assertions="3" time="0.063374"/>
-      <testcase name="testCalculateResearchComplete" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="401" assertions="6" time="0.075084"/>
-      <testcase name="testConstruct" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="43" assertions="11" time="0.029218"/>
-      <testcase name="testSaveNew" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="77" assertions="9" time="0.051677"/>
-      <testcase name="testSaveUpdate" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="114" assertions="2" time="0.044351"/>
-      <testcase name="testCalculateResearchNoActive" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="357" assertions="1" time="0.056882"/>
-      <testcase name="testCalculateResearchActive" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="370" assertions="3" time="0.039292"/>
-      <testcase name="testCalculateCities" class="UserTest" classname="UserTest" file="I:\pr1\html\tests\unit\UserTest.php" line="475" assertions="1" time="1.439826"/>
-    </testsuite>
-    <testsuite name="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" tests="13" assertions="35" errors="0" warnings="0" failures="0" skipped="0" time="51.990345">
-      <testcase name="testOpenGameWithMultiplePlayers" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="89" assertions="4" time="5.500486"/>
-      <testcase name="testOpenGameWithUserFromDifferentGame" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="20" assertions="3" time="2.391269"/>
-      <testcase name="testEmptyGameList" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="287" assertions="1" time="1.735117"/>
-      <testcase name="testGameListLoading" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="243" assertions="7" time="1.600400"/>
-      <testcase name="testSuccessfulGameOpening" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="52" assertions="2" time="7.280071"/>
-      <testcase name="testOpenGameWithDifferentTurnTypes" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="127" assertions="6" time="4.756566"/>
-      <testcase name="testOpenNonExistentGame" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="165" assertions="1" time="10.299731"/>
-      <testcase name="testOpenGameWithNonExistentUser" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="184" assertions="1" time="1.777762"/>
-      <testcase name="testOpenGameWithoutGameId" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="205" assertions="1" time="1.505712"/>
-      <testcase name="testOpenGameWithoutUserId" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="224" assertions="1" time="3.809829"/>
-      <testcase name="testSessionStateAfterGameOpening" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="296" assertions="3" time="3.331637"/>
-      <testcase name="testReopenGameWithDifferentUser" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="323" assertions="3" time="2.161778"/>
-      <testcase name="testOpenGameWithMaxPlayers" class="OpenGameTest" classname="OpenGameTest" file="I:\pr1\html\tests\unit\OpenGameTest.php" line="370" assertions="2" time="5.839986"/>
-    </testsuite>
-    <testsuite name="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" tests="15" assertions="59" errors="0" warnings="0" failures="0" skipped="0" time="56.890129">
-      <testcase name="testCalculateConcurrently" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="292" assertions="3" time="2.218171"/>
-      <testcase name="testGetActivePlayerByTurn" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="189" assertions="1" time="1.858671"/>
-      <testcase name="testGetFirstPlanetNoPlanets" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="256" assertions="1" time="5.515318"/>
-      <testcase name="testGetFirstPlanet" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="236" assertions="5" time="2.538595"/>
-      <testcase name="testGetActivePlayerConcurrently" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="204" assertions="2" time="1.704040"/>
-      <testcase name="testGetActivePlayerNoActive" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="221" assertions="1" time="5.773833"/>
-      <testcase name="testGetExistingGame" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="19" assertions="6" time="3.704124"/>
-      <testcase name="testCreateNewGame" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="315" assertions="5" time="5.424751"/>
-      <testcase name="testGameList" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="125" assertions="5" time="9.652247"/>
-      <testcase name="testGetNonExistingGame" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="41" assertions="1" time="1.490347"/>
-      <testcase name="testSaveUpdate" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="104" assertions="2" time="2.089191"/>
-      <testcase name="testConstruct" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="51" assertions="8" time="5.265189"/>
-      <testcase name="testAllSystemMessage" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="148" assertions="10" time="1.673249"/>
-      <testcase name="testSaveNew" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="77" assertions="6" time="1.896445"/>
-      <testcase name="testCalculateByTurn" class="GameTest" classname="GameTest" file="I:\pr1\html\tests\unit\GameTest.php" line="269" assertions="3" time="6.085958"/>
-    </testsuite>
-    <testsuite name="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" tests="1" assertions="4" errors="0" warnings="0" failures="0" skipped="0" time="0.067654">
-      <testcase name="testFullGameEditProcess" class="EditGameIntegrationTest" classname="EditGameIntegrationTest" file="I:\pr1\html\tests\integration\EditGameIntegrationTest.php" line="21" assertions="4" time="0.067654"/>
-    </testsuite>
-    <testsuite name="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" tests="10" assertions="29" errors="0" warnings="0" failures="0" skipped="0" time="68.735091">
-      <testcase name="testFullGameOpeningProcess" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="22" assertions="4" time="1.327588"/>
-      <testcase name="testGameOpeningSessionPersistence" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="45" assertions="6" time="8.807846"/>
-      <testcase name="testGameListWithDifferentPlayerCounts" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="102" assertions="1" time="1.779655"/>
-      <testcase name="testGameOpeningWithDifferentConfigurations" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="73" assertions="2" time="8.938542"/>
-      <testcase name="testErrorHandlingInGameOpening" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="123" assertions="3" time="13.077746"/>
-      <testcase name="testPerformanceGameOpening" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="154" assertions="2" time="6.070585"/>
-      <testcase name="testSecurityInvalidIds" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="172" assertions="3" time="8.718295"/>
-      <testcase name="testMultipleGameOpenings" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="196" assertions="2" time="6.029562"/>
-      <testcase name="testGameOpeningDataIntegrity" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="216" assertions="3" time="5.404265"/>
-      <testcase name="testGameOpeningObjectRelationships" class="OpenGameIntegrationTest" classname="OpenGameIntegrationTest" file="I:\pr1\html\tests\integration\OpenGameIntegrationTest.php" line="235" assertions="3" time="8.581008"/>
-    </testsuite>
-    <testsuite name="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" tests="13" assertions="77" errors="0" warnings="0" failures="0" skipped="0" time="83.364853">
-      <testcase name="testSQLInjectionProtection" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="276" assertions="2" time="1.794089"/>
-      <testcase name="testInitialPlayerParametersViaWeb" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="189" assertions="9" time="1.964719"/>
-      <testcase name="testMultipleGameCreation" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="320" assertions="3" time="4.128490"/>
-      <testcase name="testSuccessRedirect" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="340" assertions="2" time="6.568730"/>
-      <testcase name="testPlayerTurnOrderViaWeb" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="163" assertions="8" time="5.027291"/>
-      <testcase name="testUniquePlayerColorsViaWeb" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="141" assertions="3" time="14.933220"/>
-      <testcase name="testValidationErrorsViaWeb" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="214" assertions="7" time="8.501630"/>
-      <testcase name="testPerformanceWithMaxPlayers" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="252" assertions="4" time="16.413528"/>
-      <testcase name="testXSSProtectionViaWeb" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="299" assertions="1" time="11.954956"/>
-      <testcase name="testPlayerCountValidation" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="235" assertions="2" time="1.756824"/>
-      <testcase name="testGameCreationAndDataPersistence" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="22" assertions="16" time="1.764041"/>
-      <testcase name="testSettlerUnitsCreation" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="69" assertions="14" time="5.375547"/>
-      <testcase name="testDifferentTurnTypesViaWeb" class="CreateGameIntegrationTest" classname="CreateGameIntegrationTest" file="I:\pr1\html\tests\integration\CreateGameIntegrationTest.php" line="111" assertions="6" time="3.181788"/>
-    </testsuite>
-    <testsuite name="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" tests="19" assertions="55" errors="0" warnings="0" failures="0" skipped="0" time="87.471981">
-      <testcase name="testVeryLongStrings" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="371" assertions="6" time="8.644183"/>
-      <testcase name="testTooSmallMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="229" assertions="2" time="1.592510"/>
-      <testcase name="testDuplicatePlayerNames" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="201" assertions="1" time="2.142686"/>
-      <testcase name="testDataPreservationOnError" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="300" assertions="4" time="10.347733"/>
-      <testcase name="testNoPostData" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="514" assertions="1" time="15.002937"/>
-      <testcase name="testTooManyPlayers" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="275" assertions="1" time="2.508539"/>
-      <testcase name="testEmptyGameName" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="179" assertions="1" time="10.064285"/>
-      <testcase name="testTooLargeMapSize" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="252" assertions="2" time="4.504528"/>
-      <testcase name="testCreateBasicGame" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="17" assertions="6" time="7.410932"/>
-      <testcase name="testGameInitialConditions" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="537" assertions="5" time="6.256567"/>
-      <testcase name="testEmptyPlayerFields" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="457" assertions="1" time="1.543942"/>
-      <testcase name="testXSSInGameName" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="325" assertions="1" time="1.358537"/>
-      <testcase name="testXSSInPlayerNames" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="348" assertions="1" time="5.068499"/>
-      <testcase name="testCreateOneWindowGame" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="120" assertions="1" time="1.490795"/>
-      <testcase name="testPlayerColorGeneration" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="412" assertions="17" time="1.519536"/>
-      <testcase name="testCreateConcurrentGame" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="78" assertions="2" time="1.217611"/>
-      <testcase name="testInvalidTurnType" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="492" assertions="1" time="2.913816"/>
-      <testcase name="testWhitespaceGameName" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="157" assertions="1" time="2.669582"/>
-      <testcase name="testMinimumPlayers" class="CreateGameTest" classname="CreateGameTest" file="I:\pr1\html\tests\unit\CreateGameTest.php" line="582" assertions="1" time="1.214762"/>
+    <testsuite name="PageInfoTest" file="I:\pr1\html\tests\integration\PageInfoTest.php" tests="2" assertions="2" errors="0" warnings="0" failures="0" skipped="0" time="0.104153">
+      <testcase name="testCellInfoPage" class="PageInfoTest" classname="PageInfoTest" file="I:\pr1\html\tests\integration\PageInfoTest.php" line="16" assertions="1" time="0.067624"/>
+      <testcase name="testTurnInfoPage" class="PageInfoTest" classname="PageInfoTest" file="I:\pr1\html\tests\integration\PageInfoTest.php" line="46" assertions="1" time="0.036529"/>
     </testsuite>
   </testsuite>
 </testsuites>

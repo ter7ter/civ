@@ -23,4 +23,6 @@ require_once __DIR__ . "/classes/UnitType.class.php";
 require_once __DIR__ . "/classes/City.class.php";
 require_once __DIR__ . "/classes/Event.class.php";
 
+$error = '';
+
 ?>

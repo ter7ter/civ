@@ -1,3 +1,53 @@
-Cell
- [x] Get planet
+Create Game Integration
+ [x] S q l injection protection
+ [x] Validation errors via web
+ [x] Success redirect
+ [x] X s s protection via web
+ [x] Player turn order via web
+ [x] Multiple game creation
+ [x] Unique player colors via web
+ [x] Initial player parameters via web
+ [x] Player count validation
+ [x] Performance with max players
+ [x] Game creation and data persistence
+ [x] Settler units creation
+ [x] Different turn types via web
+
+Map Actions Integration
+ [x] Unit movement
+ [x] Map boundaries
+ [x] City foundation
+ [x] Map scrolling
+ [x] Map loading with city
+ [x] Map loading with units
+
+Map VPage
+ [x] Map v page loads without errors
+
+Open Game Integration
+ [x] Game opening session persistence
+ [x] Full game opening process
+ [x] Game list with different player counts
+ [x] Game opening with different configurations
+ [x] Error handling in game opening
+ [x] Performance game opening
+ [x] Security invalid ids
+ [x] Multiple game openings
+ [x] Game opening data integrity
+ [x] Game opening object relationships
+
+Admin Integration
+ [x] Full crud scenario
+ [x] Invalid data handling
+ [x] Unit type creation workflow
+ [x] Building type creation workflow
+ [x] Get all types
+ [x] Complex scenario
+
+Edit Game Integration
+ [x] Full game edit process
+
+Page Info
+ [x] Cell info page
+ [x] Turn info page
 

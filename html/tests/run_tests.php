@@ -202,7 +202,7 @@ class TestRunner
                 $cmd[] = "--verbose";
             }
             if ($this->options["stop-on-failure"]) {
-                $cmd[] = "--stop-on-failure";
+                $cmd[] = "--stop-on-error";
             }
             if ($this->options["filter"]) {
                 $cmd[] = "--filter=" . $this->options["filter"];

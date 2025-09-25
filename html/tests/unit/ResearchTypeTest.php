@@ -329,8 +329,8 @@ class ResearchTypeTest extends TestBase
 
         // Проверяем, что JSON правильно распарсился
         $this->assertIsArray($researchType->requirements);
-        // Проверяем, что requirements не пустой (JSON распарсился)
-        $this->assertNotEmpty($researchType->requirements);
+        // Проверяем, что requirements содержит 3 объекта (JSON распарсился)
+        $this->assertCount(3, $researchType->requirements);
         // Проверяем, что значения - объекты ResearchType
         foreach ($researchType->requirements as $req) {
             $this->assertInstanceOf(ResearchType::class, $req);

@@ -1,5 +1,5 @@
 <?php
-$item_types = ItemType::get_all();
+$item_types = ResourceType::getAll();
 ?>
 <script>
 function item_add(type) {

@@ -104,6 +104,19 @@ class BuildingType
 
     public function __construct($data)
     {
+        // Устанавливаем значения по умолчанию
+        $this->cost = 0;
+        $this->need_coastal = false;
+        $this->culture = 0;
+        $this->upkeep = 0;
+        $this->culture_bonus = 0;
+        $this->research_bonus = 0;
+        $this->money_bonus = 0;
+        $this->description = "";
+        $this->req_research = [];
+        $this->req_resources = [];
+        $this->need_research = [];
+
         // Список разрешенных свойств
         $allowedProperties = [
             "id",
@@ -138,7 +151,8 @@ class BuildingType
         foreach ($jsonFields as $field) {
             if (isset($data[$field])) {
                 if (is_string($data[$field])) {
-                    $this->$field = json_decode($data[$field], true);
+                    $decoded = json_decode($data[$field], true);
+                    $this->$field = $decoded !== null ? $decoded : [];
                 } else {
                     $this->$field = $data[$field];
                 }

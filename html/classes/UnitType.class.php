@@ -153,6 +153,35 @@ class UnitType
             $this->id = $data["id"];
         }
 
+        // Устанавливаем значения по умолчанию
+        $this->points = 1;
+        $this->cost = 0;
+        $this->population_cost = 0;
+        $this->type = "land";
+        $this->attack = 0;
+        $this->defence = 0;
+        $this->health = 1;
+        $this->movement = 1;
+        $this->upkeep = 0;
+        $this->can_found_city = false;
+        $this->can_build = false;
+        $this->description = "";
+        $this->age = 1;
+        $this->missions = ["move_to"];
+        $this->can_move = [
+            "plains" => 1,
+            "plains2" => 1,
+            "forest" => 1,
+            "hills" => 1,
+            "mountains" => 2,
+            "desert" => 1,
+            "city" => 1,
+        ];
+        $this->need_research = [];
+        $this->mission_points = [];
+        $this->req_research = [];
+        $this->req_resources = [];
+
         // Явно устанавливаем известные свойства
         $knownFields = [
             "title",
@@ -190,7 +219,8 @@ class UnitType
         foreach ($jsonFields as $field) {
             if (isset($data[$field])) {
                 if (is_string($data[$field])) {
-                    $this->$field = json_decode($data[$field], true);
+                    $decoded = json_decode($data[$field], true);
+                    $this->$field = $decoded !== null ? $decoded : [];
                 } else {
                     $this->$field = $data[$field];
                 }

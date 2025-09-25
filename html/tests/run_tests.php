@@ -682,14 +682,14 @@ class TestRunner
         echo "  --js-only           Запуск только JavaScript тестов\n";
         echo "  --with-js           Включить JavaScript тесты\n";
         echo "  --coverage           Покрытие кода (только 1 процесс, медленнее, но корректно)\n";
-        echo "                      Без --coverage тесты идут параллельно и быстро (по умолчанию 4 процесса)\n";
+        echo "                      Без --coverage тесты идут параллельно через ParaTest (по умолчанию 4 процесса)\n";
         echo "  --generate-coverage-report-only  Генерация отчета о покрытии кода из ранее собранных данных (из coverage.php) без запуска тестов\n"; // NEW
         echo "  --verbose, -v       Подробный вывод\n";
         echo "  --stop-on-failure   Остановиться при первой ошибке\n";
         echo "  --filter <pattern>  Фильтр тестов по имени/паттерну\n";
         echo "  --help, -h          Показать эту справку\n";
         echo "  --no-parallel         Запускать тесты без параллелизма (только через phpunit)\n";
-        echo "  --processes <n>       Количество процессов для параллельного запуска (по умолчанию 4)\n";
+        echo "  --processes <n>       Количество процессов для ParaTest (по умолчанию 4)\n";
         echo "\nПРИМЕРЫ:\n";
         echo "  php run_tests.php                    # Все PHP тесты\n";
         echo "  php run_tests.php --with-js          # Все тесты включая JS\n";

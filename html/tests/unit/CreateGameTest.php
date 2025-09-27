@@ -18,19 +18,16 @@ class CreateGameTest extends CommonTestBase
     public function testCreateBasicGame(): void
     {
         // Создаем игру напрямую через класс Game, избегая сложной генерации карты
-        $gameData = [
+        $game = $this->createTestGame([
             "name" => "Тестовая игра",
             "map_w" => 100,
             "map_h" => 100,
             "turn_type" => "byturn",
             "turn_num" => 1,
-        ];
-
-        $game = new Game($gameData);
-        $game->save();
+        ]);
 
         // Создаем пользователей
-        $user1Data = [
+        $user1 = $this->createTestUser([
             "login" => "Игрок1",
             "color" => "#ff0000",
             "game" => $game->id,
@@ -38,11 +35,9 @@ class CreateGameTest extends CommonTestBase
             "turn_status" => "wait",
             "money" => 50,
             "age" => 1,
-        ];
-        $user1 = new User($user1Data);
-        $user1->save();
+        ]);
 
-        $user2Data = [
+        $user2 = $this->createTestUser([
             "login" => "Игрок2",
             "color" => "#00ff00",
             "game" => $game->id,
@@ -50,9 +45,7 @@ class CreateGameTest extends CommonTestBase
             "turn_status" => "wait",
             "money" => 50,
             "age" => 1,
-        ];
-        $user2 = new User($user2Data);
-        $user2->save();
+        ]);
 
         // Проверяем, что игра создана в БД
         $gameCount = $this->getTableCount("game");
@@ -79,20 +72,17 @@ class CreateGameTest extends CommonTestBase
     public function testCreateConcurrentGame(): void
     {
         // Создаем игру с одновременными ходами напрямую
-        $gameData = [
+        $game = $this->createTestGame([
             "name" => "Игра с одновременными ходами",
             "map_w" => 100,
             "map_h" => 100,
             "turn_type" => "concurrently",
             "turn_num" => 1,
-        ];
-
-        $game = new Game($gameData);
-        $game->save();
+        ]);
 
         // Создаем трех пользователей
         for ($i = 1; $i <= 3; $i++) {
-            $userData = [
+            $this->createTestUser([
                 "login" => "Игрок$i",
                 "color" =>
                     "#" . str_pad(dechex($i * 100000), 6, "0", STR_PAD_LEFT),
@@ -101,9 +91,7 @@ class CreateGameTest extends CommonTestBase
                 "turn_status" => "wait",
                 "money" => 50,
                 "age" => 1,
-            ];
-            $user = new User($userData);
-            $user->save();
+            ]);
         }
 
         // Проверяем количество пользователей
@@ -121,20 +109,17 @@ class CreateGameTest extends CommonTestBase
     public function testCreateOneWindowGame(): void
     {
         // Создаем игру в одном окне напрямую
-        $gameData = [
+        $game = $this->createTestGame([
             "name" => "Игра в одном окне",
             "map_w" => 100,
             "map_h" => 100,
             "turn_type" => "onewindow",
             "turn_num" => 1,
-        ];
-
-        $game = new Game($gameData);
-        $game->save();
+        ]);
 
         // Создаем двух пользователей
         for ($i = 1; $i <= 2; $i++) {
-            $userData = [
+            $this->createTestUser([
                 "login" => "Игрок$i",
                 "color" =>
                     "#" . str_pad(dechex($i * 200000), 6, "0", STR_PAD_LEFT),
@@ -143,9 +128,7 @@ class CreateGameTest extends CommonTestBase
                 "turn_status" => "wait",
                 "money" => 50,
                 "age" => 1,
-            ];
-            $user = new User($userData);
-            $user->save();
+            ]);
         }
 
         $savedGame = $this->getLastRecord("game");
@@ -158,16 +141,13 @@ class CreateGameTest extends CommonTestBase
     public function testWhitespaceGameName(): void
     {
         // Проверяем только логику валидации пробельных названий
-        $gameData = [
+        $game = $this->createTestGame([
             "name" => "   ",
             "map_w" => 20,
             "map_h" => 20,
             "turn_type" => "byturn",
             "turn_num" => 1,
-        ];
-
-        $game = new Game($gameData);
-        $game->save();
+        ]);
 
         // Game класс принимает любые названия, валидация на уровне страницы
         $savedGame = $this->getLastRecord("game");
@@ -180,16 +160,13 @@ class CreateGameTest extends CommonTestBase
     public function testEmptyGameName(): void
     {
         // Проверяем только логику валидации названия
-        $gameData = [
+        $game = $this->createTestGame([
             "name" => "",
             "map_w" => 20,
             "map_h" => 20,
             "turn_type" => "byturn",
             "turn_num" => 1,
-        ];
-
-        $game = new Game($gameData);
-        $game->save();
+        ]);
 
         // Game класс не валидирует пустые названия, это делает страница
         $savedGame = $this->getLastRecord("game");
@@ -202,23 +179,23 @@ class CreateGameTest extends CommonTestBase
     public function testDuplicatePlayerNames(): void
     {
         // Проверяем логику дублирующихся имен на уровне классов
-        $gameData = $this->createTestGame(["name" => "Тестовая игра"]);
+        $game = $this->createTestGame(["name" => "Тестовая игра"]);
 
         // Создаем пользователей с одинаковыми именами
         $user1 = $this->createTestUser([
-            "game" => $gameData["id"],
+            "game" => $game->id,
             "login" => "Игрок1",
         ]);
 
         $user2 = $this->createTestUser([
-            "game" => $gameData["id"],
+            "game" => $game->id,
             "login" => "Игрок1", // дублирующееся имя
         ]);
 
         // Базовые классы не проверяют уникальность, это делает страница
         $userCount = MyDB::query(
             "SELECT COUNT(*) FROM user WHERE game = :gid AND login = 'Игрок1'",
-            ["gid" => $gameData["id"]],
+            ["gid" => $game->id],
             "elem",
         );
         $this->assertEquals(2, $userCount);
@@ -230,16 +207,13 @@ class CreateGameTest extends CommonTestBase
     public function testTooSmallMapSize(): void
     {
         // Проверяем создание игры с маленькой картой
-        $gameData = [
+        $game = $this->createTestGame([
             "name" => "Тестовая игра",
             "map_w" => 30,
             "map_h" => 30,
             "turn_type" => "byturn",
             "turn_num" => 1,
-        ];
-
-        $game = new Game($gameData);
-        $game->save();
+        ]);
 
         // Game класс принимает любые размеры, валидация на уровне страницы
         $savedGame = $this->getLastRecord("game");
@@ -253,16 +227,13 @@ class CreateGameTest extends CommonTestBase
     public function testTooLargeMapSize(): void
     {
         // Проверяем создание игры с большой картой
-        $gameData = [
+        $game = $this->createTestGame([
             "name" => "Тестовая игра",
             "map_w" => 600,
             "map_h" => 600,
             "turn_type" => "byturn",
             "turn_num" => 1,
-        ];
-
-        $game = new Game($gameData);
-        $game->save();
+        ]);
 
         // Game класс принимает любые размеры, валидация на уровне страницы
         $savedGame = $this->getLastRecord("game");
@@ -276,12 +247,12 @@ class CreateGameTest extends CommonTestBase
     public function testTooManyPlayers(): void
     {
         // Проверяем создание игры с большим количеством игроков
-        $gameData = $this->createTestGame(["name" => "Тестовая игра"]);
+        $game = $this->createTestGame(["name" => "Тестовая игра"]);
 
         // Создаем много пользователей
         for ($i = 1; $i <= 10; $i++) {
             $this->createTestUser([
-                "game" => $gameData["id"],
+                "game" => $game->id,
                 "login" => "Игрок$i",
             ]);
         }
@@ -289,7 +260,7 @@ class CreateGameTest extends CommonTestBase
         // Базовые классы не ограничивают количество, это делает страница
         $userCount = MyDB::query(
             "SELECT COUNT(*) FROM user WHERE game = :gid",
-            ["gid" => $gameData["id"]],
+            ["gid" => $game->id],
             "elem",
         );
         $this->assertEquals(10, $userCount);
@@ -301,16 +272,13 @@ class CreateGameTest extends CommonTestBase
     public function testDataPreservationOnError(): void
     {
         // Проверяем только логику сохранения данных классов
-        $gameData = [
+        $game = $this->createTestGame([
             "name" => "", // пустое имя
             "map_w" => 150,
             "map_h" => 120,
             "turn_type" => "concurrently",
             "turn_num" => 1,
-        ];
-
-        $game = new Game($gameData);
-        $game->save();
+        ]);
 
         // Проверяем, что все данные сохранились корректно
         $savedGame = $this->getLastRecord("game");
@@ -327,16 +295,13 @@ class CreateGameTest extends CommonTestBase
     {
         $maliciousName = '<script>alert("xss")</script>';
 
-        $gameData = [
+        $game = $this->createTestGame([
             "name" => $maliciousName,
             "map_w" => 20,
             "map_h" => 20,
             "turn_type" => "byturn",
             "turn_num" => 1,
-        ];
-
-        $game = new Game($gameData);
-        $game->save();
+        ]);
 
         // Проверяем, что данные в БД сохраняются как есть (экранирование на уровне вывода)
         $savedGame = $this->getLastRecord("game");
@@ -350,17 +315,17 @@ class CreateGameTest extends CommonTestBase
     {
         $maliciousPlayer = '<img src=x onerror=alert(1)>';
 
-        $gameData = $this->createTestGame(["name" => "Тестовая игра"]);
+        $game = $this->createTestGame(["name" => "Тестовая игра"]);
 
         $user = $this->createTestUser([
-            "game" => $gameData["id"],
+            "game" => $game->id,
             "login" => $maliciousPlayer,
         ]);
 
         // Проверяем, что данные в БД сохраняются как есть (экранирование на уровне вывода)
         $userData = MyDB::query(
             "SELECT * FROM user WHERE id = :id",
-            ["id" => $user["id"]],
+            ["id" => $user->id],
             "row",
         );
         $this->assertEquals($maliciousPlayer, $userData["login"]);
@@ -375,16 +340,13 @@ class CreateGameTest extends CommonTestBase
         $longName = str_repeat("A", 250); // VARCHAR(255) в БД
         $longPlayerName = str_repeat("B", 200);
 
-        $gameData = [
+        $game = $this->createTestGame([
             "name" => $longName,
             "map_w" => 20,
             "map_h" => 20,
             "turn_type" => "byturn",
             "turn_num" => 1,
-        ];
-
-        $game = new Game($gameData);
-        $game->save();
+        ]);
 
         // Создаем пользователя с длинным именем
         $testGame = $this->getLastRecord("game");
@@ -400,7 +362,7 @@ class CreateGameTest extends CommonTestBase
 
         $savedUser = MyDB::query(
             "SELECT login FROM user WHERE id = :id",
-            ["id" => $user["id"]],
+            ["id" => $user->id],
             "row",
         );
         $this->assertNotNull($savedUser["login"]);
@@ -412,7 +374,7 @@ class CreateGameTest extends CommonTestBase
      */
     public function testPlayerColorGeneration(): void
     {
-        $gameData = $this->createTestGame(["name" => "Тестовая игра"]);
+        $game = $this->createTestGame(["name" => "Тестовая игра"]);
 
         // Создаем пользователей с автогенерированными цветами
         $userNames = ["Игрок1", "Игрок2", "Игрок3", "Игрок4"];
@@ -421,7 +383,7 @@ class CreateGameTest extends CommonTestBase
         foreach ($userNames as $index => $name) {
             $color = $this->generatePlayerColor($index + 1);
             $user = $this->createTestUser([
-                "game" => $gameData["id"],
+                "game" => $game->id,
                 "login" => $name,
                 "color" => $color,
                 "turn_order" => $index + 1,
@@ -432,7 +394,7 @@ class CreateGameTest extends CommonTestBase
         // Получаем всех пользователей из БД
         $savedUsers = MyDB::query(
             "SELECT * FROM user WHERE game = :gid ORDER BY turn_order",
-            ["gid" => $gameData["id"]],
+            ["gid" => $game->id],
         );
 
         $this->assertCount(4, $savedUsers);
@@ -457,7 +419,7 @@ class CreateGameTest extends CommonTestBase
      */
     public function testEmptyPlayerFields(): void
     {
-        $gameData = $this->createTestGame(["name" => "Тестовая игра"]);
+        $game = $this->createTestGame(["name" => "Тестовая игра"]);
 
         // Создаем пользователей, включая пустые/пробельные имена
         $userNames = ["Игрок1", "", "Игрок2", "   ", "Игрок3"];
@@ -466,7 +428,7 @@ class CreateGameTest extends CommonTestBase
         foreach ($userNames as $index => $name) {
             if (trim($name) !== "") {
                 $this->createTestUser([
-                    "game" => $gameData["id"],
+                    "game" => $game->id,
                     "login" => $name,
                     "turn_order" => $index + 1,
                 ]);
@@ -477,7 +439,7 @@ class CreateGameTest extends CommonTestBase
         // Пустые поля должны быть проигнорированы
         $userCount = MyDB::query(
             "SELECT COUNT(*) FROM user WHERE game = :gid",
-            ["gid" => $gameData["id"]],
+            ["gid" => $game->id],
             "elem",
         );
         $this->assertEquals(
@@ -493,16 +455,13 @@ class CreateGameTest extends CommonTestBase
     public function testInvalidTurnType(): void
     {
         // Создаем игру напрямую через класс, без генерации карты
-        $gameData = [
+        $game = $this->createTestGame([
             "name" => "Тестовая игра",
             "map_w" => 20,
             "map_h" => 20,
             "turn_type" => "invalid_type",
             "turn_num" => 1,
-        ];
-
-        $game = new Game($gameData);
-        $game->save();
+        ]);
 
         // Проверяем, что неверный тип ходов был заменен на дефолтный
         $savedGame = $this->getLastRecord("game");
@@ -518,16 +477,13 @@ class CreateGameTest extends CommonTestBase
         $this->clearRequest();
 
         // Должна быть возможность создать игру с пустыми данными (они заполнятся по умолчанию)
-        $gameData = [
+        $game = $this->createTestGame([
             "name" => "",
             "map_w" => 20,
             "map_h" => 20,
             "turn_type" => "byturn",
             "turn_num" => 1,
-        ];
-
-        $game = new Game($gameData);
-        $game->save();
+        ]);
 
         $this->assertTrue(true); // Тест на то, что создание не падает
     }
@@ -538,30 +494,30 @@ class CreateGameTest extends CommonTestBase
     public function testGameInitialConditions(): void
     {
         // Создаем игру напрямую без генерации карты
-        $gameData = $this->createTestGame([
+        $game = $this->createTestGame([
             "name" => "Тестовая игра",
             "turn_num" => 1,
         ]);
 
         // Создаем пользователей вручную
         $user1 = $this->createTestUser([
-            "game" => $gameData["id"],
+            "game" => $game->id,
             "login" => "Игрок1",
             "money" => 50,
             "age" => 1,
         ]);
 
         $user2 = $this->createTestUser([
-            "game" => $gameData["id"],
+            "game" => $game->id,
             "login" => "Игрок2",
             "money" => 50,
             "age" => 1,
         ]);
 
-        $game = Game::get($gameData["id"]);
+        $gameObj = Game::get($game->id);
 
         // Проверяем начальный номер хода
-        $this->assertEquals(1, $game->turn_num);
+        $this->assertEquals(1, $gameObj->turn_num);
 
         // Проверяем, что у игроков правильные начальные деньги
         $users = MyDB::query("SELECT * FROM user WHERE game = :gid", [
@@ -583,20 +539,20 @@ class CreateGameTest extends CommonTestBase
     public function testMinimumPlayers(): void
     {
         // Проверяем только логику валидации
-        $gameData = $this->createTestGame([
+        $game = $this->createTestGame([
             "name" => "Тестовая игра с одним игроком",
         ]);
 
         // Создаем только одного пользователя
         $user = $this->createTestUser([
-            "game" => $gameData["id"],
+            "game" => $game->id,
             "login" => "Единственный игрок",
         ]);
 
         // Проверяем, что игра создается, но валидация должна происходить на уровне страницы
         $userCount = MyDB::query(
             "SELECT COUNT(*) FROM user WHERE game = :gid",
-            ["gid" => $gameData["id"]],
+            ["gid" => $game->id],
             "elem",
         );
         $this->assertEquals(1, $userCount);

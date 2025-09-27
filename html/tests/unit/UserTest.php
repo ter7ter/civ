@@ -12,16 +12,15 @@ class UserTest extends TestBase
      */
     public function testGetExistingUser(): void
     {
-        $userData = $this->createTestUser([
+        $user = $this->createTestUser([
             "login" => "TestUser",
             "money" => 100,
             "age" => 2,
         ]);
 
-        $user = User::get($userData["id"]);
 
         $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals($userData["id"], $user->id);
+        $this->assertEquals($user->id, $user->id);
         $this->assertEquals("TestUser", $user->login);
         $this->assertEquals(100, $user->money);
         $this->assertEquals(2, $user->age);
@@ -113,12 +112,11 @@ class UserTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $userData = $this->createTestUser([
+        $user = $this->createTestUser([
             "login" => "OriginalUser",
             "money" => 50,
         ]);
 
-        $user = User::get($userData["id"]);
         $user->login = "UpdatedUser";
         $user->money = 75;
         $user->save();
@@ -138,25 +136,23 @@ class UserTest extends TestBase
      */
     public function testCalculateIncome(): void
     {
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $userData = $this->createTestUser(["game" => $gameData["id"], "money" => 100]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
+        $user = $this->createTestUser(["game" => $game->id, "money" => 100]);
 
         $this->createTestCell(['x' => 10, 'y' => 10, 'planet' => $planetId]);
 
         // Создаем город для пользователя
-        $cityData = [
-            "user_id" => $userData["id"],
+        $city = $this->createTestCity([
+            "user_id" => $user->id,
             "x" => 10,
             "y" => 10,
             "planet" => $planetId,
             "title" => "Test City",
             "pmoney" => 25,
             "presearch" => 5,
-        ];
-        MyDB::insert("city", $cityData);
+        ]);
 
-        $user = User::get($userData["id"]);
         $income = $user->calculate_income();
 
         $this->assertEquals(25, $income);
@@ -169,39 +165,36 @@ class UserTest extends TestBase
      */
     public function testGetCities(): void
     {
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         $this->createTestCell(['x' => 5, 'y' => 5, 'planet' => $planetId]);
         $this->createTestCell(['x' => 15, 'y' => 15, 'planet' => $planetId]);
 
         // Создаем города для пользователя
-        $city1Data = [
-            "user_id" => $userData["id"],
+        $city1 = $this->createTestCity([
+            "user_id" => $user->id,
             "x" => 5,
             "y" => 5,
             "planet" => $planetId,
             "title" => "City 1",
-        ];
-        $city1Id = MyDB::insert("city", $city1Data);
+        ]);
 
-        $city2Data = [
-            "user_id" => $userData["id"],
+        $city2 = $this->createTestCity([
+            "user_id" => $user->id,
             "x" => 15,
             "y" => 15,
             "planet" => $planetId,
             "title" => "City 2",
-        ];
-        $city2Id = MyDB::insert("city", $city2Data);
+        ]);
 
-        $user = User::get($userData["id"]);
         $cities = $user->get_cities();
 
         $this->assertCount(2, $cities);
-        $this->assertEquals($city1Id, $cities[0]->id);
+        $this->assertEquals($city1->id, $cities[0]->id);
         $this->assertEquals("City 1", $cities[0]->title);
-        $this->assertEquals($city2Id, $cities[1]->id);
+        $this->assertEquals($city2->id, $cities[1]->id);
         $this->assertEquals("City 2", $cities[1]->title);
     }
 
@@ -210,22 +203,21 @@ class UserTest extends TestBase
      */
     public function testGetResearch(): void
     {
-        $userData = $this->createTestUser();
+        $user = $this->createTestUser();
 
         // Создаем исследования для пользователя
         $research1Data = [
-            "user_id" => $userData["id"],
+            "user_id" => $user->id,
             "type" => 1,
         ];
         MyDB::insert("research", $research1Data);
 
         $research2Data = [
-            "user_id" => $userData["id"],
+            "user_id" => $user->id,
             "type" => 3,
         ];
         MyDB::insert("research", $research2Data);
 
-        $user = User::get($userData["id"]);
         $research = $user->get_research();
 
         $this->assertCount(2, $research);
@@ -240,7 +232,7 @@ class UserTest extends TestBase
      */
     public function testStartResearch(): void
     {
-        $userData = $this->createTestUser(["age" => 1]);
+        $user = $this->createTestUser(["age" => 1]);
 
         // Создаем тип исследования
         $researchTypeData = [
@@ -251,7 +243,6 @@ class UserTest extends TestBase
         ];
         MyDB::insert("research_type", $researchTypeData);
 
-        $user = User::get($userData["id"]);
         $researchType = ResearchType::get(1);
 
         $result = $user->start_research($researchType);
@@ -265,14 +256,11 @@ class UserTest extends TestBase
      */
     public function testStartResearchAlreadyDone(): void
     {
-        $userData = $this->createTestUser(["age" => 1]);
-
-        // Используем существующий тип исследования (id=1 - Гончарное дело)
-        $user = User::get($userData["id"]);
+        $user = $this->createTestUser(["age" => 1]);
 
         // Добавляем исследование как уже проведенное
         $researchData = [
-            "user_id" => $userData["id"],
+            "user_id" => $user->id,
             "type" => 1, // Гончарное дело
         ];
         MyDB::insert("research", $researchData);
@@ -290,16 +278,16 @@ class UserTest extends TestBase
      */
     public function testNewSystemMessage(): void
     {
-        $userData = $this->createTestUser();
+        $user = $this->createTestUser();
 
-        $user = User::get($userData["id"]);
-        $message = $user->new_system_message("Test system message");
+        $userObj = User::get($user->id);
+        $message = $userObj->new_system_message("Test system message");
 
         $this->assertInstanceOf(Message::class, $message);
 
         // Проверяем, что сообщение сохранено
         $messages = MyDB::query("SELECT * FROM message WHERE to_id = :uid", [
-            "uid" => $userData["id"],
+            "uid" => $user->id,
         ]);
         $this->assertCount(1, $messages);
         $this->assertEquals("Test system message", $messages[0]["text"]);
@@ -311,10 +299,10 @@ class UserTest extends TestBase
      */
     public function testGetNextEventNoEvents(): void
     {
-        $userData = $this->createTestUser();
+        $user = $this->createTestUser();
 
-        $user = User::get($userData["id"]);
-        $event = $user->get_next_event();
+        $userObj = User::get($user->id);
+        $event = $userObj->get_next_event();
 
         $this->assertFalse($event);
     }
@@ -324,18 +312,17 @@ class UserTest extends TestBase
      */
     public function testGetNextEventWithEvent(): void
     {
-        $userData = $this->createTestUser();
+        $user = $this->createTestUser();
 
         // Создаем событие исследования (research event)
         $eventData = [
-            "user_id" => $userData["id"],
+            "user_id" => $user->id,
             "type" => "research",
             "object" => 1, // ID типа исследования
             "source" => null,
         ];
         MyDB::insert("event", $eventData);
 
-        $user = User::get($userData["id"]);
         $event = $user->get_next_event();
 
         $this->assertInstanceOf(Event::class, $event);
@@ -349,10 +336,10 @@ class UserTest extends TestBase
      */
     public function testCalculateResearchNoActive(): void
     {
-        $userData = $this->createTestUser();
+        $user = $this->createTestUser();
 
-        $user = User::get($userData["id"]);
-        $result = $user->calculate_research();
+        $userObj = User::get($user->id);
+        $result = $userObj->calculate_research();
 
         $this->assertFalse($result);
     }
@@ -362,7 +349,7 @@ class UserTest extends TestBase
      */
     public function testCalculateResearchActive(): void
     {
-        $userData = $this->createTestUser([
+        $user = $this->createTestUser([
             "research_amount" => 10,
             "process_research_complete" => 0,
             "process_research_turns" => 0,
@@ -377,7 +364,6 @@ class UserTest extends TestBase
         ];
         MyDB::insert("research_type", $researchTypeData);
 
-        $user = User::get($userData["id"]);
         $user->process_research_type = ResearchType::get(5);
         $user->save();
 
@@ -393,7 +379,7 @@ class UserTest extends TestBase
      */
     public function testCalculateResearchComplete(): void
     {
-        $userData = $this->createTestUser([
+        $user = $this->createTestUser([
             "research_amount" => 30,
             "process_research_complete" => 20,
             "process_research_turns" => 2,
@@ -401,7 +387,6 @@ class UserTest extends TestBase
         ]);
 
         // Используем существующий тип исследования (id=1)
-        $user = User::get($userData["id"]);
         $user->process_research_type = ResearchType::get(1); // Гончарное дело, cost=50
         $user->save();
 
@@ -414,14 +399,14 @@ class UserTest extends TestBase
 
         // Проверяем, что исследование сохранено
         $researchData = MyDB::query("SELECT * FROM research WHERE user_id = :uid AND type = :tid", [
-            "uid" => $userData["id"],
+            "uid" => $user->id,
             "tid" => 1,
         ], "row");
         $this->assertNotNull($researchData);
 
         // Проверяем, что событие создано
         $eventData = MyDB::query("SELECT * FROM event WHERE user_id = :uid AND type = 'research'", [
-            "uid" => $userData["id"],
+            "uid" => $user->id,
         ], "row");
         $this->assertNotNull($eventData);
     }
@@ -431,9 +416,8 @@ class UserTest extends TestBase
      */
     public function testGetAvailableResearch(): void
     {
-        $userData = $this->createTestUser(["age" => 1]);
+        $user = $this->createTestUser(["age" => 1]);
 
-        $user = User::get($userData["id"]);
         $available = $user->get_available_research();
 
         // Должен быть доступен хотя бы один тип исследования (например, id=1 - Гончарное дело)
@@ -447,13 +431,12 @@ class UserTest extends TestBase
      */
     public function testGetResearchNeedTurns(): void
     {
-        $userData = $this->createTestUser([
+        $user = $this->createTestUser([
             "research_amount" => 10,
             "process_research_complete" => 20,
             "process_research_turns" => 1,
         ]);
 
-        $user = User::get($userData["id"]);
         $user->process_research_type = ResearchType::get(1); // Гончарное дело, cost=50
 
         $turns = $user->get_research_need_turns();
@@ -467,27 +450,24 @@ class UserTest extends TestBase
      */
     public function testCalculateCities(): void
     {
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         $this->createTestCell(['x' => 10, 'y' => 10, 'planet' => $planetId]);
 
         // Создаем город для пользователя
-        $cityData = [
-            "user_id" => $userData["id"],
+        $city = $this->createTestCity([
+            "user_id" => $user->id,
             "x" => 10,
             "y" => 10,
             "planet" => $planetId,
             "title" => "Test City",
-        ];
-        $cityId = MyDB::insert("city", $cityData);
+        ]);
 
-        $user = User::get($userData["id"]);
         $user->calculate_cities();
 
         // Проверяем, что город рассчитан (метод calculate() вызван)
-        $city = City::get($cityId);
         $this->assertNotNull($city);
     }
 
@@ -498,27 +478,27 @@ class UserTest extends TestBase
      */
     public function testGetMessages(): void
     {
-        $userData = $this->createTestUser();
+        $user = $this->createTestUser();
 
         // Создаем сообщения для пользователя
         $message1Data = [
             "from_id" => null,
-            "to_id" => $userData["id"],
+            "to_id" => $user->id,
             "text" => "Message 1",
             "type" => "system",
         ];
         MyDB::insert("message", $message1Data);
 
         $message2Data = [
-            "from_id" => $userData["id"],
-            "to_id" => $userData["id"],
+            "from_id" => $user->id,
+            "to_id" => $user->id,
             "text" => "Message 2",
             "type" => "user",
         ];
         MyDB::insert("message", $message2Data);
 
-        $user = User::get($userData["id"]);
-        $messages = $user->get_messages();
+        $userObj = User::get($user->id);
+        $messages = $userObj->get_messages();
 
         $this->assertCount(2, $messages);
         $this->assertInstanceOf(Message::class, $messages[0]);

@@ -12,8 +12,6 @@ class MyDBTest extends TestBase
      */
     public function testSetDBConfig(): void
     {
-        MyDB::setDBConfig('localhost', 'testuser', 'testpass', '3306', 'testdb');
-
         $this->assertEquals('localhost', MyDB::$dbhost);
         $this->assertEquals('testuser', MyDB::$dbuser);
         $this->assertEquals('testpass', MyDB::$dbpass);

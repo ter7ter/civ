@@ -77,7 +77,12 @@ class UnitType
      * @var ResourceType[]
      */
     public $req_resources = [];
-    public static $all;
+
+    /**
+     * Кеш
+     * @var array UnitType[]
+     */
+    protected static $all = [];
 
     public static function get($id)
     {
@@ -142,7 +147,6 @@ class UnitType
             $this->id = MyDB::insert('unit_type', $data);
         }
         UnitType::$all[$this->id] = $this;
-        error_log("Edited unit: " . json_encode($this->toArray()));
     }
 
     public function delete()
@@ -243,9 +247,9 @@ class UnitType
         return $this->title;
     }
 
-    public function toArray()
+    public static function clearCache()
     {
-        return get_object_vars($this);
+        self::$_all = [];
     }
 }
 

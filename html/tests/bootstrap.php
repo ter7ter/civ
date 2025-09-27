@@ -17,16 +17,13 @@ require_once PROJECT_ROOT . "/config.php";
 
 // Определяем тестовые константы БД
 if (!defined("TEST_DB_HOST")) {
-    define("TEST_DB_HOST", "localhost");
+    define("TEST_DB_HOST", "db");
 }
 if (!defined("TEST_DB_USER")) {
-    define("TEST_DB_USER", "test_user");
+    define("TEST_DB_USER", "civ_test");
 }
 if (!defined("TEST_DB_PASS")) {
-    define("TEST_DB_PASS", "test_pass");
-}
-if (!defined("TEST_DB_NAME")) {
-    define("TEST_DB_NAME", "test_db");
+    define("TEST_DB_PASS", "civ_test");
 }
 if (!defined("TEST_DB_PORT")) {
     define("TEST_DB_PORT", 3306);
@@ -35,23 +32,28 @@ if (!defined("TEST_DB_PORT")) {
 // Сначала загружаем MyDB.class.php
 require_once PROJECT_ROOT . "/classes/MyDB.class.php";
 
+
+if (getenv('PARATEST')) {
+    $testToken = getmypid();
+    $dbName = 'civ_for_tests_' . $testToken;
+} else {
+    $dbName = 'civ_for_tests';
+}
+MyDB::setDBConfig(TEST_DB_HOST, TEST_DB_USER, TEST_DB_PASS, TEST_DB_PORT, $dbName);
+
+MyDB::query("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8 COLLATE utf8_general_ci");
+    // Подключаемся к MySQL серверу, не указывая базу данных
+
 // Затем загружаем моки для БД
 require_once TESTS_ROOT . "/mocks/DatabaseTestAdapter.php";
-require_once TESTS_ROOT . "/mocks/MyDBTestWrapper.php";
 require_once TESTS_ROOT . "/mocks/MockLoader.php";
 require_once TESTS_ROOT . "/mocks/TestHelpers.php";
 
-// Настраиваем тестовую БД MySQL
-$testToken = getenv('TEST_TOKEN');
-if (!empty($testToken)) {
-    $dbName = "civ_for_tests_{$testToken}";
-} else {
-    $dbName = "civ_for_tests";
-}
-MyDB::setDBConfig("localhost", "civ_test", "civ_test", "3306", $dbName);
-
 // Подключаем инициализатор игровых данных
 require_once TESTS_ROOT . "/TestGameDataInitializer.php";
+
+// Устанавливаем схему базы данных
+TestGameDataInitializer::setupDatabaseSchema();
 
 // Загружаем остальные реальные классы проекта в правильном порядке зависимостей
 $classFiles = [
@@ -92,8 +94,9 @@ TestGameDataInitializer::clearAll();
 TestGameDataInitializer::initializeAll();
 
 // Настройка обработки ошибок для тестов
-error_reporting(E_ALL & ~E_NOTICE);
-ini_set("display_errors", 1);
+error_reporting(E_ALL); // Максимальный уровень ошибок
+ini_set("display_errors", 1); // Отображать ошибки
+ini_set("display_startup_errors", 1); // Отображать ошибки запуска
 
 // Устанавливаем обработчик ошибок для тестов
 set_error_handler(function ($severity, $message, $file, $line) {
@@ -101,31 +104,6 @@ set_error_handler(function ($severity, $message, $file, $line) {
     if (strpos($message, "Cannot modify header information") !== false) {
         return true;
     }
-    // Игнорируем deprecated warnings о ${var} синтаксисе в PHP 8.4
-    if (strpos($message, "Using \${var} in strings is deprecated") !== false) {
-        return true;
-    }
-    // Игнорируем deprecated warnings о var в строках
-    if (strpos($message, "Using ${var} in strings is deprecated") !== false) {
-        return true;
-    }
-    // Игнорируем deprecated warnings о динамических свойствах
-    if (strpos($message, "Creation of dynamic property") !== false) {
-        return true;
-    }
-    // Игнорируем все E_DEPRECATED warnings
-    if ($severity === E_DEPRECATED) {
-        return true;
-    }
-    // Преобразуем только серьезные ошибки в исключения
-    if ($severity >= E_ERROR) {
-        throw new ErrorException($message, 0, $severity, $file, $line);
-    }
-    // Остальные ошибки просто логируем
-    if (error_reporting() & $severity) {
-        error_log("PHP Warning in tests: $message in $file on line $line");
-    }
-    return true;
 });
 
 // Функция для создания тестовых директорий

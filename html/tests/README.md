@@ -685,10 +685,10 @@ php tests/install_phpunit.php
 
 ```php
 // Тестовые константы (автоматически определяются)
-TEST_DB_HOST     = 'localhost'
-TEST_DB_USER     = 'test_user' 
-TEST_DB_PASS     = 'test_pass'
-TEST_DB_NAME     = 'test_db'
+TEST_DB_HOST     = 'db'
+TEST_DB_USER     = 'civ_test' 
+TEST_DB_PASS     = 'civ_test'
+TEST_DB_NAME     = 'civ_for_tests'
 TEST_DB_PORT     = 3306
 
 // Основные константы проекта (не затрагиваются)
@@ -701,20 +701,20 @@ DB_USER          = ваши_настройки
 
 #### Через переменные окружения
 ```bash
-export TEST_DB_HOST=localhost
-export TEST_DB_USER=test_user
-export TEST_DB_PASS=test_password
-export TEST_DB_NAME=test_database
+export TEST_DB_HOST=db
+export TEST_DB_USER=civ_test
+export TEST_DB_PASS=civ_test
+export TEST_DB_NAME=civ_for_tests
 export TEST_DB_PORT=3306
 ```
 
 #### Через phpunit.xml
 ```xml
 <php>
-    <const name="TEST_DB_HOST" value="localhost"/>
-    <const name="TEST_DB_USER" value="test_user"/>
-    <const name="TEST_DB_PASS" value="test_pass"/>
-    <const name="TEST_DB_NAME" value="test_db"/>
+    <const name="TEST_DB_HOST" value="db"/>
+    <const name="TEST_DB_USER" value="civ_test"/>
+    <const name="TEST_DB_PASS" value="civ_test"/>
+    <const name="TEST_DB_NAME" value="civ_for_tests"/>
     <const name="TEST_DB_PORT" value="3306"/>
 </php>
 ```

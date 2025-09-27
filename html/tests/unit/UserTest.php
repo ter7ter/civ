@@ -267,24 +267,17 @@ class UserTest extends TestBase
     {
         $userData = $this->createTestUser(["age" => 1]);
 
-        // Создаем тип исследования
-        $researchTypeData = [
-            "id" => 2,
-            "title" => "Already Done Research",
-            "age" => 1,
-            "cost" => 50,
-        ];
-        MyDB::insert("research_type", $researchTypeData);
+        // Используем существующий тип исследования (id=1 - Гончарное дело)
+        $user = User::get($userData["id"]);
 
         // Добавляем исследование как уже проведенное
         $researchData = [
             "user_id" => $userData["id"],
-            "type" => 2,
+            "type" => 1, // Гончарное дело
         ];
         MyDB::insert("research", $researchData);
 
-        $user = User::get($userData["id"]);
-        $researchType = ResearchType::get(2);
+        $researchType = ResearchType::get(1);
 
         $result = $user->start_research($researchType);
 

@@ -1,24 +1,20 @@
 <?php
-
 /**
  * Скрипт для запуска всех тестов
  * Запуск: php run_tests.php [опции]
  */
 
-// Проверяем, что скрипт запускается из командной строки
+define("PROJECT_ROOT", dirname(__DIR__));
+
 if (php_sapi_name() !== "cli") {
     die("Этот скрипт должен запускаться из командной строки\n");
 }
 
 // Устанавливаем временную зону
-date_default_timezone_set("Europe/Moscow");
 
-// Включаем bootstrap
-require_once __DIR__ . "/bootstrap.php";
 
-/**
- * Класс для запуска тестов
- */
+//require_once __DIR__ . "/bootstrap.php";
+
 class TestRunner
 {
     private $options = [];
@@ -31,9 +27,6 @@ class TestRunner
         $this->startTime = microtime(true);
     }
 
-    /**
-     * Парсинг аргументов командной строки
-     */
     private function parseArguments($argv)
     {
         $this->options = [
@@ -41,13 +34,14 @@ class TestRunner
             "integration" => true,
             "js" => true,
             "coverage" => false,
-            "generate-coverage-report-only" => false, // NEW: Option to only generate coverage report
+            "generate-coverage-report-only" => false,
             "verbose" => false,
-            "stop-on-failure" => true, // Останавливаться при первой ошибке по умолчанию
+            "stop-on-failure" => true,
             "filter" => null,
             "help" => false,
-            "no-parallel" => false, // По умолчанию используем параллелизм
+            "no-parallel" => false,
             "processes" => null,
+            "timeout" => 200,
         ];
 
         $i = 1;
@@ -73,9 +67,8 @@ class TestRunner
                 case "--coverage":
                     $this->options["coverage"] = true;
                     break;
-                case "--generate-coverage-report-only": // NEW: Handle new option
+                case "--generate-coverage-report-only":
                     $this->options["generate-coverage-report-only"] = true;
-                    // If we are only generating reports, we don't need to run tests
                     $this->options["unit"] = false;
                     $this->options["integration"] = false;
                     $this->options["js"] = false;
@@ -90,7 +83,7 @@ class TestRunner
                 case "--filter":
                     if (isset($argv[$i + 1])) {
                         $this->options["filter"] = $argv[$i + 1];
-                        $this->options["js"] = false; // Disable JS tests when filtering
+                        $this->options["js"] = false;
                         $i++;
                     }
                     break;
@@ -107,9 +100,14 @@ class TestRunner
                         $i++;
                     }
                     break;
+                case "--timeout":
+                    if (isset($argv[$i + 1])) {
+                        $this->options["timeout"] = (int)$argv[$i + 1];
+                        $i++;
+                    }
+                    break;
                 default:
-                    echo
-                        "Неизвестный параметр: " . $arg . "\n";
+                    echo "Неизвестный параметр: " . $arg . "\n";
                     $this->options["help"] = true;
                     return;
             }
@@ -117,9 +115,6 @@ class TestRunner
         }
     }
 
-    /**
-     * Запуск всех тестов
-     */
     public function run()
     {
         if ($this->options["help"]) {
@@ -131,22 +126,18 @@ class TestRunner
 
         $exitCode = 0;
 
-        // Запускаем PHP тесты
-        // Only run PHP tests if not in "generate-coverage-report-only" mode
         if (!$this->options["generate-coverage-report-only"] && ($this->options["unit"] || $this->options["integration"])) {
             $phpResult = $this->runPhpTests();
             if ($phpResult !== 0) {
                 $exitCode = $phpResult;
             }
         } elseif ($this->options["generate-coverage-report-only"]) {
-            // If only generating coverage report, directly call runPhpTests for report generation
             $phpResult = $this->runPhpTests();
             if ($phpResult !== 0) {
                 $exitCode = $phpResult;
             }
         }
 
-        // Запускаем JavaScript тесты
         if ($this->options["js"]) {
             $jsResult = $this->runJavaScriptTests();
             if ($jsResult !== 0) {
@@ -159,18 +150,18 @@ class TestRunner
         return $exitCode;
     }
 
-    /**
-     * Запуск PHP тестов через PHPUnit
-     */
     private function runPhpTests()
     {
         echo "🧪 Запуск PHP тестов...\n";
         echo str_repeat("=", 50) . "\n";
 
-        $phpunitConfig = TESTS_ROOT . "/phpunit.xml";
+        $phpunitConfig = __DIR__ . "/phpunit.xml";
         $phpunitPath = $this->findPhpUnit();
         $paratestPath = $this->findParaTest();
         $useParatest = $paratestPath && !$this->options["no-parallel"];
+        if ($this->options["filter"]) {
+            $useParatest = false;
+        }
         $processes = $this->options["processes"] ?? 4;
 
         if (!$phpunitPath) {
@@ -186,7 +177,12 @@ class TestRunner
             echo "⚠️  На Windows покрытие кода через Paratest не поддерживается. Будет использован обычный phpunit.\n";
             $useParatest = false;
         }
+
         if ($useParatest) {
+            $phpPath = $this->findPhp();
+            if ($phpPath) {
+                $cmd[] = $phpPath;
+            }
             $cmd[] = $paratestPath;
             if ($this->options["coverage"]) {
                 $cmd[] = "--processes=1";
@@ -207,13 +203,10 @@ class TestRunner
             if ($this->options["filter"]) {
                 $cmd[] = "--filter=" . $this->options["filter"];
             }
-            // Добавляем директории тестов
             if ($this->options["unit"] && !$this->options["integration"]) {
                 $cmd[] = TESTS_ROOT . "/unit";
             } elseif ($this->options["integration"] && !$this->options["unit"]) {
                 $cmd[] = TESTS_ROOT . "/integration";
-            } elseif ($this->options["unit"] && $this->options["integration"]) {
-                $cmd[] = TESTS_ROOT;
             }
         } else {
             if (substr($phpunitPath, -5) === '.phar') {
@@ -248,39 +241,37 @@ class TestRunner
                 $cmd[] = TESTS_ROOT . "/integration";
             }
         }
+
         $fullCmd = implode(" ", array_map("escapeshellarg", $cmd));
         if ($this->options["verbose"]) {
-            echo "Выполняем: {$fullCmd}\n\n";
+            echo "Выполняем: " . $fullCmd . "\n\n";
         }
+
         $startTime = microtime(true);
-        $exitCode = $this->runCommandWithTimeout($fullCmd, 240); // 4 minutes timeout
+        $exitCode = $this->runCommand($fullCmd);
         $duration = microtime(true) - $startTime;
+
         $this->results["php"] = [
             "exit_code" => $exitCode,
             "duration" => $duration,
         ];
+
         if ($exitCode === 0) {
-            echo "\n✅ PHP тесты завершены успешно (" .
-                number_format($duration, 2) .
-                "s)\n";
+            echo "\n✅ PHP тесты завершены успешно (" . number_format($duration, 2) . "s)\n";
         } else {
-            echo "\n❌ PHP тесты завершились с ошибками (" .
-                number_format($duration, 2) .
-                "s)\n";
+            echo "\n❌ PHP тесты завершились с ошибками (" . number_format($duration, 2) . "s)\n";
         }
+
         echo str_repeat("-", 50) . "\n\n";
         return $exitCode;
     }
 
-    /**
-     * Запуск JavaScript тестов
-     */
     private function runJavaScriptTests()
     {
         echo "🌐 Запуск JavaScript тестов...\n";
         echo str_repeat("=", 50) . "\n";
 
-        $testFiles = glob(TESTS_ROOT . "/js/*.html");
+        $testFiles = glob(__DIR__ . "/js/*.html");
 
         if (empty($testFiles)) {
             echo "❌ JavaScript тест файлы не найдены в " . TESTS_ROOT . "/js/\n";
@@ -288,106 +279,95 @@ class TestRunner
         }
 
         $startTime = microtime(true);
-
-        // Пытаемся найти браузер для запуска тестов
         $browsers = $this->findAvailableBrowsers();
 
         if (empty($browsers)) {
             echo "⚠️  Браузер не найден. JavaScript тесты нужно запускать вручную.\n";
             foreach ($testFiles as $testFile) {
-                echo "   Откройте в браузере: {$testFile}\n";
+                echo "   Откройте в браузере: " . $testFile . "\n";
             }
-
             $this->results["js"] = [
                 "exit_code" => 0,
                 "duration" => microtime(true) - $startTime,
                 "manual" => true,
             ];
-
             return 0;
         }
 
-        // Запускаем тесты в первом доступном браузере
         $browser = $browsers[0];
         $exitCode = 0;
 
         foreach ($testFiles as $testFile) {
             try {
-                // Открываем файл в браузере для ручного запуска тестов
-                $cmd = "\"{$browser}\" \"{$testFile}\"";
-                echo "🌐 Открываем JavaScript тесты в браузере: {$testFile}\n";
+                $cmd = "\"" . $browser . "\" \"" . $testFile . "\"";
+                echo "🌐 Открываем JavaScript тесты в браузере: " . $testFile . "\n";
                 echo "   После завершения тестов закройте браузер\n";
-
                 if ($this->options["verbose"]) {
-                    echo "Выполняем: {$cmd}\n";
+                    echo "Выполняем: " . $cmd . "\n";
                 }
-
                 exec($cmd, $output, $exitCode);
             } catch (Exception $e) {
-                echo "❌ Ошибка при запуске JavaScript тестов: " .
-                    $e->getMessage() .
-                    "\n";
+                echo "❌ Ошибка при запуске JavaScript тестов: " . $e->getMessage() . "\n";
                 $exitCode = 1;
             }
         }
 
-
         $duration = microtime(true) - $startTime;
-
         $this->results["js"] = [
             "exit_code" => $exitCode,
             "duration" => $duration,
         ];
 
         if ($exitCode === 0) {
-            echo "✅ JavaScript тесты завершены (" .
-                number_format($duration, 2) .
-                "s)\n";
+            echo "✅ JavaScript тесты завершены (" . number_format($duration, 2) . "s)\n";
         } else {
-            echo "❌ JavaScript тесты завершились с ошибками (" .
-                number_format($duration, 2) .
-                "s)\n";
+            echo "❌ JavaScript тесты завершились с ошибками (" . number_format($duration, 2) . "s)\n";
         }
 
         echo str_repeat("-", 50) . "\n\n";
-
         return $exitCode;
     }
 
-    /**
-     * Поиск PHPUnit
-     */
     private function findPhpUnit()
     {
-        // 1. Проверяем PHPUnit, установленный через Composer
         $composerPhpunit = PROJECT_ROOT . "/vendor/bin/phpunit";
         if (file_exists($composerPhpunit)) {
             return $composerPhpunit;
         }
-
-        // 2. Проверяем phpunit.phar в корне проекта
         $projectPhar = PROJECT_ROOT . "/phpunit.phar";
         if (file_exists($projectPhar)) {
             return $projectPhar;
         }
-
-        // 3. Проверяем phpunit.phar в папке tests
-        $testsPhar = TESTS_ROOT . "/phpunit.phar";
+        $testsPhar = __DIR__ . "/phpunit.phar";
         if (file_exists($testsPhar)) {
             return $testsPhar;
         }
-
-        // 4. Проверяем глобальную установку через PATH
         $isWindows = defined('PHP_OS_FAMILY') ? PHP_OS_FAMILY === 'Windows' : strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
         $cmd = $isWindows ? "where phpunit" : "which phpunit";
         $output = shell_exec($cmd . " 2>&1");
         if ($output && trim($output) && strpos($output, "not found") === false && strpos($output, "Could not find files") === false) {
-            // `where` может вернуть несколько путей, по одному на строку. Берем первый.
             $lines = explode("\n", trim($output));
             return trim($lines[0]);
         }
-
         return null;
+    }
+
+    private function runCommand($command)
+    {
+        if ($this->options["verbose"]) {
+            echo "Executing: " . $command . "\n";
+        }
+
+        // Change to the project root directory to run the command
+        $cwd = getcwd();
+        chdir(PROJECT_ROOT);
+
+        passthru($command, $exitCode);
+
+        // Change back to the original directory
+        chdir($cwd);
+
+        return $exitCode;
     }
 
     private function findParaTest()
@@ -395,8 +375,8 @@ class TestRunner
         $paths = [
             PROJECT_ROOT . "/vendor/bin/paratest",
             PROJECT_ROOT . "/vendor/bin/paratest.bat",
-            TESTS_ROOT . "/../vendor/bin/paratest",
-            TESTS_ROOT . "/../vendor/bin/paratest.bat",
+            __DIR__ . "/../vendor/bin/paratest",
+            __DIR__ . "/../vendor/bin/paratest.bat",
         ];
         foreach ($paths as $path) {
             if (file_exists($path)) {
@@ -406,15 +386,22 @@ class TestRunner
         return null;
     }
 
-    /**
-     * Поиск доступных браузеров
-     */
+    private function findPhp()
+    {
+        $isWindows = defined('PHP_OS_FAMILY') ? PHP_OS_FAMILY === 'Windows' : strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+        $cmd = $isWindows ? "where php" : "which php";
+        $output = shell_exec($cmd . " 2>&1");
+        if ($output && trim($output) && strpos($output, "not found") === false && strpos($output, "Could not find files") === false) {
+            $lines = explode("\n", trim($output));
+            return trim($lines[0]);
+        }
+        return null;
+    }
+
     private function findAvailableBrowsers()
     {
         $browsers = [];
-
         $isWindows = defined('PHP_OS_FAMILY') ? PHP_OS_FAMILY === 'Windows' : strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
-
         if ($isWindows) {
             $paths = [
                 "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
@@ -431,19 +418,14 @@ class TestRunner
                 "/Applications/Firefox.app/Contents/MacOS/firefox",
             ];
         }
-
         foreach ($paths as $path) {
             if (file_exists($path)) {
                 $browsers[] = $path;
             }
         }
-
         return $browsers;
     }
 
-    /**
-     * Вывод заголовка
-     */
     private function printHeader()
     {
         echo "\n";
@@ -452,7 +434,6 @@ class TestRunner
         echo "Время запуска: " . date("Y-m-d H:i:s") . "\n";
         echo "PHP версия: " . PHP_VERSION . "\n";
         echo "Проект: " . PROJECT_ROOT . "\n";
-
         $testTypes = [];
         if ($this->options["unit"]) {
             $testTypes[] = "Unit";
@@ -463,41 +444,31 @@ class TestRunner
         if ($this->options["js"]) {
             $testTypes[] = "JavaScript";
         }
-
         echo "Типы тестов: " . implode(", ", $testTypes) . "\n";
-
         if ($this->options["filter"]) {
             echo "Фильтр: " . $this->options["filter"] . "\n";
         }
-
         echo str_repeat("=", 60) . "\n\n";
     }
 
-    /**
-     * Вывод итогового отчета
-     */
     private function printSummary()
     {
         echo "\n";
         echo "📊 ИТОГОВЫЙ ОТЧЕТ\n";
         echo str_repeat("=", 60) . "\n";
-
         $totalDuration = microtime(true) - $this->startTime;
         $totalTests = 0;
         $passedTests = 0;
         $failedTests = 0;
-
         foreach ($this->results as $type => $result) {
             $status = $result["exit_code"] === 0 ? "✅ ПРОЙДЕН" : "❌ ПРОВАЛЕН";
             $duration = number_format($result["duration"], 2);
-
             echo sprintf(
                 "%-15s: %s (%ss)\n",
                 strtoupper($type),
                 $status,
                 $duration,
             );
-
             if ($result["exit_code"] === 0) {
                 $passedTests++;
             } else {
@@ -505,7 +476,6 @@ class TestRunner
             }
             $totalTests++;
         }
-
         echo str_repeat("-", 60) . "\n";
         echo sprintf(
             "Общее время выполнения: %ss\n",
@@ -514,164 +484,27 @@ class TestRunner
         echo sprintf("Всего наборов тестов: %d\n", $totalTests);
         echo sprintf("Пройдено: %d\n", $passedTests);
         echo sprintf("Провалено: %d\n", $failedTests);
-
         if ($failedTests === 0) {
             echo "\n🎉 ВСЕ ТЕСТЫ ПРОЙДЕНЫ УСПЕШНО!\n";
         } else {
             echo "\n💥 НЕКОТОРЫЕ ТЕСТЫ ПРОВАЛЕНЫ!\n";
         }
-
-        // Информация о дополнительных файлах
         echo "\n📁 Дополнительные файлы:\n";
-
         $logFiles = [
             "coverage-html/index.html" => "Отчет о покрытии кода",
             "results/junit.xml" => "JUnit XML отчет",
             "results/testdox.html" => "TestDox HTML отчет",
             "results/php_errors.log" => "Лог ошибок PHP",
         ];
-
         foreach ($logFiles as $file => $description) {
-            $fullPath = TESTS_ROOT . "/" . $file;
+            $fullPath = __DIR__ . "/" . $file;
             if (file_exists($fullPath)) {
-                echo "   ✓ {$description}: {$fullPath}\n";
+                echo "   ✓ " . $description . ": " . $fullPath . "\n";
             }
         }
-
         echo str_repeat("=", 60) . "\n";
     }
 
-    /**
-     * Запуск команды без таймаута
-     */
-    private function runCommand($command)
-    {
-        $descriptors = [
-            0 => ['pipe', 'r'], // stdin
-            1 => ['pipe', 'w'], // stdout
-            2 => ['pipe', 'w'], // stderr
-        ];
-
-        $process = proc_open($command, $descriptors, $pipes);
-
-        if (!is_resource($process)) {
-            echo "❌ Не удалось запустить команду: {$command}\n";
-            return 1;
-        }
-
-        // Закрываем stdin
-        fclose($pipes[0]);
-
-        // Читаем вывод в реальном времени
-        while (!feof($pipes[1])) {
-            $data = fread($pipes[1], 8192);
-            if ($data !== false) {
-                echo $data;
-            }
-        }
-
-        while (!feof($pipes[2])) {
-            $data = fread($pipes[2], 8192);
-            if ($data !== false) {
-                echo $data;
-            }
-        }
-
-        fclose($pipes[1]);
-        fclose($pipes[2]);
-
-        $exitCode = proc_close($process);
-
-        return $exitCode;
-    }
-
-    /**
-     * Запуск команды с таймаутом
-     */
-    private function runCommandWithTimeout($command, $timeout = 300)
-    {
-        $descriptors = [
-            0 => ['pipe', 'r'], // stdin
-            1 => ['pipe', 'w'], // stdout
-            2 => ['pipe', 'w'], // stderr
-        ];
-
-        $process = proc_open($command, $descriptors, $pipes);
-
-        if (!is_resource($process)) {
-            echo "❌ Не удалось запустить команду: {$command}\n";
-            return 1;
-        }
-
-        // Закрываем stdin
-        fclose($pipes[0]);
-
-        $startTime = time();
-        $output = '';
-        $errorOutput = '';
-
-        // Читаем вывод в реальном времени
-        $stdoutDone = false;
-        $stderrDone = false;
-
-        stream_set_blocking($pipes[1], false);
-        stream_set_blocking($pipes[2], false);
-
-        while (!$stdoutDone || !$stderrDone) {
-            $read = [$pipes[1], $pipes[2]];
-            $write = null;
-            $except = null;
-
-            if (stream_select($read, $write, $except, 1) > 0) {
-                foreach ($read as $stream) {
-                    if ($stream === $pipes[1]) {
-                        $data = fread($stream, 8192);
-                        if ($data === false || $data === '') {
-                            $stdoutDone = true;
-                        } else {
-                            echo $data;
-                            $output .= $data;
-                        }
-                    } elseif ($stream === $pipes[2]) {
-                        $data = fread($stream, 8192);
-                        if ($data === false || $data === '') {
-                            $stderrDone = true;
-                        } else {
-                            echo $data;
-                            $errorOutput .= $data;
-                        }
-                    }
-                }
-            }
-
-            // Проверяем таймаут
-            if (time() - $startTime > $timeout) {
-                echo "\n❌ Превышен таймаут {$timeout} секунд. Завершаем процесс.\n";
-                proc_terminate($process);
-                fclose($pipes[1]);
-                fclose($pipes[2]);
-                proc_close($process);
-                return 124; // Код выхода для таймаута
-            }
-
-            // Проверяем, завершен ли процесс
-            $status = proc_get_status($process);
-            if (!$status['running']) {
-                break;
-            }
-        }
-
-        fclose($pipes[1]);
-        fclose($pipes[2]);
-
-        $exitCode = proc_close($process);
-
-        return $exitCode;
-    }
-
-    /**
-     * Вывод справки
-     */
     private function showHelp()
     {
         echo "\n";
@@ -685,19 +518,20 @@ class TestRunner
         echo "  --with-js           Включить JavaScript тесты\n";
         echo "  --coverage           Покрытие кода (только 1 процесс, медленнее, но корректно)\n";
         echo "                      Без --coverage тесты идут параллельно через ParaTest (по умолчанию 4 процесса)\n";
-        echo "  --generate-coverage-report-only  Генерация отчета о покрытии кода из ранее собранных данных (из coverage.php) без запуска тестов\n"; // NEW
+        echo "  --generate-coverage-report-only  Генерация отчета о покрытии кода из ранее собранных данных (из coverage.php) без запуска тестов\n";
         echo "  --verbose, -v       Подробный вывод\n";
         echo "  --stop-on-failure   Остановиться при первой ошибке\n";
         echo "  --filter <pattern>  Фильтр тестов по имени/паттерну\n";
         echo "  --help, -h          Показать эту справку\n";
         echo "  --no-parallel         Запускать тесты без параллелизма (только через phpunit)\n";
         echo "  --processes <n>       Количество процессов для ParaTest (по умолчанию 4)\n";
+        echo "  --timeout <n>         Таймаут для PHP тестов в секундах (по умолчанию 300)\n";
         echo "\nПРИМЕРЫ:\n";
         echo "  php run_tests.php                    # Все PHP тесты\n";
         echo "  php run_tests.php --with-js          # Все тесты включая JS\n";
         echo "  php run_tests.php --unit-only -v     # Только unit тесты, подробно\n";
-        echo "  php run_tests.php --coverage         # Запуск тестов и генерация отчета о покрытии\n"; // UPDATED
-        echo "  php run_tests.php --generate-coverage-report-only # Генерация отчета о покрытии\n"; // NEW
+        echo "  php run_tests.php --coverage         # Запуск тестов и генерация отчета о покрытии\n";
+        echo "  php run_tests.php --generate-coverage-report-only # Генерация отчета о покрытии\n";
         echo "  php run_tests.php --filter CreateGame # Только тесты CreateGame\n";
         echo str_repeat("=", 60) . "\n";
     }

@@ -21,28 +21,12 @@ class TestBase extends PHPUnit\Framework\TestCase
                 $testToken = getmypid();
             }
 
-            // Создаем уникальную базу данных для ParaTest
+            // Создаем уникальное имя базы данных
             $uniqueDbName = MyDB::$dbname . '_' . $testToken;
-
-            // Подключаемся к MySQL без указания базы данных для проверки
-            $tempDsn = "mysql:host=" . MyDB::$dbhost . ";port=" . MyDB::$dbport . ";charset=utf8";
-            $tempPdo = new PDO($tempDsn, MyDB::$dbuser, MyDB::$dbpass);
-            $tempPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-            // Проверяем, существует ли база данных
-            $result = $tempPdo->query("SHOW DATABASES LIKE '{$uniqueDbName}'");
-            $dbExists = $result && $result->rowCount() > 0;
-
-            if (!$dbExists) {
-                // Создаем уникальную базу данных
-                $tempPdo->exec("CREATE DATABASE `{$uniqueDbName}`");
-            }
-
+            
             // Устанавливаем уникальное имя базы данных
             MyDB::$dbname = $uniqueDbName;
 
-            // Переподключаемся к новой базе данных
-            MyDB::resetConnection();
         }
 
         // Очищаем БД один раз перед всеми тестами класса
@@ -62,7 +46,28 @@ class TestBase extends PHPUnit\Framework\TestCase
 
     public static function tearDownAfterClass(): void
     {
-        // Ничего не делаем, данные остаются для отладки если нужно
+        // Проверяем, используется ли ParaTest
+        $testToken = getenv('TEST_TOKEN');
+        $paraTestFlag = getenv('PARATEST');
+        $isParaTest = !empty($testToken) || $paraTestFlag === '1';
+
+        // Для ParaTest удаляем уникальную базу данных
+        if ($isParaTest) {
+            if (empty($testToken)) {
+                // Если TEST_TOKEN не установлен, используем PID
+                $testToken = getmypid();
+            }
+
+            $uniqueDbName = MyDB::$dbname; // Имя базы данных уже установлено в setUpBeforeClass
+
+            // Подключаемся к MySQL без указания базы данных
+            $tempDsn = "mysql:host=" . MyDB::$dbhost . ";port=" . MyDB::$dbport . ";charset=utf8";
+            $tempPdo = new PDO($tempDsn, MyDB::$dbuser, MyDB::$dbpass);
+            $tempPdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            // Удаляем уникальную базу данных
+            $tempPdo->exec("DROP DATABASE IF EXISTS `{$uniqueDbName}`");
+        }
     }
 
     protected function setUp(): void
@@ -83,7 +88,6 @@ class TestBase extends PHPUnit\Framework\TestCase
         Cell::clearCache();
         Planet::clearCache();
         Building::clearCache();
-        TestGameDataInitializer::initializeAll();
         Cell::$map_width = 20;
         Cell::$map_height = 20;
     }
@@ -103,12 +107,13 @@ class TestBase extends PHPUnit\Framework\TestCase
         // Для ParaTest не очищаем таблицы в tearDown, поскольку каждый процесс имеет свою базу данных
         // и данные будут очищены в следующем setUp()
 
-        // Только кэши и переменные, не всю БД
+        // Очищаем все кэши и статические переменные
         Game::clearCache();
         User::clearCache();
         Cell::clearCache();
         Planet::clearCache();
         Building::clearCache();
+        TestGameDataInitializer::clearAll();
         Cell::$map_width = 20;
         Cell::$map_height = 20;
         parent::tearDown();

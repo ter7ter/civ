@@ -1,19 +1,15 @@
 <?php
 
+require_once __DIR__ . "/../CommonTestBase.php";
+
 /**
  * Интеграционные тесты для процесса создания игры через веб-интерфейс.
  */
-class CreateGameIntegrationTest extends FunctionalTestBase
+class CreateGameIntegrationTest extends CommonTestBase
 {
     protected function setUp(): void
     {
-        DatabaseTestAdapter::resetTestDatabase();
-        parent::setUp();
-        $this->clearRequest();
-        $this->clearSession();
-        $this->headers = [];
-        $this->initializeGameTypes();
-        $this->clearTestData(); // Добавлено для обеспечения чистого состояния перед каждым тестом
+        $this->setUpIntegrationTest();
     }
 
     /**
@@ -29,38 +25,12 @@ class CreateGameIntegrationTest extends FunctionalTestBase
             "users" => ["Игрок1", "Игрок2"],
         ];
 
-        $result = $this->executePage(
-            PROJECT_ROOT . "/pages/creategame.php",
-            $gameData
-        );
-
-        $this->assertPageHasNoError($result);
-
-        $gameRecord = $this->getLastRecord("game");
-        $this->assertNotNull($gameRecord, "Запись игры должна быть создана");
-        $this->assertEquals("Веб-тест игры", $gameRecord["name"]);
-        $this->assertEquals(50, $gameRecord["map_w"]);
-        $this->assertEquals(50, $gameRecord["map_h"]);
-        $this->assertEquals("byturn", $gameRecord["turn_type"]);
+        $result = $this->createGameViaPageAndAssert($gameData);
 
         $this->assertTrue(
-            $this->recordExists("planet", ["game_id" => $gameRecord["id"]]),
+            $this->recordExists("planet", ["game_id" => $result["game"]["id"]]),
             "Планета должна быть создана для игры"
         );
-
-        $users = MyDB::query(
-            "SELECT * FROM user WHERE game = :game_id ORDER BY turn_order",
-            ["game_id" => $gameRecord["id"]]
-        );
-
-        $this->assertCount(2, $users, "Должно быть 2 пользователя");
-
-        foreach ($users as $index => $user) {
-            $this->assertEquals(50, $user["money"], "Начальные деньги");
-            $this->assertEquals(1, $user["age"], "Начальная эра");
-            $this->assertEquals($index + 1, $user["turn_order"], "Порядок ходов");
-            $this->assertNotEmpty($user["color"], "Цвет пользователя");
-        }
     }
     
     /**
@@ -149,12 +119,8 @@ class CreateGameIntegrationTest extends FunctionalTestBase
             "users" => $players,
         ];
 
-        $result = $this->executePage(PROJECT_ROOT . "/pages/creategame.php", $gameData);
-        $this->assertPageHasNoError($result);
-
-        $colors = array_column(MyDB::query("SELECT color FROM user"), "color");
-        $this->assertCount(count($players), $colors);
-        $this->assertCount(count($colors), array_unique($colors));
+        $this->createGameViaPageAndAssert($gameData);
+        $this->assertUniqueUserColors($this->getLastRecord("game")["id"]);
     }
 
     /**
@@ -171,16 +137,8 @@ class CreateGameIntegrationTest extends FunctionalTestBase
             "users" => $players,
         ];
 
-        $result = $this->executePage(PROJECT_ROOT . "/pages/creategame.php", $gameData);
-        $this->assertPageHasNoError($result);
-
-        $userOrder = MyDB::query("SELECT login, turn_order FROM user ORDER BY turn_order");
-        $this->assertCount(3, $userOrder);
-
-        foreach ($userOrder as $i => $user) {
-            $this->assertEquals($players[$i], $user["login"]);
-            $this->assertEquals($i + 1, $user["turn_order"]);
-        }
+        $this->createGameViaPageAndAssert($gameData);
+        $this->assertUserTurnOrder($this->getLastRecord("game")["id"], $players);
     }
 
     /**
@@ -248,6 +206,7 @@ class CreateGameIntegrationTest extends FunctionalTestBase
 
     /**
      * Тест производительности создания игры с максимальным количеством игроков
+     * @large
      */
     public function testPerformanceWithMaxPlayers(): void
     {

@@ -59,7 +59,7 @@ class Game
      * Номер текущего хода
      * @var int
      */
-    public $turn_num;
+    public $turn_num = 1;
 
     /**
      * Получить игру по идентификатору
@@ -129,6 +129,7 @@ class Game
      */
     public function save()
     {
+
         $values = [];
         foreach (
             ["name", "map_w", "map_h", "turn_type", "turn_num"]

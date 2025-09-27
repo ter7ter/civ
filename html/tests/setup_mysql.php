@@ -7,7 +7,7 @@
 echo "Настройка MySQL базы данных для тестов...\n\n";
 
 // Параметры подключения
-$host = "localhost";
+$host = "db";
 $user = "civ_test";
 $pass = "civ_test";
 $dbname = "civ_for_tests";
@@ -19,6 +19,8 @@ echo "User: $user\n";
 echo "Password: $pass\n";
 echo "Database: $dbname\n";
 echo "Port: $port\n\n";
+
+define('PROJECT_ROOT', dirname(__DIR__).'/tests/../');
 
 try {
     // Сначала подключаемся без указания базы данных
@@ -65,6 +67,48 @@ try {
     $stmt = $pdo->query("SELECT COUNT(*) FROM test_setup");
     $count = $stmt->fetchColumn();
     $pdo->exec("DROP TABLE test_setup");
+
+    // Отключаем foreign key checks для MySQL
+    $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
+
+    $sqlFiles = [
+        PROJECT_ROOT . "/sql/civ.sql",
+        PROJECT_ROOT . "/sql/add_building_type_table.sql",
+        PROJECT_ROOT . "/sql/add_planet_table.sql",
+        PROJECT_ROOT . "/sql/add_research_type_table.sql",
+        PROJECT_ROOT . "/sql/add_unit_type_table.sql",
+    ];
+
+    foreach ($sqlFiles as $sqlFile) {
+        if (!file_exists($sqlFile)) {
+            throw new Exception("SQL file not found: " . $sqlFile);
+        }
+        $sqlContent = file_get_contents($sqlFile);
+        // Разделяем SQL-запросы по точке с запятой, но учитываем, что точка с запятой может быть внутри строк
+        $queries = array_filter(array_map('trim', explode(';', $sqlContent)));
+
+        foreach ($queries as $query) {
+            if (!empty($query)) {
+                try {
+                    $pdo->exec($query);
+                } catch (PDOException $e) {
+                    // Игнорируем ошибки, если таблица уже существует (CREATE TABLE IF NOT EXISTS)
+                    // или другие незначительные ошибки при создании схемы
+                    // Также игнорируем ошибки, связанные с внешними ключами при DROP TABLE,
+                    // так как они могут возникать, если таблицы уже были удалены или в другом порядке.
+                    if (strpos($e->getMessage(), "already exists") === false &&
+                        strpos($e->getMessage(), "Cannot delete or update a parent row") === false &&
+                        strpos($e->getMessage(), "a foreign key constraint fails") === false &&
+                        strpos($e->getMessage(), "Unknown table") === false) {
+                        throw $e;
+                    }
+                }
+            }
+        }
+    }
+
+    // Включаем foreign key checks обратно
+    $pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
 
     echo "✓ Создание и удаление таблиц работает (записей: $count)\n\n";
 

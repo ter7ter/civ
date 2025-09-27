@@ -13,10 +13,10 @@ class TestGameDataInitializer
     {
         self::initializeCellTypes();
         self::initializeResearchTypes();
-        self::initializeResourceTypes();
+        /*self::initializeResourceTypes();
         self::initializeBuildingTypes();
         self::initializeUnitTypes();
-        // self::initializeMissionTypes(); // Временно отключено
+        self::initializeMissionTypes();*/
     }
 
     /**
@@ -149,7 +149,7 @@ class TestGameDataInitializer
      */
     public static function initializeResourceTypes(): void
     {
-        if (!empty(ResourceType::$all)) {
+        if (!empty(ResourceType::getAll())) {
             return; // Уже инициализированы
         }
 
@@ -174,7 +174,7 @@ class TestGameDataInitializer
                 "work" => 1,
                 "eat" => 0,
                 "money" => 1,
-                "req_research" => [ResearchType::get(4)], // Верховая езда
+                "req_research" => [ResearchType::getByTitle('Верховая езда')], // Верховая езда
                 "cell_types" => [CellType::get("plains"), CellType::get("plains2")],
                 "chance" => 0.02,
                 "min_amount" => 50,
@@ -335,174 +335,159 @@ class TestGameDataInitializer
      */
     public static function initializeResearchTypes(): void
     {
-        if (!empty(ResearchType::$all)) {
+        if (!empty(ResearchType::getAllLoaded())) {
             return; // Уже инициализированы
         }
 
         ResearchType::clearAll(); // Очищаем кэш
 
-        $researchTypes = [
-            [
-                "id" => 1,
-                "title" => "Гончарное дело",
-                "age" => 1,
-                "cost" => 50,
-                "requirements" => [],
-                "m_top" => 30,
-                "m_left" => 30,
-                "age_need" => true,
-            ],
-            [
-                "id" => 2,
-                "title" => "Бронзовое дело",
+        $rt1 = new ResearchType(["title" => "Гончарное дело",
+            "age" => 1,
+            "cost" => 50,
+            "m_top" => 30,
+            "m_left" => 30,
+            "age_need" => true]);
+        $rt1->save();
+
+        $rt2 = new ResearchType(["title" => "Бронзовое дело",
                 "age" => 1,
                 "cost" => 80,
-                "requirements" => [1],
                 "m_top" => 130,
                 "m_left" => 30,
-                "age_need" => true,
-            ],
-            [
-                "id" => 3,
+                "age_need" => true]);
+        $rt2->addRequirement($rt1);
+        $rt2->save();
+
+        $rt3 = new ResearchType([
                 "title" => "Животноводство",
                 "age" => 1,
                 "cost" => 60,
-                "requirements" => [],
                 "m_top" => 230,
                 "m_left" => 30,
                 "age_need" => true,
-            ],
-            [
-                "id" => 4,
-                "title" => "Верховая езда",
-                "age" => 1,
-                "cost" => 80,
-                "requirements" => [3],
-                "m_top" => 330,
-                "m_left" => 30,
-                "age_need" => true,
-            ],
-            [
-                "id" => 5,
-                "title" => "Письменность",
-                "age" => 1,
-                "cost" => 100,
-                "requirements" => [1],
-                "m_top" => 230,
-                "m_left" => 300,
-                "age_need" => true,
-            ],
-            [
-                "id" => 6,
-                "title" => "Мистицизм",
-                "age" => 1,
-                "cost" => 60,
-                "requirements" => [],
-                "m_top" => 530,
-                "m_left" => 30,
-                "age_need" => true,
-            ],
-            [
-                "id" => 7,
-                "title" => "Обработка железа",
-                "age" => 1,
-                "cost" => 150,
-                "requirements" => [1],
-                "m_top" => 30,
-                "m_left" => 300,
-                "age_need" => true,
-            ],
-            [
-                "id" => 8,
-                "title" => "Математика",
-                "age" => 1,
-                "cost" => 150,
-                "requirements" => [2, 3],
-                "m_top" => 130,
-                "m_left" => 300,
-                "age_need" => true,
-            ],
-            [
-                "id" => 12,
-                "title" => "Строительство",
-                "age" => 1,
-                "cost" => 80,
-                "requirements" => [1],
-                "m_top" => 30,
-                "m_left" => 570,
-                "age_need" => true,
-            ],
-            [
-                "id" => 13,
-                "title" => "Свод законов",
-                "age" => 1,
-                "cost" => 120,
-                "requirements" => [5],
-                "m_top" => 140,
-                "m_left" => 570,
-                "age_need" => true,
-            ],
-            [
-                "id" => 15,
+            ]);
+        $rt3->save();
+
+        $rt4 = new ResearchType([
+            "title" => "Верховая езда",
+            "age" => 1,
+            "cost" => 80,
+            "m_top" => 330,
+            "m_left" => 30,
+            "age_need" => true,
+        ]);
+        $rt4->addRequirement($rt3);
+        $rt4->save();
+
+        $rt5 = new ResearchType([
+            "title" => "Верховая езда",
+            "age" => 1,
+            "cost" => 80,
+            "m_top" => 330,
+            "m_left" => 30,
+            "age_need" => true,
+        ]);
+        $rt5->addRequirement($rt1);
+        $rt5->save();
+
+        $rt6 = new ResearchType([
+            "title" => "Мистицизм",
+            "age" => 1,
+            "cost" => 60,
+            "m_top" => 530,
+            "m_left" => 30,
+            "age_need" => true,
+        ]);
+        $rt6->save();
+
+        $rt7 = new ResearchType([
+            "title" => "Обработка железа",
+            "age" => 1,
+            "cost" => 150,
+            "m_top" => 30,
+            "m_left" => 300,
+            "age_need" => true,
+        ]);
+        $rt7->addRequirement($rt1);
+        $rt7->save();
+
+        $rt8 = new ResearchType([
+            "title" => "Математика",
+            "age" => 1,
+            "cost" => 150,
+            "m_top" => 130,
+            "m_left" => 300,
+            "age_need" => true,
+        ]);
+        $rt8->addRequirement($rt2);
+        $rt8->addRequirement($rt3);
+        $rt8->save();
+
+        $rt9 = new ResearchType([
+            "title" => "Строительство",
+            "age" => 1,
+            "cost" => 80,
+            "m_top" => 30,
+            "m_left" => 570,
+            "age_need" => true,
+        ]);
+        $rt9->addRequirement($rt1);
+        $rt9->save();
+
+        $rt10 = new ResearchType([
+            "title" => "Свод законов",
+            "age" => 1,
+            "cost" => 120,
+            "m_top" => 140,
+            "m_left" => 570,
+            "age_need" => true,
+        ]);
+        $rt10->addRequirement($rt5);
+        $rt10->save();
+
+        $rt11 = new ResearchType([
                 "title" => "Литература",
                 "age" => 1,
                 "cost" => 90,
-                "requirements" => [5],
                 "m_top" => 320,
                 "m_left" => 570,
                 "age_need" => false,
-            ],
-            [
-                "id" => 16,
-                "title" => "Создание карт",
-                "age" => 1,
-                "cost" => 70,
-                "requirements" => [4],
-                "m_top" => 410,
-                "m_left" => 570,
-                "age_need" => true,
-            ],
-            [
-                "id" => 18,
-                "title" => "Конструкции",
-                "age" => 2,
-                "cost" => 140,
-                "requirements" => [12],
-                "m_top" => 30,
-                "m_left" => 840,
-                "age_need" => true,
-            ],
-            [
-                "id" => 19,
-                "title" => "Деньги",
-                "age" => 1,
-                "cost" => 100,
-                "requirements" => [1],
-                "m_top" => 110,
-                "m_left" => 840,
-                "age_need" => true,
-            ],
-        ];
+            ]);
+        $rt11->addRequirement($rt5);
+        $rt11->save();
 
-        // First create all research types
-        foreach ($researchTypes as $type) {
-            $rt = new ResearchType($type);
-            $rt->save();
-        }
+        $rt12 = new ResearchType([
+            "title" => "Создание карт",
+            "age" => 1,
+            "cost" => 70,
+            "m_top" => 410,
+            "m_left" => 570,
+            "age_need" => true,
+        ]);
+        $rt12->addRequirement($rt4);
+        $rt12->save();
 
-        // Then add requirements
-        foreach ($researchTypes as $type) {
-            if (isset($type['requirements']) && !empty($type['requirements'])) {
-                $rt = ResearchType::get($type['id']);
-                foreach ($type['requirements'] as $reqId) {
-                    $req = ResearchType::get($reqId);
-                    if ($req) {
-                        $rt->addRequirement($req);
-                    }
-                }
-                $rt->save(); // Save with requirements
-            }
-        }
+        $rt13 = new ResearchType([
+            "title" => "Конструкции",
+            "age" => 2,
+            "cost" => 140,
+            "m_top" => 30,
+            "m_left" => 840,
+            "age_need" => true,
+        ]);
+        $rt13->addRequirement($rt9);
+        $rt13->save();
+
+        $rt14 = new ResearchType([
+            "title" => "Деньги",
+            "age" => 1,
+            "cost" => 100,
+            "m_top" => 110,
+            "m_left" => 840,
+            "age_need" => true,
+        ]);
+        $rt14->addRequirement($rt1);
+        $rt14->save();
     }
 
     /**
@@ -799,13 +784,11 @@ class TestGameDataInitializer
         ];
 
         foreach ($missionTypes as $type) {
-            new MissionType($type);
+            $mission_type = new MissionType($type);
+            $mission_type->save();
         }
     }
 
-    /**
-     * Очищает все инициализированные данные (для тестов)
-     */
     public static function clearAll(): void
     {
         if (class_exists("CellType")) {
@@ -826,49 +809,52 @@ class TestGameDataInitializer
     }
 
     /**
-     * Создает минимальный набор данных для базовых тестов
+     * Устанавливает схему базы данных из всех SQL-файлов в каталоге sql.
      */
-    public static function initializeMinimal(): void
+    public static function setupDatabaseSchema(): void
     {
-        // Только самые необходимые типы для базовых тестов
-        if (empty(CellType::$all)) {
-            new CellType([
-                "id" => "plains",
-                "title" => "Равнины",
-                "work" => 1,
-                "eat" => 2,
-                "money" => 0,
-                "base_chance" => 15,
-                "chance_inc1" => 8,
-                "chance_inc2" => 6,
-                "chance_inc_other" => [],
-                "border_no" => [],
-            ]);
+        $pdo = MyDB::get();
+
+        // Отключаем foreign key checks для MySQL
+        $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
+
+        $sqlFiles = [
+            PROJECT_ROOT . "/sql/civ.sql",
+            PROJECT_ROOT . "/sql/add_building_type_table.sql",
+            PROJECT_ROOT . "/sql/add_planet_table.sql",
+            PROJECT_ROOT . "/sql/add_research_type_table.sql",
+            PROJECT_ROOT . "/sql/add_unit_type_table.sql",
+        ];
+
+        foreach ($sqlFiles as $sqlFile) {
+            if (!file_exists($sqlFile)) {
+                throw new Exception("SQL file not found: " . $sqlFile);
+            }
+            $sqlContent = file_get_contents($sqlFile);
+            // Разделяем SQL-запросы по точке с запятой, но учитываем, что точка с запятой может быть внутри строк
+            $queries = array_filter(array_map('trim', explode(';', $sqlContent)));
+
+            foreach ($queries as $query) {
+                if (!empty($query)) {
+                    try {
+                        MyDB::query($query);
+                    } catch (PDOException $e) {
+                        // Игнорируем ошибки, если таблица уже существует (CREATE TABLE IF NOT EXISTS)
+                        // или другие незначительные ошибки при создании схемы
+                        // Также игнорируем ошибки, связанные с внешними ключами при DROP TABLE,
+                        // так как они могут возникать, если таблицы уже были удалены или в другом порядке.
+                        if (strpos($e->getMessage(), "already exists") === false &&
+                            strpos($e->getMessage(), "Cannot delete or update a parent row") === false &&
+                            strpos($e->getMessage(), "a foreign key constraint fails") === false &&
+                            strpos($e->getMessage(), "Unknown table") === false) {
+                            throw $e;
+                        }
+                    }
+                }
+            }
         }
 
-        if (empty(UnitType::$all)) {
-            new UnitType([
-                "id" => 1,
-                "title" => "Поселенец",
-                "cost" => 40,
-                "upkeep" => 1,
-                "attack" => 0,
-                "defence" => 1,
-                "health" => 1,
-                "movement" => 1,
-                "can_found_city" => true,
-                "need_research" => [],
-            ]);
-        }
-
-        if (empty(ResearchType::$all)) {
-            new ResearchType([
-                "id" => 1,
-                "title" => "Тестовое исследование",
-                "age" => 1,
-                "cost" => 50,
-                "need_research" => [],
-            ]);
-        }
+        // Включаем foreign key checks обратно
+        $pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
     }
 }

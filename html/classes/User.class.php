@@ -85,13 +85,13 @@ class User
      * Текущий статус хода (play, wait, end)
      * @var string
      */
-    public $turn_status;
+    public $turn_status = "wait";
 
     /**
      * Порядок хода в игре, если ходы по очереди
      * @var int
      */
-    public $turn_order;
+    public $turn_order = 0;
 
     /**
      * Уровень пользователя
@@ -439,7 +439,7 @@ class User
     {
         $result = [];
         $research = $this->get_research();
-        foreach (ResearchType::$all as $res) {
+        foreach (ResearchType::getAllLoaded() as $res) {
             if (isset($research[$res->id])) {
                 continue;
             }

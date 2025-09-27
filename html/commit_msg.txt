@@ -1,1 +1,0 @@
-Fix ResearchTypeTest assertions to properly validate JSON parsing and error handling

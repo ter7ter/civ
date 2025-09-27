@@ -500,7 +500,10 @@ class Cell
                 return CellType::get($type);
             }
         }
-        die();
+        // Если не удалось определить тип, используем plains как fallback
+        //return CellType::get('plains');
+        //Так корректнее
+        throw new Exception("Не удалось определить тип клетки");
     }
 
     /**

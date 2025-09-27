@@ -1,14 +1,15 @@
 <?php
 
+require_once __DIR__ . "/../CommonTestBase.php";
+
 /**
  * Тесты для функции создания игры
  */
-class CreateGameTest extends FunctionalTestBase
+class CreateGameTest extends CommonTestBase
 {
     protected function setUp(): void
     {
-        DatabaseTestAdapter::resetTestDatabase();
-        parent::setUp();
+        $this->setUpUnitTest();
     }
 
     /**

@@ -23,7 +23,6 @@ DatabaseTestAdapter::insert("user", $userFromGame2);
 
 echo "User data: ";
 $user = User::get(1);
-var_dump($user);
 echo "User game: " . ($user ? $user->game : "null") . PHP_EOL;
 echo "Game1 id: " . $game1["id"] . PHP_EOL;
 echo "Comparison: " .

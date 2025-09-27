@@ -1,27 +1,30 @@
 <?php
 
-require_once __DIR__ . "/../bootstrap.php";
+require_once __DIR__ . "/../CommonTestBase.php";
 
 /**
  * Тесты для класса Cell
  */
-class CellTest extends TestBase
+class CellTest extends CommonTestBase
 {
+    protected function setUp(): void
+    {
+        $this->setUpUnitTest();
+    }
     /**
      * Тест получения существующей клетки
      */
     public function testGetExistingCell(): void
     {
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $this->createTestCell(['x' => 5, 'y' => 10, 'planet' => $planetId, 'type' => 'plains']);
+        $testData = $this->createCompleteTestGame();
+        $this->createTestCell(['x' => 5, 'y' => 10, 'planet' => $testData['planet'], 'type' => 'plains']);
 
-        $cell = Cell::get(5, 10, $planetId);
+        $cell = Cell::get(5, 10, $testData['planet']);
 
         $this->assertInstanceOf(Cell::class, $cell);
         $this->assertEquals(5, $cell->x);
         $this->assertEquals(10, $cell->y);
-        $this->assertEquals($planetId, $cell->planet);
+        $this->assertEquals($testData['planet'], $cell->planet);
         $this->assertInstanceOf(CellType::class, $cell->type);
         $this->assertEquals('plains', $cell->type->id);
     }
@@ -31,10 +34,9 @@ class CellTest extends TestBase
      */
     public function testGetNonExistingCell(): void
     {
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $testData = $this->createCompleteTestGame();
 
-        $cell = Cell::get(999, 999, $planetId);
+        $cell = Cell::get(999, 999, $testData['planet']);
 
         $this->assertFalse($cell);
     }

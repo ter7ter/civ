@@ -33,9 +33,7 @@ class MyDB
 
     public static function connect()
     {
-        if (MyDB::$_link) {
-            MyDB::$_link = null;
-        }
+        MyDB::$_link = null;
 
         // Используем MySQL
         $dsn = "mysql:host=" . MyDB::$dbhost . ";dbname=" . MyDB::$dbname . ";charset=utf8;port=" . MyDB::$dbport;
@@ -59,51 +57,18 @@ class MyDB
 
         // Проверяем, является ли это запросом, который не возвращает данные
         $queryStart = strtoupper(substr(trim($query), 0, 10));
-        $isNonSelect = false;
-        foreach (
-            ["INSERT", "UPDATE", "DELETE", "CREATE", "ALTER", "DROP"]
-            as $type
-        ) {
-            if (strpos($queryStart, $type) === 0) {
-                $isNonSelect = true;
-                break;
-            }
-        }
-        if ($isNonSelect) {
-            // Для DDL запросов (CREATE, ALTER, DROP) используем exec
-            if (
-                strpos($queryStart, "CREATE") === 0 ||
-                strpos($queryStart, "ALTER") === 0 ||
-                strpos($queryStart, "DROP") === 0
-            ) {
-                $db->exec($query);
-            } else {
-                $stmt = $db->prepare($query);
-                $stmt->execute($vars);
-            }
-            return true;
-        }
 
-        // Для запросов, которые могут возвращать данные
-        // Некоторые запросы (DESCRIBE, SHOW TABLES) могут не поддерживаться prepare
-        try {
+        // Для DDL запросов (CREATE, ALTER, DROP) используем exec
+        /*if (
+            strpos($queryStart, "CREATE") === 0 ||
+            strpos($queryStart, "ALTER") === 0 ||
+            strpos($queryStart, "DROP") === 0
+        ) {
+            $db->exec($query);
+        } else {*/
             $stmt = $db->prepare($query);
             $stmt->execute($vars);
-        } catch (Exception $e) {
-            // Если prepare не работает, заменяем параметры и выполняем напрямую
-            $queryWithVars = $query;
-            foreach ($vars as $key => $value) {
-                if ($value === null) {
-                    $replacement = 'NULL';
-                } elseif (is_numeric($value)) {
-                    $replacement = $value;
-                } else {
-                    $replacement = "'" . addslashes($value) . "'";
-                }
-                $queryWithVars = str_replace(":$key", $replacement, $queryWithVars);
-            }
-            $stmt = $db->query($queryWithVars);
-        }
+        //}
 
         if ($stmt->columnCount() == 0) {
             // Запрос не возвращает столбцы
@@ -222,14 +187,6 @@ class MyDB
         if ($db->inTransaction()) {
             $db->rollBack();
         }
-    }
-
-    /**
-     * Сброс соединения с базой данных (для тестов)
-     */
-    public static function resetConnection()
-    {
-        MyDB::$_link = null;
     }
 }
 ?>

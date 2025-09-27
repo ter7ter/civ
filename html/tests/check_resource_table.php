@@ -3,8 +3,6 @@
 require_once dirname(__DIR__) . "/config.php";
 require_once dirname(__DIR__) . "/classes/MyDB.class.php";
 
-MyDB::setDBConfig("localhost", "civ_test", "civ_test", "3306", "civ_for_tests");
-
 try {
     echo "Проверка структуры таблицы resource:\n";
     $result = MyDB::query("DESCRIBE resource");

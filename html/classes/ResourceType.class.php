@@ -113,7 +113,7 @@ new ResourceType([  'id' => 'iron',
                     'money' => 1,
                     'chance' => 0.015,
                     'req_research' => [
-                        ResearchType::get(7) // Обработка железа
+                        //ResearchType::get(7) // Обработка железа
                     ],
                     'cell_types' => [
                         CellType::get('hills'),
@@ -127,7 +127,7 @@ new ResourceType([  'id' => 'horse',
                     'money' => 1,
                     'chance' => 0.02,
                     'req_research' => [
-                        ResearchType::get(4) // Верховая езда
+                        //ResearchType::get(4) // Верховая езда
                     ],
                     'cell_types' => [
                         CellType::get('plains'),

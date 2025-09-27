@@ -23,11 +23,12 @@ class MapActionsIntegrationTest extends TestBase
         $this->initializeGameTypes();
 
         // Создаем тестовый тип юнита
-        MyDB::insert("unit_type", [
+        $unitType = new UnitType([
             "id" => 1,
             "title" => "Warrior",
             "points" => 2,
         ]);
+        $unitType->save();
     }
 
     public function testUnitMovement(): void
@@ -44,7 +45,8 @@ class MapActionsIntegrationTest extends TestBase
             "planet" => $planetId,
             "type" => "plains",
         ];
-        MyDB::insert("cell", $startCellData);
+        $startCell = new Cell($startCellData);
+        $startCell->save();
 
         // Создаем юнит
         $unitData = [
@@ -56,7 +58,9 @@ class MapActionsIntegrationTest extends TestBase
             "health" => 3,
             "points" => 5,
         ];
-        $unitId = MyDB::insert("unit", $unitData);
+        $unit = new Unit($unitData);
+        $unit->save();
+        $unitId = $unit->id;
 
         // Создаем клетку назначения
         $cellData = [
@@ -65,7 +69,8 @@ class MapActionsIntegrationTest extends TestBase
             "planet" => $planetId,
             "type" => "plains",
         ];
-        MyDB::insert("cell", $cellData);
+        $targetCell = new Cell($cellData);
+        $targetCell->save();
 
         // Получаем юнит и перемещаем
         $unit = Unit::get($unitId);
@@ -221,7 +226,8 @@ class MapActionsIntegrationTest extends TestBase
             "health" => 3,
             "points" => 5,
         ];
-        MyDB::insert("unit", $unitData);
+        $unit = new Unit($unitData);
+        $unit->save();
 
         // Симулируем сессию
         $this->setSession([
@@ -285,7 +291,8 @@ class MapActionsIntegrationTest extends TestBase
             "title" => "Test City",
             "population" => 1,
         ];
-        MyDB::insert("city", $cityData);
+        $city = new City($cityData);
+        $city->save();
 
         // Симулируем сессию
         $this->setSession([

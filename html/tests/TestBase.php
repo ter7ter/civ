@@ -145,8 +145,10 @@ class TestBase extends PHPUnit\Framework\TestCase
 
         $gameData = array_merge($defaultData, $data);
 
-        $gameData["id"] = MyDB::insert("game", $gameData);
-        return $gameData;
+        $game = new Game($gameData);
+        $game->save();
+
+        return $game;
     }
 
     /**
@@ -156,8 +158,8 @@ class TestBase extends PHPUnit\Framework\TestCase
     {
         // Создаем игру, если её нет
         if (!isset($data["game"])) {
-            $gameData = $this->createTestGame();
-            $gameId = $gameData["id"];
+            $game = $this->createTestGame();
+            $gameId = $game->id;
         } else {
             $gameId = $data["game"];
         }
@@ -174,8 +176,19 @@ class TestBase extends PHPUnit\Framework\TestCase
 
         $userData = array_merge($defaultData, $data);
 
-        $userData["id"] = MyDB::insert("user", $userData);
-        return $userData;
+        $user = new User($userData);
+        $user->save();
+
+        return [
+            "id" => $user->id,
+            "login" => $user->login,
+            "color" => $user->color,
+            "game" => $user->game,
+            "turn_order" => $user->turn_order,
+            "turn_status" => $user->turn_status,
+            "money" => $user->money,
+            "age" => $user->age,
+        ];
     }
 
     /**
@@ -236,25 +249,8 @@ class TestBase extends PHPUnit\Framework\TestCase
 
         $cellData = array_merge($defaultData, $data);
 
-
-
-        // Проверяем существует ли уже такая клетка
-        $existing = MyDB::query(
-            "SELECT * FROM cell WHERE x = :x AND y = :y AND planet = :planet",
-            ["x" => $cellData["x"], "y" => $cellData["y"], "planet" => $cellData["planet"]],
-            "row"
-        );
-
-        if (!$existing) {
-            // Вставляем новую клетку (таблица cell не имеет автоинкрементного id)
-            MyDB::query(
-                "INSERT INTO cell (x, y, planet, type) VALUES (:x, :y, :planet, :type)",
-                $cellData
-            );
-        } else {
-            // Обновляем существующую клетку
-            MyDB::update("cell", ["type" => $cellData["type"]], "x = {$cellData["x"]} AND y = {$cellData["y"]} AND planet = {$cellData["planet"]}");
-        }
+        $cell = new Cell($cellData);
+        $cell->save();
 
         return $cellData;
     }
@@ -288,12 +284,10 @@ class TestBase extends PHPUnit\Framework\TestCase
             "type" => "plains",
         ]);
 
-        // Убираем id из данных перед вставкой, так как это автоинкрементное поле
-        unset($cityData["id"]);
-        $insertId = MyDB::insert("city", $cityData);
-        $cityData["id"] = $insertId;
-        Cell::clearCache(); // Clear the cell cache
-        return $cityData;
+        $user = User::get($cityData["user_id"]);
+        $city = City::new_city($user, $cityData["x"], $cityData["y"], $cityData["title"], $cityData["planet"]);
+
+        return $city;
     }
 
     /**
@@ -316,8 +310,10 @@ class TestBase extends PHPUnit\Framework\TestCase
 
         $unitData = array_merge($defaultData, $data);
 
-        $unitData["id"] = MyDB::insert("unit", $unitData);
-        return $unitData;
+        $unit = new Unit($unitData);
+        $unit->save();
+
+        return $unit;
     }
 
     /**
@@ -327,8 +323,8 @@ class TestBase extends PHPUnit\Framework\TestCase
     {
         // Создаем игру, если её нет
         if (!isset($data["game_id"])) {
-            $gameData = $this->createTestGame();
-            $gameId = $gameData["id"];
+            $game = $this->createTestGame();
+            $gameId = $game->id;
         } else {
             $gameId = $data["game_id"];
         }
@@ -340,8 +336,9 @@ class TestBase extends PHPUnit\Framework\TestCase
 
         $planetData = array_merge($defaultData, $data);
 
-        $planetData["id"] = MyDB::insert("planet", $planetData);
-        return $planetData["id"];
+        $planet = new Planet($planetData);
+        $planet->save();
+        return $planet->id;
     }
 
     /**
@@ -494,19 +491,19 @@ class TestBase extends PHPUnit\Framework\TestCase
     ): array {
         $game = $this->createTestGame($gameData);
 
-        $usersData = [];
+        $users = [];
         for ($i = 0; $i < $userCount; $i++) {
-            $usersData[] = [
-                "game" => $game["id"],
+            $user = $this->createTestUser([
+                "game" => $game->id,
                 "login" => "TestUser" . ($i + 1),
                 "turn_order" => $i + 1,
                 "color" => "#ff000" . $i,
                 "money" => 50,
                 "age" => 1,
                 "turn_status" => "wait",
-            ];
+            ]);
+            $users[] = $user;
         }
-        $users = $this->createTestUsers($usersData);
 
         return [
             "game" => $game,
@@ -516,34 +513,10 @@ class TestBase extends PHPUnit\Framework\TestCase
 
     protected function createTestUsers(array $usersData): array
     {
-        if (empty($usersData)) {
-            return [];
-        }
-
-        $keys = array_keys($usersData[0]);
-        
-        $values = [];
-        $params = [];
-        foreach($usersData as $userData) {
-            $values[] = "(" . implode(", ", array_fill(0, count($keys), "?")) . ")";
-            foreach($userData as $value) {
-                $params[] = $value;
-            }
-        }
-
-        $sql = "INSERT INTO user (" . implode(", ", array_map(fn($k) => "`$k`", $keys)) . ") VALUES " .
-            implode(", ", $values);
-
-        MyDB::query($sql, $params);
-
-        $firstId = MyDB::get()->lastInsertId();
-
         $result = [];
-        for ($i = 0; $i < count($usersData); $i++) {
-            $usersData[$i]['id'] = $firstId + $i;
-            $result[] = $usersData[$i];
+        foreach ($usersData as $userData) {
+            $result[] = $this->createTestUser($userData);
         }
-
         return $result;
     }
 

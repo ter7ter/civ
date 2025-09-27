@@ -210,13 +210,15 @@ class UserTest extends TestBase
             "user_id" => $user->id,
             "type" => 1,
         ];
-        MyDB::insert("research", $research1Data);
+        $research1 = new Research($research1Data);
+        $research1->save();
 
         $research2Data = [
             "user_id" => $user->id,
             "type" => 3,
         ];
-        MyDB::insert("research", $research2Data);
+        $research2 = new Research($research2Data);
+        $research2->save();
 
         $research = $user->get_research();
 
@@ -241,7 +243,8 @@ class UserTest extends TestBase
             "age" => 1,
             "cost" => 100,
         ];
-        MyDB::insert("research_type", $researchTypeData);
+        $researchType = new ResearchType($researchTypeData);
+        $researchType->save();
 
         $researchType = ResearchType::get(1);
 
@@ -263,7 +266,8 @@ class UserTest extends TestBase
             "user_id" => $user->id,
             "type" => 1, // Гончарное дело
         ];
-        MyDB::insert("research", $researchData);
+        $research = new Research($researchData);
+        $research->save();
 
         $researchType = ResearchType::get(1);
 
@@ -321,7 +325,8 @@ class UserTest extends TestBase
             "object" => 1, // ID типа исследования
             "source" => null,
         ];
-        MyDB::insert("event", $eventData);
+        $event = new Event($eventData);
+        $event->save();
 
         $event = $user->get_next_event();
 
@@ -357,14 +362,14 @@ class UserTest extends TestBase
 
         // Создаем тип исследования
         $researchTypeData = [
-            "id" => 5,
             "title" => "Active Research",
             "age" => 1,
             "cost" => 50,
         ];
-        MyDB::insert("research_type", $researchTypeData);
+        $researchType = new ResearchType($researchTypeData);
+        $researchType->save();
 
-        $user->process_research_type = ResearchType::get(5);
+        $user->process_research_type = ResearchType::get($researchType->id);
         $user->save();
 
         $result = $user->calculate_research();
@@ -487,7 +492,8 @@ class UserTest extends TestBase
             "text" => "Message 1",
             "type" => "system",
         ];
-        MyDB::insert("message", $message1Data);
+        $message1 = new Message($message1Data);
+        $message1->save();
 
         $message2Data = [
             "from_id" => $user->id,
@@ -495,7 +501,8 @@ class UserTest extends TestBase
             "text" => "Message 2",
             "type" => "user",
         ];
-        MyDB::insert("message", $message2Data);
+        $message2 = new Message($message2Data);
+        $message2->save();
 
         $userObj = User::get($user->id);
         $messages = $userObj->get_messages();

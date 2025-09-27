@@ -12,32 +12,33 @@ class UnitTest extends TestBase
      */
     public function testGetExistingUnit(): void
     {
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $user = User::get($userData["id"]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
         $unitTypeData = [
-            "id" => 1,
             "title" => "Test Unit",
             "points" => 2,
         ];
-        MyDB::insert("unit_type", $unitTypeData);
+        $unitType = new UnitType($unitTypeData);
+        $unitType->save();
 
         $this->createTestCell(['x' => 10, 'y' => 20, 'planet' => $planetId]);
 
         // Создаем юнит
         $unitData = [
             "user_id" => $user->id,
-            "type" => 1,
+            "type" => $unitType->id,
             "x" => 10,
             "y" => 20,
             "planet" => $planetId,
             "health" => 3,
             "points" => 2,
         ];
-        $unitData["id"] = MyDB::insert("unit", $unitData);
+        $unit = new Unit($unitData);
+        $unit->save();
+        $unitData["id"] = $unit->id;
 
         $unit = Unit::get($unitData["id"]);
 
@@ -72,16 +73,16 @@ class UnitTest extends TestBase
 
         // Создаем тип юнита
         $unitTypeData = [
-            "id" => 2,
             "title" => "Construct Unit",
             "points" => 1,
         ];
-        MyDB::insert("unit_type", $unitTypeData);
+        $unitType = new UnitType($unitTypeData);
+        $unitType->save();
 
         $data = [
             "id" => 1,
             "user_id" => $user->id,
-            "type" => 2,
+            "type" => $unitType->id,
             "x" => 5,
             "y" => 15,
             "planet" => $planetId,
@@ -114,15 +115,15 @@ class UnitTest extends TestBase
 
         // Создаем тип юнита
         $unitTypeData = [
-            "id" => 3,
             "title" => "Save Unit",
             "points" => 3,
         ];
-        MyDB::insert("unit_type", $unitTypeData);
+        $unitType = new UnitType($unitTypeData);
+        $unitType->save();
 
         $data = [
             "user_id" => $user->id,
-            "type" => 3,
+            "type" => $unitType->id,
             "x" => 1,
             "y" => 2,
             "planet" => $planetId,
@@ -146,7 +147,7 @@ class UnitTest extends TestBase
         $this->assertEquals(2, $savedData["y"]);
         $this->assertEquals(3, $savedData["health"]);
         $this->assertEquals(3, $savedData["points"]);
-        $this->assertEquals(3, $savedData["type"]);
+        $this->assertEquals($unitType->id, $savedData["type"]);
     }
 
     /**

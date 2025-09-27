@@ -13,10 +13,11 @@ class BuildingTest extends TestBase
     public function testGet(): void
     {
         $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $user = $this->createTestUser(['game' => $game->id]);
-        $city = $this->createTestCity(['user_id' => $user['id'], 'planet' => $planetId]);
+        $testData = $this->createTestGameWithPlanetUserAndCity();
+        $game = $testData['game'];
+        $planetId = $testData['planet'];
+        $user = $testData['user'];
+        $city = $testData['city'];
 
         // Создаем здание через объект
         $building = new Building([
@@ -41,10 +42,8 @@ class BuildingTest extends TestBase
     public function testConstructor(): void
     {
         $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $user = $this->createTestUser(['game' => $game->id]);
-        $city = $this->createTestCity(['user_id' => $user['id'], 'planet' => $planetId]);
+        $testData = $this->createTestGameWithPlanetUserAndCity();
+        $city = $testData['city'];
 
         $data = [
             'id' => 1,
@@ -70,10 +69,8 @@ class BuildingTest extends TestBase
     public function testConstructorWithoutId(): void
     {
         $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $user = $this->createTestUser(['game' => $game->id]);
-        $city = $this->createTestCity(['user_id' => $user['id'], 'planet' => $planetId]);
+        $testData = $this->createTestGameWithPlanetUserAndCity();
+        $city = $testData['city'];
 
         $data = [
             'city_id' => $city->id,
@@ -93,10 +90,8 @@ class BuildingTest extends TestBase
     public function testGetTitle(): void
     {
         $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $user = $this->createTestUser(['game' => $game->id]);
-        $city = $this->createTestCity(['user_id' => $user['id'], 'planet' => $planetId]);
+        $testData = $this->createTestGameWithPlanetUserAndCity();
+        $city = $testData['city'];
 
         $data = [
             'city_id' => $city->id,
@@ -114,10 +109,8 @@ class BuildingTest extends TestBase
     public function testSaveNew(): void
     {
         $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $user = $this->createTestUser(['game' => $game->id]);
-        $city = $this->createTestCity(['user_id' => $user['id'], 'planet' => $planetId]);
+        $testData = $this->createTestGameWithPlanetUserAndCity();
+        $city = $testData['city'];
 
         $data = [
             'city_id' => $city->id,
@@ -146,10 +139,8 @@ class BuildingTest extends TestBase
     public function testSaveUpdate(): void
     {
         $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $user = $this->createTestUser(['game' => $game->id]);
-        $city = $this->createTestCity(['user_id' => $user['id'], 'planet' => $planetId]);
+        $testData = $this->createTestGameWithPlanetUserAndCity();
+        $city = $testData['city'];
 
         // Создаем здание через объект
         $building = new Building([
@@ -176,10 +167,8 @@ class BuildingTest extends TestBase
     public function testCaching(): void
     {
         $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $user = $this->createTestUser(['game' => $game->id]);
-        $city = $this->createTestCity(['user_id' => $user['id'], 'planet' => $planetId]);
+        $testData = $this->createTestGameWithPlanetUserAndCity();
+        $city = $testData['city'];
 
         // Создаем здание через объект
         $building = new Building([
@@ -203,10 +192,8 @@ class BuildingTest extends TestBase
     public function testDifferentBuildingTypes(): void
     {
         $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $user = $this->createTestUser(['game' => $game->id]);
-        $city = $this->createTestCity(['user_id' => $user['id'], 'planet' => $planetId]);
+        $testData = $this->createTestGameWithPlanetUserAndCity();
+        $city = $testData['city'];
 
         $buildingTypes = [1, 2, 3]; // Бараки, Храм, Рынок
 
@@ -227,12 +214,12 @@ class BuildingTest extends TestBase
 
     /**
      * Тест метода city_effect для разных типов зданий
+     * @todo Недоделан - будет переделан после доработки объекта BuildingType
      */
     public function testCityEffect(): void
     {
-        //Временно не тестируем, будет передалываться после доработки объекта BuildngType
-        $this->assertTrue(true, true);
-        return ;
+        $this->markTestIncomplete('Тест недоделан - будет переделан после доработки объекта BuildingType');
+        return;
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);

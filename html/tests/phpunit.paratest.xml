@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+         bootstrap="bootstrap.php"
+         cacheResultFile=".phpunit.result.cache"
+         executionOrder="depends,defects"
+         forceCoversAnnotation="false"
+         beStrictAboutCoversAnnotation="true"
+         beStrictAboutOutputDuringTests="false"
+         beStrictAboutTodoAnnotatedTests="true"
+         beStrictAboutChangesToGlobalState="true"
+         convertDeprecationsToExceptions="true"
+         failOnRisky="false"
+         failOnWarning="true"
+         verbose="true"
+         enforceTimeLimit="true"
+         timeoutForSmallTests="10"
+         timeoutForMediumTests="30"
+         timeoutForLargeTests="60">
+
+    <testsuites>
+        <testsuite name="Unit Tests">
+            <directory suffix="Test.php">unit</directory>
+        </testsuite>
+        <testsuite name="Integration Tests">
+            <directory suffix="Test.php">integration</directory>
+        </testsuite>
+    </testsuites>
+
+    <coverage cacheDirectory=".phpunit.cache/code-coverage"
+              processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">../classes</directory>
+        </include>
+        <exclude>
+            <directory>../pages</directory>
+            <directory>../tests</directory>
+            <directory>../vendor</directory>
+            <file>../config.php</file>
+        </exclude>
+        <report>
+            <html outputDirectory="coverage-html"/>
+            <text outputFile="coverage.txt"/>
+        </report>
+    </coverage>
+
+    <logging>
+        
+        <testdoxHtml outputFile="results/testdox.html"/>
+        <testdoxText outputFile="results/testdox.txt"/>
+    </logging>
+
+    <php>
+        <!-- Переменные окружения для тестов -->
+        <env name="APP_ENV" value="testing"/>
+        <env name="DB_CONNECTION" value="mysql"/>
+        <!-- Для ParaTest используем уникальную БД для каждого процесса -->
+        <env name="DB_DATABASE" value="test_db" force="true"/>
+        <env name="TEST_TOKEN" value="" force="true"/>
+
+        <!-- Константы для тестового окружения -->
+        <const name="TESTING" value="true"/>
+        <const name="TEST_DB_HOST" value="db"/>
+        <const name="TEST_DB_USER" value="civ_test"/>
+        <const name="TEST_DB_PASS" value="civ_test"/>
+        <const name="TEST_DB_NAME" value="civ_for_tests"/>
+        <const name="TEST_DB_PORT" value="3306"/>
+    </php>
+
+    <extensions>
+        <!-- ParaTest extension removed - using direct command -->
+    </extensions>
+</phpunit>

@@ -342,6 +342,49 @@ class TestBase extends PHPUnit\Framework\TestCase
     }
 
     /**
+     * Создает тестовую игру с планетой
+     */
+    protected function createTestGameWithPlanet($gameData = [], $planetData = []): array
+    {
+        $game = $this->createTestGame($gameData);
+        $planetId = $this->createTestPlanet(array_merge(['game_id' => $game->id], $planetData));
+
+        return [
+            'game' => $game,
+            'planet' => $planetId,
+        ];
+    }
+
+    /**
+     * Создает тестовую игру с планетой и пользователем
+     */
+    protected function createTestGameWithPlanetAndUser($gameData = [], $planetData = [], $userData = []): array
+    {
+        $result = $this->createTestGameWithPlanet($gameData, $planetData);
+        $user = $this->createTestUser(array_merge(['game' => $result['game']->id], $userData));
+
+        return array_merge($result, [
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Создает тестовую игру с планетой, пользователем и городом
+     */
+    protected function createTestGameWithPlanetUserAndCity($gameData = [], $planetData = [], $userData = [], $cityData = []): array
+    {
+        $result = $this->createTestGameWithPlanetAndUser($gameData, $planetData, $userData);
+        $city = $this->createTestCity(array_merge([
+            'user_id' => $result['user']['id'],
+            'planet' => $result['planet']
+        ], $cityData));
+
+        return array_merge($result, [
+            'city' => $city,
+        ]);
+    }
+
+    /**
      * Симулирует POST запрос
      */
     protected function simulatePostRequest($data): void
@@ -482,34 +525,7 @@ class TestBase extends PHPUnit\Framework\TestCase
         $_SESSION = [];
     }
 
-    /**
-     * Создает полностью настроенную тестовую игру с пользователями
-     */
-    protected function createCompleteTestGame(
-        $gameData = [],
-        $userCount = 2,
-    ): array {
-        $game = $this->createTestGame($gameData);
 
-        $users = [];
-        for ($i = 0; $i < $userCount; $i++) {
-            $user = $this->createTestUser([
-                "game" => $game->id,
-                "login" => "TestUser" . ($i + 1),
-                "turn_order" => $i + 1,
-                "color" => "#ff000" . $i,
-                "money" => 50,
-                "age" => 1,
-                "turn_status" => "wait",
-            ]);
-            $users[] = $user;
-        }
-
-        return [
-            "game" => $game,
-            "users" => $users,
-        ];
-    }
 
     protected function createTestUsers(array $usersData): array
     {

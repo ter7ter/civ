@@ -231,6 +231,8 @@ class AdminBuildingTypeTest extends TestBase
 
     public function testBuildingTypeCityEffect()
     {
+        $this->markTestIncomplete('Тест недоделан - дублирует BuildingTypeTest.php');
+        return;
         $buildingType = new BuildingType([]);
         $buildingType->title = 'Effect Test Building';
         $buildingType->id = 2; // Амбар

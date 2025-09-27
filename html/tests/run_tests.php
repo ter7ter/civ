@@ -160,6 +160,7 @@ class TestRunner
         echo str_repeat("=", 50) . "\n";
 
         $phpunitConfig = __DIR__ . "/phpunit.xml";
+        $paratestConfigPath = __DIR__ . '/phpunit.paratest.xml';
         $phpunitPath = $this->findPhpUnit();
         $paratestPath = $this->findParaTest();
         $useParatest = $paratestPath && !$this->options["no-parallel"];
@@ -183,6 +184,17 @@ class TestRunner
         }
 
         if ($useParatest) {
+            // Create a temporary phpunit.xml for paratest without the junit logger
+            $phpunitConfigContent = file_get_contents($phpunitConfig);
+            $phpunitConfigContent = str_replace('<junit outputFile="results/junit.xml"/>', '', $phpunitConfigContent);
+            file_put_contents($paratestConfigPath, $phpunitConfigContent);
+            
+            register_shutdown_function(function() use ($paratestConfigPath) {
+                if (file_exists($paratestConfigPath)) {
+                    unlink($paratestConfigPath);
+                }
+            });
+
             $phpPath = $this->findPhp();
             if ($phpPath) {
                 $cmd[] = $phpPath;
@@ -190,14 +202,14 @@ class TestRunner
             $cmd[] = $paratestPath;
             if ($this->options["coverage"]) {
                 $cmd[] = "--processes=1";
-                $cmd[] = "--coverage-html=" . TESTS_ROOT . "/coverage-html";
-                $cmd[] = "--coverage-text=" . TESTS_ROOT . "/coverage.txt";
-                $cmd[] = "--coverage-php=" . TESTS_ROOT . "/coverage.php";
+                $cmd[] = "--coverage-html=" . __DIR__ . "/coverage-html";
+                $cmd[] = "--coverage-text=" . __DIR__ . "/coverage.txt";
+                $cmd[] = "--coverage-php=" . __DIR__ . "/coverage.php";
             } else {
                 $cmd[] = "--processes=" . $processes;
                 $cmd[] = "--no-coverage";
             }
-            $cmd[] = "--configuration=" . $phpunitConfig;
+            $cmd[] = "--configuration=" . $paratestConfigPath; // Use the temporary config
             if ($this->options["verbose"]) {
                 $cmd[] = "--verbose";
             }

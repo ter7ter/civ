@@ -31,11 +31,19 @@ tests/
 
 ## Быстрый старт
 
-### Windows (двойной клик)
-1. Двойной клик на `run_tests_docker.bat`
-2. Следуйте инструкциям на экране
+### Основной способ: Docker (рекомендуется)
+```batch
+# Двойной клик на файле run_docker_tests.bat
+# или в командной строке:
+run_docker_tests.bat
 
-### Командная строка (Windows)
+# С дополнительными параметрами:
+run_docker_tests.bat --with-js --coverage
+```
+
+### Альтернативные способы
+
+#### Командная строка (Windows)
 ```batch
 # Все PHP тесты
 run_tests_docker.bat
@@ -50,7 +58,7 @@ run_tests_docker.bat --unit-only --verbose
 run_tests_docker.bat --coverage
 ```
 
-### Командная строка (Linux/Mac)
+#### Командная строка (Linux/Mac)
 ```bash
 # Все PHP тесты
 php run_tests.php

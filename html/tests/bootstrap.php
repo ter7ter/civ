@@ -1,5 +1,7 @@
 <?php
 
+use App\MyDB;
+
 /**
  * Bootstrap файл для PHPUnit тестов
  * Инициализирует тестовое окружение с использованием реальных классов игры
@@ -73,6 +75,8 @@ require_once TESTS_ROOT . "/mocks/TestHelpers.php";
 
 // Подключаем инициализатор игровых данных
 require_once TESTS_ROOT . "/TestGameDataInitializer.php";
+
+use App\Tests\TestGameDataInitializer;
 
 // Устанавливаем схему базы данных
 TestGameDataInitializer::setupDatabaseSchema();

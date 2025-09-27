@@ -1,6 +1,10 @@
 <?php
 
+namespace App\Tests;
+
 require_once __DIR__ . "/../bootstrap.php";
+
+use App\UnitType;
 
 /**
  * Тесты для класса UnitType

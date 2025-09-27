@@ -1,6 +1,14 @@
 <?php
 
+namespace App\Tests;
+
 require_once __DIR__ . "/../bootstrap.php";
+
+use App\BuildingType;
+use App\City;
+use App\Game;
+use App\Planet;
+use App\User;
 
 /**
  * Тесты для класса BuildingType

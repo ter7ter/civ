@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Tests;
+
 class MapVPageTest extends TestBase
 {
     protected function setUp(): void

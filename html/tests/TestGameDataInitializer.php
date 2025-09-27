@@ -1,5 +1,15 @@
 <?php
 
+namespace App\Tests;
+
+use App\MyDB;
+use App\CellType;
+use App\ResourceType;
+use App\ResearchType;
+use App\BuildingType;
+use App\UnitType;
+use App\MissionType;
+
 /**
  * Инициализатор тестовых игровых данных
  * Содержит функции для инициализации базовых типов игровых объектов для тестов
@@ -819,6 +829,8 @@ class TestGameDataInitializer
             PROJECT_ROOT . "/sql/add_planet_table.sql",
             PROJECT_ROOT . "/sql/add_research_type_table.sql",
             PROJECT_ROOT . "/sql/add_unit_type_table.sql",
+            PROJECT_ROOT . "/sql/add_resource_type_table.sql",
+            PROJECT_ROOT . "/sql/add_mission_type_table.sql",
         ];
 
         foreach ($sqlFiles as $sqlFile) {

@@ -1,6 +1,10 @@
 <?php
 
+namespace App\Tests;
+
 require_once __DIR__ . "/../CommonTestBase.php";
+
+use App\Game;
 
 /**
  * Тесты для функции создания игры

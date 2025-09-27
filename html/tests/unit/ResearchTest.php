@@ -1,5 +1,12 @@
 <?php
 
+namespace App\Tests;
+
+use App\Research;
+use App\User;
+use App\ResearchType;
+use App\MyDB;
+
 /**
  * Тесты для класса Research
  */

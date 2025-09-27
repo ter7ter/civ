@@ -1,11 +1,18 @@
 <?php
 
+namespace App\Tests;
+
 require_once __DIR__ . '/../bootstrap.php';
+
+use App\UnitType;
+use App\MyDB;
 
 class AdminUnitTypeTest extends TestBase
 {
     public function testGetAllUnitTypes()
     {
+        UnitType::clearCache();
+
         // Создаем тестовые данные
         $unitTypeData = [
             'title' => 'Test Warrior',

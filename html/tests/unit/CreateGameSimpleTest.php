@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Tests;
+
+use App\Game;
+use App\User;
+
 /**
  * Простые unit-тесты для создания игр (только классы, без веб-страниц)
  */

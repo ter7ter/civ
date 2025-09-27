@@ -1,6 +1,17 @@
 <?php
 
+namespace App\Tests;
+
 require_once __DIR__ . "/../CommonTestBase.php";
+
+use App\Cell;
+use App\CellType;
+use App\Game;
+use App\MyDB;
+use App\Planet;
+use App\Unit;
+use App\User;
+use App\MissionType;
 
 /**
  * Тесты для класса Cell

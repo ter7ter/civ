@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Tests;
+
+use App\ResearchType;
+
 /**
  * Тесты для класса ResearchType
  */

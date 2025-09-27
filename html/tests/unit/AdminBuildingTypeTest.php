@@ -1,6 +1,11 @@
 <?php
 
+namespace App\Tests;
+
 require_once __DIR__ . '/../bootstrap.php';
+
+use App\BuildingType;
+use App\MyDB;
 
 class AdminBuildingTypeTest extends TestBase
 {

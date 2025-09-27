@@ -1,5 +1,12 @@
 <?php
 
+namespace App\Tests;
+
+use App\MissionType;
+use App\Unit;
+use App\City;
+use App\Cell;
+
 class MissionTypeTest extends TestBase
 {
     protected function setUp(): void

@@ -1,6 +1,6 @@
-Admin Building Type
- [x] Building type city effect
+Admin Building Type (App\Tests\AdminBuildingType)
  [x] Get all building types
+ [ ] Building type city effect
  [x] Save new building type
  [x] Update building type
  [x] Delete building type
@@ -13,48 +13,45 @@ Admin Building Type
  [x] Building type with complex data
  [x] Building type get title
 
-Admin Unit Type
- [x] Get all unit types
- [x] Save new unit type
- [x] Delete unit type
- [x] Json fields handling
- [x] Update unit type
- [x] Get unit type by id
- [x] Unit type constructor with invalid json
- [x] Unit type default values
- [x] Get non existent unit type
- [x] Unit type with complex data
-
-Building
- [x] Get title
- [x] Caching
- [x] Save new
- [x] Different building types
- [x] City effect
+Building (App\Tests\Unit\Building)
  [x] Get
  [x] Constructor
- [x] Save update
  [x] Constructor without id
-
-Building Type
- [x] City effect coliseum
- [x] City effect market
- [x] Get existing building type
- [x] All predefined building types
  [x] Get title
- [x] City effect temple negative norm
- [x] City effect coliseum negative dis
+ [x] Save new
+ [x] Save update
+ [x] Caching
+ [x] Different building types
+ [ ] City effect
+
+Admin Unit Type (App\Tests\AdminUnitType)
+ [x] Get all unit types
+ [x] Save new unit type
+ [x] Update unit type
+ [x] Delete unit type
+ [x] Get unit type by id
+ [x] Json fields handling
+ [x] Get non existent unit type
+ [x] Unit type constructor with invalid json
+ [x] Unit type default values
+ [x] Unit type with complex data
+
+Building Type (App\Tests\BuildingType)
+ [x] Get existing building type
  [x] Get non existing building type
  [x] Constructor
+ [x] Get title
  [x] City effect granary
  [x] City effect temple
+ [x] City effect temple negative norm
  [x] City effect library
+ [x] City effect market
+ [x] City effect coliseum
+ [x] City effect coliseum negative dis
  [x] City effect no effect
+ [x] All predefined building types
 
-Cell
- [x] Get money
- [x] Get eat
- [x] Get mission need points
- [x] Get cells around
- [ ] Generate map
+Cell (App\Tests\Cell)
+ [ ] Get existing cell
+ [ ] Get non existing cell
 

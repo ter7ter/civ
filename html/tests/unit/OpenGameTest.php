@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Tests;
+
+use App\Game;
+use App\User;
+
 /**
  * Тесты для функции открытия игры
  */

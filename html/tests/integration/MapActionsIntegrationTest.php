@@ -1,5 +1,14 @@
 <?php
 
+namespace App\Tests;
+
+use App\UnitType;
+use App\Unit;
+use App\Cell;
+use App\User;
+use App\Game;
+use App\City;
+
 /**
  * Интеграционные тесты для действий на карте
  */

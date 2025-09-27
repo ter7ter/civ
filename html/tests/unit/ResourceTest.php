@@ -1,5 +1,11 @@
 <?php
 
+namespace App\Tests;
+
+use App\Resource;
+use App\ResourceType;
+use App\MyDB;
+
 /**
  * Тесты для класса Resource
  */

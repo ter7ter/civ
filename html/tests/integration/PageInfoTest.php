@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Tests;
+
+use App\User;
+use App\Game;
+
 class PageInfoTest extends TestBase
 {
     protected function setUp(): void

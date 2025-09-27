@@ -1,5 +1,15 @@
 <?php
 
+namespace App\Tests;
+
+use App\Event;
+use App\User;
+use App\ResearchType;
+use App\City;
+use App\BuildingType;
+use App\UnitType;
+use App\MyDB;
+
 /**
  * Тесты для класса Event
  */

@@ -1,6 +1,10 @@
 <?php
 
+namespace App\Tests;
+
 require_once __DIR__ . "/FunctionalTestBase.php";
+
+use App\MyDB;
 
 /**
  * Общий базовый класс для всех тестов с устранением дублирования
@@ -44,12 +48,12 @@ class CommonTestBase extends FunctionalTestBase
         $gameData = array_merge($defaultGameData, $gameData);
 
         $game = $this->createTestGame($gameData);
-        $planetId = $this->createTestPlanet(["game_id" => $game["id"]]);
+        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
 
         $users = [];
         foreach ($userNames as $index => $name) {
             $user = $this->createTestUser([
-                "game" => $game["id"],
+                "game" => $game->id,
                 "login" => $name,
                 "turn_order" => $index + 1,
                 "turn_status" => $index === 0 ? "play" : "wait",

@@ -1,6 +1,15 @@
 <?php
 
+namespace App\Tests;
+
 require_once __DIR__ . "/../bootstrap.php";
+
+use App\User;
+use App\MyDB;
+use App\Research;
+use App\ResearchType;
+use App\Event;
+use App\Message;
 
 /**
  * Тесты для класса User

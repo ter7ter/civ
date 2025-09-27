@@ -1,6 +1,13 @@
 <?php
 
+namespace App\Tests;
+
 require_once __DIR__ . "/../bootstrap.php";
+
+use App\City;
+use App\UnitType;
+use App\BuildingType;
+use App\Building;
 
 /**
  * @covers City

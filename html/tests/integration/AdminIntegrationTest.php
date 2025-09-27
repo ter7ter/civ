@@ -1,5 +1,11 @@
 <?php
 
+namespace App\Tests;
+
+use App\UnitType;
+use App\BuildingType;
+use App\ResearchType;
+
 /**
  * Интеграционные тесты для админ-панели управления типами юнитов и построек
  */

@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Tests;
+
 require_once __DIR__ . "/../CommonTestBase.php";
 
 /**

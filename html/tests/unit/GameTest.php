@@ -1,6 +1,13 @@
 <?php
 
+namespace App\Tests;
+
 require_once __DIR__ . "/../bootstrap.php";
+
+use App\Game;
+use App\User;
+use App\MyDB;
+use App\Planet;
 
 /**
  * Тесты для класса Game

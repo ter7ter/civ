@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Tests;
+
+use App\ResourceType;
+use App\User;
+
 /**
  * Тесты для класса ResourceType
  */

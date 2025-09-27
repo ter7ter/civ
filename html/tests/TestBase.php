@@ -15,7 +15,7 @@ use App\User;
  * Базовый класс для всех тестов
  * Использует реальные классы игры вместо моков
  */
-class TestBase extends PHPUnit\Framework\TestCase
+class TestBase extends \PHPUnit\Framework\TestCase
 {
 
     public static function setUpBeforeClass(): void

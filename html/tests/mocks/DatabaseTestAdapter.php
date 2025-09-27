@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Tests;
+
+use App\MyDB;
+
 /**
  * Тестовый адаптер для базы данных
  */

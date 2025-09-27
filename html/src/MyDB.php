@@ -2,6 +2,8 @@
 
 namespace App;
 
+use PDO;
+
 class MyDB
 {
     /**
@@ -40,7 +42,7 @@ class MyDB
 
         // Используем MySQL
         $dsn = "mysql:host=" . MyDB::$dbhost . ";dbname=" . MyDB::$dbname . ";charset=utf8;port=" . MyDB::$dbport;
-        MyDB::$_link = new PDO($dsn, MyDB::$dbuser, MyDB::$dbpass);
+        MyDB::$_link = new \PDO($dsn, MyDB::$dbuser, MyDB::$dbpass);
 
         MyDB::$_link->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         MyDB::$_link->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);

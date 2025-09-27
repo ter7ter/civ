@@ -1,5 +1,11 @@
 <?php
 
+namespace App\Tests;
+
+use App\Message;
+use App\User;
+use App\MyDB;
+
 /**
  * Тесты для класса Message
  */

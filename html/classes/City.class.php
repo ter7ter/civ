@@ -631,7 +631,7 @@ class City
      */
     public function get_possible_units()
     {
-        $units = UnitType::$all;
+        $units = UnitType::getAll();
         $result = [];
         $have_research = $this->user->get_research();
         foreach ($units as $unit) {
@@ -663,7 +663,7 @@ class City
      */
     public function get_possible_buildings()
     {
-        $buildings = BuildingType::$all;
+        $buildings = BuildingType::getAll();
         $result = [];
         $have_research = $this->user->get_research();
         foreach ($buildings as $building) {

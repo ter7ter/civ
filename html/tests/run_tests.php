@@ -12,8 +12,7 @@ if (php_sapi_name() !== "cli") {
 
 // Устанавливаем временную зону
 
-
-//require_once __DIR__ . "/bootstrap.php";
+date_default_timezone_set("Europe/Moscow");
 
 class TestRunner
 {
@@ -209,9 +208,9 @@ class TestRunner
                 $cmd[] = "--filter=" . $this->options["filter"];
             }
             if ($this->options["unit"] && !$this->options["integration"]) {
-                $cmd[] = TESTS_ROOT . "/unit";
+                $cmd[] = __DIR__ . "/unit";
             } elseif ($this->options["integration"] && !$this->options["unit"]) {
-                $cmd[] = TESTS_ROOT . "/integration";
+                $cmd[] = __DIR__ . "/integration";
             }
         } else {
             if (substr($phpunitPath, -5) === '.phar') {
@@ -224,10 +223,10 @@ class TestRunner
             }
             if ($this->options["coverage"]) {
                 $cmd[] = "--coverage-html";
-                $cmd[] = TESTS_ROOT . "/coverage-html";
-                $cmd[] = "--coverage-text=" . TESTS_ROOT . "/coverage.txt";
+                $cmd[] = __DIR__ . "/coverage-html";
+                $cmd[] = "--coverage-text=" . __DIR__ . "/coverage.txt";
                 $cmd[] = "--coverage-php";
-                $cmd[] = TESTS_ROOT . "/coverage.php";
+                $cmd[] = __DIR__ . "/coverage.php";
             }
             if ($this->options["verbose"]) {
                 $cmd[] = "--verbose";
@@ -241,9 +240,9 @@ class TestRunner
                 $cmd[] = $this->options["filter"];
             }
             if ($this->options["unit"] && !$this->options["integration"]) {
-                $cmd[] = TESTS_ROOT . "/unit";
+                $cmd[] = __DIR__ . "/unit";
             } elseif ($this->options["integration"] && !$this->options["unit"]) {
-                $cmd[] = TESTS_ROOT . "/integration";
+                $cmd[] = __DIR__ . "/integration";
             }
         }
 
@@ -279,7 +278,7 @@ class TestRunner
         $testFiles = glob(__DIR__ . "/js/*.html");
 
         if (empty($testFiles)) {
-            echo "❌ JavaScript тест файлы не найдены в " . TESTS_ROOT . "/js/\n";
+            echo "❌ JavaScript тест файлы не найдены в " . __DIR__ . "/js/\n";
             return 1;
         }
 

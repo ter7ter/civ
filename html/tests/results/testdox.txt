@@ -1,3 +1,21 @@
-Admin Building Type
- [ ] Get all building types
+Create Game
+ [x] Very long strings
+ [x] Data preservation on error
+ [x] Duplicate player names
+ [x] Too large map size
+ [x] Empty game name
+ [x] Too small map size
+ [x] No post data
+ [x] Too many players
+ [x] Game initial conditions
+ [x] Player color generation
+ [x] Empty player fields
+ [x] Invalid turn type
+ [x] Create one window game
+ [x] Create basic game
+ [x] Create concurrent game
+ [x] X s s in player names
+ [x] X s s in game name
+ [x] Whitespace game name
+ [x] Minimum players
 

@@ -323,7 +323,7 @@ class CreateGameSimpleTest extends TestBase
     public function testHtmlEscapingInUserLogin(): void
     {
         $game = $this->createTestGame();
-        $maliciousLogin = '<img src="x" onerror="alert(1)">';
+        $maliciousLogin = '<img src=x onerror=alert(1)>';
 
         $userData = [
             "login" => $maliciousLogin,

@@ -157,6 +157,7 @@ class Cell
 
     public function get_title()
     {
+        if (!$this->type) return "unknown";
         return $this->type->get_title();
     }
 
@@ -170,6 +171,9 @@ class Cell
 
     public function save()
     {
+        if (!$this->type) {
+            throw new Exception("Cannot save cell without type");
+        }
         $owner_id = $this->owner ? $this->owner->id : null;
         $road = $this->road;
         if (!$road) {
@@ -323,44 +327,6 @@ class Cell
             ]);
             $planet->save();
         }
-        MyDB::query(
-            "DELETE FROM `mission_order` WHERE `unit_id` IN (SELECT id FROM `unit` WHERE `planet` = :planet)",
-            [
-                "planet" => $planetId,
-            ],
-        );
-        MyDB::query("DELETE FROM `unit` WHERE `planet` = :planet", [
-            "planet" => $planetId,
-        ]);
-        $data = MyDB::query("SELECT id FROM city WHERE planet =:planet", [
-            "planet" => $planetId,
-        ]);
-        foreach ($data as $row) {
-            MyDB::query("DELETE FROM `building` WHERE `city_id` = :cid", [
-                "cid" => $row["id"],
-            ]);
-        }
-        MyDB::query("DELETE FROM `city_people` WHERE `planet` = :planet", [
-            "planet" => $planetId,
-        ]);
-        MyDB::query("DELETE FROM `city` WHERE `planet` = :planet", [
-            "planet" => $planetId,
-        ]);
-        $data = MyDB::query("SELECT id FROM user WHERE game =:game", [
-            "game" => $game_id,
-        ]);
-        foreach ($data as $row) {
-            MyDB::query("DELETE FROM `research` WHERE `user_id` = :uid", [
-                "uid" => $row["id"],
-            ]);
-        }
-        MyDB::query("DELETE FROM `resource` WHERE `planet` = :planet", [
-            "planet" => $planetId,
-        ]);
-        MyDB::query("DELETE FROM `cell` WHERE `planet` = :planet", [
-            "planet" => $planetId,
-        ]);
-
         // Оптимизированная генерация карты с batch INSERT
         $cellsData = [];
         $resourcesData = [];
@@ -368,6 +334,11 @@ class Cell
         for ($x = 0; $x < Cell::$map_width; $x++) {
             for ($y = 0; $y < Cell::$map_height; $y++) {
                 $cell_type = Cell::generate_type($x, $y, $planetId);
+
+
+                if (!$cell_type || empty($cell_type->id)) {
+                    throw new Exception("Invalid cell type for ($x, $y): " . var_export($cell_type, true));
+                }
 
                 // Собираем данные клеток для batch INSERT
                 $cellsData[] =
@@ -429,6 +400,9 @@ class Cell
      */
     public static function generate_type($x, $y, $planetId)
     {
+        if (empty(CellType::$all)) {
+            throw new Exception("CellType::\$all is empty");
+        }
         $c1 = [];
         $c2 = [];
         $chance = [];

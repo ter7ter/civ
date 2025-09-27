@@ -13,10 +13,10 @@ class TestGameDataInitializer
     {
         self::initializeCellTypes();
         self::initializeResearchTypes();
-        /*self::initializeResourceTypes();
+        self::initializeResourceTypes();
         self::initializeBuildingTypes();
         self::initializeUnitTypes();
-        self::initializeMissionTypes();*/
+        self::initializeMissionTypes();
     }
 
     /**
@@ -24,9 +24,8 @@ class TestGameDataInitializer
      */
     public static function initializeCellTypes(): void
     {
-        if (!empty(CellType::$all)) {
-            return; // Уже инициализированы
-        }
+        // Очищаем старые данные
+        CellType::$all = [];
 
         $cellTypes = [
             [
@@ -662,11 +661,7 @@ class TestGameDataInitializer
      */
     public static function initializeUnitTypes(): void
     {
-        // Проверяем, есть ли уже данные в БД
-        $existing = MyDB::query("SELECT COUNT(*) FROM unit_type", [], "elem");
-        if ($existing > 0) {
-            return; // Уже инициализированы
-        }
+        // Всегда инициализируем, чтобы перезаписать старые данные
 
         $unitTypes = [
             [

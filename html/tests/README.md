@@ -26,29 +26,28 @@ tests/
 ├── bootstrap.php           # Инициализация тестового окружения
 ├── phpunit.xml             # Конфигурация PHPUnit
 ├── run_tests.php           # Основной скрипт запуска
-├── run_tests.bat           # Batch файл для Windows
 └── README.md               # Этот файл
 ```
 
 ## Быстрый старт
 
 ### Windows (двойной клик)
-1. Двойной клик на `run_tests.bat`
+1. Двойной клик на `run_tests_docker.bat`
 2. Следуйте инструкциям на экране
 
 ### Командная строка (Windows)
 ```batch
 # Все PHP тесты
-run_tests.bat
+run_tests_docker.bat
 
 # С JavaScript тестами
-run_tests.bat --with-js
+run_tests_docker.bat --with-js
 
 # Только unit тесты с подробным выводом
-run_tests.bat --unit-only --verbose
+run_tests_docker.bat --unit-only --verbose
 
 # С отчетом покрытия кода
-run_tests.bat --coverage
+run_tests_docker.bat --coverage
 ```
 
 ### Командная строка (Linux/Mac)

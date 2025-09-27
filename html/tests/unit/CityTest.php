@@ -103,6 +103,7 @@ class CityTest extends TestBase
     public function testGetPossibleUnits()
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        TestGameDataInitializer::initializeUnitTypes();
         City::clearCache();
         $city = City::get($cityData["id"]);
         $units = $city->get_possible_units();

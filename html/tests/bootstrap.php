@@ -32,16 +32,24 @@ if (!defined("TEST_DB_PORT")) {
 // Сначала загружаем MyDB.class.php
 require_once PROJECT_ROOT . "/classes/MyDB.class.php";
 
-
 if (getenv('PARATEST')) {
     $testToken = getmypid();
     $dbName = 'civ_for_tests_' . $testToken;
 } else {
     $dbName = 'civ_for_tests';
 }
-MyDB::setDBConfig(TEST_DB_HOST, TEST_DB_USER, TEST_DB_PASS, TEST_DB_PORT, $dbName);
 
-MyDB::query("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8 COLLATE utf8_general_ci");
+// Сначала подключаемся без базы данных, чтобы создать её
+try {
+    $pdo = new PDO("mysql:host=" . TEST_DB_HOST . ";port=" . TEST_DB_PORT, TEST_DB_USER, TEST_DB_PASS);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS `$dbName` CHARACTER SET utf8 COLLATE utf8_general_ci");
+} catch (PDOException $e) {
+    error_log("Failed to create test database: " . $e->getMessage());
+    throw $e;
+}
+
+MyDB::setDBConfig(TEST_DB_HOST, TEST_DB_USER, TEST_DB_PASS, TEST_DB_PORT, $dbName);
     // Подключаемся к MySQL серверу, не указывая базу данных
 
 // Затем загружаем моки для БД

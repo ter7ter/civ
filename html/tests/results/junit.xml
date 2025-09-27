@@ -1,16 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="1" assertions="0" errors="1" warnings="0" failures="0" skipped="0" time="0.000000">
-    <testsuite name="Unit Tests" tests="1" assertions="0" errors="1" warnings="0" failures="0" skipped="0" time="0.000000">
-      <testsuite name="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" tests="1" assertions="0" errors="1" warnings="0" failures="0" skipped="0" time="0.000000">
-        <testcase name="testGetAllBuildingTypes" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="7" assertions="0" time="0.000000">
-          <error type="Error">AdminBuildingTypeTest::testGetAllBuildingTypes
-Error: Access to undeclared static property UnitType::$_all
-
-/var/www/html/classes/UnitType.class.php:252
-/var/www/html/tests/mocks/DatabaseTestAdapter.php:82
-/var/www/html/tests/TestBase.php:33</error>
+  <testsuite name="" tests="19" assertions="55" errors="0" warnings="0" failures="0" skipped="0" time="17.160781">
+    <testsuite name="Unit Tests" tests="19" assertions="55" errors="0" warnings="0" failures="0" skipped="0" time="17.160781">
+      <testsuite name="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" tests="19" assertions="55" errors="0" warnings="0" failures="0" skipped="0" time="17.160781">
+        <testcase name="testVeryLongStrings" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="372" assertions="6" time="0.851898"/>
+        <testcase name="testDataPreservationOnError" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="301" assertions="4" time="0.695956"/>
+        <testcase name="testDuplicatePlayerNames" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="202" assertions="1" time="0.663634"/>
+        <testcase name="testTooLargeMapSize" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="253" assertions="2" time="0.818569"/>
+        <testcase name="testEmptyGameName" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="180" assertions="1" time="0.686790"/>
+        <testcase name="testTooSmallMapSize" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="230" assertions="2" time="0.615263"/>
+        <testcase name="testNoPostData" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="515" assertions="1" time="0.692926"/>
+        <testcase name="testTooManyPlayers" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="276" assertions="1" time="4.102159">
+          <system-out>
+Deleting from table: city_people
+</system-out>
         </testcase>
+        <testcase name="testGameInitialConditions" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="538" assertions="5" time="0.856496"/>
+        <testcase name="testPlayerColorGeneration" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="413" assertions="17" time="0.828241"/>
+        <testcase name="testEmptyPlayerFields" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="458" assertions="1" time="0.630432"/>
+        <testcase name="testInvalidTurnType" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="493" assertions="1" time="0.723715"/>
+        <testcase name="testCreateOneWindowGame" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="121" assertions="1" time="0.718611"/>
+        <testcase name="testCreateBasicGame" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="18" assertions="6" time="0.828823"/>
+        <testcase name="testCreateConcurrentGame" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="79" assertions="2" time="0.621028"/>
+        <testcase name="testXSSInPlayerNames" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="349" assertions="1" time="0.683392"/>
+        <testcase name="testXSSInGameName" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="326" assertions="1" time="0.704094"/>
+        <testcase name="testWhitespaceGameName" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="158" assertions="1" time="0.721557"/>
+        <testcase name="testMinimumPlayers" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="583" assertions="1" time="0.717198"/>
       </testsuite>
     </testsuite>
   </testsuite>

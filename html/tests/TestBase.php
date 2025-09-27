@@ -78,10 +78,6 @@ class TestBase extends PHPUnit\Framework\TestCase
         $testToken = getenv('TEST_TOKEN');
         $isParaTest = !empty($testToken);
 
-        if (!$isParaTest) {
-            // Для обычных тестов используем транзакции
-            MyDB::get()->beginTransaction();
-        }
         // Только кэши и переменные, не всю БД
         Game::clearCache();
         User::clearCache();

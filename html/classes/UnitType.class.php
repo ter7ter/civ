@@ -102,19 +102,31 @@ class UnitType
         }
     }
 
-    public static function getAll()
+    public static function loadAll()
     {
-        $data = MyDB::query("SELECT * FROM unit_type ORDER BY id");
-        $result = [];
-        foreach ($data as $row) {
-            $result[] = new UnitType($row);
-        }
-        return $result;
+
     }
 
     public static function clearAll()
     {
         UnitType::$all = [];
+    }
+
+    /**
+     * Возвращает кэш всех загруженных типов юнитов
+     * @return array
+     */
+    public static function getAll()
+    {
+        if (count(UnitType::$all) == 0) {
+            $data = MyDB::query("SELECT * FROM unit_type ORDER BY id");
+            $result = [];
+            foreach ($data as $row) {
+                $result[] = new UnitType($row);
+            }
+        }
+
+        return UnitType::$all;
     }
 
     public function save()
@@ -227,7 +239,7 @@ class UnitType
         ];
 
         foreach ($jsonFields as $field) {
-            if (isset($data[$field])) {
+            if (isset($data[$field]) && $data[$field] !== null) {
                 if (is_string($data[$field])) {
                     $decoded = json_decode($data[$field], true);
                     $this->$field = $decoded !== null ? $decoded : [];
@@ -249,7 +261,7 @@ class UnitType
 
     public static function clearCache()
     {
-        self::$_all = [];
+        self::$all = [];
     }
 }
 

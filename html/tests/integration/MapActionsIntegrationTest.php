@@ -16,6 +16,12 @@ class MapActionsIntegrationTest extends TestBase
         // Подключаем классы проекта
         require_once PROJECT_ROOT . "/includes.php";
 
+        // Очищаем старые данные CellType, чтобы избежать конфликтов
+        TestGameDataInitializer::clearAll();
+
+        // Переинициализируем данные после очистки
+        $this->initializeGameTypes();
+
         // Создаем тестовый тип юнита
         MyDB::insert("unit_type", [
             "id" => 1,
@@ -30,6 +36,15 @@ class MapActionsIntegrationTest extends TestBase
         $gameData = $this->createTestGame();
         $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
         $userData = $this->createTestUser(["game" => $gameData["id"]]);
+
+        // Создаем клетку начальной позиции
+        $startCellData = [
+            "x" => 10,
+            "y" => 10,
+            "planet" => $planetId,
+            "type" => "plains",
+        ];
+        MyDB::insert("cell", $startCellData);
 
         // Создаем юнит
         $unitData = [

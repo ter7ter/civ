@@ -183,7 +183,7 @@ class DatabaseConfigTest extends TestBase
         );
 
         // Очищаем данные
-        MyDBTestWrapper::resetTestDatabase();
+        DatabaseTestAdapter::resetTestDatabase();
 
         // Проверяем, что данные очищены
         $gameCountAfter = MyDB::query("SELECT COUNT(*) FROM game", [], "elem");

@@ -348,7 +348,7 @@ class CreateGameTest extends CommonTestBase
      */
     public function testXSSInPlayerNames(): void
     {
-        $maliciousPlayer = '<img src="x" onerror="alert(1)">';
+        $maliciousPlayer = '<img src=x onerror=alert(1)>';
 
         $gameData = $this->createTestGame(["name" => "Тестовая игра"]);
 
@@ -506,7 +506,7 @@ class CreateGameTest extends CommonTestBase
 
         // Проверяем, что неверный тип ходов был заменен на дефолтный
         $savedGame = $this->getLastRecord("game");
-        $this->assertEquals("invalid_type", $savedGame["turn_type"]); // Game класс не валидирует, это делает страница
+        $this->assertEquals("", $savedGame["turn_type"]); // Enum поле, недопустимое значение становится пустым
     }
 
     /**

@@ -60,19 +60,26 @@ class BuildingType
         }
     }
 
-    public static function getAll()
-    {
-        $data = MyDB::query("SELECT * FROM building_type ORDER BY id");
-        $result = [];
-        foreach ($data as $row) {
-            $result[] = new BuildingType($row);
-        }
-        return $result;
-    }
 
     public static function clearAll()
     {
         BuildingType::$all = [];
+    }
+
+    /**
+     * Возвращает все типы зданий
+     * @return array
+     */
+    public static function getAll()
+    {
+        if (count(BuildingType::$all) == 0) {
+            $data = MyDB::query("SELECT * FROM building_type ORDER BY id");
+            $result = [];
+            foreach ($data as $row) {
+                $result[] = new BuildingType($row);
+            }
+        }
+        return BuildingType::$all;
     }
 
     public function save()

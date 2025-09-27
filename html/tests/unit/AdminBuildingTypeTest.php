@@ -4,25 +4,29 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class AdminBuildingTypeTest extends TestBase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->initializeGameTypes();
+    }
+
     public function testGetAllBuildingTypes()
     {
         // Создаем тестовые данные
-        $buildingTypeData = [
-            'title' => 'Test Library',
-            'cost' => 50,
-            'req_research' => json_encode([]),
-            'req_resources' => json_encode([]),
-            'need_coastal' => 0,
-            'culture' => 2,
-            'upkeep' => 1,
-            'need_research' => json_encode([]),
-            'culture_bonus' => 50,
-            'research_bonus' => 0,
-            'money_bonus' => 0,
-            'description' => 'Test building',
-        ];
-
-        MyDB::insert('building_type', $buildingTypeData);
+        $buildingType = new BuildingType([]);
+        $buildingType->title = 'Test Library';
+        $buildingType->cost = 50;
+        $buildingType->req_research = [];
+        $buildingType->req_resources = [];
+        $buildingType->need_coastal = false;
+        $buildingType->culture = 2;
+        $buildingType->upkeep = 1;
+        $buildingType->need_research = [];
+        $buildingType->culture_bonus = 50;
+        $buildingType->research_bonus = 0;
+        $buildingType->money_bonus = 0;
+        $buildingType->description = 'Test building';
+        $buildingType->save();
 
         $buildingTypes = BuildingType::getAll();
 

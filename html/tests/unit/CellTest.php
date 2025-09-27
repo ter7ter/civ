@@ -10,6 +10,8 @@ class CellTest extends CommonTestBase
     protected function setUp(): void
     {
         $this->setUpUnitTest();
+        CellType::$all = []; // Очистить кэш CellType
+        $this->initializeGameTypes();
     }
     /**
      * Тест получения существующей клетки
@@ -529,11 +531,11 @@ class CellTest extends CommonTestBase
         $cellCount = MyDB::query("SELECT COUNT(*) FROM cell WHERE planet = :planet", ['planet' => $planetId], 'elem');
         $this->assertEquals(25, $cellCount); // 5x5 = 25 клеток
 
-        // Проверяем, что некоторые клетки имеют типы
-        $cells = MyDB::query("SELECT * FROM cell WHERE planet = :planet LIMIT 5", ['planet' => $planetId]);
-        $this->assertCount(5, $cells);
+        // Проверяем, что все клетки имеют типы
+        $cells = MyDB::query("SELECT * FROM cell WHERE planet = :planet", ['planet' => $planetId]);
+        $this->assertCount(25, $cells);
         foreach ($cells as $cell) {
-            $this->assertNotEmpty($cell['type']);
+            $this->assertNotEmpty($cell['type'], "Cell at ({$cell['x']}, {$cell['y']}) has empty type");
         }
     }
 }

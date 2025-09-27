@@ -5,6 +5,7 @@ namespace App\Tests;
 require_once __DIR__ . "/../bootstrap.php";
 
 use App\City;
+use App\Unit;
 use App\UnitType;
 use App\BuildingType;
 use App\Building;
@@ -96,7 +97,7 @@ class CityTest extends TestBase
         ]);
         $this->createTestMapCells(10, 10, 3, 3, $planetId); // 3x3 карта
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         $cells = $city->get_culture_cells();
         $this->assertIsArray($cells);
         $this->assertCount(8, $cells); // 8 клеток вокруг города
@@ -123,7 +124,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         $city->peat = 5;
         $city->population = 2;
         $city->eat = 0;
@@ -138,7 +139,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         $city->pwork = 5;
         $city->calculate();
         $this->assertEquals(1, $city->pwork); // Должно сбрасываться до 1
@@ -151,7 +152,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         $city->pmoney = 10;
         $city->calculate();
         $this->assertEquals(1, $city->pmoney); // Должно сбрасываться до 1
@@ -164,7 +165,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         $city->presearch = 5;
         $city->calculate();
         $this->assertEquals(0, $city->presearch); // Должно сбрасываться до 0
@@ -177,7 +178,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         $city->culture = 0;
         $city->culture_level = 0;
         $city->calculate();
@@ -192,7 +193,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity(["population" => 1]);
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         $city->add_people();
         $this->assertEquals(2, $city->population);
     }
@@ -204,7 +205,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity(["population" => 2]);
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         $city->remove_people();
         $this->assertEquals(1, $city->population);
     }
@@ -216,11 +217,11 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity(["title" => "Original Title"]);
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         $city->title = "New Title";
         $city->save();
         City::clearCache();
-        $updatedCity = City::get($cityData["id"]);
+        $updatedCity = City::get($cityData->id);
         $this->assertEquals("New Title", $updatedCity->title);
     }
 
@@ -231,7 +232,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         TestGameDataInitializer::initializeUnitTypes();
         $unitType = UnitType::get(1); // Settler
         $unit = $city->create_unit($unitType);
@@ -249,7 +250,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         TestGameDataInitializer::initializeBuildingTypes();
         $buildingType = BuildingType::get(1); // Granary
         $building = $city->create_building($buildingType);
@@ -265,7 +266,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         TestGameDataInitializer::initializeBuildingTypes();
         $buildingType = BuildingType::get(1); // Granary
         $city->create_building($buildingType);
@@ -281,7 +282,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         $city->people_dis = 10;
         $city->people_happy = 0;
         $city->pwork = 5;
@@ -298,7 +299,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         TestGameDataInitializer::initializeUnitTypes();
         $unitType = UnitType::get(1); // Settler
         $city->production_type = "buil";

@@ -3,6 +3,7 @@
 namespace App\Tests;
 
 use App\Game;
+use App\MyDB;
 use App\User;
 
 /**

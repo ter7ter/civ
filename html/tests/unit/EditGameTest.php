@@ -2,6 +2,8 @@
 
 namespace App\Tests;
 
+use Exception;
+
 /**
  * Тесты для функции редактирования игры
  */

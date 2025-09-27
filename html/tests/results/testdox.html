@@ -51,25 +51,10 @@
         </style>
     </head>
     <body>
-        <h2>Admin Building Type (App\Tests\AdminBuildingType)</h2>
-        <ul>
-            <li class="success">Get all building types</li>
-            <li class="defect">Building type city effect</li>
-            <li class="success">Save new building type</li>
-            <li class="success">Update building type</li>
-            <li class="success">Delete building type</li>
-            <li class="success">Get building type by id</li>
-            <li class="success">Json fields handling</li>
-            <li class="success">Building type properties</li>
-            <li class="success">Get non existent building type</li>
-            <li class="success">Building type constructor with invalid json</li>
-            <li class="success">Building type default values</li>
-            <li class="success">Building type with complex data</li>
-            <li class="success">Building type get title</li>
-        </ul>
         <h2>Building (App\Tests\Unit\Building)</h2>
         <ul>
             <li class="success">Get</li>
+            <li class="defect">City effect</li>
             <li class="success">Constructor</li>
             <li class="success">Constructor without id</li>
             <li class="success">Get title</li>
@@ -77,7 +62,36 @@
             <li class="success">Save update</li>
             <li class="success">Caching</li>
             <li class="success">Different building types</li>
-            <li class="defect">City effect</li>
+        </ul>
+        <h2>City (App\Tests\City)</h2>
+        <ul>
+            <li class="success">Calculate eat</li>
+            <li class="success">Create unit</li>
+            <li class="success">Get culture cells</li>
+            <li class="success">Constructor</li>
+            <li class="success">By coords</li>
+            <li class="success">Get title</li>
+            <li class="success">Get possible units</li>
+            <li class="success">Calculate work</li>
+            <li class="success">Calculate money</li>
+            <li class="success">Calculate research</li>
+            <li class="success">Calculate culture</li>
+            <li class="success">Add people</li>
+            <li class="success">Remove people</li>
+            <li class="success">Save</li>
+            <li class="success">Create building</li>
+            <li class="success">Calculate buildings</li>
+            <li class="success">Check mood</li>
+            <li class="success">Select next production</li>
+        </ul>
+        <h2>Database Config (App\Tests\DatabaseConfig)</h2>
+        <ul>
+            <li class="success">Test database configuration</li>
+            <li class="success">Game and user mocks</li>
+            <li class="success">Test tables creation</li>
+            <li class="success">Test data operations</li>
+            <li class="defect">Test data cleanup</li>
+            <li class="success">Transaction handling</li>
         </ul>
         <h2>Admin Unit Type (App\Tests\AdminUnitType)</h2>
         <ul>
@@ -91,6 +105,92 @@
             <li class="success">Unit type constructor with invalid json</li>
             <li class="success">Unit type default values</li>
             <li class="success">Unit type with complex data</li>
+        </ul>
+        <h2>Cell Type (App\Tests\CellType)</h2>
+        <ul>
+            <li class="success">All predefined cell types</li>
+            <li class="success">Get title</li>
+            <li class="success">Get existing cell type</li>
+            <li class="success">Get non existing cell type</li>
+            <li class="success">Constructor</li>
+            <li class="success">Constructor without id</li>
+            <li class="success">Complex properties</li>
+        </ul>
+        <h2>Admin Building Type (App\Tests\AdminBuildingType)</h2>
+        <ul>
+            <li class="defect">Building type city effect</li>
+            <li class="success">Get all building types</li>
+            <li class="success">Save new building type</li>
+            <li class="success">Update building type</li>
+            <li class="success">Delete building type</li>
+            <li class="success">Get building type by id</li>
+            <li class="success">Json fields handling</li>
+            <li class="success">Building type properties</li>
+            <li class="success">Get non existent building type</li>
+            <li class="success">Building type constructor with invalid json</li>
+            <li class="success">Building type default values</li>
+            <li class="success">Building type with complex data</li>
+            <li class="success">Building type get title</li>
+        </ul>
+        <h2>Cell (App\Tests\Cell)</h2>
+        <ul>
+            <li class="defect">Get units</li>
+            <li class="defect">Save new</li>
+            <li class="defect">Clear cache</li>
+            <li class="defect">D coord</li>
+            <li class="defect">Get work</li>
+            <li class="defect">Get title</li>
+            <li class="defect">Get cells around</li>
+            <li class="defect">Get non existing cell</li>
+            <li class="defect">Save update</li>
+            <li class="defect">Calc coord</li>
+            <li class="defect">Get eat</li>
+            <li class="defect">Get money</li>
+            <li class="defect">Get planet</li>
+            <li class="defect">Constructor</li>
+            <li class="defect">Load cells</li>
+            <li class="defect">Constructor without owner</li>
+            <li class="defect">Get existing cell</li>
+            <li class="defect">Calc distance</li>
+            <li class="defect">Generate map</li>
+            <li class="defect">Generate type</li>
+            <li class="defect">Get mission need points</li>
+        </ul>
+        <h2>Create Game Simple (App\Tests\CreateGameSimple)</h2>
+        <ul>
+            <li class="defect">Game caching</li>
+            <li class="defect">Create basic game class</li>
+            <li class="defect">Game list</li>
+            <li class="defect">User color generation</li>
+            <li class="defect">Game get method</li>
+            <li class="defect">Create game with different map sizes</li>
+            <li class="defect">Create users for game</li>
+            <li class="defect">Html escaping in game name</li>
+            <li class="defect">Create game with different turn types</li>
+            <li class="defect">Html escaping in user login</li>
+            <li class="defect">Update game data</li>
+        </ul>
+        <h2>Create Game (App\Tests\CreateGame)</h2>
+        <ul>
+            <li class="defect">Whitespace game name</li>
+            <li class="defect">Empty game name</li>
+            <li class="defect">Create concurrent game</li>
+            <li class="defect">Invalid turn type</li>
+            <li class="defect">Too small map size</li>
+            <li class="defect">Create one window game</li>
+            <li class="defect">Create basic game</li>
+            <li class="defect">Too large map size</li>
+            <li class="defect">X s s in player names</li>
+            <li class="defect">Too many players</li>
+            <li class="defect">Very long strings</li>
+            <li class="defect">Player color generation</li>
+            <li class="defect">Data preservation on error</li>
+            <li class="defect">Duplicate player names</li>
+            <li class="defect">Empty player fields</li>
+            <li class="defect">X s s in game name</li>
+            <li class="defect">No post data</li>
+            <li class="defect">Game initial conditions</li>
+            <li class="defect">Minimum players</li>
         </ul>
         <h2>Building Type (App\Tests\BuildingType)</h2>
         <ul>
@@ -108,10 +208,9 @@
             <li class="success">City effect no effect</li>
             <li class="success">All predefined building types</li>
         </ul>
-        <h2>Cell (App\Tests\Cell)</h2>
+        <h2>Edit Game (App\Tests\EditGame)</h2>
         <ul>
-            <li class="defect">Get existing cell</li>
-            <li class="defect">Get non existing cell</li>
+            <li class="defect">Load game without id</li>
         </ul>
     </body>
 </html>

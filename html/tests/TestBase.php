@@ -304,7 +304,7 @@ class TestBase extends \PHPUnit\Framework\TestCase
     /**
      * Создает тестовый юнит
      */
-    protected function createTestUnit($data = []): array
+    protected function createTestUnit($data = []): Unit
     {
         if (!isset($data["planet"])) {
             throw new Exception("Planet ID is required to create a test unit");

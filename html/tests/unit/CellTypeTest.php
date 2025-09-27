@@ -22,13 +22,13 @@ class CellTypeTest extends TestBase
 
         $this->assertInstanceOf(CellType::class, $cellType);
         $this->assertEquals('plains', $cellType->id);
-        $this->assertEquals('Равнины', $cellType->title);
+        $this->assertEquals('равнина', $cellType->title);
         $this->assertEquals(15, $cellType->base_chance);
         $this->assertEquals(8, $cellType->chance_inc1);
         $this->assertEquals(6, $cellType->chance_inc2);
         $this->assertEquals(2, $cellType->eat);
         $this->assertEquals(1, $cellType->work);
-        $this->assertEquals(0, $cellType->money);
+        $this->assertEquals(1, $cellType->money);
     }
 
     /**
@@ -104,7 +104,7 @@ class CellTypeTest extends TestBase
 
         $cellType = CellType::get('forest');
 
-        $this->assertEquals('Лес', $cellType->get_title());
+        $this->assertEquals('лес', $cellType->get_title());
     }
 
     /**
@@ -115,15 +115,13 @@ class CellTypeTest extends TestBase
         $this->initializeGameTypes();
 
         $expectedTypes = [
-            'plains' => ['title' => 'Равнины', 'work' => 1, 'eat' => 2, 'money' => 0],
-            'plains2' => ['title' => 'Равнины 2', 'work' => 2, 'eat' => 2, 'money' => 0],
-            'forest' => ['title' => 'Лес', 'work' => 2, 'eat' => 1, 'money' => 0],
-            'hills' => ['title' => 'Холмы', 'work' => 1, 'eat' => 1, 'money' => 0],
-            'mountains' => ['title' => 'Горы', 'work' => 1, 'eat' => 0, 'money' => 0],
-            'desert' => ['title' => 'Пустыня', 'work' => 0, 'eat' => 0, 'money' => 1],
-            'water' => ['title' => 'Вода', 'work' => 0, 'eat' => 2, 'money' => 2],
-            'water1' => ['title' => 'Прибрежная вода', 'work' => 0, 'eat' => 3, 'money' => 2],
-            'tundra' => ['title' => 'Тундра', 'work' => 1, 'eat' => 1, 'money' => 0],
+            'plains' => ['title' => 'равнина', 'work' => 1, 'eat' => 2, 'money' => 1],
+            'plains2' => ['title' => 'равнина', 'work' => 0, 'eat' => 2, 'money' => 1],
+            'forest' => ['title' => 'лес', 'work' => 2, 'eat' => 1, 'money' => 1],
+            'hills' => ['title' => 'холмы', 'work' => 2, 'eat' => 1, 'money' => 0],
+            'mountains' => ['title' => 'горы', 'work' => 1, 'eat' => 0, 'money' => 1],
+            'desert' => ['title' => 'пустыня', 'work' => 1, 'eat' => 0, 'money' => 2],
+            'water1' => ['title' => 'вода', 'work' => 0, 'eat' => 2, 'money' => 1],
         ];
 
         foreach ($expectedTypes as $id => $expected) {

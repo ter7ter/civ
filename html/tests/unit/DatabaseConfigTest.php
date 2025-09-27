@@ -3,6 +3,7 @@
 namespace App\Tests;
 
 use App\Game;
+use App\MyDB;
 use App\User;
 
 /**
@@ -238,11 +239,11 @@ class DatabaseConfigTest extends TestBase
     {
         // Проверяем, что моки доступны
         $this->assertTrue(
-            class_exists("Game"),
+            class_exists(Game::class),
             "Класс Game должен быть доступен",
         );
         $this->assertTrue(
-            class_exists("User"),
+            class_exists(User::class),
             "Класс User должен быть доступен",
         );
 

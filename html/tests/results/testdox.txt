@@ -1,20 +1,6 @@
-Admin Building Type (App\Tests\AdminBuildingType)
- [x] Get all building types
- [ ] Building type city effect
- [x] Save new building type
- [x] Update building type
- [x] Delete building type
- [x] Get building type by id
- [x] Json fields handling
- [x] Building type properties
- [x] Get non existent building type
- [x] Building type constructor with invalid json
- [x] Building type default values
- [x] Building type with complex data
- [x] Building type get title
-
 Building (App\Tests\Unit\Building)
  [x] Get
+ [ ] City effect
  [x] Constructor
  [x] Constructor without id
  [x] Get title
@@ -22,7 +8,34 @@ Building (App\Tests\Unit\Building)
  [x] Save update
  [x] Caching
  [x] Different building types
- [ ] City effect
+
+City (App\Tests\City)
+ [x] Calculate eat
+ [x] Create unit
+ [x] Get culture cells
+ [x] Constructor
+ [x] By coords
+ [x] Get title
+ [x] Get possible units
+ [x] Calculate work
+ [x] Calculate money
+ [x] Calculate research
+ [x] Calculate culture
+ [x] Add people
+ [x] Remove people
+ [x] Save
+ [x] Create building
+ [x] Calculate buildings
+ [x] Check mood
+ [x] Select next production
+
+Database Config (App\Tests\DatabaseConfig)
+ [x] Test database configuration
+ [x] Game and user mocks
+ [x] Test tables creation
+ [x] Test data operations
+ [ ] Test data cleanup
+ [x] Transaction handling
 
 Admin Unit Type (App\Tests\AdminUnitType)
  [x] Get all unit types
@@ -35,6 +48,87 @@ Admin Unit Type (App\Tests\AdminUnitType)
  [x] Unit type constructor with invalid json
  [x] Unit type default values
  [x] Unit type with complex data
+
+Cell Type (App\Tests\CellType)
+ [x] All predefined cell types
+ [x] Get title
+ [x] Get existing cell type
+ [x] Get non existing cell type
+ [x] Constructor
+ [x] Constructor without id
+ [x] Complex properties
+
+Admin Building Type (App\Tests\AdminBuildingType)
+ [ ] Building type city effect
+ [x] Get all building types
+ [x] Save new building type
+ [x] Update building type
+ [x] Delete building type
+ [x] Get building type by id
+ [x] Json fields handling
+ [x] Building type properties
+ [x] Get non existent building type
+ [x] Building type constructor with invalid json
+ [x] Building type default values
+ [x] Building type with complex data
+ [x] Building type get title
+
+Cell (App\Tests\Cell)
+ [ ] Get units
+ [ ] Save new
+ [ ] Clear cache
+ [ ] D coord
+ [ ] Get work
+ [ ] Get title
+ [ ] Get cells around
+ [ ] Get non existing cell
+ [ ] Save update
+ [ ] Calc coord
+ [ ] Get eat
+ [ ] Get money
+ [ ] Get planet
+ [ ] Constructor
+ [ ] Load cells
+ [ ] Constructor without owner
+ [ ] Get existing cell
+ [ ] Calc distance
+ [ ] Generate map
+ [ ] Generate type
+ [ ] Get mission need points
+
+Create Game Simple (App\Tests\CreateGameSimple)
+ [ ] Game caching
+ [ ] Create basic game class
+ [ ] Game list
+ [ ] User color generation
+ [ ] Game get method
+ [ ] Create game with different map sizes
+ [ ] Create users for game
+ [ ] Html escaping in game name
+ [ ] Create game with different turn types
+ [ ] Html escaping in user login
+ [ ] Update game data
+
+Create Game (App\Tests\CreateGame)
+ [ ] Whitespace game name
+ [ ] Empty game name
+ [ ] Create concurrent game
+ [ ] Invalid turn type
+ [ ] Too small map size
+ [ ] Create one window game
+ [ ] Create basic game
+ [ ] Too large map size
+ [ ] X s s in player names
+ [ ] Too many players
+ [ ] Very long strings
+ [ ] Player color generation
+ [ ] Data preservation on error
+ [ ] Duplicate player names
+ [ ] Empty player fields
+ [ ] X s s in game name
+ [ ] No post data
+ [ ] Game initial conditions
+ [ ] Minimum players
 
 Building Type (App\Tests\BuildingType)
  [x] Get existing building type
@@ -51,7 +145,6 @@ Building Type (App\Tests\BuildingType)
  [x] City effect no effect
  [x] All predefined building types
 
-Cell (App\Tests\Cell)
- [ ] Get existing cell
- [ ] Get non existing cell
+Edit Game (App\Tests\EditGame)
+ [ ] Load game without id
 

@@ -84,8 +84,8 @@ class Cell
         $query = [];
         $result = [];
         foreach ($coords as $coord) {
-            if (isset(Cell::$_all[$coord["x"]][$coord["y"]])) {
-                $result[] = Cell::$_all[$coord["x"]][$coord["y"]];
+            if (isset(Cell::$_all[$planetId][$coord["x"]][$coord["y"]])) {
+                $result[] = Cell::$_all[$planetId][$coord["x"]][$coord["y"]];
             } else {
                 $query[] =
                     "(x = " .
@@ -186,48 +186,23 @@ class Cell
         if (!$improvement) {
             $improvement = "none";
         }
-        // Try INSERT first, fallback to UPDATE if record exists
-        try {
-            MyDB::query(
-                "INSERT INTO `cell` (`x`, `y`, `planet`, `type`, `owner`, `owner_culture`, `road`, `improvement`)
-                 VALUES (:x, :y, :planet, :type, :owner, :culture, :road, :improvement)",
-                [
-                    "x" => $this->x,
-                    "y" => $this->y,
-                    "planet" => $this->planet,
-                    "type" => $this->type->id,
-                    "owner" => $owner_id,
-                    "culture" => $this->owner_culture,
-                    "road" => $road,
-                    "improvement" => $improvement,
-                ],
-            );
-        } catch (Exception $e) {
-            // If INSERT fails due to duplicate key, try UPDATE
-            if (
-                strpos($e->getMessage(), "UNIQUE constraint failed") !==
-                    false ||
-                strpos($e->getMessage(), "Duplicate entry") !== false
-            ) {
-                MyDB::query(
-                    "UPDATE `cell` SET `type` = :type, `owner` = :owner, `owner_culture` = :culture, `road` = :road, `improvement` = :improvement
-                     WHERE `x` = :x AND `y` = :y AND `planet` = :planet",
-                    [
-                        "x" => $this->x,
-                        "y" => $this->y,
-                        "planet" => $this->planet,
-                        "type" => $this->type->id,
-                        "owner" => $owner_id,
-                        "culture" => $this->owner_culture,
-                        "road" => $road,
-                        "improvement" => $improvement,
-                    ],
-                );
-            } else {
-                // Re-throw if it's a different error
-                throw $e;
-            }
-        }
+        // Use INSERT ... ON DUPLICATE KEY UPDATE
+        MyDB::query(
+            "INSERT INTO `cell` (`x`, `y`, `planet`, `type`, `owner`, `owner_culture`, `road`, `improvement`)
+             VALUES (:x, :y, :planet, :type, :owner, :culture, :road, :improvement)
+             ON DUPLICATE KEY UPDATE
+             `type` = VALUES(`type`), `owner` = VALUES(`owner`), `owner_culture` = VALUES(`owner_culture`), `road` = VALUES(`road`), `improvement` = VALUES(`improvement`)",
+            [
+                "x" => $this->x,
+                "y" => $this->y,
+                "planet" => $this->planet,
+                "type" => $this->type->id,
+                "owner" => $owner_id,
+                "culture" => $this->owner_culture,
+                "road" => $road,
+                "improvement" => $improvement,
+            ],
+        );
     }
 
     /**
@@ -337,7 +312,6 @@ class Cell
         for ($x = 0; $x < Cell::$map_width; $x++) {
             for ($y = 0; $y < Cell::$map_height; $y++) {
                 $cell_type = Cell::generate_type($x, $y, $planetId);
-
 
                 if (!$cell_type || empty($cell_type->id)) {
                     throw new Exception("Invalid cell type for ($x, $y): " . var_export($cell_type, true));
@@ -470,6 +444,9 @@ class Cell
                 "end" => $chance_sum + $val,
             ];
             $chance_sum += $val;
+        }
+        if ($chance_sum == 0) {
+            throw new Exception("Все шансы типов клеток равны 0 для ($x, $y)");
         }
         $rand = mt_rand(0, $chance_sum - 1);
         foreach ($chance_interval as $type => $val) {

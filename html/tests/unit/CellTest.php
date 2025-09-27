@@ -407,7 +407,7 @@ class CellTest extends CommonTestBase
         $this->createTestCell(['x' => 0, 'y' => 0, 'planet' => $planetId, 'type' => 'plains']);
 
         // Создаем юнит на клетке
-        $unitData = $this->createTestUnit(['x' => 0, 'y' => 0, 'planet' => $planetId, 'user_id' => $userData['id']]);
+        $unit = $this->createTestUnit(['x' => 0, 'y' => 0, 'planet' => $planetId, 'user_id' => $userData['id']]);
 
         Cell::clearCache();
         $cell = Cell::get(0, 0, $planetId);
@@ -416,7 +416,7 @@ class CellTest extends CommonTestBase
         $this->assertIsArray($units);
         $this->assertCount(1, $units);
         $this->assertInstanceOf(Unit::class, $units[0]);
-        $this->assertEquals($unitData['id'], $units[0]->id);
+        $this->assertEquals($unit->id, $units[0]->id);
     }
 
     /**

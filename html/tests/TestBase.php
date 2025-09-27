@@ -1,5 +1,16 @@
 <?php
 
+namespace App\Tests;
+
+use App\Building;
+use App\Cell;
+use App\City;
+use App\Game;
+use App\MyDB;
+use App\Planet;
+use App\Unit;
+use App\User;
+
 /**
  * Базовый класс для всех тестов
  * Использует реальные классы игры вместо моков

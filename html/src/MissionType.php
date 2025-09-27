@@ -1,4 +1,8 @@
 <?php
+
+namespace App;
+
+
 class MissionType {
 	//int
 	public $id;

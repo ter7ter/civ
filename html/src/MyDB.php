@@ -1,4 +1,7 @@
 <?php
+
+namespace App;
+
 class MyDB
 {
     /**
@@ -189,4 +192,3 @@ class MyDB
         }
     }
 }
-?>

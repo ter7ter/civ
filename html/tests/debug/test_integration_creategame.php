@@ -7,38 +7,12 @@
 
 // Подключаем необходимые файлы
 require_once dirname(__DIR__) . "/config.php";
-require_once dirname(__DIR__) . "/classes/MyDB.class.php";
+require_once dirname(__DIR__) . "/vendor/autoload.php";
 
 // Настраиваем тестовую БД
 MyDB::setDBConfig("localhost", "civ_test", "civ_test", "3306", "civ_for_tests");
 
-// Подключаем классы в правильном порядке
-$classFiles = [
-    "CellType.class.php",
-    "ResearchType.class.php",
-    "ResourceType.class.php",
-    "BuildingType.class.php",
-    "UnitType.class.php",
-    "MissionType.class.php",
-    "Planet.class.php",
-    "Cell.class.php",
-    "Resource.class.php",
-    "Research.class.php",
-    "Building.class.php",
-    "Unit.class.php",
-    "City.class.php",
-    "Message.class.php",
-    "Event.class.php",
-    "User.class.php",
-    "Game.class.php",
-];
 
-foreach ($classFiles as $classFile) {
-    $filePath = dirname(__DIR__) . "/classes/" . $classFile;
-    if (file_exists($filePath)) {
-        require_once $filePath;
-    }
-}
 
 // Инициализируем типы данных
 require_once dirname(__DIR__) . "/tests/TestGameDataInitializer.php";

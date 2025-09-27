@@ -398,12 +398,12 @@ class EditGameTest extends TestBase
         $game = $this->createTestGame();
         $this->createTestUser([
             "login" => "Игрок1",
-            "game" => $game["id"],
+            "game" => $game->id,
             "turn_order" => 1,
         ]);
         $this->createTestUser([
             "login" => "Игрок2",
-            "game" => $game["id"],
+            "game" => $game->id,
             "turn_order" => 2,
         ]);
 

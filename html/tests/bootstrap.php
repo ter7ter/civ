@@ -29,8 +29,22 @@ if (!defined("TEST_DB_PORT")) {
     define("TEST_DB_PORT", 3306);
 }
 
-// Сначала загружаем MyDB.class.php
-require_once PROJECT_ROOT . "/classes/MyDB.class.php";
+// Загружаем автозагрузчик Composer
+require_once PROJECT_ROOT . "/vendor/autoload.php";
+
+// Ручная автозагрузка для App namespace, если composer autoload не работает
+spl_autoload_register(function ($class) {
+    if (strpos($class, 'App\\') === 0) {
+        $relativeClass = substr($class, 4);
+        $file = PROJECT_ROOT . '/src/' . str_replace('\\', '/', $relativeClass) . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+        }
+    }
+});
+
+// Загружаем MyDB для настройки БД
+require_once PROJECT_ROOT . "/src/MyDB.php";
 
 if (getenv('PARATEST')) {
     $testToken = getmypid();
@@ -62,34 +76,6 @@ require_once TESTS_ROOT . "/TestGameDataInitializer.php";
 
 // Устанавливаем схему базы данных
 TestGameDataInitializer::setupDatabaseSchema();
-
-// Загружаем остальные реальные классы проекта в правильном порядке зависимостей
-$classFiles = [
-    "CellType.class.php",
-    "ResearchType.class.php",
-    "ResourceType.class.php",
-    "BuildingType.class.php",
-    "UnitType.class.php",
-    "MissionType.class.php",
-    "Planet.class.php",
-    "Cell.class.php",
-    "Resource.class.php",
-    "Research.class.php",
-    "Building.class.php",
-    "Unit.class.php",
-    "City.class.php",
-    "Message.class.php",
-    "Event.class.php",
-    "User.class.php",
-    "Game.class.php",
-];
-
-foreach ($classFiles as $classFile) {
-    $filePath = PROJECT_ROOT . "/classes/" . $classFile;
-    if (file_exists($filePath)) {
-        require_once $filePath;
-    }
-}
 
 // Загружаем тестовые базовые классы только если PHPUnit доступен
 if (class_exists("PHPUnit\Framework\TestCase")) {

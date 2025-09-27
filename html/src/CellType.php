@@ -1,4 +1,8 @@
 <?php
+
+namespace App;
+
+
 class CellType {
 	public $id;
 	public $base_chance = 0;

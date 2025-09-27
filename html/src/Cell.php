@@ -1,4 +1,7 @@
 <?php
+
+namespace App;
+
 class Cell
 {
     public $x, $y, $planet;

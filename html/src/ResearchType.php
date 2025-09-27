@@ -1,4 +1,8 @@
 <?php
+
+namespace App;
+
+
 class ResearchType {
 	public $id;
 	//Название

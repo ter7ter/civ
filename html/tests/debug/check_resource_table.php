@@ -1,7 +1,7 @@
 <?php
 
 require_once dirname(__DIR__) . "/config.php";
-require_once dirname(__DIR__) . "/classes/MyDB.class.php";
+require_once dirname(__DIR__) . "/vendor/autoload.php";
 
 try {
     echo "Проверка структуры таблицы resource:\n";

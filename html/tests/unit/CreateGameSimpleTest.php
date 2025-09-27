@@ -166,7 +166,7 @@ class CreateGameSimpleTest extends TestBase
             $userData = [
                 "login" => "Игрок$i",
                 "color" => $color,
-                "game" => $game["id"],
+                "game" => $game->id,
                 "turn_order" => $i,
                 "turn_status" => "wait",
                 "money" => 50,
@@ -206,16 +206,16 @@ class CreateGameSimpleTest extends TestBase
     {
         // Создаем несколько игр с пользователями
         $game1 = $this->createTestGame(["name" => "Первая игра"]);
-        $this->createTestUser(["game" => $game1["id"], "login" => "Игрок1"]);
+        $this->createTestUser(["game" => $game1->id, "login" => "Игрок1"]);
 
         $game2 = $this->createTestGame(["name" => "Вторая игра"]);
-        $this->createTestUser(["game" => $game2["id"], "login" => "Игрок2"]);
-        $this->createTestUser(["game" => $game2["id"], "login" => "Игрок3"]);
+        $this->createTestUser(["game" => $game2->id, "login" => "Игрок2"]);
+        $this->createTestUser(["game" => $game2->id, "login" => "Игрок3"]);
 
         $game3 = $this->createTestGame(["name" => "Третья игра"]);
-        $this->createTestUser(["game" => $game3["id"], "login" => "Игрок4"]);
-        $this->createTestUser(["game" => $game3["id"], "login" => "Игрок5"]);
-        $this->createTestUser(["game" => $game3["id"], "login" => "Игрок6"]);
+        $this->createTestUser(["game" => $game3->id, "login" => "Игрок4"]);
+        $this->createTestUser(["game" => $game3->id, "login" => "Игрок5"]);
+        $this->createTestUser(["game" => $game3->id, "login" => "Игрок6"]);
 
         // Получаем список игр
         $games = Game::game_list();
@@ -240,10 +240,10 @@ class CreateGameSimpleTest extends TestBase
     {
         $gameData = $this->createTestGame(["name" => "Test Get Game"]);
 
-        $game = Game::get($gameData["id"]);
+        $game = Game::get($gameData->id);
 
         $this->assertInstanceOf(Game::class, $game);
-        $this->assertEquals($gameData["id"], $game->id);
+        $this->assertEquals($gameData->id, $game->id);
         $this->assertEquals("Test Get Game", $game->name);
     }
 
@@ -254,15 +254,15 @@ class CreateGameSimpleTest extends TestBase
     {
         $gameData = $this->createTestGame(["name" => "Cached Game"]);
 
-        $game1 = Game::get($gameData["id"]);
-        $game2 = Game::get($gameData["id"]);
+        $game1 = Game::get($gameData->id);
+        $game2 = Game::get($gameData->id);
 
         // Объекты должны быть одинаковыми (кэширование)
         $this->assertSame($game1, $game2);
 
         // Очищаем кэш и проверяем, что создается новый объект
         Game::clearCache();
-        $game3 = Game::get($gameData["id"]);
+        $game3 = Game::get($gameData->id);
 
         $this->assertNotSame($game1, $game3);
         $this->assertEquals($game1->id, $game3->id);
@@ -278,7 +278,7 @@ class CreateGameSimpleTest extends TestBase
             "turn_num" => 1,
         ]);
 
-        $game = Game::get($gameData["id"]);
+        $game = Game::get($gameData->id);
         $game->name = "Обновленное название";
         $game->turn_num = 5;
         $game->save();
@@ -328,7 +328,7 @@ class CreateGameSimpleTest extends TestBase
         $userData = [
             "login" => $maliciousLogin,
             "color" => "#ff0000",
-            "game" => $game["id"],
+            "game" => $game->id,
             "turn_order" => 1,
             "turn_status" => "wait",
             "money" => 50,

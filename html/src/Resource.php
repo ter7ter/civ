@@ -1,4 +1,7 @@
 <?php
+
+namespace App;
+
 class Resource
 {
     public $id = null;

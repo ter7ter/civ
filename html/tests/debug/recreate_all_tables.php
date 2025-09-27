@@ -5,7 +5,7 @@
  */
 
 require_once dirname(__DIR__) . "/config.php";
-require_once dirname(__DIR__) . "/classes/MyDB.class.php";
+require_once dirname(__DIR__) . "/vendor/autoload.php";
 require_once __DIR__ . "/mocks/DatabaseTestAdapter.php";
 
 MyDB::setDBConfig("localhost", "civ_test", "civ_test", "3306", "civ_for_tests");

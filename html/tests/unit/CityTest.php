@@ -16,6 +16,9 @@ class CityTest extends TestBase
 
         // Подключаем классы проекта
         require_once PROJECT_ROOT . "/includes.php";
+
+        // Инициализируем типы клеток для тестов
+        TestGameDataInitializer::initializeCellTypes();
     }
 
     /**
@@ -25,17 +28,12 @@ class CityTest extends TestBase
      */
     private function setUpTestCity(array $cityOverrides = [])
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $this->createTestMapCells(10, 10, 1, 1, $planetId);
-        $cityData = $this->createTestCity(array_merge([
-            "planet" => $planetId,
-            "user_id" => $userData["id"],
+        $result = $this->createTestGameWithPlanetUserAndCity([], [], [], array_merge([
             "x" => 10,
             "y" => 10,
         ], $cityOverrides));
-        return [$gameData, $userData, $planetId, $cityData];
+        $this->createTestMapCells(10, 10, 1, 1, $result['planet']);
+        return [$result['game'], $result['user'], $result['planet'], $result['city']];
     }
 
     /**
@@ -66,7 +64,7 @@ class CityTest extends TestBase
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         $city = City::by_coords(10, 10, $planetId);
         $this->assertInstanceOf(City::class, $city);
-        $this->assertEquals($cityData["id"], $city->id);
+        $this->assertEquals($cityData->id, $city->id);
     }
 
     /**
@@ -76,7 +74,7 @@ class CityTest extends TestBase
     {
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         $this->assertEquals('Test City', $city->get_title());
     }
 
@@ -105,7 +103,7 @@ class CityTest extends TestBase
         [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
         TestGameDataInitializer::initializeUnitTypes();
         City::clearCache();
-        $city = City::get($cityData["id"]);
+        $city = City::get($cityData->id);
         $units = $city->get_possible_units();
         $this->assertIsArray($units);
         $this->assertGreaterThan(0, count($units));

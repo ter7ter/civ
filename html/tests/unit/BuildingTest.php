@@ -1,5 +1,13 @@
 <?php
 
+namespace App\Tests\Unit;
+
+use App\Building;
+use App\BuildingType;
+use App\City;
+use App\MyDB;
+use App\Tests\TestBase;
+
 require_once __DIR__ . "/../bootstrap.php";
 
 /**

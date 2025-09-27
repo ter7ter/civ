@@ -186,7 +186,7 @@ class TestRunner
         if ($useParatest) {
             // Create a temporary phpunit.xml for paratest without the junit logger
             $phpunitConfigContent = file_get_contents($phpunitConfig);
-            $phpunitConfigContent = str_replace('<junit outputFile="results/junit.xml"/>', '', $phpunitConfigContent);
+            $phpunitConfigContent = preg_replace('/<junit[^>]+>/', '', $phpunitConfigContent);
             file_put_contents($paratestConfigPath, $phpunitConfigContent);
             
             register_shutdown_function(function() use ($paratestConfigPath) {

@@ -1,4 +1,8 @@
 <?php
+
+namespace App;
+
+
 class ResourceType {
     /**
      * @var string

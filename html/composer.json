@@ -4,5 +4,15 @@
         "brianium/paratest": "^6.11"
     },
     "name": "local/game-project",
-    "type": "project"
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    }
 }

@@ -1,4 +1,7 @@
 <?php
+
+namespace App;
+
 class BuildingType
 {
     public $id;

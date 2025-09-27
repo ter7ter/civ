@@ -94,10 +94,10 @@ class BuildingTypeTest extends TestBase
     public function testCityEffectGranary(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-        $cityData = $this->createTestCity([
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $userData = $this->createTestUser(['game' => $game->id]);
+        $city = $this->createTestCity([
             'planet' => $planetId,
             'user_id' => $userData['id'],
             'x' => 10,
@@ -105,7 +105,7 @@ class BuildingTypeTest extends TestBase
         ]);
 
         City::clearCache();
-        $city = City::get($cityData['id']);
+        $city = City::get($city->id);
 
         // Устанавливаем базовое значение eat_up
         if (!defined('BASE_EAT_UP')) {
@@ -125,10 +125,10 @@ class BuildingTypeTest extends TestBase
     public function testCityEffectTemple(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-        $cityData = $this->createTestCity([
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $userData = $this->createTestUser(['game' => $game->id]);
+        $city = $this->createTestCity([
             'planet' => $planetId,
             'user_id' => $userData['id'],
             'x' => 10,
@@ -136,7 +136,7 @@ class BuildingTypeTest extends TestBase
         ]);
 
         City::clearCache();
-        $city = City::get($cityData['id']);
+        $city = City::get($city->id);
 
         // Устанавливаем начальные значения
         $city->people_norm = 2;
@@ -155,10 +155,10 @@ class BuildingTypeTest extends TestBase
     public function testCityEffectTempleNegativeNorm(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-        $cityData = $this->createTestCity([
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $userData = $this->createTestUser(['game' => $game->id]);
+        $city = $this->createTestCity([
             'planet' => $planetId,
             'user_id' => $userData['id'],
             'x' => 10,
@@ -166,7 +166,7 @@ class BuildingTypeTest extends TestBase
         ]);
 
         City::clearCache();
-        $city = City::get($cityData['id']);
+        $city = City::get($city->id);
 
         // Устанавливаем начальные значения
         $city->people_norm = 0;
@@ -185,10 +185,10 @@ class BuildingTypeTest extends TestBase
     public function testCityEffectLibrary(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-        $cityData = $this->createTestCity([
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $userData = $this->createTestUser(['game' => $game->id]);
+        $city = $this->createTestCity([
             'planet' => $planetId,
             'user_id' => $userData['id'],
             'x' => 10,
@@ -196,7 +196,7 @@ class BuildingTypeTest extends TestBase
         ]);
 
         City::clearCache();
-        $city = City::get($cityData['id']);
+        $city = City::get($city->id);
 
         $city->presearch = 4;
 
@@ -212,10 +212,10 @@ class BuildingTypeTest extends TestBase
     public function testCityEffectMarket(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-        $cityData = $this->createTestCity([
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $userData = $this->createTestUser(['game' => $game->id]);
+        $city = $this->createTestCity([
             'planet' => $planetId,
             'user_id' => $userData['id'],
             'x' => 10,
@@ -223,7 +223,7 @@ class BuildingTypeTest extends TestBase
         ]);
 
         City::clearCache();
-        $city = City::get($cityData['id']);
+        $city = City::get($city->id);
 
         $city->pmoney = 4;
 
@@ -239,10 +239,10 @@ class BuildingTypeTest extends TestBase
     public function testCityEffectColiseum(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-        $cityData = $this->createTestCity([
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $userData = $this->createTestUser(['game' => $game->id]);
+        $city = $this->createTestCity([
             'planet' => $planetId,
             'user_id' => $userData['id'],
             'x' => 10,
@@ -250,7 +250,7 @@ class BuildingTypeTest extends TestBase
         ]);
 
         City::clearCache();
-        $city = City::get($cityData['id']);
+        $city = City::get($city->id);
 
         // Устанавливаем начальные значения
         $city->people_dis = 3;
@@ -271,10 +271,10 @@ class BuildingTypeTest extends TestBase
     public function testCityEffectColiseumNegativeDis(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-        $cityData = $this->createTestCity([
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $userData = $this->createTestUser(['game' => $game->id]);
+        $city = $this->createTestCity([
             'planet' => $planetId,
             'user_id' => $userData['id'],
             'x' => 10,
@@ -282,7 +282,7 @@ class BuildingTypeTest extends TestBase
         ]);
 
         City::clearCache();
-        $city = City::get($cityData['id']);
+        $city = City::get($city->id);
 
         // Устанавливаем начальные значения
         $city->people_dis = 1;
@@ -303,10 +303,10 @@ class BuildingTypeTest extends TestBase
     public function testCityEffectNoEffect(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-        $cityData = $this->createTestCity([
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $userData = $this->createTestUser(['game' => $game->id]);
+        $city = $this->createTestCity([
             'planet' => $planetId,
             'user_id' => $userData['id'],
             'x' => 10,
@@ -314,7 +314,7 @@ class BuildingTypeTest extends TestBase
         ]);
 
         City::clearCache();
-        $city = City::get($cityData['id']);
+        $city = City::get($city->id);
 
         // Устанавливаем начальные значения
         $originalEatUp = $city->eat_up ?? 0;

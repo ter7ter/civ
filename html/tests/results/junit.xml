@@ -1,31 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="19" assertions="55" errors="0" warnings="0" failures="0" skipped="0" time="17.160781">
-    <testsuite name="Unit Tests" tests="19" assertions="55" errors="0" warnings="0" failures="0" skipped="0" time="17.160781">
-      <testsuite name="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" tests="19" assertions="55" errors="0" warnings="0" failures="0" skipped="0" time="17.160781">
-        <testcase name="testVeryLongStrings" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="372" assertions="6" time="0.851898"/>
-        <testcase name="testDataPreservationOnError" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="301" assertions="4" time="0.695956"/>
-        <testcase name="testDuplicatePlayerNames" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="202" assertions="1" time="0.663634"/>
-        <testcase name="testTooLargeMapSize" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="253" assertions="2" time="0.818569"/>
-        <testcase name="testEmptyGameName" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="180" assertions="1" time="0.686790"/>
-        <testcase name="testTooSmallMapSize" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="230" assertions="2" time="0.615263"/>
-        <testcase name="testNoPostData" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="515" assertions="1" time="0.692926"/>
-        <testcase name="testTooManyPlayers" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="276" assertions="1" time="4.102159">
-          <system-out>
-Deleting from table: city_people
-</system-out>
+  <testsuite name="" tests="50" assertions="251" errors="0" warnings="0" failures="1" skipped="0" time="4.819664">
+    <testsuite name="Unit Tests" tests="50" assertions="251" errors="0" warnings="0" failures="1" skipped="0" time="4.819664">
+      <testsuite name="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" tests="13" assertions="53" errors="0" warnings="0" failures="0" skipped="0" time="0.400646">
+        <testcase name="testBuildingTypeCityEffect" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="232" assertions="1" time="0.118230"/>
+        <testcase name="testGetAllBuildingTypes" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="13" assertions="6" time="0.048284"/>
+        <testcase name="testSaveNewBuildingType" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="49" assertions="2" time="0.048675"/>
+        <testcase name="testUpdateBuildingType" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="65" assertions="2" time="0.017634"/>
+        <testcase name="testDeleteBuildingType" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="85" assertions="1" time="0.024945"/>
+        <testcase name="testGetBuildingTypeById" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="100" assertions="3" time="0.016641"/>
+        <testcase name="testJsonFieldsHandling" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="114" assertions="3" time="0.020066"/>
+        <testcase name="testBuildingTypeProperties" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="130" assertions="8" time="0.016691"/>
+        <testcase name="testGetNonExistentBuildingType" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="156" assertions="1" time="0.021122"/>
+        <testcase name="testBuildingTypeConstructorWithInvalidJson" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="162" assertions="2" time="0.016854"/>
+        <testcase name="testBuildingTypeDefaultValues" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="178" assertions="11" time="0.017943"/>
+        <testcase name="testBuildingTypeWithComplexData" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="199" assertions="12" time="0.015829"/>
+        <testcase name="testBuildingTypeGetTitle" class="AdminBuildingTypeTest" classname="AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="251" assertions="1" time="0.017733"/>
+      </testsuite>
+      <testsuite name="AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" tests="10" assertions="47" errors="0" warnings="0" failures="0" skipped="0" time="0.019336">
+        <testcase name="testGetAllUnitTypes" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="7" assertions="6" time="0.003142"/>
+        <testcase name="testSaveNewUnitType" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="53" assertions="2" time="0.002014"/>
+        <testcase name="testDeleteUnitType" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="90" assertions="1" time="0.002459"/>
+        <testcase name="testJsonFieldsHandling" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="119" assertions="3" time="0.001643"/>
+        <testcase name="testUpdateUnitType" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="71" assertions="2" time="0.002519"/>
+        <testcase name="testGetUnitTypeById" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="105" assertions="3" time="0.001712"/>
+        <testcase name="testUnitTypeConstructorWithInvalidJson" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="141" assertions="2" time="0.001969"/>
+        <testcase name="testUnitTypeDefaultValues" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="157" assertions="8" time="0.001495"/>
+        <testcase name="testGetNonExistentUnitType" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="135" assertions="1" time="0.000642"/>
+        <testcase name="testUnitTypeWithComplexData" class="AdminUnitTypeTest" classname="AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="175" assertions="19" time="0.001739"/>
+      </testsuite>
+      <testsuite name="BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" tests="9" assertions="36" errors="0" warnings="0" failures="0" skipped="0" time="0.244473">
+        <testcase name="testGetTitle" class="BuildingTest" classname="BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="93" assertions="1" time="0.034047"/>
+        <testcase name="testCaching" class="BuildingTest" classname="BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="176" assertions="1" time="0.033928"/>
+        <testcase name="testSaveNew" class="BuildingTest" classname="BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="114" assertions="4" time="0.027850"/>
+        <testcase name="testDifferentBuildingTypes" class="BuildingTest" classname="BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="203" assertions="12" time="0.040220"/>
+        <testcase name="testCityEffect" class="BuildingTest" classname="BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="231" assertions="1" time="0.000086"/>
+        <testcase name="testGet" class="BuildingTest" classname="BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="13" assertions="7" time="0.026794"/>
+        <testcase name="testConstructor" class="BuildingTest" classname="BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="41" assertions="6" time="0.025885"/>
+        <testcase name="testSaveUpdate" class="BuildingTest" classname="BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="146" assertions="1" time="0.027749"/>
+        <testcase name="testConstructorWithoutId" class="BuildingTest" classname="BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="70" assertions="3" time="0.027914"/>
+      </testsuite>
+      <testsuite name="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" tests="13" assertions="79" errors="0" warnings="0" failures="0" skipped="0" time="0.296583">
+        <testcase name="testCityEffectColiseum" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="239" assertions="3" time="0.035660"/>
+        <testcase name="testCityEffectMarket" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="212" assertions="1" time="0.027008"/>
+        <testcase name="testGetExistingBuildingType" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="13" assertions="5" time="0.017917"/>
+        <testcase name="testAllPredefinedBuildingTypes" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="342" assertions="39" time="0.016045"/>
+        <testcase name="testGetTitle" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="82" assertions="1" time="0.015874"/>
+        <testcase name="testCityEffectTempleNegativeNorm" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="155" assertions="2" time="0.026885"/>
+        <testcase name="testCityEffectColiseumNegativeDis" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="271" assertions="3" time="0.025887"/>
+        <testcase name="testGetNonExistingBuildingType" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="29" assertions="1" time="0.016836"/>
+        <testcase name="testConstructor" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="41" assertions="14" time="0.000092"/>
+        <testcase name="testCityEffectGranary" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="94" assertions="1" time="0.027296"/>
+        <testcase name="testCityEffectTemple" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="125" assertions="2" time="0.026345"/>
+        <testcase name="testCityEffectLibrary" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="185" assertions="1" time="0.034238"/>
+        <testcase name="testCityEffectNoEffect" class="BuildingTypeTest" classname="BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="303" assertions="6" time="0.026500"/>
+      </testsuite>
+      <testsuite name="CellTest" file="/var/www/html/tests/unit/CellTest.php" tests="5" assertions="36" errors="0" warnings="0" failures="1" skipped="0" time="3.858627">
+        <testcase name="testGetMoney" class="CellTest" classname="CellTest" file="/var/www/html/tests/unit/CellTest.php" line="367" assertions="4" time="0.689504"/>
+        <testcase name="testGetEat" class="CellTest" classname="CellTest" file="/var/www/html/tests/unit/CellTest.php" line="344" assertions="4" time="0.826532"/>
+        <testcase name="testGetMissionNeedPoints" class="CellTest" classname="CellTest" file="/var/www/html/tests/unit/CellTest.php" line="439" assertions="1" time="0.722225"/>
+        <testcase name="testGetCellsAround" class="CellTest" classname="CellTest" file="/var/www/html/tests/unit/CellTest.php" line="295" assertions="4" time="0.783448"/>
+        <testcase name="testGenerateMap" class="CellTest" classname="CellTest" file="/var/www/html/tests/unit/CellTest.php" line="514" assertions="23" time="0.836918">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">CellTest::testGenerateMap
+Cell at (4, 0) has empty type
+Failed asserting that a string is not empty.
+
+/var/www/html/tests/unit/CellTest.php:538</failure>
         </testcase>
-        <testcase name="testGameInitialConditions" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="538" assertions="5" time="0.856496"/>
-        <testcase name="testPlayerColorGeneration" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="413" assertions="17" time="0.828241"/>
-        <testcase name="testEmptyPlayerFields" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="458" assertions="1" time="0.630432"/>
-        <testcase name="testInvalidTurnType" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="493" assertions="1" time="0.723715"/>
-        <testcase name="testCreateOneWindowGame" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="121" assertions="1" time="0.718611"/>
-        <testcase name="testCreateBasicGame" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="18" assertions="6" time="0.828823"/>
-        <testcase name="testCreateConcurrentGame" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="79" assertions="2" time="0.621028"/>
-        <testcase name="testXSSInPlayerNames" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="349" assertions="1" time="0.683392"/>
-        <testcase name="testXSSInGameName" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="326" assertions="1" time="0.704094"/>
-        <testcase name="testWhitespaceGameName" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="158" assertions="1" time="0.721557"/>
-        <testcase name="testMinimumPlayers" class="CreateGameTest" classname="CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="583" assertions="1" time="0.717198"/>
       </testsuite>
     </testsuite>
   </testsuite>

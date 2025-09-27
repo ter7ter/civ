@@ -49,9 +49,9 @@ class CellTest extends CommonTestBase
     public function testConstructor(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $userData = $this->createTestUser(['game' => $game->id]);
 
         $cellData = [
             'x' => 3,
@@ -85,8 +85,8 @@ class CellTest extends CommonTestBase
     public function testConstructorWithoutOwner(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         $cellData = [
             'x' => 1,
@@ -113,8 +113,8 @@ class CellTest extends CommonTestBase
     public function testGetTitle(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
         $this->createTestCell(['x' => 0, 'y' => 0, 'planet' => $planetId, 'type' => 'plains']);
 
         Cell::clearCache();
@@ -130,8 +130,8 @@ class CellTest extends CommonTestBase
     public function testGetPlanet(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
         $this->createTestCell(['x' => 0, 'y' => 0, 'planet' => $planetId, 'type' => 'plains']);
 
         Cell::clearCache();
@@ -148,9 +148,9 @@ class CellTest extends CommonTestBase
     public function testSaveNew(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $userData = $this->createTestUser(['game' => $game->id]);
 
         $cellData = [
             'x' => 10,
@@ -186,9 +186,9 @@ class CellTest extends CommonTestBase
     public function testSaveUpdate(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $userData = $this->createTestUser(['game' => $game->id]);
 
         // Создаем клетку
         $this->createTestCell(['x' => 5, 'y' => 5, 'planet' => $planetId, 'type' => 'plains']);
@@ -275,8 +275,8 @@ class CellTest extends CommonTestBase
     public function testDCoord(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
         $this->createTestCell(['x' => 5, 'y' => 5, 'planet' => $planetId, 'type' => 'plains']);
 
         $cell = Cell::d_coord(5, 5, 0, 0, true, $planetId);
@@ -295,8 +295,8 @@ class CellTest extends CommonTestBase
     public function testGetCellsAround(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         // Создаем несколько клеток
         for ($x = 0; $x < 5; $x++) {
@@ -321,8 +321,8 @@ class CellTest extends CommonTestBase
     public function testGetWork(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
         $this->createTestCell(['x' => 0, 'y' => 0, 'planet' => $planetId, 'type' => 'plains']);
 
         Cell::clearCache();
@@ -344,8 +344,8 @@ class CellTest extends CommonTestBase
     public function testGetEat(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
         $this->createTestCell(['x' => 0, 'y' => 0, 'planet' => $planetId, 'type' => 'plains']);
 
         Cell::clearCache();
@@ -367,8 +367,8 @@ class CellTest extends CommonTestBase
     public function testGetMoney(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
         $this->createTestCell(['x' => 0, 'y' => 0, 'planet' => $planetId, 'type' => 'plains']);
 
         Cell::clearCache();
@@ -390,9 +390,9 @@ class CellTest extends CommonTestBase
     public function testGetUnits(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $userData = $this->createTestUser(['game' => $game->id]);
         $this->createTestCell(['x' => 0, 'y' => 0, 'planet' => $planetId, 'type' => 'plains']);
 
         // Создаем юнит на клетке
@@ -414,8 +414,8 @@ class CellTest extends CommonTestBase
     public function testLoadCells(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         // Создаем клетки
         $this->createTestCell(['x' => 1, 'y' => 1, 'planet' => $planetId, 'type' => 'plains']);
@@ -439,8 +439,8 @@ class CellTest extends CommonTestBase
     public function testGetMissionNeedPoints(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
         $this->createTestCell(['x' => 0, 'y' => 0, 'planet' => $planetId, 'type' => 'plains']);
 
         Cell::clearCache();
@@ -465,8 +465,8 @@ class CellTest extends CommonTestBase
     public function testClearCache(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
         $this->createTestCell(['x' => 0, 'y' => 0, 'planet' => $planetId, 'type' => 'plains']);
 
         // Получаем клетку, чтобы она попала в кэш
@@ -487,8 +487,8 @@ class CellTest extends CommonTestBase
     public function testGenerateType(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         // Устанавливаем маленький размер карты для теста
         Cell::$map_width = 10;
@@ -514,8 +514,8 @@ class CellTest extends CommonTestBase
     public function testGenerateMap(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame(['map_w' => 5, 'map_h' => 5]);
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame(['map_w' => 5, 'map_h' => 5]);
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         // Устанавливаем маленький размер карты для быстрого теста
         Cell::$map_width = 5;
@@ -525,7 +525,7 @@ class CellTest extends CommonTestBase
         MyDB::query("DELETE FROM cell WHERE planet = :planet", ['planet' => $planetId]);
         MyDB::query("DELETE FROM resource WHERE planet = :planet", ['planet' => $planetId]);
 
-        Cell::generate_map($planetId, $gameData['id']);
+        Cell::generate_map($planetId, $game->id);
 
         // Проверяем, что клетки созданы
         $cellCount = MyDB::query("SELECT COUNT(*) FROM cell WHERE planet = :planet", ['planet' => $planetId], 'elem');

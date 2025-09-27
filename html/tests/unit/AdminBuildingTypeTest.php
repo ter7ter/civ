@@ -239,8 +239,7 @@ class AdminBuildingTypeTest extends TestBase
         // Создаем тестового пользователя, планету и город
         $userData = $this->createTestUser();
         $planetId = $this->createTestPlanet();
-        $cityData = $this->createTestCity(['user_id' => $userData['id'], 'planet' => $planetId]);
-        $city = City::get($cityData['id']);
+        $city = $this->createTestCity(['user_id' => $userData['id'], 'planet' => $planetId]);
 
         // Применяем эффект здания
         $buildingType->city_effect($city);

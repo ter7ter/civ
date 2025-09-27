@@ -133,7 +133,7 @@ class TestBase extends PHPUnit\Framework\TestCase
     /**
      * Создает тестовую игру
      */
-    protected function createTestGame($data = []): array
+    protected function createTestGame($data = []): Game
     {
         $defaultData = [
             "name" => "Test Game",
@@ -258,7 +258,7 @@ class TestBase extends PHPUnit\Framework\TestCase
     /**
      * Создает тестовый город
      */
-    protected function createTestCity($data = []): array
+    protected function createTestCity($data = []): City
     {
         if (!isset($data["planet"])) {
             throw new Exception("Planet ID is required to create a test city");

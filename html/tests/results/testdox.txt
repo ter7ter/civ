@@ -1,21 +1,60 @@
-Create Game
- [x] Very long strings
- [x] Data preservation on error
- [x] Duplicate player names
- [x] Too large map size
- [x] Empty game name
- [x] Too small map size
- [x] No post data
- [x] Too many players
- [x] Game initial conditions
- [x] Player color generation
- [x] Empty player fields
- [x] Invalid turn type
- [x] Create one window game
- [x] Create basic game
- [x] Create concurrent game
- [x] X s s in player names
- [x] X s s in game name
- [x] Whitespace game name
- [x] Minimum players
+Admin Building Type
+ [x] Building type city effect
+ [x] Get all building types
+ [x] Save new building type
+ [x] Update building type
+ [x] Delete building type
+ [x] Get building type by id
+ [x] Json fields handling
+ [x] Building type properties
+ [x] Get non existent building type
+ [x] Building type constructor with invalid json
+ [x] Building type default values
+ [x] Building type with complex data
+ [x] Building type get title
+
+Admin Unit Type
+ [x] Get all unit types
+ [x] Save new unit type
+ [x] Delete unit type
+ [x] Json fields handling
+ [x] Update unit type
+ [x] Get unit type by id
+ [x] Unit type constructor with invalid json
+ [x] Unit type default values
+ [x] Get non existent unit type
+ [x] Unit type with complex data
+
+Building
+ [x] Get title
+ [x] Caching
+ [x] Save new
+ [x] Different building types
+ [x] City effect
+ [x] Get
+ [x] Constructor
+ [x] Save update
+ [x] Constructor without id
+
+Building Type
+ [x] City effect coliseum
+ [x] City effect market
+ [x] Get existing building type
+ [x] All predefined building types
+ [x] Get title
+ [x] City effect temple negative norm
+ [x] City effect coliseum negative dis
+ [x] Get non existing building type
+ [x] Constructor
+ [x] City effect granary
+ [x] City effect temple
+ [x] City effect library
+ [x] City effect no effect
+
+Cell
+ [x] Get money
+ [x] Get eat
+ [x] Get mission need points
+ [x] Get cells around
+ [ ] Generate map
 

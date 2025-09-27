@@ -16,23 +16,23 @@ class PageInfoTest extends TestBase
     public function testCellInfoPage()
     {
         // 1. Create test data
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(["game_id" => $gameData["id"]]);
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
+        $userData = $this->createTestUser(["game" => $game->id]);
         $this->createTestMapCells(10, 10, 1, 1, $planetId);
 
         // 2. Set session
         $this->setSession([
             "user_id" => $userData["id"],
-            "game_id" => $gameData["id"],
+            "game_id" => $game->id,
         ]);
 
         // 3. Simulate request
         $_REQUEST['x'] = 10;
         $_REQUEST['y'] = 10;
-        
+
         $user = User::get($userData['id']);
-        $game = Game::get($gameData['id']);
+        $game = Game::get($game->id);
 
         // 4. Include page and check for errors
         $vars = mockIncludeFile(__DIR__ . "/../../pages/cellinfo.php", [
@@ -46,17 +46,17 @@ class PageInfoTest extends TestBase
     public function testTurnInfoPage()
     {
         // 1. Create test data
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $gameData["id"]]);
+        $game = $this->createTestGame();
+        $userData = $this->createTestUser(["game" => $game->id]);
 
         // 2. Set session
         $this->setSession([
             "user_id" => $userData["id"],
-            "game_id" => $gameData["id"],
+            "game_id" => $game->id,
         ]);
-        
+
         $user = User::get($userData['id']);
-        $game = Game::get($gameData['id']);
+        $game = Game::get($game->id);
 
         // 3. Include page and check for errors
         $vars = mockIncludeFile(__DIR__ . "/../../pages/turninfo.php", [

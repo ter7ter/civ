@@ -105,11 +105,6 @@ class UnitType
         }
     }
 
-    public static function loadAll()
-    {
-
-    }
-
     public static function clearAll()
     {
         UnitType::$all = [];
@@ -122,7 +117,7 @@ class UnitType
     public static function getAll()
     {
         if (count(UnitType::$all) == 0) {
-            $data = MyDB::query("SELECT * FROM unit_type ORDER BY id");
+            $data = MyDB::query("SELECT * FROM unit_type ");
             $result = [];
             foreach ($data as $row) {
                 $result[] = new UnitType($row);

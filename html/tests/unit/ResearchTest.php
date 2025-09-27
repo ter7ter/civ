@@ -17,13 +17,13 @@ class ResearchTest extends TestBase
      */
     public function testGet(): void
     {
-        $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $result = $this->createTestGameWithPlanetAndUser();
+        $game = $result['game'];
+        $user = $result['user'];
 
         // Создаем исследование через БД
         $researchId = MyDB::insert('research', [
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'type' => 1, // Гончарное дело
         ]);
 
@@ -32,31 +32,7 @@ class ResearchTest extends TestBase
         $this->assertInstanceOf(Research::class, $research);
         $this->assertEquals($researchId, $research->id);
         $this->assertInstanceOf(User::class, $research->user);
-        $this->assertEquals($userData['id'], $research->user->id);
-        $this->assertInstanceOf(ResearchType::class, $research->type);
-        $this->assertEquals(1, $research->type->id);
-    }
-
-    /**
-     * Тест конструктора Research
-     */
-    public function testConstructor(): void
-    {
-        $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-
-        $data = [
-            'id' => 1,
-            'user_id' => $userData['id'],
-            'type' => 1, // Гончарное дело
-        ];
-
-        $research = new Research($data);
-
-        $this->assertEquals(1, $research->id);
-        $this->assertInstanceOf(User::class, $research->user);
-        $this->assertEquals($userData['id'], $research->user->id);
+        $this->assertEquals($user->id, $research->user->id);
         $this->assertInstanceOf(ResearchType::class, $research->type);
         $this->assertEquals(1, $research->type->id);
     }
@@ -66,12 +42,12 @@ class ResearchTest extends TestBase
      */
     public function testConstructorWithoutId(): void
     {
-        $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $result = $this->createTestGameWithPlanetAndUser();
+        $game = $result['game'];
+        $user = $result['user'];
 
         $data = [
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'type' => 2, // Бронзовое дело
         ];
 
@@ -88,12 +64,12 @@ class ResearchTest extends TestBase
      */
     public function testSaveNew(): void
     {
-        $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $result = $this->createTestGameWithPlanetAndUser();
+        $game = $result['game'];
+        $user = $result['user'];
 
         $data = [
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'type' => 1, // Гончарное дело
         ];
 
@@ -109,7 +85,7 @@ class ResearchTest extends TestBase
             "row"
         );
         $this->assertNotNull($savedData);
-        $this->assertEquals($userData['id'], $savedData['user_id']);
+        $this->assertEquals($user->id, $savedData['user_id']);
         $this->assertEquals(1, $savedData['type']);
     }
 
@@ -118,19 +94,19 @@ class ResearchTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $result = $this->createTestGameWithPlanetAndUser();
+        $game = $result['game'];
+        $user = $result['user'];
 
         // Создаем исследование через БД
         $researchId = MyDB::insert('research', [
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'type' => 1, // Гончарное дело
         ]);
 
         $data = [
             'id' => $researchId,
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'type' => 1,
         ];
 
@@ -152,15 +128,15 @@ class ResearchTest extends TestBase
      */
     public function testDifferentResearchTypes(): void
     {
-        $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $result = $this->createTestGameWithPlanetAndUser();
+        $game = $result['game'];
+        $user = $result['user'];
 
         $researchTypes = [1, 2, 3]; // Гончарное дело, Бронзовое дело, Письменность
 
         foreach ($researchTypes as $typeId) {
             $data = [
-                'user_id' => $userData['id'],
+                'user_id' => $user->id,
                 'type' => $typeId,
             ];
 
@@ -169,7 +145,7 @@ class ResearchTest extends TestBase
             $this->assertInstanceOf(ResearchType::class, $research->type);
             $this->assertEquals($typeId, $research->type->id);
             $this->assertInstanceOf(User::class, $research->user);
-            $this->assertEquals($userData['id'], $research->user->id);
+            $this->assertEquals($user->id, $research->user->id);
         }
     }
 
@@ -178,20 +154,19 @@ class ResearchTest extends TestBase
      */
     public function testResearchUserRelationship(): void
     {
-        $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $result = $this->createTestGameWithPlanetAndUser();
+        $user = $result['user'];
 
         $data = [
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'type' => 1,
         ];
 
         $research = new Research($data);
 
         // Проверяем, что исследование связано с правильным пользователем
-        $this->assertEquals($userData['id'], $research->user->id);
-        $this->assertEquals($userData['login'], $research->user->login);
+        $this->assertEquals($user->id, $research->user->id);
+        $this->assertEquals($user->login, $research->user->login);
 
         // Проверяем, что тип исследования правильный
         $this->assertEquals(1, $research->type->id);

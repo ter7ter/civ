@@ -165,7 +165,7 @@ class TestBase extends \PHPUnit\Framework\TestCase
     /**
      * Создает тестового пользователя
      */
-    protected function createTestUser($data = []): array
+    protected function createTestUser($data = []): User
     {
         // Создаем игру, если её нет
         if (!isset($data["game"])) {
@@ -190,16 +190,7 @@ class TestBase extends \PHPUnit\Framework\TestCase
         $user = new User($userData);
         $user->save();
 
-        return [
-            "id" => $user->id,
-            "login" => $user->login,
-            "color" => $user->color,
-            "game" => $user->game,
-            "turn_order" => $user->turn_order,
-            "turn_status" => $user->turn_status,
-            "money" => $user->money,
-            "age" => $user->age,
-        ];
+        return $user;
     }
 
     /**
@@ -386,7 +377,7 @@ class TestBase extends \PHPUnit\Framework\TestCase
     {
         $result = $this->createTestGameWithPlanetAndUser($gameData, $planetData, $userData);
         $city = $this->createTestCity(array_merge([
-            'user_id' => $result['user']['id'],
+            'user_id' => $result['user']->id,
             'planet' => $result['planet']
         ], $cityData));
 

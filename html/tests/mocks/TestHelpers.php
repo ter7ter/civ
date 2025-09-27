@@ -339,6 +339,10 @@ function mockIncludeFile($filename, $varsToExtract = [])
 
     ob_start();
     try {
+        // Подключаем MyDB в глобальное пространство имен для тестов
+        if (!class_exists('MyDB', false)) {
+            require_once PROJECT_ROOT . "/src/MyDB.php";
+        }
         include $filename;
     } catch (TestExitException $e) {
         // Игнорируем выход из скрипта

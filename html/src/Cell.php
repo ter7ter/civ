@@ -115,7 +115,7 @@ class Cell
         $this->x = $data["x"];
         $this->y = $data["y"];
         if (!isset($data["planet"])) {
-            throw new Exception("Planet is required for Cell");
+            throw new \Exception("Planet is required for Cell");
         }
         $this->planet = $data["planet"];
         $this->type = CellType::get($data["type"]);
@@ -175,7 +175,7 @@ class Cell
     public function save()
     {
         if (!$this->type) {
-            throw new Exception("Cannot save cell without type");
+            throw new \Exception("Cannot save cell without type");
         }
         $owner_id = $this->owner ? $this->owner->id : null;
         $road = $this->road;
@@ -225,7 +225,7 @@ class Cell
     ) {
         Cell::calc_coord($x, $y, $dx, $dy);
         if ($planet === null) {
-            throw new Exception("Planet ID is required in d_coord");
+            throw new \Exception("Planet ID is required in d_coord");
         }
         if (isset(self::$_all[$planet][$x][$y])) {
             return self::$_all[$planet][$x][$y];
@@ -295,7 +295,7 @@ class Cell
     public static function generate_map($planetId, $game_id = null)
     {
         if ($game_id === null) {
-            throw new Exception("game_id is required for generate_map");
+            throw new \Exception("game_id is required for generate_map");
         }
         $planet = Planet::get($planetId);
         if (!$planet) {
@@ -314,7 +314,7 @@ class Cell
                 $cell_type = Cell::generate_type($x, $y, $planetId);
 
                 if (!$cell_type || empty($cell_type->id)) {
-                    throw new Exception("Invalid cell type for ($x, $y): " . var_export($cell_type, true));
+                    throw new \Exception("Invalid cell type for ($x, $y): " . var_export($cell_type, true));
                 }
 
                 // Собираем данные клеток для batch INSERT
@@ -378,7 +378,7 @@ class Cell
     public static function generate_type($x, $y, $planetId)
     {
         if (empty(CellType::$all)) {
-            throw new Exception("CellType::\$all is empty");
+            throw new \Exception("CellType::\$all is empty");
         }
         $c1 = [];
         $c2 = [];
@@ -446,7 +446,7 @@ class Cell
             $chance_sum += $val;
         }
         if ($chance_sum == 0) {
-            throw new Exception("Все шансы типов клеток равны 0 для ($x, $y)");
+            throw new \Exception("Все шансы типов клеток равны 0 для ($x, $y)");
         }
         $rand = mt_rand(0, $chance_sum - 1);
         foreach ($chance_interval as $type => $val) {
@@ -457,7 +457,7 @@ class Cell
         // Если не удалось определить тип, используем plains как fallback
         //return CellType::get('plains');
         //Так корректнее
-        throw new Exception("Не удалось определить тип клетки");
+        throw new \Exception("Не удалось определить тип клетки");
     }
 
     /**

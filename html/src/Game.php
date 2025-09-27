@@ -94,7 +94,7 @@ class Game
     public function __construct($data)
     {
         if (!$data || !is_array($data)) {
-            throw new Exception(
+            throw new \Exception(
                 "Invalid game data provided to Game constructor",
             );
         }
@@ -154,7 +154,7 @@ class Game
     public function create_new_game()
     {
         // Убеждаемся, что типы юнитов инициализированы перед созданием юнитов
-        if (empty(UnitType::$all)) {
+        if (empty(UnitType::getAll())) {
             if (class_exists("TestGameDataInitializer")) {
                 TestGameDataInitializer::initializeUnitTypes();
             }
@@ -183,7 +183,7 @@ class Game
             $pos_y = mt_rand(0, $this->map_h - 1);
             $cell = Cell::get($pos_x, $pos_y, $planetId);
             if ($i > 1000) {
-                throw new Exception("Too many iterations");
+                throw new \Exception("Too many iterations");
             }
             if (
                 !in_array($cell->type->id, [

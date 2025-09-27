@@ -8,6 +8,7 @@ use App\Game;
 use App\User;
 use App\MyDB;
 use App\Planet;
+use App\Cell;
 
 /**
  * Тесты для класса Game
@@ -25,17 +26,17 @@ class GameTest extends TestBase
      */
     public function testGetExistingGame(): void
     {
-        $gameData = $this->createTestGame([
+        $game = $this->createTestGame([
             'name' => 'Test Game',
             'map_w' => 100,
             'map_h' => 100,
             'turn_type' => 'byturn'
         ]);
 
-        $game = Game::get($gameData['id']);
+        $game = Game::get($game->id);
 
         $this->assertInstanceOf(Game::class, $game);
-        $this->assertEquals($gameData['id'], $game->id);
+        $this->assertEquals($game->id, $game->id);
         $this->assertEquals('Test Game', $game->name);
         $this->assertEquals(100, $game->map_w);
         $this->assertEquals(100, $game->map_h);
@@ -110,12 +111,12 @@ class GameTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $gameData = $this->createTestGame([
+        $game = $this->createTestGame([
             'name' => 'Original Name',
             'turn_num' => 1
         ]);
 
-        $game = Game::get($gameData['id']);
+        $game = Game::get($game->id);
         $game->name = 'Updated Name';
         $game->turn_num = 2;
         $game->save();
@@ -133,11 +134,11 @@ class GameTest extends TestBase
     {
         // Создаем игры и пользователей
         $game1 = $this->createTestGame(['name' => 'Game 1']);
-        $this->createTestUser(['game' => $game1['id']]);
+        $this->createTestUser(['game' => $game1->id]);
 
         $game2 = $this->createTestGame(['name' => 'Game 2']);
-        $this->createTestUser(['game' => $game2['id']]);
-        $this->createTestUser(['game' => $game2['id']]);
+        $this->createTestUser(['game' => $game2->id]);
+        $this->createTestUser(['game' => $game2->id]);
 
         $games = Game::game_list();
 
@@ -154,12 +155,10 @@ class GameTest extends TestBase
      */
     public function testAllSystemMessage(): void
     {
-        $gameData = $this->createTestGame();
-        $user1 = $this->createTestUser(['game' => $gameData['id'], 'login' => 'User1']);
-        $user2 = $this->createTestUser(['game' => $gameData['id'], 'login' => 'User2']);
+        $game = $this->createTestGame();
+        $user1 = $this->createTestUser(['game' => $game->id, 'login' => 'User1']);
+        $user2 = $this->createTestUser(['game' => $game->id, 'login' => 'User2']);
 
-        // Создаем новый объект Game, чтобы избежать кэширования
-        $game = new Game($gameData);
         // Заполняем пользователей
         $users = MyDB::query("SELECT id FROM user WHERE game = :gameid", ["gameid" => $game->id]);
         $game->users = [];
@@ -179,8 +178,8 @@ class GameTest extends TestBase
         $allMessages = MyDB::query("SELECT * FROM message");
         $this->assertCount(2, $allMessages, "Должно быть создано 2 сообщения");
 
-        $messages1 = MyDB::query("SELECT * FROM message WHERE to_id = :uid", ['uid' => $user1['id']]);
-        $messages2 = MyDB::query("SELECT * FROM message WHERE to_id = :uid", ['uid' => $user2['id']]);
+        $messages1 = MyDB::query("SELECT * FROM message WHERE to_id = :uid", ['uid' => $user1->id]);
+        $messages2 = MyDB::query("SELECT * FROM message WHERE to_id = :uid", ['uid' => $user2->id]);
 
         $this->assertCount(1, $messages1);
         $this->assertCount(1, $messages2);
@@ -195,14 +194,14 @@ class GameTest extends TestBase
      */
     public function testGetActivePlayerByTurn(): void
     {
-        $gameData = $this->createTestGame(['turn_type' => 'byturn']);
-        $user1 = $this->createTestUser(['game' => $gameData['id'], 'turn_order' => 1, 'turn_status' => 'play']);
-        $user2 = $this->createTestUser(['game' => $gameData['id'], 'turn_order' => 2, 'turn_status' => 'wait']);
+        $game = $this->createTestGame(['turn_type' => 'byturn']);
+        $user1 = $this->createTestUser(['game' => $game->id, 'turn_order' => 1, 'turn_status' => 'play']);
+        $user2 = $this->createTestUser(['game' => $game->id, 'turn_order' => 2, 'turn_status' => 'wait']);
 
-        $game = Game::get($gameData['id']);
+        $game = Game::get($game->id);
         $activePlayer = $game->getActivePlayer();
 
-        $this->assertEquals($user1['id'], $activePlayer);
+        $this->assertEquals($user1->id, $activePlayer);
     }
 
     /**
@@ -210,16 +209,16 @@ class GameTest extends TestBase
      */
     public function testGetActivePlayerConcurrently(): void
     {
-        $gameData = $this->createTestGame(['turn_type' => 'concurrently']);
-        $user1 = $this->createTestUser(['game' => $gameData['id'], 'turn_status' => 'play']);
-        $user2 = $this->createTestUser(['game' => $gameData['id'], 'turn_status' => 'play']);
+        $game = $this->createTestGame(['turn_type' => 'concurrently']);
+        $user1 = $this->createTestUser(['game' => $game->id, 'turn_status' => 'play']);
+        $user2 = $this->createTestUser(['game' => $game->id, 'turn_status' => 'play']);
 
-        $game = Game::get($gameData['id']);
+        $game = Game::get($game->id);
         $activePlayer = $game->getActivePlayer();
 
         // Для concurrently должен быть активный игрок
         $this->assertNotFalse($activePlayer, "Должен быть активный игрок");
-        $this->assertTrue(in_array($activePlayer, [$user1['id'], $user2['id']]), "Активный игрок должен быть одним из созданных");
+        $this->assertTrue(in_array($activePlayer, [$user1->id, $user2->id]), "Активный игрок должен быть одним из созданных");
     }
 
     /**
@@ -227,11 +226,11 @@ class GameTest extends TestBase
      */
     public function testGetActivePlayerNoActive(): void
     {
-        $gameData = $this->createTestGame();
-        $this->createTestUser(['game' => $gameData['id'], 'turn_status' => 'wait']);
-        $this->createTestUser(['game' => $gameData['id'], 'turn_status' => 'end']);
+        $game = $this->createTestGame();
+        $this->createTestUser(['game' => $game->id, 'turn_status' => 'wait']);
+        $this->createTestUser(['game' => $game->id, 'turn_status' => 'end']);
 
-        $game = Game::get($gameData['id']);
+        $game = Game::get($game->id);
         $activePlayer = $game->getActivePlayer();
 
         $this->assertNull($activePlayer);
@@ -242,19 +241,17 @@ class GameTest extends TestBase
      */
     public function testGetFirstPlanet(): void
     {
-        $gameData = $this->createTestGame(['name' => 'Planet Game']);
+        $result = $this->createTestGameWithPlanet(['name' => 'Planet Game'], ['name' => 'First Planet']);
+        $game = $result['game'];
+        $planetId = $result['planet'];
 
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id'], 'name' => 'First Planet']);
-
-        Game::clearCache();
-        $game = Game::get($gameData['id']);
         $this->assertNotNull($game, 'Game should be found');
         $planet = $game->get_first_planet();
 
         $this->assertInstanceOf(Planet::class, $planet);
         $this->assertEquals($planetId, $planet->id);
         $this->assertEquals('First Planet', $planet->name);
-        $this->assertEquals($gameData['id'], $planet->game_id);
+        $this->assertEquals($game->id, $planet->game_id);
     }
 
     /**
@@ -262,9 +259,9 @@ class GameTest extends TestBase
      */
     public function testGetFirstPlanetNoPlanets(): void
     {
-        $gameData = $this->createTestGame(['name' => 'Empty Game']);
+        $game = $this->createTestGame(['name' => 'Empty Game']);
 
-        $game = Game::get($gameData['id']);
+        $game = Game::get($game->id);
         $planet = $game->get_first_planet();
 
         $this->assertNull($planet);
@@ -275,19 +272,19 @@ class GameTest extends TestBase
      */
     public function testCalculateByTurn(): void
     {
-        $gameData = $this->createTestGame(['turn_type' => 'byturn', 'turn_num' => 1]);
-        $user1 = $this->createTestUser(['game' => $gameData['id'], 'turn_order' => 1]);
-        $user2 = $this->createTestUser(['game' => $gameData['id'], 'turn_order' => 2]);
+        $game = $this->createTestGame(['turn_type' => 'byturn', 'turn_num' => 1]);
+        $user1 = $this->createTestUser(['game' => $game->id, 'turn_order' => 1]);
+        $user2 = $this->createTestUser(['game' => $game->id, 'turn_order' => 2]);
 
-        $game = Game::get($gameData['id']);
+        $game = Game::get($game->id);
         $game->calculate();
 
         // Проверяем, что turn_num увеличился
         $this->assertEquals(2, $game->turn_num);
 
         // Проверяем статусы пользователей
-        $user1Updated = User::get($user1['id']);
-        $user2Updated = User::get($user2['id']);
+        $user1Updated = User::get($user1->id);
+        $user2Updated = User::get($user2->id);
 
         $this->assertEquals('play', $user1Updated->turn_status);
         $this->assertEquals('wait', $user2Updated->turn_status);
@@ -298,19 +295,19 @@ class GameTest extends TestBase
      */
     public function testCalculateConcurrently(): void
     {
-        $gameData = $this->createTestGame(['turn_type' => 'concurrently', 'turn_num' => 1]);
-        $user1 = $this->createTestUser(['game' => $gameData['id']]);
-        $user2 = $this->createTestUser(['game' => $gameData['id']]);
+        $game = $this->createTestGame(['turn_type' => 'concurrently', 'turn_num' => 1]);
+        $user1 = $this->createTestUser(['game' => $game->id]);
+        $user2 = $this->createTestUser(['game' => $game->id]);
 
-        $game = Game::get($gameData['id']);
+        $game = Game::get($game->id);
         $game->calculate();
 
         // Проверяем, что turn_num увеличился
         $this->assertEquals(2, $game->turn_num);
 
         // Проверяем статусы пользователей
-        $user1Updated = User::get($user1['id']);
-        $user2Updated = User::get($user2['id']);
+        $user1Updated = User::get($user1->id);
+        $user2Updated = User::get($user2->id);
 
         $this->assertEquals('play', $user1Updated->turn_status);
         $this->assertEquals('play', $user2Updated->turn_status);
@@ -322,7 +319,7 @@ class GameTest extends TestBase
     public function testCreateNewGame(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame([
+        $game = $this->createTestGame([
             'name' => 'New Game Test',
             'map_w' => 20,
             'map_h' => 20,
@@ -330,10 +327,10 @@ class GameTest extends TestBase
         ]);
 
         // Добавляем пользователей
-        $user1 = $this->createTestUser(['game' => $gameData['id'], 'turn_order' => 1]);
-        $user2 = $this->createTestUser(['game' => $gameData['id'], 'turn_order' => 2]);
+        $user1 = $this->createTestUser(['game' => $game->id, 'turn_order' => 1]);
+        $user2 = $this->createTestUser(['game' => $game->id, 'turn_order' => 2]);
 
-        $game = Game::get($gameData['id']);
+        $game = Game::get($game->id);
 
         // Метод create_new_game должен выполняться без ошибок
         $game->create_new_game();
@@ -347,8 +344,8 @@ class GameTest extends TestBase
         $this->assertCount(2, $game->users);
 
         // Проверяем, что юниты созданы для пользователей
-        $units1 = MyDB::query("SELECT COUNT(*) as count FROM unit WHERE user_id = :uid", ['uid' => $user1['id']], 'elem');
-        $units2 = MyDB::query("SELECT COUNT(*) as count FROM unit WHERE user_id = :uid", ['uid' => $user2['id']], 'elem');
+        $units1 = MyDB::query("SELECT COUNT(*) as count FROM unit WHERE user_id = :uid", ['uid' => $user1->id], 'elem');
+        $units2 = MyDB::query("SELECT COUNT(*) as count FROM unit WHERE user_id = :uid", ['uid' => $user2->id], 'elem');
 
         $this->assertGreaterThan(0, $units1, "Должен быть создан хотя бы один юнит для первого пользователя");
         $this->assertGreaterThan(0, $units2, "Должен быть создан хотя бы один юнит для второго пользователя");

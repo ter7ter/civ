@@ -56,7 +56,7 @@ class Planet
     public function __construct($data)
     {
         if (!$data || !is_array($data)) {
-            throw new Exception(
+            throw new \Exception(
                 "Invalid planet data provided to Planet constructor",
             );
         }

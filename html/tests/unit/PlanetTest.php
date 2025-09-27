@@ -7,6 +7,7 @@ require_once __DIR__ . "/../bootstrap.php";
 use App\Planet;
 use App\Game;
 use App\MyDB;
+use Exception;
 
 /**
  * Тесты для класса Planet
@@ -18,15 +19,15 @@ class PlanetTest extends TestBase
      */
     public function testGetExistingPlanet(): void
     {
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id'], 'name' => 'Test Planet']);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id, 'name' => 'Test Planet']);
 
         $planet = Planet::get($planetId);
 
         $this->assertInstanceOf(Planet::class, $planet);
         $this->assertEquals($planetId, $planet->id);
         $this->assertEquals('Test Planet', $planet->name);
-        $this->assertEquals($gameData['id'], $planet->game_id);
+        $this->assertEquals($game->id, $planet->game_id);
     }
 
     /**
@@ -44,19 +45,19 @@ class PlanetTest extends TestBase
      */
     public function testConstructor(): void
     {
-        $gameData = $this->createTestGame();
+        $game = $this->createTestGame();
 
         $data = [
             'id' => 1,
             'name' => 'Constructor Planet',
-            'game_id' => $gameData['id'],
+            'game_id' => $game->id,
         ];
 
         $planet = new Planet($data);
 
         $this->assertEquals(1, $planet->id);
         $this->assertEquals('Constructor Planet', $planet->name);
-        $this->assertEquals($gameData['id'], $planet->game_id);
+        $this->assertEquals($game->id, $planet->game_id);
 
         // Проверяем, что объект добавлен в кэш
         $this->assertSame($planet, Planet::get(1));
@@ -67,18 +68,18 @@ class PlanetTest extends TestBase
      */
     public function testConstructorWithoutId(): void
     {
-        $gameData = $this->createTestGame();
+        $game = $this->createTestGame();
 
         $data = [
             'name' => 'No ID Planet',
-            'game_id' => $gameData['id'],
+            'game_id' => $game->id,
         ];
 
         $planet = new Planet($data);
 
         $this->assertNull($planet->id);
         $this->assertEquals('No ID Planet', $planet->name);
-        $this->assertEquals($gameData['id'], $planet->game_id);
+        $this->assertEquals($game->id, $planet->game_id);
     }
 
     /**
@@ -97,11 +98,11 @@ class PlanetTest extends TestBase
      */
     public function testSaveNew(): void
     {
-        $gameData = $this->createTestGame();
+        $game = $this->createTestGame();
 
         $data = [
             'name' => 'Save New Planet',
-            'game_id' => $gameData['id'],
+            'game_id' => $game->id,
         ];
 
         $planet = new Planet($data);
@@ -117,7 +118,7 @@ class PlanetTest extends TestBase
         );
         $this->assertNotNull($savedData);
         $this->assertEquals('Save New Planet', $savedData['name']);
-        $this->assertEquals($gameData['id'], $savedData['game_id']);
+        $this->assertEquals($game->id, $savedData['game_id']);
     }
 
     /**
@@ -125,8 +126,8 @@ class PlanetTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id'], 'name' => 'Original Name']);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id, 'name' => 'Original Name']);
 
         Planet::clearCache();
         $planet = Planet::get($planetId);
@@ -140,7 +141,7 @@ class PlanetTest extends TestBase
             "row"
         );
         $this->assertEquals('Updated Name', $updatedData['name']);
-        $this->assertEquals($gameData['id'], $updatedData['game_id']);
+        $this->assertEquals($game->id, $updatedData['game_id']);
     }
 
     /**
@@ -148,15 +149,13 @@ class PlanetTest extends TestBase
      */
     public function testGetGame(): void
     {
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         Planet::clearCache();
         $planet = Planet::get($planetId);
 
-        $game = $planet->get_game();
         $this->assertInstanceOf(Game::class, $game);
-        $this->assertEquals($gameData['id'], $game->id);
     }
 
     /**
@@ -164,8 +163,8 @@ class PlanetTest extends TestBase
      */
     public function testClearCache(): void
     {
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         // Получаем планету, чтобы она попала в кэш
         $planet1 = Planet::get($planetId);

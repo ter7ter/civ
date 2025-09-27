@@ -16,14 +16,14 @@ class MessageTest extends TestBase
      */
     public function testConstructorWithFullData(): void
     {
-        $gameData = $this->createTestGame();
-        $userFromData = $this->createTestUser(['game' => $gameData['id']]);
-        $userToData = $this->createTestUser(['game' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $userFrom = $this->createTestUser(['game' => $game->id]);
+        $userTo = $this->createTestUser(['game' => $game->id]);
 
         $data = [
             'id' => 1,
-            'from_id' => $userFromData['id'],
-            'to_id' => $userToData['id'],
+            'from_id' => $userFrom->id,
+            'to_id' => $userTo->id,
             'text' => 'Test message',
             'type' => 'chat',
         ];
@@ -32,9 +32,9 @@ class MessageTest extends TestBase
 
         $this->assertEquals(1, $message->id);
         $this->assertInstanceOf(User::class, $message->from);
-        $this->assertEquals($userFromData['id'], $message->from->id);
+        $this->assertEquals($userFrom->id, $message->from->id);
         $this->assertInstanceOf(User::class, $message->to);
-        $this->assertEquals($userToData['id'], $message->to->id);
+        $this->assertEquals($userTo->id, $message->to->id);
         $this->assertEquals('Test message', $message->text);
         $this->assertEquals('chat', $message->type);
     }
@@ -44,12 +44,12 @@ class MessageTest extends TestBase
      */
     public function testConstructorWithoutFrom(): void
     {
-        $gameData = $this->createTestGame();
-        $userToData = $this->createTestUser(['game' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $userTo = $this->createTestUser(['game' => $game->id]);
 
         $data = [
             'id' => 2,
-            'to_id' => $userToData['id'],
+            'to_id' => $userTo->id,
             'text' => 'System message',
             'type' => 'system',
         ];
@@ -59,7 +59,7 @@ class MessageTest extends TestBase
         $this->assertEquals(2, $message->id);
         $this->assertFalse($message->from);
         $this->assertInstanceOf(User::class, $message->to);
-        $this->assertEquals($userToData['id'], $message->to->id);
+        $this->assertEquals($userTo->id, $message->to->id);
         $this->assertEquals('System message', $message->text);
         $this->assertEquals('system', $message->type);
     }
@@ -69,12 +69,12 @@ class MessageTest extends TestBase
      */
     public function testConstructorWithoutTo(): void
     {
-        $gameData = $this->createTestGame();
-        $userFromData = $this->createTestUser(['game' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $userFrom = $this->createTestUser(['game' => $game->id]);
 
         $data = [
             'id' => 3,
-            'from_id' => $userFromData['id'],
+            'from_id' => $userFrom->id,
             'text' => 'Broadcast message',
             'type' => 'broadcast',
         ];
@@ -83,7 +83,7 @@ class MessageTest extends TestBase
 
         $this->assertEquals(3, $message->id);
         $this->assertInstanceOf(User::class, $message->from);
-        $this->assertEquals($userFromData['id'], $message->from->id);
+        $this->assertEquals($userFrom->id, $message->from->id);
         $this->assertFalse($message->to);
         $this->assertEquals('Broadcast message', $message->text);
         $this->assertEquals('broadcast', $message->type);
@@ -94,13 +94,13 @@ class MessageTest extends TestBase
      */
     public function testSaveNew(): void
     {
-        $gameData = $this->createTestGame();
-        $userFromData = $this->createTestUser(['game' => $gameData['id']]);
-        $userToData = $this->createTestUser(['game' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $userFrom = $this->createTestUser(['game' => $game->id]);
+        $userTo = $this->createTestUser(['game' => $game->id]);
 
         $data = [
-            'from_id' => $userFromData['id'],
-            'to_id' => $userToData['id'],
+            'from_id' => $userFrom->id,
+            'to_id' => $userTo->id,
             'text' => 'New message to save',
             'type' => 'chat',
         ];
@@ -117,8 +117,8 @@ class MessageTest extends TestBase
             "row"
         );
         $this->assertNotNull($savedData);
-        $this->assertEquals($userFromData['id'], $savedData['from_id']);
-        $this->assertEquals($userToData['id'], $savedData['to_id']);
+        $this->assertEquals($userFrom->id, $savedData['from_id']);
+        $this->assertEquals($userTo->id, $savedData['to_id']);
         $this->assertEquals('New message to save', $savedData['text']);
         $this->assertEquals('chat', $savedData['type']);
     }
@@ -128,22 +128,22 @@ class MessageTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $gameData = $this->createTestGame();
-        $userFromData = $this->createTestUser(['game' => $gameData['id']]);
-        $userToData = $this->createTestUser(['game' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $userFrom = $this->createTestUser(['game' => $game->id]);
+        $userTo = $this->createTestUser(['game' => $game->id]);
 
         // Создаем сообщение через БД
         $messageId = MyDB::insert('message', [
-            'from_id' => $userFromData['id'],
-            'to_id' => $userToData['id'],
+            'from_id' => $userFrom->id,
+            'to_id' => $userTo->id,
             'text' => 'Original message',
             'type' => 'chat',
         ]);
 
         $data = [
             'id' => $messageId,
-            'from_id' => $userFromData['id'],
-            'to_id' => $userToData['id'],
+            'from_id' => $userFrom->id,
+            'to_id' => $userTo->id,
             'text' => 'Original message',
             'type' => 'chat',
         ];
@@ -159,8 +159,8 @@ class MessageTest extends TestBase
             "row"
         );
         $this->assertEquals('Updated message', $updatedData['text']);
-        $this->assertEquals($userFromData['id'], $updatedData['from_id']);
-        $this->assertEquals($userToData['id'], $updatedData['to_id']);
+        $this->assertEquals($userFrom->id, $updatedData['from_id']);
+        $this->assertEquals($userTo->id, $updatedData['to_id']);
     }
 
     /**
@@ -168,11 +168,11 @@ class MessageTest extends TestBase
      */
     public function testSaveSystemMessage(): void
     {
-        $gameData = $this->createTestGame();
-        $userToData = $this->createTestUser(['game' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $userTo = $this->createTestUser(['game' => $game->id]);
 
         $data = [
-            'to_id' => $userToData['id'],
+            'to_id' => $userTo->id,
             'text' => 'System notification',
             'type' => 'system',
         ];
@@ -189,7 +189,7 @@ class MessageTest extends TestBase
             "row"
         );
         $this->assertNull($savedData['from_id']);
-        $this->assertEquals($userToData['id'], $savedData['to_id']);
+        $this->assertEquals($userTo->id, $savedData['to_id']);
         $this->assertEquals('System notification', $savedData['text']);
         $this->assertEquals('system', $savedData['type']);
     }

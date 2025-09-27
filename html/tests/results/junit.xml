@@ -1,219 +1,231 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="128" assertions="338" errors="104" warnings="0" failures="0" skipped="2" time="66.117097">
-    <testsuite name="Unit Tests" tests="128" assertions="338" errors="104" warnings="0" failures="0" skipped="2" time="66.117097">
-      <testsuite name="App\Tests\Unit\BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" tests="9" assertions="35" errors="0" warnings="0" failures="0" skipped="1" time="0.408193">
-        <testcase name="testGet" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="21" assertions="7" time="0.236025"/>
-        <testcase name="testCityEffect" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="227" assertions="0" time="0.029449">
+  <testsuite name="" tests="233" assertions="818" errors="95" warnings="0" failures="0" skipped="2" time="85.815682">
+    <testsuite name="Unit Tests" tests="233" assertions="818" errors="95" warnings="0" failures="0" skipped="2" time="85.815682">
+      <testsuite name="App\Tests\BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" tests="13" assertions="79" errors="0" warnings="0" failures="0" skipped="0" time="0.309225">
+        <testcase name="testCityEffectGranary" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="102" assertions="1" time="0.132214"/>
+        <testcase name="testGetExistingBuildingType" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="21" assertions="5" time="0.017468"/>
+        <testcase name="testGetNonExistingBuildingType" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="37" assertions="1" time="0.014896"/>
+        <testcase name="testConstructor" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="49" assertions="14" time="0.014556"/>
+        <testcase name="testGetTitle" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="90" assertions="1" time="0.004526"/>
+        <testcase name="testCityEffectTemple" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="133" assertions="2" time="0.016492"/>
+        <testcase name="testCityEffectTempleNegativeNorm" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="163" assertions="2" time="0.020096"/>
+        <testcase name="testCityEffectLibrary" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="193" assertions="1" time="0.017404"/>
+        <testcase name="testCityEffectMarket" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="220" assertions="1" time="0.018820"/>
+        <testcase name="testCityEffectColiseum" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="247" assertions="3" time="0.017390"/>
+        <testcase name="testCityEffectColiseumNegativeDis" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="279" assertions="3" time="0.015822"/>
+        <testcase name="testCityEffectNoEffect" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="311" assertions="6" time="0.015120"/>
+        <testcase name="testAllPredefinedBuildingTypes" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="350" assertions="39" time="0.004423"/>
+      </testsuite>
+      <testsuite name="App\Tests\CityTest" file="/var/www/html/tests/unit/CityTest.php" tests="18" assertions="33" errors="0" warnings="0" failures="0" skipped="0" time="0.313103">
+        <testcase name="testConstructor" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="50" assertions="4" time="0.027609"/>
+        <testcase name="testCreateUnit" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="231" assertions="5" time="0.027360"/>
+        <testcase name="testCalculateEat" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="123" assertions="1" time="0.013363"/>
+        <testcase name="testGetCultureCells" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="92" assertions="2" time="0.032505"/>
+        <testcase name="testByCoords" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="70" assertions="2" time="0.014731"/>
+        <testcase name="testGetTitle" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="81" assertions="1" time="0.013179"/>
+        <testcase name="testGetPossibleUnits" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="109" assertions="2" time="0.026614"/>
+        <testcase name="testCalculateWork" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="138" assertions="1" time="0.014520"/>
+        <testcase name="testCalculateMoney" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="151" assertions="1" time="0.013097"/>
+        <testcase name="testCalculateResearch" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="164" assertions="1" time="0.012924"/>
+        <testcase name="testCalculateCulture" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="177" assertions="2" time="0.013297"/>
+        <testcase name="testAddPeople" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="192" assertions="1" time="0.012535"/>
+        <testcase name="testRemovePeople" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="204" assertions="1" time="0.012456"/>
+        <testcase name="testSave" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="216" assertions="1" time="0.015713"/>
+        <testcase name="testCreateBuilding" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="249" assertions="3" time="0.016323"/>
+        <testcase name="testCalculateBuildings" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="265" assertions="1" time="0.016685"/>
+        <testcase name="testCheckMood" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="281" assertions="2" time="0.014423"/>
+        <testcase name="testSelectNextProduction" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="298" assertions="2" time="0.015769"/>
+      </testsuite>
+      <testsuite name="App\Tests\DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" tests="6" assertions="29" errors="0" warnings="0" failures="0" skipped="0" time="0.899104">
+        <testcase name="testTestDatabaseConfiguration" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="17" assertions="5" time="0.000142"/>
+        <testcase name="testGameAndUserMocks" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="238" assertions="8" time="0.005041"/>
+        <testcase name="testTestDataCleanup" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="163" assertions="4" time="0.799970"/>
+        <testcase name="testTestTablesCreation" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="96" assertions="5" time="0.019223"/>
+        <testcase name="testTestDataOperations" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="115" assertions="5" time="0.071382"/>
+        <testcase name="testTransactionHandling" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="209" assertions="2" time="0.003346"/>
+      </testsuite>
+      <testsuite name="App\Tests\EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" tests="17" assertions="58" errors="0" warnings="0" failures="0" skipped="0" time="0.183699">
+        <testcase name="testEditBasicGameParameters" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="36" assertions="6" time="0.013063"/>
+        <testcase name="testLoadGameWithoutId" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="23" assertions="1" time="0.024999"/>
+        <testcase name="testEditGameNameOnly" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="88" assertions="4" time="0.006987"/>
+        <testcase name="testEditMapSize" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="126" assertions="3" time="0.006282"/>
+        <testcase name="testEditTurnType" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="157" assertions="6" time="0.015388"/>
+        <testcase name="testLoadGameDataForEditing" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="191" assertions="6" time="0.005706"/>
+        <testcase name="testEditWithEmptyName" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="238" assertions="2" time="0.005137"/>
+        <testcase name="testEditWithInvalidMapSize" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="265" assertions="4" time="0.016593"/>
+        <testcase name="testEditWithInvalidTurnType" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="311" assertions="2" time="0.007157"/>
+        <testcase name="testEditNonExistentGame" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="342" assertions="2" time="0.002756">
+          <system-out>Debug: Exception thrown: Ошибка: Игра не найдена.
+</system-out>
+        </testcase>
+        <testcase name="testEditWithoutGameId" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="382" assertions="1" time="0.002487"/>
+        <testcase name="testDataPreservationOnValidationError" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="400" assertions="6" time="0.005344"/>
+        <testcase name="testXSSInEditedGameName" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="456" assertions="2" time="0.005738"/>
+        <testcase name="testVeryLongStringsInEdit" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="494" assertions="4" time="0.053935"/>
+        <testcase name="testLoadNonExistentGameForEditing" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="535" assertions="1" time="0.002679"/>
+        <testcase name="testMultipleValidationErrors" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="548" assertions="3" time="0.004851"/>
+        <testcase name="testGameNotChangedOnValidationError" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="576" assertions="5" time="0.004597"/>
+      </testsuite>
+      <testsuite name="App\Tests\EventTest" file="/var/www/html/tests/unit/EventTest.php" tests="10" assertions="56" errors="0" warnings="0" failures="0" skipped="0" time="0.110699">
+        <testcase name="testGet" class="App\Tests\EventTest" classname="App.Tests.EventTest" file="/var/www/html/tests/unit/EventTest.php" line="21" assertions="8" time="0.011941"/>
+        <testcase name="testConstructorCityBuilding" class="App\Tests\EventTest" classname="App.Tests.EventTest" file="/var/www/html/tests/unit/EventTest.php" line="77" assertions="8" time="0.025645"/>
+        <testcase name="testConstructorResearch" class="App\Tests\EventTest" classname="App.Tests.EventTest" file="/var/www/html/tests/unit/EventTest.php" line="50" assertions="7" time="0.003111"/>
+        <testcase name="testConstructorCityUnit" class="App\Tests\EventTest" classname="App.Tests.EventTest" file="/var/www/html/tests/unit/EventTest.php" line="108" assertions="8" time="0.018284"/>
+        <testcase name="testSaveNew" class="App\Tests\EventTest" classname="App.Tests.EventTest" file="/var/www/html/tests/unit/EventTest.php" line="139" assertions="6" time="0.004102"/>
+        <testcase name="testSaveWithSource" class="App\Tests\EventTest" classname="App.Tests.EventTest" file="/var/www/html/tests/unit/EventTest.php" line="172" assertions="6" time="0.018144"/>
+        <testcase name="testSaveUpdate" class="App\Tests\EventTest" classname="App.Tests.EventTest" file="/var/www/html/tests/unit/EventTest.php" line="208" assertions="1" time="0.003094"/>
+        <testcase name="testRemove" class="App\Tests\EventTest" classname="App.Tests.EventTest" file="/var/www/html/tests/unit/EventTest.php" line="245" assertions="1" time="0.003386"/>
+        <testcase name="testGetTitle" class="App\Tests\EventTest" classname="App.Tests.EventTest" file="/var/www/html/tests/unit/EventTest.php" line="281" assertions="4" time="0.011375"/>
+        <testcase name="testGetText" class="App\Tests\EventTest" classname="App.Tests.EventTest" file="/var/www/html/tests/unit/EventTest.php" line="327" assertions="7" time="0.011617"/>
+      </testsuite>
+      <testsuite name="App\Tests\MessageTest" file="/var/www/html/tests/unit/MessageTest.php" tests="7" assertions="38" errors="0" warnings="0" failures="0" skipped="0" time="0.104996">
+        <testcase name="testConstructorWithFullData" class="App\Tests\MessageTest" classname="App.Tests.MessageTest" file="/var/www/html/tests/unit/MessageTest.php" line="17" assertions="7" time="0.020425"/>
+        <testcase name="testConstructorWithoutFrom" class="App\Tests\MessageTest" classname="App.Tests.MessageTest" file="/var/www/html/tests/unit/MessageTest.php" line="45" assertions="6" time="0.015345"/>
+        <testcase name="testConstructorWithoutTo" class="App\Tests\MessageTest" classname="App.Tests.MessageTest" file="/var/www/html/tests/unit/MessageTest.php" line="70" assertions="6" time="0.008326"/>
+        <testcase name="testSaveNew" class="App\Tests\MessageTest" classname="App.Tests.MessageTest" file="/var/www/html/tests/unit/MessageTest.php" line="95" assertions="6" time="0.011674"/>
+        <testcase name="testSaveUpdate" class="App\Tests\MessageTest" classname="App.Tests.MessageTest" file="/var/www/html/tests/unit/MessageTest.php" line="129" assertions="3" time="0.029094"/>
+        <testcase name="testSaveSystemMessage" class="App\Tests\MessageTest" classname="App.Tests.MessageTest" file="/var/www/html/tests/unit/MessageTest.php" line="169" assertions="5" time="0.019975"/>
+        <testcase name="testConstructorMinimalData" class="App\Tests\MessageTest" classname="App.Tests.MessageTest" file="/var/www/html/tests/unit/MessageTest.php" line="200" assertions="5" time="0.000157"/>
+      </testsuite>
+      <testsuite name="App\Tests\MissionTypeTest" file="/var/www/html/tests/unit/MissionTypeTest.php" tests="5" assertions="13" errors="0" warnings="0" failures="0" skipped="0" time="0.077204">
+        <testcase name="testCheckCell" class="App\Tests\MissionTypeTest" classname="App.Tests.MissionTypeTest" file="/var/www/html/tests/unit/MissionTypeTest.php" line="53" assertions="3" time="0.037240"/>
+        <testcase name="testConstructor" class="App\Tests\MissionTypeTest" classname="App.Tests.MissionTypeTest" file="/var/www/html/tests/unit/MissionTypeTest.php" line="26" assertions="2" time="0.006497"/>
+        <testcase name="testGet" class="App\Tests\MissionTypeTest" classname="App.Tests.MissionTypeTest" file="/var/www/html/tests/unit/MissionTypeTest.php" line="40" assertions="2" time="0.004805"/>
+        <testcase name="testGetTitle" class="App\Tests\MissionTypeTest" classname="App.Tests.MissionTypeTest" file="/var/www/html/tests/unit/MissionTypeTest.php" line="47" assertions="1" time="0.005122"/>
+        <testcase name="testComplete" class="App\Tests\MissionTypeTest" classname="App.Tests.MissionTypeTest" file="/var/www/html/tests/unit/MissionTypeTest.php" line="74" assertions="5" time="0.023540"/>
+      </testsuite>
+      <testsuite name="App\Tests\MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" tests="12" assertions="35" errors="0" warnings="0" failures="0" skipped="0" time="0.323954">
+        <testcase name="testGet" class="App\Tests\MyDBTest" classname="App.Tests.MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" line="30" assertions="2" time="0.000154"/>
+        <testcase name="testSetDBConfig" class="App\Tests\MyDBTest" classname="App.Tests.MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" line="19" assertions="4" time="0.000053"/>
+        <testcase name="testQuerySelect" class="App\Tests\MyDBTest" classname="App.Tests.MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" line="41" assertions="4" time="0.044680"/>
+        <testcase name="testQuerySelectOutputTypes" class="App\Tests\MyDBTest" classname="App.Tests.MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" line="65" assertions="7" time="0.041182"/>
+        <testcase name="testInsert" class="App\Tests\MyDBTest" classname="App.Tests.MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" line="97" assertions="3" time="0.005415"/>
+        <testcase name="testInsertMultiple" class="App\Tests\MyDBTest" classname="App.Tests.MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" line="116" assertions="3" time="0.006915"/>
+        <testcase name="testUpdate" class="App\Tests\MyDBTest" classname="App.Tests.MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" line="138" assertions="2" time="0.044527"/>
+        <testcase name="testUpdateWithWhere" class="App\Tests\MyDBTest" classname="App.Tests.MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" line="161" assertions="3" time="0.047597"/>
+        <testcase name="testNullHandling" class="App\Tests\MyDBTest" classname="App.Tests.MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" line="189" assertions="1" time="0.044270"/>
+        <testcase name="testDDLQueries" class="App\Tests\MyDBTest" classname="App.Tests.MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" line="209" assertions="3" time="0.041060"/>
+        <testcase name="testErrorHandling" class="App\Tests\MyDBTest" classname="App.Tests.MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" line="230" assertions="1" time="0.000694"/>
+        <testcase name="testTransactions" class="App\Tests\MyDBTest" classname="App.Tests.MyDBTest" file="/var/www/html/tests/unit/MyDBTest.php" line="240" assertions="2" time="0.047407"/>
+      </testsuite>
+      <testsuite name="App\Tests\PlanetTest" file="/var/www/html/tests/unit/PlanetTest.php" tests="9" assertions="24" errors="0" warnings="0" failures="0" skipped="0" time="0.037241">
+        <testcase name="testGetExistingPlanet" class="App\Tests\PlanetTest" classname="App.Tests.PlanetTest" file="/var/www/html/tests/unit/PlanetTest.php" line="20" assertions="4" time="0.005264"/>
+        <testcase name="testConstructorWithInvalidData" class="App\Tests\PlanetTest" classname="App.Tests.PlanetTest" file="/var/www/html/tests/unit/PlanetTest.php" line="88" assertions="2" time="0.009641"/>
+        <testcase name="testGetNonExistingPlanet" class="App\Tests\PlanetTest" classname="App.Tests.PlanetTest" file="/var/www/html/tests/unit/PlanetTest.php" line="36" assertions="1" time="0.001323"/>
+        <testcase name="testConstructor" class="App\Tests\PlanetTest" classname="App.Tests.PlanetTest" file="/var/www/html/tests/unit/PlanetTest.php" line="46" assertions="4" time="0.002724"/>
+        <testcase name="testConstructorWithoutId" class="App\Tests\PlanetTest" classname="App.Tests.PlanetTest" file="/var/www/html/tests/unit/PlanetTest.php" line="69" assertions="3" time="0.003442"/>
+        <testcase name="testSaveNew" class="App\Tests\PlanetTest" classname="App.Tests.PlanetTest" file="/var/www/html/tests/unit/PlanetTest.php" line="99" assertions="4" time="0.003211"/>
+        <testcase name="testSaveUpdate" class="App\Tests\PlanetTest" classname="App.Tests.PlanetTest" file="/var/www/html/tests/unit/PlanetTest.php" line="127" assertions="2" time="0.003497"/>
+        <testcase name="testGetGame" class="App\Tests\PlanetTest" classname="App.Tests.PlanetTest" file="/var/www/html/tests/unit/PlanetTest.php" line="150" assertions="1" time="0.003420"/>
+        <testcase name="testClearCache" class="App\Tests\PlanetTest" classname="App.Tests.PlanetTest" file="/var/www/html/tests/unit/PlanetTest.php" line="164" assertions="3" time="0.004720"/>
+      </testsuite>
+      <testsuite name="App\Tests\AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" tests="10" assertions="47" errors="0" warnings="0" failures="0" skipped="0" time="0.027960">
+        <testcase name="testGetAllUnitTypes" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="12" assertions="6" time="0.004556"/>
+        <testcase name="testSaveNewUnitType" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="60" assertions="2" time="0.003023"/>
+        <testcase name="testUpdateUnitType" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="78" assertions="2" time="0.003547"/>
+        <testcase name="testDeleteUnitType" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="97" assertions="1" time="0.002567"/>
+        <testcase name="testGetUnitTypeById" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="112" assertions="3" time="0.003898"/>
+        <testcase name="testJsonFieldsHandling" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="126" assertions="3" time="0.002357"/>
+        <testcase name="testGetNonExistentUnitType" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="142" assertions="1" time="0.001139"/>
+        <testcase name="testUnitTypeConstructorWithInvalidJson" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="148" assertions="2" time="0.002721"/>
+        <testcase name="testUnitTypeDefaultValues" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="164" assertions="8" time="0.002171"/>
+        <testcase name="testUnitTypeWithComplexData" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="182" assertions="19" time="0.001981"/>
+      </testsuite>
+      <testsuite name="App\Tests\CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" tests="7" assertions="65" errors="0" warnings="0" failures="0" skipped="0" time="0.031957">
+        <testcase name="testGetExistingCellType" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="17" assertions="9" time="0.009423"/>
+        <testcase name="testGetTitle" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="101" assertions="1" time="0.004404"/>
+        <testcase name="testAllPredefinedCellTypes" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="113" assertions="35" time="0.007505"/>
+        <testcase name="testGetNonExistingCellType" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="37" assertions="1" time="0.005351"/>
+        <testcase name="testConstructor" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="49" assertions="11" time="0.000114"/>
+        <testcase name="testConstructorWithoutId" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="84" assertions="3" time="0.000088"/>
+        <testcase name="testComplexProperties" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="140" assertions="5" time="0.005071"/>
+      </testsuite>
+      <testsuite name="App\Tests\AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" tests="13" assertions="52" errors="0" warnings="0" failures="0" skipped="1" time="0.175785">
+        <testcase name="testBuildingTypeCityEffect" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="237" assertions="0" time="0.027645">
           <skipped/>
         </testcase>
-        <testcase name="testConstructor" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="50" assertions="6" time="0.021993"/>
-        <testcase name="testConstructorWithoutId" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="77" assertions="3" time="0.016794"/>
-        <testcase name="testGetTitle" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="98" assertions="1" time="0.015913"/>
-        <testcase name="testSaveNew" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="117" assertions="4" time="0.018293"/>
-        <testcase name="testSaveUpdate" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="147" assertions="1" time="0.017552"/>
-        <testcase name="testCaching" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="175" assertions="1" time="0.020850"/>
-        <testcase name="testDifferentBuildingTypes" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="200" assertions="12" time="0.031325"/>
+        <testcase name="testGetAllBuildingTypes" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="18" assertions="6" time="0.007173"/>
+        <testcase name="testSaveNewBuildingType" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="54" assertions="2" time="0.007162"/>
+        <testcase name="testUpdateBuildingType" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="70" assertions="2" time="0.036202"/>
+        <testcase name="testDeleteBuildingType" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="90" assertions="1" time="0.008048"/>
+        <testcase name="testGetBuildingTypeById" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="105" assertions="3" time="0.014490"/>
+        <testcase name="testJsonFieldsHandling" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="119" assertions="3" time="0.016738"/>
+        <testcase name="testBuildingTypeProperties" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="135" assertions="8" time="0.008416"/>
+        <testcase name="testGetNonExistentBuildingType" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="161" assertions="1" time="0.009312"/>
+        <testcase name="testBuildingTypeConstructorWithInvalidJson" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="167" assertions="2" time="0.009428"/>
+        <testcase name="testBuildingTypeDefaultValues" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="183" assertions="11" time="0.010376"/>
+        <testcase name="testBuildingTypeWithComplexData" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="204" assertions="12" time="0.009771"/>
+        <testcase name="testBuildingTypeGetTitle" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="258" assertions="1" time="0.011024"/>
       </testsuite>
-      <testsuite name="App\Tests\CityTest" file="/var/www/html/tests/unit/CityTest.php" tests="18" assertions="33" errors="0" warnings="0" failures="0" skipped="0" time="0.596955">
-        <testcase name="testCalculateEat" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="123" assertions="1" time="0.029095"/>
-        <testcase name="testCreateUnit" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="231" assertions="5" time="0.026358"/>
-        <testcase name="testGetCultureCells" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="92" assertions="2" time="0.023573"/>
-        <testcase name="testConstructor" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="50" assertions="4" time="0.018174"/>
-        <testcase name="testByCoords" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="70" assertions="2" time="0.083025"/>
-        <testcase name="testGetTitle" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="81" assertions="1" time="0.050147"/>
-        <testcase name="testGetPossibleUnits" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="109" assertions="2" time="0.054059"/>
-        <testcase name="testCalculateWork" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="138" assertions="1" time="0.045372"/>
-        <testcase name="testCalculateMoney" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="151" assertions="1" time="0.034146"/>
-        <testcase name="testCalculateResearch" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="164" assertions="1" time="0.042964"/>
-        <testcase name="testCalculateCulture" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="177" assertions="2" time="0.015480"/>
-        <testcase name="testAddPeople" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="192" assertions="1" time="0.021931"/>
-        <testcase name="testRemovePeople" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="204" assertions="1" time="0.011955"/>
-        <testcase name="testSave" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="216" assertions="1" time="0.032896"/>
-        <testcase name="testCreateBuilding" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="249" assertions="3" time="0.020770"/>
-        <testcase name="testCalculateBuildings" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="265" assertions="1" time="0.016713"/>
-        <testcase name="testCheckMood" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="281" assertions="2" time="0.016547"/>
-        <testcase name="testSelectNextProduction" class="App\Tests\CityTest" classname="App.Tests.CityTest" file="/var/www/html/tests/unit/CityTest.php" line="298" assertions="2" time="0.053749"/>
-      </testsuite>
-      <testsuite name="App\Tests\DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" tests="6" assertions="27" errors="1" warnings="0" failures="0" skipped="0" time="1.748728">
-        <testcase name="testTestDatabaseConfiguration" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="17" assertions="5" time="0.000141"/>
-        <testcase name="testGameAndUserMocks" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="238" assertions="8" time="0.014999"/>
-        <testcase name="testTestTablesCreation" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="96" assertions="5" time="0.023525"/>
-        <testcase name="testTestDataOperations" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="115" assertions="5" time="0.003038"/>
-        <testcase name="testTestDataCleanup" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="163" assertions="2" time="1.698549">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\DatabaseConfigTest::testTestDataCleanup
-Execution aborted after 1 second</error>
-        </testcase>
-        <testcase name="testTransactionHandling" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="209" assertions="2" time="0.008477"/>
-      </testsuite>
-      <testsuite name="App\Tests\AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" tests="10" assertions="47" errors="0" warnings="0" failures="0" skipped="0" time="0.125255">
-        <testcase name="testGetAllUnitTypes" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="12" assertions="6" time="0.025542"/>
-        <testcase name="testSaveNewUnitType" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="60" assertions="2" time="0.009518"/>
-        <testcase name="testUpdateUnitType" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="78" assertions="2" time="0.014461"/>
-        <testcase name="testDeleteUnitType" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="97" assertions="1" time="0.030781"/>
-        <testcase name="testGetUnitTypeById" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="112" assertions="3" time="0.006008"/>
-        <testcase name="testJsonFieldsHandling" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="126" assertions="3" time="0.006651"/>
-        <testcase name="testGetNonExistentUnitType" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="142" assertions="1" time="0.003375"/>
-        <testcase name="testUnitTypeConstructorWithInvalidJson" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="148" assertions="2" time="0.008260"/>
-        <testcase name="testUnitTypeDefaultValues" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="164" assertions="8" time="0.011728"/>
-        <testcase name="testUnitTypeWithComplexData" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="182" assertions="19" time="0.008933"/>
-      </testsuite>
-      <testsuite name="App\Tests\CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" tests="7" assertions="65" errors="0" warnings="0" failures="0" skipped="0" time="0.130801">
-        <testcase name="testAllPredefinedCellTypes" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="113" assertions="35" time="0.027781"/>
-        <testcase name="testGetTitle" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="101" assertions="1" time="0.021028"/>
-        <testcase name="testGetExistingCellType" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="17" assertions="9" time="0.026546"/>
-        <testcase name="testGetNonExistingCellType" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="37" assertions="1" time="0.029322"/>
-        <testcase name="testConstructor" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="49" assertions="11" time="0.000316"/>
-        <testcase name="testConstructorWithoutId" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="84" assertions="3" time="0.000309"/>
-        <testcase name="testComplexProperties" class="App\Tests\CellTypeTest" classname="App.Tests.CellTypeTest" file="/var/www/html/tests/unit/CellTypeTest.php" line="140" assertions="5" time="0.025500"/>
-      </testsuite>
-      <testsuite name="App\Tests\AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" tests="13" assertions="52" errors="0" warnings="0" failures="0" skipped="1" time="0.400709">
-        <testcase name="testBuildingTypeCityEffect" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="237" assertions="0" time="0.034768">
+      <testsuite name="App\Tests\Unit\BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" tests="9" assertions="35" errors="0" warnings="0" failures="0" skipped="1" time="0.173968">
+        <testcase name="testCityEffect" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="227" assertions="0" time="0.000157">
           <skipped/>
         </testcase>
-        <testcase name="testGetAllBuildingTypes" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="18" assertions="6" time="0.025447"/>
-        <testcase name="testSaveNewBuildingType" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="54" assertions="2" time="0.033042"/>
-        <testcase name="testUpdateBuildingType" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="70" assertions="2" time="0.042031"/>
-        <testcase name="testDeleteBuildingType" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="90" assertions="1" time="0.023856"/>
-        <testcase name="testGetBuildingTypeById" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="105" assertions="3" time="0.033436"/>
-        <testcase name="testJsonFieldsHandling" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="119" assertions="3" time="0.016176"/>
-        <testcase name="testBuildingTypeProperties" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="135" assertions="8" time="0.031652"/>
-        <testcase name="testGetNonExistentBuildingType" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="161" assertions="1" time="0.033282"/>
-        <testcase name="testBuildingTypeConstructorWithInvalidJson" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="167" assertions="2" time="0.027691"/>
-        <testcase name="testBuildingTypeDefaultValues" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="183" assertions="11" time="0.033031"/>
-        <testcase name="testBuildingTypeWithComplexData" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="204" assertions="12" time="0.027287"/>
-        <testcase name="testBuildingTypeGetTitle" class="App\Tests\AdminBuildingTypeTest" classname="App.Tests.AdminBuildingTypeTest" file="/var/www/html/tests/unit/AdminBuildingTypeTest.php" line="258" assertions="1" time="0.039010"/>
+        <testcase name="testGet" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="21" assertions="7" time="0.030136"/>
+        <testcase name="testConstructor" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="50" assertions="6" time="0.018292"/>
+        <testcase name="testConstructorWithoutId" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="77" assertions="3" time="0.020331"/>
+        <testcase name="testGetTitle" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="98" assertions="1" time="0.018835"/>
+        <testcase name="testSaveNew" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="117" assertions="4" time="0.020455"/>
+        <testcase name="testSaveUpdate" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="147" assertions="1" time="0.022949"/>
+        <testcase name="testCaching" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="175" assertions="1" time="0.021906"/>
+        <testcase name="testDifferentBuildingTypes" class="App\Tests\Unit\BuildingTest" classname="App.Tests.Unit.BuildingTest" file="/var/www/html/tests/unit/BuildingTest.php" line="200" assertions="12" time="0.020907"/>
       </testsuite>
-      <testsuite name="App\Tests\CellTest" file="/var/www/html/tests/unit/CellTest.php" tests="21" assertions="0" errors="42" warnings="0" failures="0" skipped="0" time="23.062975">
-        <testcase name="testGetUnits" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="401" assertions="0" time="1.111166">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetUnits
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetUnits
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:401</error>
-        </testcase>
-        <testcase name="testSaveNew" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="159" assertions="0" time="1.063024">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testSaveNew
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testSaveNew
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:159</error>
-        </testcase>
-        <testcase name="testClearCache" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="476" assertions="0" time="1.147243">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testClearCache
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testClearCache
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:476</error>
-        </testcase>
-        <testcase name="testDCoord" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="286" assertions="0" time="1.107311">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testDCoord
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testDCoord
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:286</error>
-        </testcase>
-        <testcase name="testGetWork" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="332" assertions="0" time="1.190538">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetWork
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetWork
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:332</error>
-        </testcase>
-        <testcase name="testGetTitle" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="124" assertions="0" time="1.242471">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetTitle
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetTitle
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:124</error>
-        </testcase>
-        <testcase name="testGetCellsAround" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="306" assertions="0" time="1.325073">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetCellsAround
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetCellsAround
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:306</error>
-        </testcase>
-        <testcase name="testGetNonExistingCell" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="48" assertions="0" time="1.021167">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetNonExistingCell
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetNonExistingCell
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:48</error>
-        </testcase>
-        <testcase name="testSaveUpdate" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="197" assertions="0" time="1.069049">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testSaveUpdate
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testSaveUpdate
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:197</error>
-        </testcase>
-        <testcase name="testCalcCoord" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="230" assertions="0" time="1.052114">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testCalcCoord
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testCalcCoord
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:230</error>
-        </testcase>
-        <testcase name="testGetEat" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="355" assertions="0" time="1.056455">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetEat
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetEat
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:355</error>
-        </testcase>
-        <testcase name="testGetMoney" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="378" assertions="0" time="1.049478">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetMoney
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetMoney
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:378</error>
-        </testcase>
-        <testcase name="testGetPlanet" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="141" assertions="0" time="1.027988">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetPlanet
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetPlanet
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:141</error>
-        </testcase>
-        <testcase name="testConstructor" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="60" assertions="0" time="1.047212">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testConstructor
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testConstructor
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:60</error>
-        </testcase>
-        <testcase name="testLoadCells" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="425" assertions="0" time="1.041723">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testLoadCells
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testLoadCells
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:425</error>
-        </testcase>
-        <testcase name="testConstructorWithoutOwner" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="96" assertions="0" time="1.103848">
+      <testsuite name="App\Tests\CellTest" file="/var/www/html/tests/unit/CellTest.php" tests="21" assertions="19" errors="30" warnings="0" failures="0" skipped="0" time="23.025916">
+        <testcase name="testConstructorWithoutOwner" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="97" assertions="0" time="1.275696">
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testConstructorWithoutOwner
 Execution aborted after 1 second</error>
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testConstructorWithoutOwner
 This test did not perform any assertions
 
-/var/www/html/tests/unit/CellTest.php:96</error>
+/var/www/html/tests/unit/CellTest.php:97</error>
         </testcase>
-        <testcase name="testGetExistingCell" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="30" assertions="0" time="1.053597">
+        <testcase name="testClearCache" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="477" assertions="3" time="0.872699"/>
+        <testcase name="testSaveNew" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="160" assertions="0" time="1.144300">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testSaveNew
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testSaveNew
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CellTest.php:160</error>
+        </testcase>
+        <testcase name="testGetPlanet" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="142" assertions="0" time="1.421234">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetPlanet
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetPlanet
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CellTest.php:142</error>
+        </testcase>
+        <testcase name="testGetTitle" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="125" assertions="0" time="1.019883">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetTitle
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetTitle
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CellTest.php:125</error>
+        </testcase>
+        <testcase name="testGenerateMap" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="526" assertions="0" time="1.064351">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGenerateMap
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGenerateMap
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CellTest.php:526</error>
+        </testcase>
+        <testcase name="testSaveUpdate" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="198" assertions="4" time="0.942869"/>
+        <testcase name="testGenerateType" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="499" assertions="3" time="0.981577"/>
+        <testcase name="testGetNonExistingCell" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="48" assertions="1" time="0.972590"/>
+        <testcase name="testGetCellsAround" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="307" assertions="4" time="0.974338"/>
+        <testcase name="testGetWork" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="333" assertions="0" time="1.035572">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetWork
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetWork
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CellTest.php:333</error>
+        </testcase>
+        <testcase name="testGetExistingCell" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="30" assertions="0" time="1.046778">
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetExistingCell
 Execution aborted after 1 second</error>
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetExistingCell
@@ -221,49 +233,75 @@ This test did not perform any assertions
 
 /var/www/html/tests/unit/CellTest.php:30</error>
         </testcase>
-        <testcase name="testCalcDistance" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="265" assertions="0" time="1.090257">
+        <testcase name="testCalcDistance" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="266" assertions="0" time="1.044302">
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testCalcDistance
 Execution aborted after 1 second</error>
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testCalcDistance
 This test did not perform any assertions
 
-/var/www/html/tests/unit/CellTest.php:265</error>
+/var/www/html/tests/unit/CellTest.php:266</error>
         </testcase>
-        <testcase name="testGenerateMap" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="525" assertions="0" time="1.061660">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGenerateMap
+        <testcase name="testCalcCoord" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="231" assertions="0" time="1.017054">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testCalcCoord
 Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGenerateMap
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testCalcCoord
 This test did not perform any assertions
 
-/var/www/html/tests/unit/CellTest.php:525</error>
+/var/www/html/tests/unit/CellTest.php:231</error>
         </testcase>
-        <testcase name="testGenerateType" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="498" assertions="0" time="1.037179">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGenerateType
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGenerateType
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CellTest.php:498</error>
-        </testcase>
-        <testcase name="testGetMissionNeedPoints" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="450" assertions="0" time="1.164420">
+        <testcase name="testDCoord" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="287" assertions="4" time="0.987515"/>
+        <testcase name="testGetMissionNeedPoints" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="451" assertions="0" time="1.034539">
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetMissionNeedPoints
 Execution aborted after 1 second</error>
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetMissionNeedPoints
 This test did not perform any assertions
 
-/var/www/html/tests/unit/CellTest.php:450</error>
+/var/www/html/tests/unit/CellTest.php:451</error>
+        </testcase>
+        <testcase name="testLoadCells" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="426" assertions="0" time="1.043618">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testLoadCells
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testLoadCells
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CellTest.php:426</error>
+        </testcase>
+        <testcase name="testGetUnits" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="402" assertions="0" time="1.238470">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetUnits
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetUnits
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CellTest.php:402</error>
+        </testcase>
+        <testcase name="testConstructor" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="60" assertions="0" time="1.452567">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testConstructor
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testConstructor
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CellTest.php:60</error>
+        </testcase>
+        <testcase name="testGetEat" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="356" assertions="0" time="1.158435">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetEat
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetEat
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CellTest.php:356</error>
+        </testcase>
+        <testcase name="testGetMoney" class="App\Tests\CellTest" classname="App.Tests.CellTest" file="/var/www/html/tests/unit/CellTest.php" line="379" assertions="0" time="1.297529">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetMoney
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CellTest::testGetMoney
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CellTest.php:379</error>
         </testcase>
       </testsuite>
-      <testsuite name="App\Tests\CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" tests="11" assertions="0" errors="22" warnings="0" failures="0" skipped="0" time="13.950247">
-        <testcase name="testGameCaching" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="259" assertions="0" time="1.590707">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testGameCaching
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testGameCaching
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameSimpleTest.php:259</error>
-        </testcase>
-        <testcase name="testCreateBasicGameClass" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="23" assertions="0" time="1.636666">
+      <testsuite name="App\Tests\CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" tests="11" assertions="33" errors="12" warnings="0" failures="0" skipped="0" time="10.665072">
+        <testcase name="testCreateGameWithDifferentMapSizes" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="78" assertions="8" time="0.788433"/>
+        <testcase name="testCreateBasicGameClass" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="23" assertions="0" time="1.046662">
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testCreateBasicGameClass
 Execution aborted after 1 second</error>
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testCreateBasicGameClass
@@ -271,55 +309,8 @@ This test did not perform any assertions
 
 /var/www/html/tests/unit/CreateGameSimpleTest.php:23</error>
         </testcase>
-        <testcase name="testGameList" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="211" assertions="0" time="1.375313">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testGameList
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testGameList
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameSimpleTest.php:211</error>
-        </testcase>
-        <testcase name="testUserColorGeneration" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="163" assertions="0" time="1.432017">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testUserColorGeneration
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testUserColorGeneration
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameSimpleTest.php:163</error>
-        </testcase>
-        <testcase name="testGameGetMethod" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="245" assertions="0" time="1.058377">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testGameGetMethod
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testGameGetMethod
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameSimpleTest.php:245</error>
-        </testcase>
-        <testcase name="testCreateGameWithDifferentMapSizes" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="78" assertions="0" time="1.087351">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testCreateGameWithDifferentMapSizes
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testCreateGameWithDifferentMapSizes
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameSimpleTest.php:78</error>
-        </testcase>
-        <testcase name="testCreateUsersForGame" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="105" assertions="0" time="1.124196">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testCreateUsersForGame
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testCreateUsersForGame
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameSimpleTest.php:105</error>
-        </testcase>
-        <testcase name="testHtmlEscapingInGameName" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="306" assertions="0" time="1.209235">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testHtmlEscapingInGameName
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testHtmlEscapingInGameName
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameSimpleTest.php:306</error>
-        </testcase>
-        <testcase name="testCreateGameWithDifferentTurnTypes" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="52" assertions="0" time="1.127764">
+        <testcase name="testUserColorGeneration" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="163" assertions="15" time="0.848383"/>
+        <testcase name="testCreateGameWithDifferentTurnTypes" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="52" assertions="0" time="1.054036">
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testCreateGameWithDifferentTurnTypes
 Execution aborted after 1 second</error>
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testCreateGameWithDifferentTurnTypes
@@ -327,161 +318,44 @@ This test did not perform any assertions
 
 /var/www/html/tests/unit/CreateGameSimpleTest.php:52</error>
         </testcase>
-        <testcase name="testHtmlEscapingInUserLogin" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="329" assertions="0" time="1.222894">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testHtmlEscapingInUserLogin
+        <testcase name="testCreateUsersForGame" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="105" assertions="0" time="1.022884">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testCreateUsersForGame
 Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testHtmlEscapingInUserLogin
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testCreateUsersForGame
 This test did not perform any assertions
 
-/var/www/html/tests/unit/CreateGameSimpleTest.php:329</error>
+/var/www/html/tests/unit/CreateGameSimpleTest.php:105</error>
         </testcase>
-        <testcase name="testUpdateGameData" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="280" assertions="0" time="1.085726">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testUpdateGameData
+        <testcase name="testGameCaching" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="259" assertions="0" time="1.045701">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testGameCaching
 Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testUpdateGameData
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testGameCaching
 This test did not perform any assertions
 
-/var/www/html/tests/unit/CreateGameSimpleTest.php:280</error>
+/var/www/html/tests/unit/CreateGameSimpleTest.php:259</error>
+        </testcase>
+        <testcase name="testHtmlEscapingInGameName" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="306" assertions="0" time="1.061585">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testHtmlEscapingInGameName
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testHtmlEscapingInGameName
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CreateGameSimpleTest.php:306</error>
+        </testcase>
+        <testcase name="testHtmlEscapingInUserLogin" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="329" assertions="1" time="0.955273"/>
+        <testcase name="testGameList" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="211" assertions="7" time="0.950948"/>
+        <testcase name="testUpdateGameData" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="280" assertions="2" time="0.791629"/>
+        <testcase name="testGameGetMethod" class="App\Tests\CreateGameSimpleTest" classname="App.Tests.CreateGameSimpleTest" file="/var/www/html/tests/unit/CreateGameSimpleTest.php" line="245" assertions="0" time="1.099536">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testGameGetMethod
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameSimpleTest::testGameGetMethod
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CreateGameSimpleTest.php:245</error>
         </testcase>
       </testsuite>
-      <testsuite name="App\Tests\CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" tests="19" assertions="0" errors="38" warnings="0" failures="0" skipped="0" time="25.397992">
-        <testcase name="testWhitespaceGameName" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="146" assertions="0" time="1.236709">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testWhitespaceGameName
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testWhitespaceGameName
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:146</error>
-        </testcase>
-        <testcase name="testEmptyGameName" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="165" assertions="0" time="1.241820">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testEmptyGameName
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testEmptyGameName
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:165</error>
-        </testcase>
-        <testcase name="testCreateConcurrentGame" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="77" assertions="0" time="1.315585">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testCreateConcurrentGame
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testCreateConcurrentGame
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:77</error>
-        </testcase>
-        <testcase name="testInvalidTurnType" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="460" assertions="0" time="1.089517">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testInvalidTurnType
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testInvalidTurnType
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:460</error>
-        </testcase>
-        <testcase name="testTooSmallMapSize" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="212" assertions="0" time="1.612555">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testTooSmallMapSize
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testTooSmallMapSize
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:212</error>
-        </testcase>
-        <testcase name="testCreateOneWindowGame" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="114" assertions="0" time="1.051084">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testCreateOneWindowGame
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testCreateOneWindowGame
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:114</error>
-        </testcase>
-        <testcase name="testCreateBasicGame" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="23" assertions="0" time="1.035411">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testCreateBasicGame
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testCreateBasicGame
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:23</error>
-        </testcase>
-        <testcase name="testTooLargeMapSize" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="232" assertions="0" time="1.229438">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testTooLargeMapSize
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testTooLargeMapSize
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:232</error>
-        </testcase>
-        <testcase name="testXSSInPlayerNames" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="319" assertions="0" time="1.038352">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testXSSInPlayerNames
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testXSSInPlayerNames
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:319</error>
-        </testcase>
-        <testcase name="testTooManyPlayers" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="252" assertions="0" time="1.216833">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testTooManyPlayers
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testTooManyPlayers
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:252</error>
-        </testcase>
-        <testcase name="testVeryLongStrings" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="342" assertions="0" time="1.134180">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testVeryLongStrings
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testVeryLongStrings
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:342</error>
-        </testcase>
-        <testcase name="testPlayerColorGeneration" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="380" assertions="0" time="1.162095">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testPlayerColorGeneration
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testPlayerColorGeneration
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:380</error>
-        </testcase>
-        <testcase name="testDataPreservationOnError" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="277" assertions="0" time="1.255352">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testDataPreservationOnError
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testDataPreservationOnError
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:277</error>
-        </testcase>
-        <testcase name="testDuplicatePlayerNames" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="184" assertions="0" time="1.295627">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testDuplicatePlayerNames
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testDuplicatePlayerNames
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:184</error>
-        </testcase>
-        <testcase name="testEmptyPlayerFields" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="425" assertions="0" time="1.061240">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testEmptyPlayerFields
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testEmptyPlayerFields
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:425</error>
-        </testcase>
-        <testcase name="testXSSInGameName" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="299" assertions="0" time="1.332988">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testXSSInGameName
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testXSSInGameName
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:299</error>
-        </testcase>
-        <testcase name="testNoPostData" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="479" assertions="0" time="3.978163">
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testNoPostData
-Execution aborted after 1 second</error>
-          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testNoPostData
-This test did not perform any assertions
-
-/var/www/html/tests/unit/CreateGameTest.php:479</error>
-        </testcase>
-        <testcase name="testGameInitialConditions" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="499" assertions="0" time="1.086962">
+      <testsuite name="App\Tests\CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" tests="19" assertions="11" errors="20" warnings="0" failures="0" skipped="0" time="19.086546">
+        <testcase name="testGameInitialConditions" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="499" assertions="0" time="1.019073">
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testGameInitialConditions
 Execution aborted after 1 second</error>
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testGameInitialConditions
@@ -489,7 +363,28 @@ This test did not perform any assertions
 
 /var/www/html/tests/unit/CreateGameTest.php:499</error>
         </testcase>
-        <testcase name="testMinimumPlayers" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="544" assertions="0" time="1.024081">
+        <testcase name="testEmptyPlayerFields" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="425" assertions="1" time="0.886169"/>
+        <testcase name="testCreateBasicGame" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="23" assertions="0" time="1.058908">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testCreateBasicGame
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testCreateBasicGame
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CreateGameTest.php:23</error>
+        </testcase>
+        <testcase name="testNoPostData" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="479" assertions="1" time="0.903464"/>
+        <testcase name="testTooLargeMapSize" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="232" assertions="2" time="0.880716"/>
+        <testcase name="testXSSInGameName" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="299" assertions="0" time="1.018946">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testXSSInGameName
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testXSSInGameName
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CreateGameTest.php:299</error>
+        </testcase>
+        <testcase name="testXSSInPlayerNames" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="319" assertions="1" time="0.920781"/>
+        <testcase name="testTooSmallMapSize" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="212" assertions="2" time="0.964127"/>
+        <testcase name="testMinimumPlayers" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="544" assertions="0" time="1.033201">
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testMinimumPlayers
 Execution aborted after 1 second</error>
           <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testMinimumPlayers
@@ -497,26 +392,231 @@ This test did not perform any assertions
 
 /var/www/html/tests/unit/CreateGameTest.php:544</error>
         </testcase>
+        <testcase name="testEmptyGameName" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="165" assertions="0" time="1.069872">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testEmptyGameName
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testEmptyGameName
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CreateGameTest.php:165</error>
+        </testcase>
+        <testcase name="testInvalidTurnType" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="460" assertions="1" time="0.916506"/>
+        <testcase name="testDataPreservationOnError" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="277" assertions="0" time="1.028955">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testDataPreservationOnError
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testDataPreservationOnError
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CreateGameTest.php:277</error>
+        </testcase>
+        <testcase name="testCreateConcurrentGame" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="77" assertions="0" time="1.349837">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testCreateConcurrentGame
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testCreateConcurrentGame
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CreateGameTest.php:77</error>
+        </testcase>
+        <testcase name="testVeryLongStrings" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="342" assertions="0" time="1.055526">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testVeryLongStrings
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testVeryLongStrings
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CreateGameTest.php:342</error>
+        </testcase>
+        <testcase name="testWhitespaceGameName" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="146" assertions="0" time="1.114826">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testWhitespaceGameName
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testWhitespaceGameName
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CreateGameTest.php:146</error>
+        </testcase>
+        <testcase name="testDuplicatePlayerNames" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="184" assertions="1" time="0.881035"/>
+        <testcase name="testPlayerColorGeneration" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="380" assertions="0" time="1.039413">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testPlayerColorGeneration
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\CreateGameTest::testPlayerColorGeneration
+This test did not perform any assertions
+
+/var/www/html/tests/unit/CreateGameTest.php:380</error>
+        </testcase>
+        <testcase name="testCreateOneWindowGame" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="114" assertions="1" time="0.951238"/>
+        <testcase name="testTooManyPlayers" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="252" assertions="1" time="0.993951"/>
       </testsuite>
-      <testsuite name="App\Tests\BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" tests="13" assertions="79" errors="0" warnings="0" failures="0" skipped="0" time="0.282829">
-        <testcase name="testGetExistingBuildingType" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="21" assertions="5" time="0.010867"/>
-        <testcase name="testGetNonExistingBuildingType" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="37" assertions="1" time="0.010792"/>
-        <testcase name="testConstructor" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="49" assertions="14" time="0.000170"/>
-        <testcase name="testGetTitle" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="90" assertions="1" time="0.005010"/>
-        <testcase name="testCityEffectGranary" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="102" assertions="1" time="0.038796"/>
-        <testcase name="testCityEffectTemple" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="133" assertions="2" time="0.030800"/>
-        <testcase name="testCityEffectTempleNegativeNorm" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="163" assertions="2" time="0.029006"/>
-        <testcase name="testCityEffectLibrary" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="193" assertions="1" time="0.028693"/>
-        <testcase name="testCityEffectMarket" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="220" assertions="1" time="0.029158"/>
-        <testcase name="testCityEffectColiseum" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="247" assertions="3" time="0.023936"/>
-        <testcase name="testCityEffectColiseumNegativeDis" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="279" assertions="3" time="0.024721"/>
-        <testcase name="testCityEffectNoEffect" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="311" assertions="6" time="0.029634"/>
-        <testcase name="testAllPredefinedBuildingTypes" class="App\Tests\BuildingTypeTest" classname="App.Tests.BuildingTypeTest" file="/var/www/html/tests/unit/BuildingTypeTest.php" line="350" assertions="39" time="0.021245"/>
+      <testsuite name="App\Tests\GameTest" file="/var/www/html/tests/unit/GameTest.php" tests="15" assertions="38" errors="15" warnings="0" failures="0" skipped="0" time="14.840903">
+        <testcase name="testGetActivePlayerByTurn" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="195" assertions="1" time="0.978046"/>
+        <testcase name="testGetFirstPlanetNoPlanets" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="260" assertions="0" time="1.031354">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testGetFirstPlanetNoPlanets
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testGetFirstPlanetNoPlanets
+This test did not perform any assertions
+
+/var/www/html/tests/unit/GameTest.php:260</error>
+        </testcase>
+        <testcase name="testGetNonExistingGame" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="49" assertions="0" time="1.015405">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testGetNonExistingGame
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testGetNonExistingGame
+This test did not perform any assertions
+
+/var/www/html/tests/unit/GameTest.php:49</error>
+        </testcase>
+        <testcase name="testCalculateConcurrently" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="296" assertions="3" time="0.905563"/>
+        <testcase name="testCalculateByTurn" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="273" assertions="3" time="0.930538"/>
+        <testcase name="testConstruct" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="59" assertions="8" time="0.822076"/>
+        <testcase name="testGetActivePlayerNoActive" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="227" assertions="0" time="1.074091">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testGetActivePlayerNoActive
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testGetActivePlayerNoActive
+This test did not perform any assertions
+
+/var/www/html/tests/unit/GameTest.php:227</error>
+        </testcase>
+        <testcase name="testGameList" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="133" assertions="0" time="1.187960">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testGameList
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testGameList
+This test did not perform any assertions
+
+/var/www/html/tests/unit/GameTest.php:133</error>
+        </testcase>
+        <testcase name="testGetFirstPlanet" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="242" assertions="0" time="1.123123">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testGetFirstPlanet
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testGetFirstPlanet
+This test did not perform any assertions
+
+/var/www/html/tests/unit/GameTest.php:242</error>
+        </testcase>
+        <testcase name="testSaveUpdate" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="112" assertions="0" time="1.036189">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testSaveUpdate
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testSaveUpdate
+This test did not perform any assertions
+
+/var/www/html/tests/unit/GameTest.php:112</error>
+        </testcase>
+        <testcase name="testSaveNew" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="85" assertions="0" time="1.043751">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testSaveNew
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testSaveNew
+This test did not perform any assertions
+
+/var/www/html/tests/unit/GameTest.php:85</error>
+        </testcase>
+        <testcase name="testGetActivePlayerConcurrently" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="210" assertions="2" time="0.838199"/>
+        <testcase name="testCreateNewGame" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="319" assertions="5" time="1.032313">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\GameTest::testCreateNewGame
+Execution aborted after 1 second</error>
+        </testcase>
+        <testcase name="testAllSystemMessage" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="156" assertions="10" time="0.967498"/>
+        <testcase name="testGetExistingGame" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="27" assertions="6" time="0.854798"/>
       </testsuite>
-      <testsuite name="App\Tests\EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" tests="1" assertions="0" errors="1" warnings="0" failures="0" skipped="0" time="0.012411">
-        <testcase name="testLoadGameWithoutId" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="21" assertions="0" time="0.012411">
-          <error type="PHPUnit\Framework\Exception">App\Tests\EditGameTest::testLoadGameWithoutId
-PHPUnit\Framework\Exception: Class "App\Tests\Exception" does not exist</error>
+      <testsuite name="App\Tests\OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" tests="13" assertions="18" errors="17" warnings="0" failures="0" skipped="0" time="15.236072">
+        <testcase name="testGameListLoading" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="248" assertions="7" time="1.016194">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testGameListLoading
+Execution aborted after 1 second</error>
+        </testcase>
+        <testcase name="testEmptyGameList" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="292" assertions="1" time="0.843219"/>
+        <testcase name="testOpenGameWithMaxPlayers" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="375" assertions="0" time="1.044438">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testOpenGameWithMaxPlayers
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testOpenGameWithMaxPlayers
+This test did not perform any assertions
+
+/var/www/html/tests/unit/OpenGameTest.php:375</error>
+        </testcase>
+        <testcase name="testOpenGameWithDifferentTurnTypes" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="132" assertions="6" time="0.846678"/>
+        <testcase name="testOpenGameWithoutUserId" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="229" assertions="0" time="1.046610">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testOpenGameWithoutUserId
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testOpenGameWithoutUserId
+This test did not perform any assertions
+
+/var/www/html/tests/unit/OpenGameTest.php:229</error>
+        </testcase>
+        <testcase name="testOpenGameWithoutGameId" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="210" assertions="1" time="0.828329"/>
+        <testcase name="testSessionStateAfterGameOpening" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="301" assertions="0" time="1.231079">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testSessionStateAfterGameOpening
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testSessionStateAfterGameOpening
+This test did not perform any assertions
+
+/var/www/html/tests/unit/OpenGameTest.php:301</error>
+        </testcase>
+        <testcase name="testOpenGameWithUserFromDifferentGame" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="25" assertions="0" time="1.316198">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testOpenGameWithUserFromDifferentGame
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testOpenGameWithUserFromDifferentGame
+This test did not perform any assertions
+
+/var/www/html/tests/unit/OpenGameTest.php:25</error>
+        </testcase>
+        <testcase name="testOpenGameWithMultiplePlayers" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="94" assertions="0" time="1.123336">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testOpenGameWithMultiplePlayers
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testOpenGameWithMultiplePlayers
+This test did not perform any assertions
+
+/var/www/html/tests/unit/OpenGameTest.php:94</error>
+        </testcase>
+        <testcase name="testSuccessfulGameOpening" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="57" assertions="0" time="1.541165">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testSuccessfulGameOpening
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testSuccessfulGameOpening
+This test did not perform any assertions
+
+/var/www/html/tests/unit/OpenGameTest.php:57</error>
+        </testcase>
+        <testcase name="testOpenNonExistentGame" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="170" assertions="0" time="2.065925">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testOpenNonExistentGame
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testOpenNonExistentGame
+This test did not perform any assertions
+
+/var/www/html/tests/unit/OpenGameTest.php:170</error>
+        </testcase>
+        <testcase name="testOpenGameWithNonExistentUser" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="189" assertions="0" time="1.380314">
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testOpenGameWithNonExistentUser
+Execution aborted after 1 second</error>
+          <error type="PHPUnit\Framework\RiskyTestError">App\Tests\OpenGameTest::testOpenGameWithNonExistentUser
+This test did not perform any assertions
+
+/var/www/html/tests/unit/OpenGameTest.php:189</error>
+        </testcase>
+        <testcase name="testReopenGameWithDifferentUser" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="328" assertions="3" time="0.952589"/>
+      </testsuite>
+      <testsuite name="EmptyTest" file="/var/www/html/tests/unit/EmptyTest.php" tests="1" assertions="1" errors="0" warnings="0" failures="0" skipped="0" time="0.000097">
+        <testcase name="testEmpty" class="EmptyTest" classname="EmptyTest" file="/var/www/html/tests/unit/EmptyTest.php" line="6" assertions="1" time="0.000097"/>
+      </testsuite>
+      <testsuite name="App\Tests\ResearchTest" file="/var/www/html/tests/unit/ResearchTest.php" tests="6" assertions="31" errors="0" warnings="0" failures="0" skipped="0" time="0.052980">
+        <testcase name="testGet" class="App\Tests\ResearchTest" classname="App.Tests.ResearchTest" file="/var/www/html/tests/unit/ResearchTest.php" line="18" assertions="6" time="0.027663"/>
+        <testcase name="testConstructorWithoutId" class="App\Tests\ResearchTest" classname="App.Tests.ResearchTest" file="/var/www/html/tests/unit/ResearchTest.php" line="43" assertions="4" time="0.007322"/>
+        <testcase name="testSaveNew" class="App\Tests\ResearchTest" classname="App.Tests.ResearchTest" file="/var/www/html/tests/unit/ResearchTest.php" line="65" assertions="4" time="0.005063"/>
+        <testcase name="testSaveUpdate" class="App\Tests\ResearchTest" classname="App.Tests.ResearchTest" file="/var/www/html/tests/unit/ResearchTest.php" line="95" assertions="1" time="0.005840"/>
+        <testcase name="testDifferentResearchTypes" class="App\Tests\ResearchTest" classname="App.Tests.ResearchTest" file="/var/www/html/tests/unit/ResearchTest.php" line="129" assertions="12" time="0.003834"/>
+        <testcase name="testResearchUserRelationship" class="App\Tests\ResearchTest" classname="App.Tests.ResearchTest" file="/var/www/html/tests/unit/ResearchTest.php" line="155" assertions="4" time="0.003258"/>
+      </testsuite>
+      <testsuite name="App\Tests\ResearchTypeTest" file="/var/www/html/tests/unit/ResearchTypeTest.php" tests="11" assertions="103" errors="1" warnings="0" failures="0" skipped="0" time="0.139200">
+        <testcase name="testGetExistingResearchType" class="App\Tests\ResearchTypeTest" classname="App.Tests.ResearchTypeTest" file="/var/www/html/tests/unit/ResearchTypeTest.php" line="15" assertions="6" time="0.013626"/>
+        <testcase name="testGetNonExistingResearchType" class="App\Tests\ResearchTypeTest" classname="App.Tests.ResearchTypeTest" file="/var/www/html/tests/unit/ResearchTypeTest.php" line="32" assertions="1" time="0.007703"/>
+        <testcase name="testConstructor" class="App\Tests\ResearchTypeTest" classname="App.Tests.ResearchTypeTest" file="/var/www/html/tests/unit/ResearchTypeTest.php" line="44" assertions="10" time="0.000786"/>
+        <testcase name="testConstructorWithoutId" class="App\Tests\ResearchTypeTest" classname="App.Tests.ResearchTypeTest" file="/var/www/html/tests/unit/ResearchTypeTest.php" line="76" assertions="3" time="0.000587"/>
+        <testcase name="testGetTitle" class="App\Tests\ResearchTypeTest" classname="App.Tests.ResearchTypeTest" file="/var/www/html/tests/unit/ResearchTypeTest.php" line="93" assertions="1" time="0.008318"/>
+        <testcase name="testGetTurnCount" class="App\Tests\ResearchTypeTest" classname="App.Tests.ResearchTypeTest" file="/var/www/html/tests/unit/ResearchTypeTest.php" line="105" assertions="4" time="0.011228"/>
+        <testcase name="testGetNeedAgeIds" class="App\Tests\ResearchTypeTest" classname="App.Tests.ResearchTypeTest" file="/var/www/html/tests/unit/ResearchTypeTest.php" line="131" assertions="7" time="0.013489"/>
+        <testcase name="testResearchRequirements" class="App\Tests\ResearchTypeTest" classname="App.Tests.ResearchTypeTest" file="/var/www/html/tests/unit/ResearchTypeTest.php" line="153" assertions="2" time="0.016052"/>
+        <testcase name="testAllPredefinedResearchTypes" class="App\Tests\ResearchTypeTest" classname="App.Tests.ResearchTypeTest" file="/var/www/html/tests/unit/ResearchTypeTest.php" line="168" assertions="7" time="0.015239"/>
+        <testcase name="testGetAll" class="App\Tests\ResearchTypeTest" classname="App.Tests.ResearchTypeTest" file="/var/www/html/tests/unit/ResearchTypeTest.php" line="190" assertions="62" time="0.007125"/>
+        <testcase name="testSaveNewResearchType" class="App\Tests\ResearchTypeTest" classname="App.Tests.ResearchTypeTest" file="/var/www/html/tests/unit/ResearchTypeTest.php" line="214" assertions="0" time="0.045048">
+          <error type="PDOException">App\Tests\ResearchTypeTest::testSaveNewResearchType
+PDOException: SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`civ_for_tests`.`research_requirements`, CONSTRAINT `research_requirements_ibfk_2` FOREIGN KEY (`required_research_type_id`) REFERENCES `research_type` (`id`) ON DELETE CASCADE)
+
+/var/www/html/src/MyDB.php:75
+/var/www/html/src/ResearchType.php:190
+/var/www/html/tests/unit/ResearchTypeTest.php:227</error>
         </testcase>
       </testsuite>
     </testsuite>

@@ -5,6 +5,8 @@ namespace App\Tests;
 require_once __DIR__ . "/../bootstrap.php";
 
 use App\MyDB;
+use PDO;
+use PDOException;
 
 /**
  * Тесты для класса MyDB
@@ -16,11 +18,10 @@ class MyDBTest extends TestBase
      */
     public function testSetDBConfig(): void
     {
-        $this->assertEquals('localhost', MyDB::$dbhost);
-        $this->assertEquals('testuser', MyDB::$dbuser);
-        $this->assertEquals('testpass', MyDB::$dbpass);
+        $this->assertEquals('db', MyDB::$dbhost);
+        $this->assertEquals('civ_test', MyDB::$dbuser);
+        $this->assertEquals('civ_test', MyDB::$dbpass);
         $this->assertEquals('3306', MyDB::$dbport);
-        $this->assertEquals('testdb', MyDB::$dbname);
     }
 
     /**

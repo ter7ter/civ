@@ -1,19 +1,23 @@
-Building (App\Tests\Unit\Building)
- [x] Get
- [ ] City effect
+Building Type (App\Tests\BuildingType)
+ [x] City effect granary
+ [x] Get existing building type
+ [x] Get non existing building type
  [x] Constructor
- [x] Constructor without id
  [x] Get title
- [x] Save new
- [x] Save update
- [x] Caching
- [x] Different building types
+ [x] City effect temple
+ [x] City effect temple negative norm
+ [x] City effect library
+ [x] City effect market
+ [x] City effect coliseum
+ [x] City effect coliseum negative dis
+ [x] City effect no effect
+ [x] All predefined building types
 
 City (App\Tests\City)
- [x] Calculate eat
- [x] Create unit
- [x] Get culture cells
  [x] Constructor
+ [x] Create unit
+ [x] Calculate eat
+ [x] Get culture cells
  [x] By coords
  [x] Get title
  [x] Get possible units
@@ -32,10 +36,82 @@ City (App\Tests\City)
 Database Config (App\Tests\DatabaseConfig)
  [x] Test database configuration
  [x] Game and user mocks
+ [x] Test data cleanup
  [x] Test tables creation
  [x] Test data operations
- [ ] Test data cleanup
  [x] Transaction handling
+
+Edit Game (App\Tests\EditGame)
+ [x] Edit basic game parameters
+ [x] Load game without id
+ [x] Edit game name only
+ [x] Edit map size
+ [x] Edit turn type
+ [x] Load game data for editing
+ [x] Edit with empty name
+ [x] Edit with invalid map size
+ [x] Edit with invalid turn type
+ [x] Edit non existent game
+ [x] Edit without game id
+ [x] Data preservation on validation error
+ [x] X s s in edited game name
+ [x] Very long strings in edit
+ [x] Load non existent game for editing
+ [x] Multiple validation errors
+ [x] Game not changed on validation error
+
+Event (App\Tests\Event)
+ [x] Get
+ [x] Constructor city building
+ [x] Constructor research
+ [x] Constructor city unit
+ [x] Save new
+ [x] Save with source
+ [x] Save update
+ [x] Remove
+ [x] Get title
+ [x] Get text
+
+Message (App\Tests\Message)
+ [x] Constructor with full data
+ [x] Constructor without from
+ [x] Constructor without to
+ [x] Save new
+ [x] Save update
+ [x] Save system message
+ [x] Constructor minimal data
+
+Mission Type (App\Tests\MissionType)
+ [x] Check cell
+ [x] Constructor
+ [x] Get
+ [x] Get title
+ [x] Complete
+
+My DB (App\Tests\MyDB)
+ [x] Get
+ [x] Set d b config
+ [x] Query select
+ [x] Query select output types
+ [x] Insert
+ [x] Insert multiple
+ [x] Update
+ [x] Update with where
+ [x] Null handling
+ [x] D d l queries
+ [x] Error handling
+ [x] Transactions
+
+Planet (App\Tests\Planet)
+ [x] Get existing planet
+ [x] Constructor with invalid data
+ [x] Get non existing planet
+ [x] Constructor
+ [x] Constructor without id
+ [x] Save new
+ [x] Save update
+ [x] Get game
+ [x] Clear cache
 
 Admin Unit Type (App\Tests\AdminUnitType)
  [x] Get all unit types
@@ -50,9 +126,9 @@ Admin Unit Type (App\Tests\AdminUnitType)
  [x] Unit type with complex data
 
 Cell Type (App\Tests\CellType)
- [x] All predefined cell types
- [x] Get title
  [x] Get existing cell type
+ [x] Get title
+ [x] All predefined cell types
  [x] Get non existing cell type
  [x] Constructor
  [x] Constructor without id
@@ -73,78 +149,127 @@ Admin Building Type (App\Tests\AdminBuildingType)
  [x] Building type with complex data
  [x] Building type get title
 
+Building (App\Tests\Unit\Building)
+ [ ] City effect
+ [x] Get
+ [x] Constructor
+ [x] Constructor without id
+ [x] Get title
+ [x] Save new
+ [x] Save update
+ [x] Caching
+ [x] Different building types
+
 Cell (App\Tests\Cell)
- [ ] Get units
- [ ] Save new
- [ ] Clear cache
- [ ] D coord
- [ ] Get work
- [ ] Get title
- [ ] Get cells around
- [ ] Get non existing cell
- [ ] Save update
- [ ] Calc coord
- [ ] Get eat
- [ ] Get money
- [ ] Get planet
- [ ] Constructor
- [ ] Load cells
  [ ] Constructor without owner
+ [x] Clear cache
+ [ ] Save new
+ [ ] Get planet
+ [ ] Get title
+ [ ] Generate map
+ [x] Save update
+ [x] Generate type
+ [x] Get non existing cell
+ [x] Get cells around
+ [ ] Get work
  [ ] Get existing cell
  [ ] Calc distance
- [ ] Generate map
- [ ] Generate type
+ [ ] Calc coord
+ [x] D coord
  [ ] Get mission need points
+ [ ] Load cells
+ [ ] Get units
+ [ ] Constructor
+ [ ] Get eat
+ [ ] Get money
 
 Create Game Simple (App\Tests\CreateGameSimple)
- [ ] Game caching
+ [x] Create game with different map sizes
  [ ] Create basic game class
- [ ] Game list
- [ ] User color generation
- [ ] Game get method
- [ ] Create game with different map sizes
- [ ] Create users for game
- [ ] Html escaping in game name
+ [x] User color generation
  [ ] Create game with different turn types
- [ ] Html escaping in user login
- [ ] Update game data
+ [ ] Create users for game
+ [ ] Game caching
+ [ ] Html escaping in game name
+ [x] Html escaping in user login
+ [x] Game list
+ [x] Update game data
+ [ ] Game get method
 
 Create Game (App\Tests\CreateGame)
- [ ] Whitespace game name
- [ ] Empty game name
- [ ] Create concurrent game
- [ ] Invalid turn type
- [ ] Too small map size
- [ ] Create one window game
- [ ] Create basic game
- [ ] Too large map size
- [ ] X s s in player names
- [ ] Too many players
- [ ] Very long strings
- [ ] Player color generation
- [ ] Data preservation on error
- [ ] Duplicate player names
- [ ] Empty player fields
- [ ] X s s in game name
- [ ] No post data
  [ ] Game initial conditions
+ [x] Empty player fields
+ [ ] Create basic game
+ [x] No post data
+ [x] Too large map size
+ [ ] X s s in game name
+ [x] X s s in player names
+ [x] Too small map size
  [ ] Minimum players
+ [ ] Empty game name
+ [x] Invalid turn type
+ [ ] Data preservation on error
+ [ ] Create concurrent game
+ [ ] Very long strings
+ [ ] Whitespace game name
+ [x] Duplicate player names
+ [ ] Player color generation
+ [x] Create one window game
+ [x] Too many players
 
-Building Type (App\Tests\BuildingType)
- [x] Get existing building type
- [x] Get non existing building type
+Game (App\Tests\Game)
+ [x] Get active player by turn
+ [ ] Get first planet no planets
+ [ ] Get non existing game
+ [x] Calculate concurrently
+ [x] Calculate by turn
+ [x] Construct
+ [ ] Get active player no active
+ [ ] Game list
+ [ ] Get first planet
+ [ ] Save update
+ [ ] Save new
+ [x] Get active player concurrently
+ [ ] Create new game
+ [x] All system message
+ [x] Get existing game
+
+Open Game (App\Tests\OpenGame)
+ [ ] Game list loading
+ [x] Empty game list
+ [ ] Open game with max players
+ [x] Open game with different turn types
+ [ ] Open game without user id
+ [x] Open game without game id
+ [ ] Session state after game opening
+ [ ] Open game with user from different game
+ [ ] Open game with multiple players
+ [ ] Successful game opening
+ [ ] Open non existent game
+ [ ] Open game with non existent user
+ [x] Reopen game with different user
+
+Empty
+ [x] Empty
+
+Research (App\Tests\Research)
+ [x] Get
+ [x] Constructor without id
+ [x] Save new
+ [x] Save update
+ [x] Different research types
+ [x] Research user relationship
+
+Research Type (App\Tests\ResearchType)
+ [x] Get existing research type
+ [x] Get non existing research type
  [x] Constructor
+ [x] Constructor without id
  [x] Get title
- [x] City effect granary
- [x] City effect temple
- [x] City effect temple negative norm
- [x] City effect library
- [x] City effect market
- [x] City effect coliseum
- [x] City effect coliseum negative dis
- [x] City effect no effect
- [x] All predefined building types
-
-Edit Game (App\Tests\EditGame)
- [ ] Load game without id
+ [x] Get turn count
+ [x] Get need age ids
+ [x] Research requirements
+ [x] All predefined research types
+ [x] Get all
+ [ ] Save new research type
 

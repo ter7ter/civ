@@ -1,5 +1,9 @@
 <?php
 // Логика страницы редактирования игры
+use App\MyDB;
+use App\Game;
+use App\User;
+
 $error = false;
 $data = [];
 

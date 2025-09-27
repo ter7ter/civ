@@ -62,14 +62,14 @@ class CellTest extends CommonTestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $userData = $this->createTestUser(['game' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
 
         $cellData = [
             'x' => 3,
             'y' => 7,
             'planet' => $planetId,
             'type' => 'plains',
-            'owner' => $userData['id'],
+            'owner' => $user->id,
             'owner_culture' => 5,
             'road' => 'road',
             'improvement' => 'mine',
@@ -82,6 +82,7 @@ class CellTest extends CommonTestBase
         $this->assertEquals($planetId, $cell->planet);
         $this->assertInstanceOf(CellType::class, $cell->type);
         $this->assertInstanceOf(User::class, $cell->owner);
+        $this->assertEquals($user->id, $cell->owner->id);
         $this->assertEquals(5, $cell->owner_culture);
         $this->assertEquals('road', $cell->road);
         $this->assertEquals('mine', $cell->improvement);
@@ -161,14 +162,14 @@ class CellTest extends CommonTestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $userData = $this->createTestUser(['game' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
 
         $cellData = [
             'x' => 10,
             'y' => 20,
             'planet' => $planetId,
             'type' => 'plains',
-            'owner' => $userData['id'],
+            'owner' => $user->id,
             'owner_culture' => 3,
             'road' => 'road',
             'improvement' => 'mine',
@@ -185,7 +186,7 @@ class CellTest extends CommonTestBase
         );
         $this->assertNotNull($savedData);
         $this->assertEquals('plains', $savedData['type']);
-        $this->assertEquals($userData['id'], $savedData['owner']);
+        $this->assertEquals($user->id, $savedData['owner']);
         $this->assertEquals(3, $savedData['owner_culture']);
         $this->assertEquals('road', $savedData['road']);
         $this->assertEquals('mine', $savedData['improvement']);
@@ -199,14 +200,14 @@ class CellTest extends CommonTestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $userData = $this->createTestUser(['game' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
 
         // Создаем клетку
         $this->createTestCell(['x' => 5, 'y' => 5, 'planet' => $planetId, 'type' => 'plains']);
 
         Cell::clearCache();
         $cell = Cell::get(5, 5, $planetId);
-        $cell->owner = User::get($userData['id']);
+        $cell->owner = User::get($user->id);
         $cell->owner_culture = 10;
         $cell->road = 'iron';
         $cell->improvement = 'irrigation';
@@ -218,7 +219,7 @@ class CellTest extends CommonTestBase
             ['x' => 5, 'y' => 5, 'planet' => $planetId],
             "row"
         );
-        $this->assertEquals($userData['id'], $updatedData['owner']);
+        $this->assertEquals($user->id, $updatedData['owner']);
         $this->assertEquals(10, $updatedData['owner_culture']);
         $this->assertEquals('iron', $updatedData['road']);
         $this->assertEquals('irrigation', $updatedData['improvement']);
@@ -403,11 +404,11 @@ class CellTest extends CommonTestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $userData = $this->createTestUser(['game' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
         $this->createTestCell(['x' => 0, 'y' => 0, 'planet' => $planetId, 'type' => 'plains']);
 
         // Создаем юнит на клетке
-        $unit = $this->createTestUnit(['x' => 0, 'y' => 0, 'planet' => $planetId, 'user_id' => $userData['id']]);
+        $unit = $this->createTestUnit(['x' => 0, 'y' => 0, 'planet' => $planetId, 'user_id' => $user->id]);
 
         Cell::clearCache();
         $cell = Cell::get(0, 0, $planetId);

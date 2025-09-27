@@ -104,10 +104,10 @@ class BuildingTypeTest extends TestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $userData = $this->createTestUser(['game' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
         $city = $this->createTestCity([
             'planet' => $planetId,
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'x' => 10,
             'y' => 10,
         ]);
@@ -135,10 +135,10 @@ class BuildingTypeTest extends TestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $userData = $this->createTestUser(['game' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
         $city = $this->createTestCity([
             'planet' => $planetId,
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'x' => 10,
             'y' => 10,
         ]);
@@ -165,10 +165,10 @@ class BuildingTypeTest extends TestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $userData = $this->createTestUser(['game' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
         $city = $this->createTestCity([
             'planet' => $planetId,
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'x' => 10,
             'y' => 10,
         ]);
@@ -195,10 +195,10 @@ class BuildingTypeTest extends TestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $userData = $this->createTestUser(['game' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
         $city = $this->createTestCity([
             'planet' => $planetId,
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'x' => 10,
             'y' => 10,
         ]);
@@ -222,10 +222,10 @@ class BuildingTypeTest extends TestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $userData = $this->createTestUser(['game' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
         $city = $this->createTestCity([
             'planet' => $planetId,
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'x' => 10,
             'y' => 10,
         ]);
@@ -249,10 +249,10 @@ class BuildingTypeTest extends TestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $userData = $this->createTestUser(['game' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
         $city = $this->createTestCity([
             'planet' => $planetId,
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'x' => 10,
             'y' => 10,
         ]);
@@ -281,10 +281,10 @@ class BuildingTypeTest extends TestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $userData = $this->createTestUser(['game' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
         $city = $this->createTestCity([
             'planet' => $planetId,
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'x' => 10,
             'y' => 10,
         ]);
@@ -313,10 +313,10 @@ class BuildingTypeTest extends TestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $userData = $this->createTestUser(['game' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
         $city = $this->createTestCity([
             'planet' => $planetId,
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'x' => 10,
             'y' => 10,
         ]);

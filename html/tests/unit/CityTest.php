@@ -49,9 +49,9 @@ class CityTest extends TestBase
      */
     public function testConstructor()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         $data = [
-            'user_id' => $userData["id"],
+            'user_id' => $user->id,
             'planet' => $planetId,
             'x' => 10,
             'y' => 10,
@@ -61,7 +61,7 @@ class CityTest extends TestBase
         $this->assertEquals('Test City', $city->title);
         $this->assertEquals(10, $city->x);
         $this->assertEquals(10, $city->y);
-        $this->assertEquals($userData["id"], $city->user->id);
+        $this->assertEquals($user->id, $city->user->id);
     }
 
     /**
@@ -69,7 +69,7 @@ class CityTest extends TestBase
      */
     public function testByCoords()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         $city = City::by_coords(10, 10, $planetId);
         $this->assertInstanceOf(City::class, $city);
         $this->assertEquals($cityData->id, $city->id);
@@ -80,7 +80,7 @@ class CityTest extends TestBase
      */
     public function testGetTitle()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
         $this->assertEquals('Test City', $city->get_title());
@@ -91,7 +91,7 @@ class CityTest extends TestBase
      */
     public function testGetCultureCells()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity([
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity([
             'x' => 11,
             'y' => 11
         ]);
@@ -108,7 +108,7 @@ class CityTest extends TestBase
      */
     public function testGetPossibleUnits()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         TestGameDataInitializer::initializeUnitTypes();
         City::clearCache();
         $city = City::get($cityData->id);
@@ -122,7 +122,7 @@ class CityTest extends TestBase
      */
     public function testCalculateEat()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
         $city->peat = 5;
@@ -137,7 +137,7 @@ class CityTest extends TestBase
      */
     public function testCalculateWork()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
         $city->pwork = 5;
@@ -150,7 +150,7 @@ class CityTest extends TestBase
      */
     public function testCalculateMoney()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
         $city->pmoney = 10;
@@ -163,7 +163,7 @@ class CityTest extends TestBase
      */
     public function testCalculateResearch()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
         $city->presearch = 5;
@@ -176,7 +176,7 @@ class CityTest extends TestBase
      */
     public function testCalculateCulture()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
         $city->culture = 0;
@@ -191,7 +191,7 @@ class CityTest extends TestBase
      */
     public function testAddPeople()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity(["population" => 1]);
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity(["population" => 1]);
         City::clearCache();
         $city = City::get($cityData->id);
         $city->add_people();
@@ -203,7 +203,7 @@ class CityTest extends TestBase
      */
     public function testRemovePeople()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity(["population" => 2]);
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity(["population" => 2]);
         City::clearCache();
         $city = City::get($cityData->id);
         $city->remove_people();
@@ -215,7 +215,7 @@ class CityTest extends TestBase
      */
     public function testSave()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity(["title" => "Original Title"]);
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity(["title" => "Original Title"]);
         City::clearCache();
         $city = City::get($cityData->id);
         $city->title = "New Title";
@@ -230,7 +230,7 @@ class CityTest extends TestBase
      */
     public function testCreateUnit()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
         TestGameDataInitializer::initializeUnitTypes();
@@ -248,7 +248,7 @@ class CityTest extends TestBase
      */
     public function testCreateBuilding()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
         TestGameDataInitializer::initializeBuildingTypes();
@@ -264,7 +264,7 @@ class CityTest extends TestBase
      */
     public function testCalculateBuildings()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
         TestGameDataInitializer::initializeBuildingTypes();
@@ -280,7 +280,7 @@ class CityTest extends TestBase
      */
     public function testCheckMood()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
         $city->people_dis = 10;
@@ -297,7 +297,7 @@ class CityTest extends TestBase
      */
     public function testSelectNextProduction()
     {
-        [$gameData, $userData, $planetId, $cityData] = $this->setUpTestCity();
+        [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
         TestGameDataInitializer::initializeUnitTypes();
@@ -309,3 +309,4 @@ class CityTest extends TestBase
         $this->assertEquals($unitType->id, $city->production);
     }
 }
+?>

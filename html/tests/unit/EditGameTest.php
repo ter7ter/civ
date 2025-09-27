@@ -46,17 +46,17 @@ class EditGameTest extends TestBase
         // Создаем тестовых пользователей
         $this->createTestUser([
             "login" => "Игрок1",
-            "game" => $game["id"],
+            "game" => $game->id,
             "turn_order" => 1,
         ]);
         $this->createTestUser([
             "login" => "Игрок2",
-            "game" => $game["id"],
+            "game" => $game->id,
             "turn_order" => 2,
         ]);
 
         $this->simulatePostRequest([
-            "game_id" => $game["id"],
+            "game_id" => $game->id,
             "name" => "Новое название",
             "map_w" => 150,
             "map_h" => 200,
@@ -94,11 +94,11 @@ class EditGameTest extends TestBase
             "turn_type" => "byturn",
         ]);
 
-        $this->createTestUser(["login" => "Игрок1", "game" => $game["id"]]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game["id"]]);
+        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $this->simulatePostRequest([
-            "game_id" => $game["id"],
+            "game_id" => $game->id,
             "name" => "Обновленное название",
             "map_w" => 100, // оставляем прежние значения
             "map_h" => 100,
@@ -126,11 +126,11 @@ class EditGameTest extends TestBase
     public function testEditMapSize(): void
     {
         $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Игрок1", "game" => $game["id"]]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game["id"]]);
+        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $this->simulatePostRequest([
-            "game_id" => $game["id"],
+            "game_id" => $game->id,
             "name" => "Test Game",
             "map_w" => 500, // максимальный размер
             "map_h" => 50, // минимальный размер
@@ -157,14 +157,14 @@ class EditGameTest extends TestBase
     public function testEditTurnType(): void
     {
         $game = $this->createTestGame(["turn_type" => "byturn"]);
-        $this->createTestUser(["login" => "Игрок1", "game" => $game["id"]]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game["id"]]);
+        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $turnTypes = ["concurrently", "byturn", "onewindow"];
 
         foreach ($turnTypes as $turnType) {
             $this->simulatePostRequest([
-                "game_id" => $game["id"],
+                "game_id" => $game->id,
                 "name" => "Test Game",
                 "map_w" => 100,
                 "map_h" => 100,
@@ -199,29 +199,29 @@ class EditGameTest extends TestBase
 
         $this->createTestUser([
             "login" => "Первый игрок",
-            "game" => $game["id"],
+            "game" => $game->id,
             "turn_order" => 1,
         ]);
         $this->createTestUser([
             "login" => "Второй игрок",
-            "game" => $game["id"],
+            "game" => $game->id,
             "turn_order" => 2,
         ]);
         $this->createTestUser([
             "login" => "Третий игрок",
-            "game" => $game["id"],
+            "game" => $game->id,
             "turn_order" => 3,
         ]);
 
         // Симулируем GET запрос
-        $_REQUEST = ["game_id" => $game["id"]];
-        $_GET = ["game_id" => $game["id"]];
+        $_REQUEST = ["game_id" => $game->id];
+        $_GET = ["game_id" => $game->id];
 
         $vars = mockIncludeFile(__DIR__ . "/../../pages/editgame.php");
         $data = $vars["data"] ?? [];
 
         // Проверяем, что данные загрузились корректно
-        $this->assertEquals($game["id"], $data["game_id"]);
+        $this->assertEquals($game->id, $data["game_id"]);
         $this->assertEquals("Тестовая игра для загрузки", $data["name"]);
         $this->assertEquals(150, $data["map_w"]);
         $this->assertEquals(200, $data["map_h"]);
@@ -238,11 +238,11 @@ class EditGameTest extends TestBase
     public function testEditWithEmptyName(): void
     {
         $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Игрок1", "game" => $game["id"]]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game["id"]]);
+        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $this->simulatePostRequest([
-            "game_id" => $game["id"],
+            "game_id" => $game->id,
             "name" => "", // пустое название
             "map_w" => 100,
             "map_h" => 100,
@@ -265,12 +265,12 @@ class EditGameTest extends TestBase
     public function testEditWithInvalidMapSize(): void
     {
         $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Игрок1", "game" => $game["id"]]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game["id"]]);
+        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         // Тест слишком маленькой карты
         $this->simulatePostRequest([
-            "game_id" => $game["id"],
+            "game_id" => $game->id,
             "name" => "Test Game",
             "map_w" => 49, // меньше минимума
             "map_h" => 100,
@@ -288,7 +288,7 @@ class EditGameTest extends TestBase
 
         // Тест слишком большой карты
         $this->simulatePostRequest([
-            "game_id" => $game["id"],
+            "game_id" => $game->id,
             "name" => "Test Game",
             "map_w" => 100,
             "map_h" => 501, // больше максимума
@@ -311,11 +311,11 @@ class EditGameTest extends TestBase
     public function testEditWithInvalidTurnType(): void
     {
         $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Игрок1", "game" => $game["id"]]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game["id"]]);
+        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $this->simulatePostRequest([
-            "game_id" => $game["id"],
+            "game_id" => $game->id,
             "name" => "Test Game",
             "map_w" => 100,
             "map_h" => 100,
@@ -412,7 +412,7 @@ class EditGameTest extends TestBase
         ]);
 
         $testData = [
-            "game_id" => $game["id"],
+            "game_id" => $game->id,
             "name" => "", // пустое имя вызовет ошибку
             "map_w" => 150,
             "map_h" => 200,
@@ -456,13 +456,13 @@ class EditGameTest extends TestBase
     public function testXSSInEditedGameName(): void
     {
         $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Игрок1", "game" => $game["id"]]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game["id"]]);
+        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $maliciousName = '<script>alert("XSS")</script>';
 
         $this->simulatePostRequest([
-            "game_id" => $game["id"],
+            "game_id" => $game->id,
             "name" => $maliciousName,
             "map_w" => 100,
             "map_h" => 100,
@@ -493,11 +493,11 @@ class EditGameTest extends TestBase
      */
     public function testVeryLongStringsInEdit(): void
     {
-        $gameData = $this->createTestGame();
+        $game = $this->createTestGame();
         $longName = str_repeat("A", 250); // разумная длина для тестирования
 
         $this->simulatePostRequest([
-            "game_id" => $gameData["id"],
+            "game_id" => $game->id,
             "name" => $longName,
             "map_w" => 100,
             "map_h" => 100,
@@ -548,11 +548,11 @@ class EditGameTest extends TestBase
     public function testMultipleValidationErrors(): void
     {
         $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Игрок1", "game" => $game["id"]]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game["id"]]);
+        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $this->simulatePostRequest([
-            "game_id" => $game["id"],
+            "game_id" => $game->id,
             "name" => "", // пустое название
             "map_w" => 49, // слишком маленькая ширина
             "map_h" => 501, // слишком большая высота
@@ -582,11 +582,11 @@ class EditGameTest extends TestBase
             "turn_type" => "byturn",
         ];
         $game = $this->createTestGame($originalData);
-        $this->createTestUser(["login" => "Игрок1", "game" => $game["id"]]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game["id"]]);
+        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $this->simulatePostRequest([
-            "game_id" => $game["id"],
+            "game_id" => $game->id,
             "name" => "", // пустое название - ошибка валидации
             "map_w" => 150,
             "map_h" => 200,

@@ -20,13 +20,14 @@ class EventTest extends TestBase
      */
     public function testGet(): void
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $result = $this->createTestGameWithPlanetAndUser();
+        $game = $result['game'];
+        $user = $result['user'];
 
         // Создаем событие через БД
         $eventId = MyDB::insert('event', [
             'type' => 'research',
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'object' => 1,
             'source' => null,
         ]);
@@ -37,7 +38,7 @@ class EventTest extends TestBase
         $this->assertEquals($eventId, $event->id);
         $this->assertEquals('research', $event->type);
         $this->assertInstanceOf(User::class, $event->user);
-        $this->assertEquals($userData['id'], $event->user->id);
+        $this->assertEquals($user->id, $event->user->id);
         $this->assertInstanceOf(ResearchType::class, $event->object);
         $this->assertEquals(1, $event->object->id);
         $this->assertNull($event->soruce);
@@ -48,14 +49,14 @@ class EventTest extends TestBase
      */
     public function testConstructorResearch(): void
     {
-        $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $result = $this->createTestGameWithPlanetAndUser();
+        $game = $result['game'];
+        $user = $result['user'];
 
         $data = [
             'id' => 1,
             'type' => 'research',
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'object' => 1, // Гончарное дело
         ];
 
@@ -64,7 +65,7 @@ class EventTest extends TestBase
         $this->assertEquals(1, $event->id);
         $this->assertEquals('research', $event->type);
         $this->assertInstanceOf(User::class, $event->user);
-        $this->assertEquals($userData['id'], $event->user->id);
+        $this->assertEquals($user->id, $event->user->id);
         $this->assertInstanceOf(ResearchType::class, $event->object);
         $this->assertEquals(1, $event->object->id);
         $this->assertNull($event->soruce);
@@ -76,16 +77,16 @@ class EventTest extends TestBase
     public function testConstructorCityBuilding(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-        $cityData = $this->createTestCity(['user_id' => $userData['id'], 'planet' => $planetId]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
+        $city = $this->createTestCity(['user_id' => $user->id, 'planet' => $planetId]);
 
         $data = [
             'id' => 2,
             'type' => 'city_building',
-            'user_id' => $userData['id'],
-            'source' => $cityData['id'], // ID города
+            'user_id' => $user->id,
+            'source' => $city->id, // ID города
             'object' => 1, // Бараки
         ];
 
@@ -94,9 +95,9 @@ class EventTest extends TestBase
         $this->assertEquals(2, $event->id);
         $this->assertEquals('city_building', $event->type);
         $this->assertInstanceOf(User::class, $event->user);
-        $this->assertEquals($userData['id'], $event->user->id);
+        $this->assertEquals($user->id, $event->user->id);
         $this->assertInstanceOf(City::class, $event->soruce);
-        $this->assertEquals($cityData['id'], $event->soruce->id);
+        $this->assertEquals($city->id, $event->soruce->id);
         $this->assertInstanceOf(BuildingType::class, $event->object);
         $this->assertEquals(1, $event->object->id);
     }
@@ -107,16 +108,16 @@ class EventTest extends TestBase
     public function testConstructorCityUnit(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-        $cityData = $this->createTestCity(['user_id' => $userData['id'], 'planet' => $planetId]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
+        $city = $this->createTestCity(['user_id' => $user->id, 'planet' => $planetId]);
 
         $data = [
             'id' => 3,
             'type' => 'city_unit',
-            'user_id' => $userData['id'],
-            'source' => $cityData['id'], // ID города
+            'user_id' => $user->id,
+            'source' => $city->id, // ID города
             'object' => 1, // Поселенец
         ];
 
@@ -125,9 +126,9 @@ class EventTest extends TestBase
         $this->assertEquals(3, $event->id);
         $this->assertEquals('city_unit', $event->type);
         $this->assertInstanceOf(User::class, $event->user);
-        $this->assertEquals($userData['id'], $event->user->id);
+        $this->assertEquals($user->id, $event->user->id);
         $this->assertInstanceOf(City::class, $event->soruce);
-        $this->assertEquals($cityData['id'], $event->soruce->id);
+        $this->assertEquals($city->id, $event->soruce->id);
         $this->assertInstanceOf(UnitType::class, $event->object);
         $this->assertEquals(1, $event->object->id);
     }
@@ -137,13 +138,13 @@ class EventTest extends TestBase
      */
     public function testSaveNew(): void
     {
-        $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $result = $this->createTestGameWithPlanetAndUser();
+        $game = $result['game'];
+        $user = $result['user'];
 
         $data = [
             'type' => 'research',
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'object' => 1,
         ];
 
@@ -160,7 +161,7 @@ class EventTest extends TestBase
         );
         $this->assertNotNull($savedData);
         $this->assertEquals('research', $savedData['type']);
-        $this->assertEquals($userData['id'], $savedData['user_id']);
+        $this->assertEquals($user->id, $savedData['user_id']);
         $this->assertEquals(1, $savedData['object']);
         $this->assertNull($savedData['source']);
     }
@@ -171,15 +172,15 @@ class EventTest extends TestBase
     public function testSaveWithSource(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-        $cityData = $this->createTestCity(['user_id' => $userData['id'], 'planet' => $planetId]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $user = $this->createTestUser(['game' => $game->id]);
+        $city = $this->createTestCity(['user_id' => $user->id, 'planet' => $planetId]);
 
         $data = [
             'type' => 'city_building',
-            'user_id' => $userData['id'],
-            'source' => $cityData['id'],
+            'user_id' => $user->id,
+            'source' => $city->id,
             'object' => 1,
         ];
 
@@ -196,8 +197,8 @@ class EventTest extends TestBase
         );
         $this->assertNotNull($savedData);
         $this->assertEquals('city_building', $savedData['type']);
-        $this->assertEquals($userData['id'], $savedData['user_id']);
-        $this->assertEquals($cityData['id'], $savedData['source']);
+        $this->assertEquals($user->id, $savedData['user_id']);
+        $this->assertEquals($city->id, $savedData['source']);
         $this->assertEquals(1, $savedData['object']);
     }
 
@@ -206,14 +207,14 @@ class EventTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $result = $this->createTestGameWithPlanetAndUser();
+        $game = $result['game'];
+        $user = $result['user'];
 
         // Создаем событие через БД
         $eventId = MyDB::insert('event', [
             'type' => 'research',
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'object' => 1,
             'source' => null,
         ]);
@@ -221,7 +222,7 @@ class EventTest extends TestBase
         $data = [
             'id' => $eventId,
             'type' => 'research',
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'object' => 1,
         ];
 
@@ -243,13 +244,14 @@ class EventTest extends TestBase
      */
     public function testRemove(): void
     {
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $result = $this->createTestGameWithPlanetAndUser();
+        $game = $result['game'];
+        $user = $result['user'];
 
         // Создаем событие через БД
         $eventId = MyDB::insert('event', [
             'type' => 'research',
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'object' => 1,
             'source' => null,
         ]);
@@ -257,7 +259,7 @@ class EventTest extends TestBase
         $data = [
             'id' => $eventId,
             'type' => 'research',
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'object' => 1,
         ];
 
@@ -278,25 +280,25 @@ class EventTest extends TestBase
      */
     public function testGetTitle(): void
     {
-        $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $result = $this->createTestGameWithPlanetUserAndCity();
+        $game = $result['game'];
+        $planetId = $result['planet'];
+        $user = $result['user'];
+        $city = $result['city'];
 
         // Тест исследования
         $researchEvent = new Event([
             'type' => 'research',
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'object' => 1,
         ]);
         $this->assertEquals('Исследование завершено', $researchEvent->get_title());
 
         // Тест строительства
-        $cityData = $this->createTestCity(['user_id' => $userData['id'], 'planet' => $planetId]);
         $buildingEvent = new Event([
             'type' => 'city_building',
-            'user_id' => $userData['id'],
-            'source' => $cityData['id'],
+            'user_id' => $user->id,
+            'source' => $city->id,
             'object' => 1,
         ]);
         $this->assertEquals('Строительство завершено', $buildingEvent->get_title());
@@ -304,8 +306,8 @@ class EventTest extends TestBase
         // Тест создания юнита
         $unitEvent = new Event([
             'type' => 'city_unit',
-            'user_id' => $userData['id'],
-            'source' => $cityData['id'],
+            'user_id' => $user->id,
+            'source' => $city->id,
             'object' => 1,
         ]);
         $this->assertEquals('Юнит создан', $unitEvent->get_title());
@@ -313,7 +315,7 @@ class EventTest extends TestBase
         // Тест неизвестного типа
         $unknownEvent = new Event([
             'type' => 'unknown',
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'object' => 1,
         ]);
         $this->assertEquals('Неизвестное событие', $unknownEvent->get_title());
@@ -324,16 +326,16 @@ class EventTest extends TestBase
      */
     public function testGetText(): void
     {
-        $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-        $cityData = $this->createTestCity(['user_id' => $userData['id'], 'planet' => $planetId]);
+        $result = $this->createTestGameWithPlanetUserAndCity();
+        $game = $result['game'];
+        $planetId = $result['planet'];
+        $user = $result['user'];
+        $city = $result['city'];
 
         // Тест исследования
         $researchEvent = new Event([
             'type' => 'research',
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'object' => 1,
         ]);
         $this->assertStringContainsString('Вы исследовали', $researchEvent->get_text());
@@ -342,8 +344,8 @@ class EventTest extends TestBase
         // Тест строительства
         $buildingEvent = new Event([
             'type' => 'city_building',
-            'user_id' => $userData['id'],
-            'source' => $cityData['id'],
+            'user_id' => $user->id,
+            'source' => $city->id,
             'object' => 1,
         ]);
         $this->assertStringContainsString('построено', $buildingEvent->get_text());
@@ -352,8 +354,8 @@ class EventTest extends TestBase
         // Тест создания юнита
         $unitEvent = new Event([
             'type' => 'city_unit',
-            'user_id' => $userData['id'],
-            'source' => $cityData['id'],
+            'user_id' => $user->id,
+            'source' => $city->id,
             'object' => 1,
         ]);
         $this->assertStringContainsString('создан юнит', $unitEvent->get_text());
@@ -362,7 +364,7 @@ class EventTest extends TestBase
         // Тест неизвестного типа
         $unknownEvent = new Event([
             'type' => 'unknown',
-            'user_id' => $userData['id'],
+            'user_id' => $user->id,
             'object' => 1,
         ]);
         $this->assertEquals('Неизвестное событие', $unknownEvent->get_text());

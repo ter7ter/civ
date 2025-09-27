@@ -50,7 +50,7 @@ class CellType {
             'eat' => 2,
             'work' => 1,
             'money' => 1,
-            'chance_inc_other' => ['mountians' => [15, 8]],
+            'chance_inc_other' => ['mountains' => [15, 8]],
             'border_no' => ['water2', 'water3']]);
         new CellType(['id' => 'plains2',
             'title' => 'равнина',
@@ -79,7 +79,7 @@ class CellType {
             'eat' => 1,
             'work' => 2,
             'money' => 0,
-            'chance_inc_other' => ['mountians' => [3, 2]],
+            'chance_inc_other' => ['mountains' => [3, 2]],
             'border_no' => ['water2', 'water3']]);
         new CellType(['id' => 'mountains',
             'title' => 'горы',

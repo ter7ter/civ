@@ -56,6 +56,11 @@ class TestRunner
                     $this->options["unit"] = false;
                     $this->options["js"] = false;
                     break;
+                case "--js-only":
+                    $this->options["unit"] = false;
+                    $this->options["integration"] = false;
+                    $this->options["js"] = true;
+                    break;
                 case "--with-js":
                     $this->options["js"] = true;
                     break;

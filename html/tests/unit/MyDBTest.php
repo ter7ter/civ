@@ -13,6 +13,12 @@ use PDOException;
  */
 class MyDBTest extends TestBase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        MyDB::disableLogging();
+        MyDB::clearQueryLog();
+    }
     /**
      * Тест установки конфигурации БД
      */
@@ -145,7 +151,7 @@ class MyDBTest extends TestBase
         // Обновляем запись
         $result = MyDB::update($tableName, ['status' => 'inactive'], 1);
 
-        $this->assertTrue($result);
+        $this->assertGreaterThan(0, $result);
 
         // Проверяем обновление
         $updated = MyDB::query("SELECT status FROM `$tableName` WHERE id = 1", [], 'elem');
@@ -169,7 +175,7 @@ class MyDBTest extends TestBase
         // Обновляем записи с условием
         $result = MyDB::update($tableName, ['active' => 0], "category = 'A'");
 
-        $this->assertTrue($result);
+        $this->assertGreaterThan(0, $result);
 
         // Проверяем обновление
         $updated = MyDB::query("SELECT active FROM `$tableName` WHERE category = 'A'", [], 'elem');
@@ -260,6 +266,141 @@ class MyDBTest extends TestBase
         // Проверяем, что изменения сохранены
         $finalBalance = MyDB::query("SELECT balance FROM `$tableName` WHERE id = 1", [], 'elem');
         $this->assertEquals(150, $finalBalance);
+
+        // Очищаем таблицу
+        MyDB::query("DROP TABLE `$tableName`");
+    }
+
+    /**
+     * Тест включения логирования
+     */
+    public function testEnableLogging(): void
+    {
+        // По умолчанию логирование отключено (лог пустой)
+        $log = MyDB::getQueryLog();
+        $this->assertEmpty($log);
+
+        // Выполняем запрос без логирования
+        MyDB::query("SELECT 1");
+
+        // Лог все еще пустой
+        $log = MyDB::getQueryLog();
+        $this->assertEmpty($log);
+
+        // Включаем логирование
+        MyDB::enableLogging();
+
+        // Теперь запрос логируется
+        MyDB::query("SELECT 1");
+
+        $log = MyDB::getQueryLog();
+        $this->assertCount(1, $log);
+    }
+
+    /**
+     * Тест получения лога запросов
+     */
+    public function testGetQueryLog(): void
+    {
+        $log = MyDB::getQueryLog();
+
+        $this->assertIsArray($log);
+        $this->assertEmpty($log);
+    }
+
+    /**
+     * Тест логирования в query
+     */
+    public function testQueryLogging(): void
+    {
+        // Включаем логирование
+        MyDB::enableLogging();
+
+        // Создаем уникальную тестовую таблицу
+        $tableName = 'test_query_log_' . uniqid();
+        MyDB::query("CREATE TABLE `$tableName` (id INT PRIMARY KEY)");
+
+        // Проверяем лог
+        $log = MyDB::getQueryLog();
+        $this->assertCount(1, $log);
+        $this->assertEquals("CREATE TABLE `$tableName` (id INT PRIMARY KEY)", $log[0]['query']);
+        $this->assertIsArray($log[0]['params']);
+        $this->assertArrayHasKey('timestamp', $log[0]);
+
+        // Очищаем таблицу
+        MyDB::query("DROP TABLE `$tableName`");
+    }
+
+    /**
+     * Тест логирования в insert
+     */
+    public function testInsertLogging(): void
+    {
+        // Включаем логирование
+        MyDB::enableLogging();
+
+        // Создаем уникальную тестовую таблицу
+        $tableName = 'test_insert_log_' . uniqid();
+        MyDB::query("CREATE TABLE `$tableName` (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(50))");
+
+        // Вставляем данные
+        MyDB::insert($tableName, ['name' => 'Test']);
+
+        // Проверяем лог (должен быть лог для CREATE и INSERT)
+        $log = MyDB::getQueryLog();
+        $this->assertGreaterThanOrEqual(2, count($log));
+
+        // Находим лог INSERT
+        $insertLog = null;
+        foreach ($log as $entry) {
+            if (strpos($entry['query'], 'INSERT INTO') === 0) {
+                $insertLog = $entry;
+                break;
+            }
+        }
+
+        $this->assertNotNull($insertLog);
+        $this->assertStringContainsString('INSERT INTO', $insertLog['query']);
+        $this->assertIsArray($insertLog['params']);
+        $this->assertArrayHasKey('timestamp', $insertLog);
+
+        // Очищаем таблицу
+        MyDB::query("DROP TABLE `$tableName`");
+    }
+
+    /**
+     * Тест логирования в update
+     */
+    public function testUpdateLogging(): void
+    {
+        // Включаем логирование
+        MyDB::enableLogging();
+
+        // Создаем уникальную тестовую таблицу
+        $tableName = 'test_update_log_' . uniqid();
+        MyDB::query("CREATE TABLE `$tableName` (id INT PRIMARY KEY, value INT)");
+        MyDB::insert($tableName, ['id' => 1, 'value' => 10]);
+
+        // Обновляем данные
+        MyDB::update($tableName, ['value' => 20], 1);
+
+        // Проверяем лог
+        $log = MyDB::getQueryLog();
+        $this->assertGreaterThanOrEqual(3, count($log)); // CREATE, INSERT, UPDATE
+
+        // Находим лог UPDATE
+        $updateLog = null;
+        foreach ($log as $entry) {
+            if (strpos($entry['query'], 'UPDATE') === 0) {
+                $updateLog = $entry;
+                break;
+            }
+        }
+
+        $this->assertNotNull($updateLog);
+        $this->assertStringContainsString('UPDATE', $updateLog['query']);
+        $this->assertIsArray($updateLog['params']);
+        $this->assertArrayHasKey('timestamp', $updateLog);
 
         // Очищаем таблицу
         MyDB::query("DROP TABLE `$tableName`");

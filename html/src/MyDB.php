@@ -16,6 +16,16 @@ class MyDB
      */
     private static $_tablePrefix = '';
 
+    /**
+     * @var bool
+     */
+    private static $_loggingEnabled = false;
+
+    /**
+     * @var array
+     */
+    private static $_queryLog = [];
+
     public static $dbhost;
     public static $dbuser;
     public static $dbpass;
@@ -63,17 +73,9 @@ class MyDB
         // Проверяем, является ли это запросом, который не возвращает данные
         $queryStart = strtoupper(substr(trim($query), 0, 10));
 
-        // Для DDL запросов (CREATE, ALTER, DROP) используем exec
-        /*if (
-            strpos($queryStart, "CREATE") === 0 ||
-            strpos($queryStart, "ALTER") === 0 ||
-            strpos($queryStart, "DROP") === 0
-        ) {
-            $db->exec($query);
-        } else {*/
-            $stmt = $db->prepare($query);
-            $stmt->execute($vars);
-        //}
+        $stmt = $db->prepare($query);
+        $stmt->execute($vars);
+        self::logQuery($query, $vars);
 
         if ($stmt->columnCount() == 0) {
             // Запрос не возвращает столбцы
@@ -113,12 +115,12 @@ class MyDB
                 "(" .
                 implode(
                     ",",
-                    array_map(fn($i) => ":p$i", range(0, count($keys) - 1)),
+                    array_map(fn ($i) => ":p$i", range(0, count($keys) - 1)),
                 ) .
                 ")";
             $query =
                 "INSERT INTO `$table` (" .
-                implode(",", array_map(fn($k) => "`$k`", $keys)) .
+                implode(",", array_map(fn ($k) => "`$k`", $keys)) .
                 ") VALUES " .
                 implode(",", array_fill(0, count($values), $placeholders));
             $params = [];
@@ -132,10 +134,10 @@ class MyDB
         } else {
             // Single row
             $keys = array_keys($values);
-            $placeholders = implode(", ", array_map(fn($k) => ":$k", $keys));
+            $placeholders = implode(", ", array_map(fn ($k) => ":$k", $keys));
             $query =
                 "INSERT INTO `$table` (" .
-                implode(",", array_map(fn($k) => "`$k`", $keys)) .
+                implode(",", array_map(fn ($k) => "`$k`", $keys)) .
                 ") VALUES (" .
                 $placeholders .
                 ")";
@@ -146,13 +148,14 @@ class MyDB
         }
         $stmt = $db->prepare($query);
         $stmt->execute($params);
+        self::logQuery($query, $params);
         return $db->lastInsertId();
     }
 
     public static function update($table, $values, $where)
     {
         $db = MyDB::get();
-        $setParts = array_map(fn($k) => "`$k` = :$k", array_keys($values));
+        $setParts = array_map(fn ($k) => "`$k` = :$k", array_keys($values));
         $query = "UPDATE `$table` SET " . implode(", ", $setParts);
         $params = [];
         foreach ($values as $k => $v) {
@@ -167,7 +170,8 @@ class MyDB
         }
         $stmt = $db->prepare($query);
         $stmt->execute($params);
-        return true;
+        self::logQuery($query, $params);
+        return $stmt->rowCount();
     }
 
     public static function start_transaction()
@@ -192,5 +196,36 @@ class MyDB
         if ($db->inTransaction()) {
             $db->rollBack();
         }
+    }
+
+    private static function logQuery($query, $params = [])
+    {
+        if (self::$_loggingEnabled) {
+            self::$_queryLog[] = [
+                'query' => $query,
+                'params' => $params,
+                'timestamp' => time()
+            ];
+        }
+    }
+
+    public static function enableLogging()
+    {
+        self::$_loggingEnabled = true;
+    }
+
+    public static function disableLogging()
+    {
+        self::$_loggingEnabled = false;
+    }
+
+    public static function getQueryLog()
+    {
+        return self::$_queryLog;
+    }
+
+    public static function clearQueryLog()
+    {
+        self::$_queryLog = [];
     }
 }

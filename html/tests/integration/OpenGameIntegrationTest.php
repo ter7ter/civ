@@ -27,21 +27,21 @@ class OpenGameIntegrationTest extends FunctionalTestBase
     public function testFullGameOpeningProcess(): void
     {
         $game = $this->createTestGame(["name" => "Интеграционная игра"]);
-        $player = $this->createTestUser(["login" => "Игрок1", "game" => $game["id"]]);
+        $player = $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
 
         $_REQUEST = [
             "method" => "login",
-            "gid" => $game["id"],
-            "uid" => $player["id"],
+            "gid" => $game->id,
+            "uid" => $player->id,
         ];
 
         $this->simulateGameOpening();
 
-        $this->assertEquals($game["id"], $_SESSION["game_id"]);
-        $this->assertEquals($player["id"], $_SESSION["user_id"]);
+        $this->assertEquals($game->id, $_SESSION["game_id"]);
+        $this->assertEquals($player->id, $_SESSION["user_id"]);
 
-        $this->assertTrue($this->recordExists("game", ["id" => $game["id"]]));
-        $this->assertTrue($this->recordExists("user", ["id" => $player["id"], "game" => $game["id"]]));
+        $this->assertTrue($this->recordExists("game", ["id" => $game->id]));
+        $this->assertTrue($this->recordExists("user", ["id" => $player->id, "game" => $game->id]));
     }
 
     /**
@@ -50,18 +50,18 @@ class OpenGameIntegrationTest extends FunctionalTestBase
     public function testGameOpeningSessionPersistence(): void
     {
         $game = $this->createTestGame(["name" => "Тест сессии"]);
-        $user = $this->createTestUser(["login" => "Тестовый пользователь", "game" => $game["id"]]);
+        $user = $this->createTestUser(["login" => "Тестовый пользователь", "game" => $game->id]);
 
         $_REQUEST = [
             "method" => "login",
-            "gid" => $game["id"],
-            "uid" => $user["id"],
+            "gid" => $game->id,
+            "uid" => $user->id,
         ];
 
         $this->simulateGameOpening();
 
-        $this->assertEquals($game["id"], $_SESSION["game_id"]);
-        $this->assertEquals($user["id"], $_SESSION["user_id"]);
+        $this->assertEquals($game->id, $_SESSION["game_id"]);
+        $this->assertEquals($user->id, $_SESSION["user_id"]);
 
         $sessionGame = Game::get($_SESSION["game_id"]);
         $sessionUser = User::get($_SESSION["user_id"]);
@@ -87,16 +87,16 @@ class OpenGameIntegrationTest extends FunctionalTestBase
             $this->clearSession();
 
             $game = $this->createTestGame($config);
-            $user = $this->createTestUser(["login" => "Игрок", "game" => $game["id"]]);
+            $user = $this->createTestUser(["login" => "Игрок", "game" => $game->id]);
 
             $_REQUEST = [
                 "method" => "login",
-                "gid" => $game["id"],
-                "uid" => $user["id"],
+                "gid" => $game->id,
+                "uid" => $user->id,
             ];
 
             $this->simulateGameOpening();
-            $this->assertEquals($game["id"], $_SESSION["game_id"], "Сессия должна быть установлена для конфигурации: {$config["name"]}");
+            $this->assertEquals($game->id, $_SESSION["game_id"], "Сессия должна быть установлена для конфигурации: {$config["name"]}");
         }
     }
 
@@ -114,7 +114,7 @@ class OpenGameIntegrationTest extends FunctionalTestBase
         foreach ($gameConfigs as $config) {
             $game = $this->createTestGame(["name" => $config["name"]]);
             for ($i = 1; $i <= $config["players"]; $i++) {
-                $this->createTestUser(["login" => "Игрок{$i}", "game" => $game["id"]]);
+                $this->createTestUser(["login" => "Игрок{$i}", "game" => $game->id]);
             }
         }
 
@@ -136,7 +136,7 @@ class OpenGameIntegrationTest extends FunctionalTestBase
 
         // Тест с несуществующим пользователем
         $game = $this->createTestGame();
-        $_REQUEST = ["method" => "login", "gid" => $game["id"], "uid" => 999];
+        $_REQUEST = ["method" => "login", "gid" => $game->id, "uid" => 999];
         ob_start();
         $this->simulateGameOpening();
         $output = ob_get_clean();
@@ -145,8 +145,8 @@ class OpenGameIntegrationTest extends FunctionalTestBase
         // Тест с пользователем из другой игры
         $game1 = $this->createTestGame(["name" => "Игра 1"]);
         $game2 = $this->createTestGame(["name" => "Игра 2"]);
-        $userFromGame2 = $this->createTestUser(["game" => $game2["id"]]);
-        $_REQUEST = ["method" => "login", "gid" => $game1["id"], "uid" => $userFromGame2["id"]];
+        $userFromGame2 = $this->createTestUser(["game" => $game2->id]);
+        $_REQUEST = ["method" => "login", "gid" => $game1->id, "uid" => $userFromGame2->id];
         ob_start();
         $this->simulateGameOpening();
         $output = ob_get_clean();
@@ -159,16 +159,16 @@ class OpenGameIntegrationTest extends FunctionalTestBase
     public function testPerformanceGameOpening(): void
     {
         $game = $this->createTestGame(["map_w" => 500, "map_h" => 500]);
-        $player = $this->createTestUser(["game" => $game["id"]]);
+        $player = $this->createTestUser(["game" => $game->id]);
 
-        $_REQUEST = ["method" => "login", "gid" => $game["id"], "uid" => $player["id"]];
+        $_REQUEST = ["method" => "login", "gid" => $game->id, "uid" => $player->id];
 
         $startTime = microtime(true);
         $this->simulateGameOpening();
         $executionTime = microtime(true) - $startTime;
 
         $this->assertLessThan(1.0, $executionTime);
-        $this->assertEquals($game["id"], $_SESSION["game_id"]);
+        $this->assertEquals($game->id, $_SESSION["game_id"]);
     }
 
     /**
@@ -203,15 +203,15 @@ class OpenGameIntegrationTest extends FunctionalTestBase
         $games = [];
         for ($i = 1; $i <= 2; $i++) {
             $game = $this->createTestGame(["name" => "Игра {$i}"]);
-            $user = $this->createTestUser(["login" => "Игрок игры {$i}", "game" => $game["id"]]);
+            $user = $this->createTestUser(["login" => "Игрок игры {$i}", "game" => $game->id]);
             $games[] = ["game" => $game, "user" => $user];
         }
 
         foreach ($games as $gameData) {
             $this->clearSession();
-            $_REQUEST = ["method" => "login", "gid" => $gameData["game"]["id"], "uid" => $gameData["user"]["id"]];
+            $_REQUEST = ["method" => "login", "gid" => $gameData["game"]->id, "uid" => $gameData["user"]->id];
             $this->simulateGameOpening();
-            $this->assertEquals($gameData["game"]["id"], $_SESSION["game_id"]);
+            $this->assertEquals($gameData["game"]->id, $_SESSION["game_id"]);
         }
     }
 
@@ -221,9 +221,9 @@ class OpenGameIntegrationTest extends FunctionalTestBase
     public function testGameOpeningDataIntegrity(): void
     {
         $game = $this->createTestGame(["turn_num" => 5]);
-        $user = $this->createTestUser(["game" => $game["id"], "money" => 200, "age" => 3]);
+        $user = $this->createTestUser(["game" => $game->id, "money" => 200, "age" => 3]);
 
-        $_REQUEST = ["method" => "login", "gid" => $game["id"], "uid" => $user["id"]];
+        $_REQUEST = ["method" => "login", "gid" => $game->id, "uid" => $user->id];
         $this->simulateGameOpening();
 
         $loadedGame = Game::get($_SESSION["game_id"]);
@@ -242,10 +242,10 @@ class OpenGameIntegrationTest extends FunctionalTestBase
         $game = $this->createTestGame();
         $users = [];
         for ($i = 1; $i <= 2; $i++) {
-            $users[] = $this->createTestUser(["login" => "Игрок{$i}", "game" => $game["id"]]);
+            $users[] = $this->createTestUser(["login" => "Игрок{$i}", "game" => $game->id]);
         }
 
-        $_REQUEST = ["method" => "login", "gid" => $game["id"], "uid" => $users[0]["id"]];
+        $_REQUEST = ["method" => "login", "gid" => $game->id, "uid" => $users[0]->id];
         $this->simulateGameOpening();
 
         $sessionGame = Game::get($_SESSION["game_id"]);

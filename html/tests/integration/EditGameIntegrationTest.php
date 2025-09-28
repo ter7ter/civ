@@ -1,14 +1,42 @@
 <?php
-
 namespace App\Tests;
+
+use App\MyDB;
 
 /**
  * Интеграционные тесты для полного процесса редактирования игры через веб-интерфейс.
+ * Тестирует функциональность страницы editgame.php, включая валидацию, сохранение данных,
+ * безопасность и производительность.
  */
 class EditGameIntegrationTest extends FunctionalTestBase
 {
+    /**
+     * Поставщик данных для тестов с разными типами ходов.
+     */
+    public function turnTypeProvider(): array
+    {
+        return [
+            ['concurrently'],
+            ['byturn'],
+            ['onewindow'],
+        ];
+    }
+
+    /**
+     * Поставщик данных для тестов производительности с разным количеством игроков.
+     */
+    public function playerCountProvider(): array
+    {
+        return [
+            [1],
+            [8],
+            [16],
+        ];
+    }
+
     protected function setUp(): void
     {
+        DatabaseTestAdapter::resetTestDatabase();
         parent::setUp();
         $this->clearRequest();
         $this->clearSession();
@@ -23,10 +51,10 @@ class EditGameIntegrationTest extends FunctionalTestBase
     public function testFullGameEditProcess(): void
     {
         $originalGame = $this->createTestGame(["name" => "Исходная игра"]);
-        $this->createTestUser(["login" => "Алиса", "game" => $originalGame["id"]]);
+        $this->createTestUser(["login" => "Алиса", "game" => $originalGame->id]);
 
         $editData = [
-            "game_id" => $originalGame["id"],
+            "game_id" => $originalGame->id,
             "name" => "Отредактированная игра",
             "map_w" => 50,
             "map_h" => 50,
@@ -41,278 +69,260 @@ class EditGameIntegrationTest extends FunctionalTestBase
         $this->assertTrue($this->recordExists("user", ["login" => "Алиса"]));
     }
 
-    // /**
-    //  * Тест сохранения измененных данных игры.
-    //  */
-    // public function testEditedGameDataPersistence(): void
-    // {
-    //     $originalGame = $this->createTestGame();
-    //     $editData = [
-    //         "game_id" => $originalGame["id"],
-    //         "name" => "Обновленное название",
-    //         "map_w" => 60,
-    //         "map_h" => 60,
-    //         "turn_type" => "onewindow",
-    //     ];
+     /**
+      * Тест сохранения измененных данных игры.
+      */
+     public function testEditedGameDataPersistence(): void
+     {
+         $originalGame = $this->createTestGame();
+         $editData = [
+             "game_id" => $originalGame->id,
+             "name" => "Обновленное название",
+             "map_w" => 60,
+             "map_h" => 60,
+             "turn_type" => "onewindow",
+         ];
 
-    //     $result = $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
-    //     $this->assertPageHasNoError($result);
+         $result = $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
+         $this->assertPageHasNoError($result);
 
-    //     $gameRecord = $this->getLastRecord("game");
-    //     $this->assertEquals("Обновленное название", $gameRecord["name"]);
-    //     $this->assertEquals(60, $gameRecord["map_w"]);
-    //     $this->assertEquals("onewindow", $gameRecord["turn_type"]);
-    // }
+         $gameRecord = $this->getLastRecord("game");
+         $this->assertEquals("Обновленное название", $gameRecord["name"]);
+         $this->assertEquals(60, $gameRecord["map_w"]);
+         $this->assertEquals("onewindow", $gameRecord["turn_type"]);
+     }
 
-    // /**
-    //  * Тест редактирования с разными типами ходов.
-    //  */
-    // public function testEditDifferentTurnTypes(): void
-    // {
-    //     $game = $this->createTestGame();
-    //     $turnTypes = ["concurrently", "byturn", "onewindow"];
+     /**
+      * Тест редактирования с разными типами ходов.
+      *
+      * @dataProvider turnTypeProvider
+      */
+     public function testEditDifferentTurnTypes(string $turnType): void
+     {
+         $game = $this->createTestGame();
 
-    //     foreach ($turnTypes as $turnType) {
-    //         $editData = [
-    //             "game_id" => $game["id"],
-    //             "name" => "Игра с типом $turnType",
-    //             "map_w" => 50,
-    //             "map_h" => 50,
-    //             "turn_type" => $turnType,
-    //         ];
-    //         $result = $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
-    //         $this->assertPageHasNoError($result);
+         $editData = [
+             "game_id" => $game->id,
+             "name" => "Игра с типом $turnType",
+             "map_w" => 50,
+             "map_h" => 50,
+             "turn_type" => $turnType,
+         ];
 
-    //         $gameRecord = $this->getLastRecord("game");
-    //         $this->assertEquals($turnType, $gameRecord["turn_type"]);
-    //     }
-    // }
+         $result = $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
+         $this->assertPageHasNoError($result);
 
-    // /**
-    //  * Тест сохранения порядка игроков при редактировании.
-    //  */
-    // public function testPlayerOrderPreservationOnEdit(): void
-    // {
-    //     $game = $this->createTestGame();
-    //     $players = ["Альфа", "Бета", "Гамма"];
-    //     foreach ($players as $i => $name) {
-    //         $this->createTestUser(["login" => $name, "game" => $game["id"], "turn_order" => $i + 1]);
-    //     }
+         $gameRecord = $this->getLastRecord("game");
+         $this->assertEquals($turnType, $gameRecord["turn_type"]);
+     }
 
-    //     $editData = ["game_id" => $game["id"], "name" => "Новое имя"];
-    //     $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
+     /**
+      * Тест сохранения порядка игроков при редактировании.
+      */
+     public function testPlayerOrderPreservationOnEdit(): void
+     {
+         $game = $this->createTestGame();
+         $players = ["Альфа", "Бета", "Гамма"];
+         foreach ($players as $i => $name) {
+             $this->createTestUser(["login" => $name, "game" => $game->id, "turn_order" => $i + 1]);
+         }
 
-    //     $userOrder = MyDB::query("SELECT login FROM user WHERE game = ? ORDER BY turn_order", [$game["id"]]);
-    //     $this->assertEquals($players, array_column($userOrder, "login"));
-    // }
+         $editData = ["game_id" => $game->id, "name" => "Новое имя"];
+         $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
 
-    // /**
-    //  * Тест сохранения параметров игроков при редактировании.
-    //  */
-    // public function testPlayerParametersPreservationOnEdit(): void
-    // {
-    //     $game = $this->createTestGame();
-    //     $this->createTestUser(["login" => "Богач", "game" => $game["id"], "money" => 100, "age" => 2]);
+         $userOrder = MyDB::query("SELECT login FROM user WHERE game = ? ORDER BY turn_order", [$game->id]);
+         $this->assertEquals($players, array_column($userOrder, "login"));
+     }
 
-    //     $editData = ["game_id" => $game["id"], "name" => "Новое имя"];
-    //     $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
+     /**
+      * Тест сохранения параметров игроков при редактировании.
+      */
+     public function testPlayerParametersPreservationOnEdit(): void
+     {
+         $game = $this->createTestGame();
+         $this->createTestUser(["login" => "Богач", "game" => $game->id, "money" => 100, "age" => 2]);
 
-    //     $user = $this->getLastRecord("user");
-    //     $this->assertEquals(100, $user["money"]);
-    //     $this->assertEquals(2, $user["age"]);
-    // }
+         $editData = ["game_id" => $game->id, "name" => "Новое имя"];
+         $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
 
-    // /**
-    //  * Тест ошибок валидации при редактировании.
-    //  */
-    // public function testValidationErrorsOnEdit(): void
-    // {
-    //     $game = $this->createTestGame(["name" => "Исходная игра"]);
-    //     $invalidData = [
-    //         "game_id" => $game["id"],
-    //         "name" => "",
-    //         "map_w" => 9999,
-    //         "map_h" => 50, // Добавлено
-    //         "turn_type" => "byturn", // Добавлено
-    //     ];
+         $user = $this->getLastRecord("user");
+         $this->assertEquals(100, $user["money"]);
+         $this->assertEquals(2, $user["age"]);
+     }
 
-    //     $result = $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $invalidData);
+     /**
+      * Тест ошибок валидации при редактировании.
+      */
+     public function testValidationErrorsOnEdit(): void
+     {
+         $game = $this->createTestGame(["name" => "Исходная игра"]);
+         $invalidData = [
+             "game_id" => $game->id,
+             "name" => "",
+             "map_w" => 9999,
+             "map_h" => 50, // Добавлено
+             "turn_type" => "byturn", // Добавлено
+         ];
 
-    //     $this->assertPageHasError($result, "Название игры не может быть пустым");
-    //     $this->assertPageHasError($result, "должна быть от 50 до 500");
+         $result = $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $invalidData);
 
-    //     $gameRecord = $this->getLastRecord("game");
-    //     $this->assertEquals("Исходная игра", $gameRecord["name"]);
-    // }
+         $this->assertPageHasError($result, "Название игры не может быть пустым");
+         $this->assertPageHasError($result, "должна быть от 50 до 500");
 
-    // /**
-    //  * Тест безопасности: SQL-инъекции при редактировании.
-    //  */
-    // public function testSQLInjectionProtectionOnEdit(): void
-    // {
-    //     $game = $this->createTestGame(["name" => "Безопасная игра"]);
-    //     $maliciousData = [
-    //         "game_id" => $game["id"],
-    //         "name" => "'; DROP TABLE game; --",
-    //     ];
+         $gameRecord = $this->getLastRecord("game");
+         $this->assertEquals("Исходная игра", $gameRecord["name"]);
+     }
 
-    //     $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $maliciousData);
+     /**
+      * Тест безопасности: SQL-инъекции при редактировании.
+      */
+     public function testSQLInjectionProtectionOnEdit(): void
+     {
+         $game = $this->createTestGame(["name" => "Безопасная игра"]);
+         $maliciousData = [
+             "game_id" => $game->id,
+             "name" => "'; DROP TABLE game; --",
+         ];
 
-    //     $tables = array_column(MyDB::query("SHOW TABLES"), "Tables_in_civ_for_tests");
-    //     $this->assertContains("game", $tables);
-    // }
+         $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $maliciousData);
+
+         $tables = array_column(MyDB::query("SHOW TABLES"), "Tables_in_civ_for_tests");
+         $this->assertContains("game", $tables);
+     }
     
-    // /**
-    //  * Тест редактирования с сохранением связанных данных.
-    //  */
-    // public function testEditWithRelatedDataPreservation(): void
-    // {
-    //     $game = $this->createTestGame(["turn_num" => 5]);
-    //     $this->createTestUser(["game" => $game["id"], "money" => 150, "age" => 3]);
+     /**
+      * Тест редактирования с сохранением связанных данных.
+      */
+     public function testEditWithRelatedDataPreservation(): void
+     {
+         $game = $this->createTestGame(["turn_num" => 5]);
+         $this->createTestUser(["game" => $game->id, "money" => 150, "age" => 3]);
 
-    //     $editData = ["game_id" => $game["id"], "name" => "Переименованная игра"];
-    //     $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
+         $editData = ["game_id" => $game->id, "name" => "Переименованная игра"];
+         $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
 
-    //     $updatedGame = $this->getLastRecord("game");
-    //     $this->assertEquals(5, $updatedGame["turn_num"]);
+         $updatedGame = $this->getLastRecord("game");
+         $this->assertEquals(5, $updatedGame["turn_num"]);
 
-    //     $user = $this->getLastRecord("user");
-    //     $this->assertEquals(150, $user["money"]);
-    //     $this->assertEquals(3, $user["age"]);
-    // }
+         $user = $this->getLastRecord("user");
+         $this->assertEquals(150, $user["money"]);
+         $this->assertEquals(3, $user["age"]);
+     }
 
-    // // Тест производительности редактирования игры с максимальным количеством игроков
-    // public function testPerformanceEditWithMaxPlayers(): void
-    // {
-    //     $game = $this->createTestGame([
-    //         "name" => "Тест производительности редактирования",
-    //         "map_w" => 200,
-    //         "map_h" => 200,
-    //         "turn_type" => "byturn",
-    //     ]);
+     // Тест производительности редактирования игры с максимальным количеством игроков
+     public function testPerformanceEditWithMaxPlayers(): void
+     {
+         $game = $this->createTestGame([
+             "name" => "Тест производительности редактирования",
+             "map_w" => 200,
+             "map_h" => 200,
+             "turn_type" => "byturn",
+         ]);
 
-    //     // Создаем максимальное количество игроков
-    //     for ($i = 1; $i <= 16; $i++) {
-    //         $this->createTestUser([
-    //             "login" => "Игрок{$i}",
-    //             "game" => $game["id"],
-    //             "turn_order" => $i,
-    //         ]);
-    //     }
+         // Создаем максимальное количество игроков
+         for ($i = 1; $i <= 16; $i++) {
+             $this->createTestUser([
+                 "login" => "Игрок{$i}",
+                 "game" => $game->id,
+                 "turn_order" => $i,
+             ]);
+         }
 
-    //     $editData = [
-    //         "game_id" => $game["id"],
-    //         "name" => "Отредактированная игра с 16 игроками",
-    //         "map_w" => 500,
-    //         "map_h" => 500,
-    //         "turn_type" => "concurrently",
-    //     ];
+         $editData = [
+             "game_id" => $game->id,
+             "name" => "Отредактированная игра с 16 игроками",
+             "map_w" => 500,
+             "map_h" => 500,
+             "turn_type" => "concurrently",
+         ];
 
-    //     $startTime = microtime(true);
+         $startTime = microtime(true);
 
-    //     $this->simulatePostRequest($editData);
+         $result = $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
 
-    //     $vars = mockIncludeFile(__DIR__ . "/../../pages/editgame.php");
-    //     $error = $vars["error"] ?? false;
+         $endTime = microtime(true);
+         $executionTime = $endTime - $startTime;
 
-    //     $endTime = microtime(true);
-    //     $executionTime = $endTime - $startTime;
+         $this->assertPageHasNoError($result);
+         $this->assertLessThan(
+             3.0,
+             $executionTime,
+             "Редактирование игры должно занимать менее 3 секунд",
+         );
 
-    //     $this->assertFalse(
-    //         $error,
-    //         "Редактирование игры должно пройти успешно: " .
-    //             (is_string($error) ? $error : ""),
-    //     );
-    //     $this->assertLessThan(
-    //         3.0,
-    //         $executionTime,
-    //         "Редактирование игры должно занимать менее 3 секунд",
-    //     );
+         // Проверяем, что все данные обновились корректно
+         $gameRecord = $this->getLastRecord("game");
+         $this->assertEquals(
+             "Отредактированная игра с 16 игроками",
+             $gameRecord["name"],
+         );
+         $this->assertEquals(500, $gameRecord["map_w"]);
+         $this->assertEquals(500, $gameRecord["map_h"]);
+         $this->assertEquals("concurrently", $gameRecord["turn_type"]);
 
-    //     // Проверяем, что все данные обновились корректно
-    //     $gameRecord = $this->getLastRecord("game");
-    //     $this->assertEquals(
-    //         "Отредактированная игра с 16 игроками",
-    //         $gameRecord["name"],
-    //     );
-    //     $this->assertEquals(500, $gameRecord["map_w"]);
-    //     $this->assertEquals(500, $gameRecord["map_h"]);
-    //     $this->assertEquals("concurrently", $gameRecord["turn_type"]);
+         // Проверяем, что все игроки остались
+         $this->assertEquals(
+             16,
+             $this->getTableCount("user"),
+             "Должно остаться 16 игроков",
+         );
+     }
 
-    //     // Проверяем, что все игроки остались
-    //     $this->assertEquals(
-    //         16,
-    //         $this->getTableCount("user"),
-    //         "Должно остаться 16 игроков",
-    //     );
-    // }
+     /**
+      * Тест редактирования нескольких игр подряд
+      */
+     public function testMultipleGameEdits(): void
+     {
+         $games = [];
 
-    // /**
-    //  * Тест редактирования нескольких игр подряд
-    //  */
-    // public function testMultipleGameEdits(): void
-    // {
-    //     $games = [];
+         // Создаем несколько игр
+         for ($i = 1; $i <= 3; $i++) {
+             $game = $this->createTestGame([
+                 "name" => "Игра {$i}",
+                 "map_w" => 100,
+                 "map_h" => 100,
+                 "turn_type" => "byturn",
+             ]);
 
-    //     // Создаем несколько игр
-    //     for ($i = 1; $i <= 3; $i++) {
-    //         $game = $this->createTestGame([
-    //             "name" => "Игра {$i}",
-    //             "map_w" => 100,
-    //             "map_h" => 100,
-    //             "turn_type" => "byturn",
-    //         ]);
+             $this->createTestUser(["login" => "А{$i}", "game" => $game->id]);
+             $this->createTestUser(["login" => "Б{$i}", "game" => $game->id]);
 
-    //         $this->createTestUser(["login" => "А{$i}", "game" => $game["id"]]);
-    //         $this->createTestUser(["login" => "Б{$i}", "game" => $game["id"]]);
+             $games[] = $game;
+         }
 
-    //         $games[] = $game;
-    //     }
+         // Редактируем каждую игру
+         foreach ($games as $index => $game) {
+             $editData = [
+                 "game_id" => $game->id,
+                 "name" => "Отредактированная игра " . ($index + 1),
+                 "map_w" => 150 + $index * 50,
+                 "map_h" => 150 + $index * 50,
+                 "turn_type" => "concurrently",
+             ];
 
-    //     // Редактируем каждую игру
-    //     foreach ($games as $index => $game) {
-    //         $editData = [
-    //             "game_id" => $game["id"],
-    //             "name" => "Отредактированная игра " . ($index + 1),
-    //             "map_w" => 150 + $index * 50,
-    //             "map_h" => 150 + $index * 50,
-    //             "turn_type" => "concurrently",
-    //         ];
+             $result = $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
+             $this->assertPageHasNoError($result);
+         }
 
-    //         $this->simulatePostRequest($editData);
+         // Проверяем, что все игры были отредактированы корректно
+         $allGames = MyDB::query("SELECT * FROM game ORDER BY id");
+         $this->assertEquals(3, count($allGames), "Должно быть 3 игры");
 
-    //         $vars = mockIncludeFile(__DIR__ . "/../../pages/editgame.php");
-    //         $error = $vars["error"] ?? false;
+         for ($i = 0; $i < 3; $i++) {
+             $this->assertEquals(
+                 "Отредактированная игра " . ($i + 1),
+                 $allGames[$i]["name"],
+             );
+             $this->assertEquals(150 + $i * 50, $allGames[$i]["map_w"]);
+             $this->assertEquals(150 + $i * 50, $allGames[$i]["map_h"]);
+             $this->assertEquals("concurrently", $allGames[$i]["turn_type"]);
+         }
 
-    //         $this->assertFalse(
-    //             $error,
-    //             "Редактирование игры " .
-    //                 ($index + 1) .
-
-    //                 " должно пройти успешно: " .
-    //                 (is_string($error) ? $error : ""),
-    //         );
-    //     }
-
-    //     // Проверяем, что все игры были отредактированы корректно
-    //     $allGames = MyDB::query("SELECT * FROM game ORDER BY id");
-    //     $this->assertEquals(3, count($allGames), "Должно быть 3 игры");
-
-    //     for ($i = 0; $i < 3; $i++) {
-    //         $this->assertEquals(
-    //             "Отредактированная игра " . ($i + 1),
-    //             $allGames[$i]["name"],
-    //         );
-    //         $this->assertEquals(150 + $i * 50, $allGames[$i]["map_w"]);
-    //         $this->assertEquals(150 + $i * 50, $allGames[$i]["map_h"]);
-    //         $this->assertEquals("concurrently", $allGames[$i]["turn_type"]);
-    //     }
-
-    //     // Проверяем общее количество игроков
-    //     $this->assertEquals(
-    //         6,
-    //         $this->getTableCount("user"),
-    //         "Должно быть 6 игроков всего",
-    //     );
-    // }
+         // Проверяем общее количество игроков
+         $this->assertEquals(
+             6,
+             $this->getTableCount("user"),
+             "Должно быть 6 игроков всего",
+         );
+     }
 }

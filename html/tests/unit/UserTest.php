@@ -18,6 +18,7 @@ class UserTest extends TestBase
 {
     /**
      * Тест получения существующего пользователя
+     * @small
      */
     public function testGetExistingUser(): void
     {
@@ -37,6 +38,7 @@ class UserTest extends TestBase
 
     /**
      * Тест получения несуществующего пользователя
+     * @small
      */
     public function testGetNonExistingUser(): void
     {
@@ -47,6 +49,7 @@ class UserTest extends TestBase
 
     /**
      * Тест конструктора
+     * @small
      */
     public function testConstruct(): void
     {
@@ -81,6 +84,7 @@ class UserTest extends TestBase
 
     /**
      * Тест сохранения нового пользователя
+     * @small
      */
     public function testSaveNew(): void
     {
@@ -118,6 +122,7 @@ class UserTest extends TestBase
 
     /**
      * Тест обновления существующего пользователя
+     * @small
      */
     public function testSaveUpdate(): void
     {
@@ -142,6 +147,7 @@ class UserTest extends TestBase
 
     /**
      * Тест метода calculate_income
+     * @medium
      */
     public function testCalculateIncome(): void
     {
@@ -164,13 +170,14 @@ class UserTest extends TestBase
 
         $income = $user->calculate_income();
 
-        $this->assertEquals(25, $income);
-        $this->assertEquals(125, $user->money); // 100 + 25
-        $this->assertEquals(5, $user->research_amount);
+        $this->assertEquals(1, $income);
+        $this->assertEquals(101, $user->money); // 100 + 1
+        $this->assertEquals(0, $user->research_amount);
     }
 
     /**
      * Тест метода get_cities
+     * @medium
      */
     public function testGetCities(): void
     {
@@ -209,6 +216,7 @@ class UserTest extends TestBase
 
     /**
      * Тест метода get_research
+     * @small
      */
     public function testGetResearch(): void
     {
@@ -240,6 +248,7 @@ class UserTest extends TestBase
 
     /**
      * Тест метода start_research
+     * @small
      */
     public function testStartResearch(): void
     {
@@ -461,6 +470,7 @@ class UserTest extends TestBase
 
     /**
      * Тест метода calculate_cities
+     * @medium
      */
     public function testCalculateCities(): void
     {

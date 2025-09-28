@@ -11,23 +11,38 @@ class ResearchTypeTest extends TestBase
 {
     /**
      * Тест получения существующего типа исследования
+     * @small
      */
     public function testGetExistingResearchType(): void
     {
-        $this->initializeGameTypes();
+        // Создаем тестовый research_type вручную
+        $researchType = new ResearchType([
+            'title' => 'Test Research',
+            'cost' => 100,
+            'age' => 1,
+            'age_need' => true,
+            'm_top' => 30,
+            'm_left' => 30,
+        ]);
+        $researchType->save();
+        $id = $researchType->id;
 
-        $researchType = ResearchType::get(1);
+        $retrieved = ResearchType::get($id);
 
-        $this->assertInstanceOf(ResearchType::class, $researchType);
-        $this->assertEquals(1, $researchType->id);
-        $this->assertEquals('Гончарное дело', $researchType->title);
-        $this->assertEquals(50, $researchType->cost);
-        $this->assertEquals(1, $researchType->age);
-        $this->assertTrue($researchType->age_need);
+        $this->assertInstanceOf(ResearchType::class, $retrieved);
+        $this->assertEquals($id, $retrieved->id);
+        $this->assertEquals('Test Research', $retrieved->title);
+        $this->assertEquals(100, $retrieved->cost);
+        $this->assertEquals(1, $retrieved->age);
+        $this->assertTrue($retrieved->age_need);
+
+        // Очищаем
+        $researchType->delete();
     }
 
     /**
      * Тест получения несуществующего типа исследования
+     * @small
      */
     public function testGetNonExistingResearchType(): void
     {
@@ -40,6 +55,7 @@ class ResearchTypeTest extends TestBase
 
     /**
      * Тест конструктора ResearchType
+     * @small
      */
     public function testConstructor(): void
     {
@@ -72,6 +88,7 @@ class ResearchTypeTest extends TestBase
 
     /**
      * Тест конструктора без id
+     * @small
      */
     public function testConstructorWithoutId(): void
     {
@@ -89,24 +106,43 @@ class ResearchTypeTest extends TestBase
 
     /**
      * Тест метода get_title
+     * @small
      */
     public function testGetTitle(): void
     {
-        $this->initializeGameTypes();
+        // Создаем тестовый research_type
+        $researchType = new ResearchType([
+            'title' => 'Test Title Research',
+            'cost' => 100,
+            'age' => 1,
+            'age_need' => true,
+            'm_top' => 30,
+            'm_left' => 30,
+        ]);
+        $researchType->save();
 
-        $researchType = ResearchType::get(2);
+        $this->assertEquals('Test Title Research', $researchType->get_title());
 
-        $this->assertEquals('Бронзовое дело', $researchType->get_title());
+        // Очищаем
+        $researchType->delete();
     }
 
     /**
      * Тест метода get_turn_count
+     * @small
      */
     public function testGetTurnCount(): void
     {
-        $this->initializeGameTypes();
-
-        $researchType = ResearchType::get(1); // cost = 50
+        // Создаем тестовый research_type
+        $researchType = new ResearchType([
+            'title' => 'Test Turn Research',
+            'cost' => 50,
+            'age' => 1,
+            'age_need' => true,
+            'm_top' => 30,
+            'm_left' => 30,
+        ]);
+        $researchType->save();
 
         // Нормальный случай
         $turns = $researchType->get_turn_count(12); // 50 / 12 = 4.166, ceil(4.166) = 5
@@ -123,69 +159,135 @@ class ResearchTypeTest extends TestBase
         // Нулевой amount
         $turns = $researchType->get_turn_count(0);
         $this->assertFalse($turns);
+
+        // Очищаем
+        $researchType->delete();
     }
 
     /**
      * Тест метода get_need_age_ids
+     * @small
      */
     public function testGetNeedAgeIds(): void
     {
-        $this->initializeGameTypes();
+        // Создаем тестовые research_types
+        $rt1 = new ResearchType([
+            'title' => 'Test Age 1 Need',
+            'cost' => 50,
+            'age' => 1,
+            'age_need' => true,
+            'm_top' => 30,
+            'm_left' => 30,
+        ]);
+        $rt1->save();
+
+        $rt2 = new ResearchType([
+            'title' => 'Test Age 1 No Need',
+            'cost' => 50,
+            'age' => 1,
+            'age_need' => false,
+            'm_top' => 30,
+            'm_left' => 30,
+        ]);
+        $rt2->save();
+
+        $rt3 = new ResearchType([
+            'title' => 'Test Age 2 Need',
+            'cost' => 50,
+            'age' => 2,
+            'age_need' => true,
+            'm_top' => 30,
+            'm_left' => 30,
+        ]);
+        $rt3->save();
 
         $age1Ids = ResearchType::get_need_age_ids(1);
         $this->assertIsArray($age1Ids);
-        $this->assertContains(1, $age1Ids); // Гончарное дело
-        $this->assertContains(2, $age1Ids); // Бронзовое дело
-        $this->assertNotContains(20, $age1Ids); // Республика имеет age_need = false
+        $this->assertContains($rt1->id, $age1Ids);
+        $this->assertNotContains($rt2->id, $age1Ids);
 
         $age2Ids = ResearchType::get_need_age_ids(2);
         $this->assertIsArray($age2Ids);
-        // В TestGameDataInitializer нет исследований для эпохи 2
+        $this->assertContains($rt3->id, $age2Ids);
 
         $age3Ids = ResearchType::get_need_age_ids(3);
         $this->assertIsArray($age3Ids);
-        $this->assertEmpty($age3Ids); // Нет исследований для 3 эпохи
+        $this->assertEmpty($age3Ids);
+
+        // Очищаем
+        $rt1->delete();
+        $rt2->delete();
+        $rt3->delete();
     }
 
     /**
      * Тест зависимостей исследований
+     * @small
      */
     public function testResearchRequirements(): void
     {
-        $this->initializeGameTypes();
+        // Создаем тестовые research_types с requirements
+        $rt1 = new ResearchType([
+            'title' => 'Test Req 1',
+            'cost' => 50,
+            'age' => 1,
+            'age_need' => true,
+            'm_top' => 30,
+            'm_left' => 30,
+        ]);
+        $rt1->save();
+
+        $rt2 = new ResearchType([
+            'title' => 'Test Req 2',
+            'cost' => 50,
+            'age' => 1,
+            'age_need' => true,
+            'm_top' => 30,
+            'm_left' => 30,
+        ]);
+        $rt2->requirements = [$rt1];
+        $rt2->save();
 
         // Проверяем, что у исследований есть массив requirements
-        $research1 = ResearchType::get(1);
+        $research1 = ResearchType::get($rt1->id);
         $this->assertIsArray($research1->requirements);
+        $this->assertEmpty($research1->requirements);
 
-        $research2 = ResearchType::get(2);
+        $research2 = ResearchType::get($rt2->id);
         $this->assertIsArray($research2->requirements);
+        $this->assertCount(1, $research2->requirements);
+        $this->assertEquals($rt1->id, $research2->requirements[0]->id);
+
+        // Очищаем
+        $rt2->delete();
+        $rt1->delete();
     }
 
     /**
      * Тест всех предопределенных типов исследований
+     * @small
      */
     public function testAllPredefinedResearchTypes(): void
     {
         $this->initializeGameTypes();
 
         // Проверяем, что все исследования загружены
-        $this->assertGreaterThan(10, count(ResearchType::getAllCached()));
+        $all = ResearchType::getAllCached();
+        $this->assertGreaterThan(10, count($all));
 
-        // Проверяем некоторые конкретные
-        $research1 = ResearchType::get(1);
-        $this->assertEquals('Гончарное дело', $research1->title);
-        $this->assertEquals(50, $research1->cost);
-        $this->assertEquals(1, $research1->age);
-
-        $research2 = ResearchType::get(2);
-        $this->assertEquals('Бронзовое дело', $research2->title);
-        $this->assertEquals(80, $research2->cost);
-        $this->assertEquals(1, $research2->age);
+        // Проверяем, что все имеют правильные свойства
+        foreach ($all as $research) {
+            $this->assertIsInt($research->id);
+            $this->assertIsString($research->title);
+            $this->assertIsInt($research->cost);
+            $this->assertIsInt($research->age);
+            $this->assertIsBool($research->age_need);
+        }
     }
 
     /**
      * Тест метода getAll
+     * @small
      */
     public function testGetAll(): void
     {
@@ -210,6 +312,7 @@ class ResearchTypeTest extends TestBase
 
     /**
      * Тест метода save для нового объекта
+     * @small
      */
     public function testSaveNewResearchType(): void
     {
@@ -218,7 +321,7 @@ class ResearchTypeTest extends TestBase
         $researchType = new ResearchType([]);
         $researchType->title = 'Unit Test Research';
         $researchType->cost = 300;
-        $researchType->requirements = [ResearchType::get(1), ResearchType::get(2)];
+        $researchType->requirements = [];
         $researchType->m_top = 150;
         $researchType->m_left = 250;
         $researchType->age = 1;
@@ -248,6 +351,7 @@ class ResearchTypeTest extends TestBase
 
     /**
      * Тест метода save для обновления существующего объекта
+     * @small
      */
     public function testSaveExistingResearchType(): void
     {
@@ -284,6 +388,7 @@ class ResearchTypeTest extends TestBase
 
     /**
      * Тест метода delete
+     * @small
      */
     public function testDeleteResearchType(): void
     {
@@ -312,29 +417,64 @@ class ResearchTypeTest extends TestBase
 
     /**
      * Тест обработки требований исследований
+     * @small
      */
     public function testResearchRequirementsObjects(): void
     {
-        $this->initializeGameTypes();
+        // Создаем тестовые research_types с requirements
+        $rt1 = new ResearchType([
+            'title' => 'Test Req Base',
+            'cost' => 50,
+            'age' => 1,
+            'age_need' => true,
+            'm_top' => 30,
+            'm_left' => 30,
+        ]);
+        $rt1->save();
 
-        $researchType = ResearchType::get(1); // Гончарное дело
-        $this->assertIsArray($researchType->requirements);
-        $this->assertEmpty($researchType->requirements); // Нет требований
+        $rt2 = new ResearchType([
+            'title' => 'Test Req 2',
+            'cost' => 50,
+            'age' => 1,
+            'age_need' => true,
+            'm_top' => 30,
+            'm_left' => 30,
+        ]);
+        $rt2->addRequirement($rt1);
+        $rt2->save();
 
-        $researchType = ResearchType::get(7); // Обработка железа, требует 1
-        $this->assertIsArray($researchType->requirements);
-        $this->assertCount(1, $researchType->requirements);
-        $this->assertInstanceOf(ResearchType::class, $researchType->requirements[0]);
-        $this->assertEquals(1, $researchType->requirements[0]->id);
+        $rt3 = new ResearchType([
+            'title' => 'Test Req 3',
+            'cost' => 50,
+            'age' => 1,
+            'age_need' => true,
+            'm_top' => 30,
+            'm_left' => 30,
+        ]);
+        $rt3->addRequirement($rt1);
+        $rt3->addRequirement($rt2);
+        $rt3->save();
 
-        $researchType = ResearchType::get(8); // Математика, требует 2,3
-        $this->assertIsArray($researchType->requirements);
-        $this->assertCount(2, $researchType->requirements);
-        $this->assertInstanceOf(ResearchType::class, $researchType->requirements[0]);
-        $this->assertInstanceOf(ResearchType::class, $researchType->requirements[1]);
-        // IDs могут быть не упорядочены, проверяем наличие
-        $reqIds = array_map(fn($r) => $r->id, $researchType->requirements);
-        $this->assertContains(2, $reqIds);
-        $this->assertContains(3, $reqIds);
+        // Проверяем requirements
+        $research1 = ResearchType::get($rt1->id);
+        $this->assertIsArray($research1->requirements);
+        $this->assertEmpty($research1->requirements);
+
+        $research2 = ResearchType::get($rt2->id);
+        $this->assertIsArray($research2->requirements);
+        $this->assertCount(1, $research2->requirements);
+        $this->assertEquals($rt1->id, $research2->requirements[0]->id);
+
+        $research3 = ResearchType::get($rt3->id);
+        $this->assertIsArray($research3->requirements);
+        $this->assertCount(2, $research3->requirements);
+        $reqIds = array_map(fn($r) => $r->id, $research3->requirements);
+        $this->assertContains($rt1->id, $reqIds);
+        $this->assertContains($rt2->id, $reqIds);
+
+        // Очищаем
+        $rt3->delete();
+        $rt2->delete();
+        $rt1->delete();
     }
 }

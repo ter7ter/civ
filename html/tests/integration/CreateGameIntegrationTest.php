@@ -16,6 +16,7 @@ class CreateGameIntegrationTest extends CommonTestBase
 
     /**
      * Тест создания игры и проверки всех связанных данных в БД.
+     * @medium
      */
     public function testGameCreationAndDataPersistence(): void
     {
@@ -37,6 +38,7 @@ class CreateGameIntegrationTest extends CommonTestBase
     
     /**
      * Тест создания юнитов поселенцев для каждого игрока
+     * @medium
      */
     public function testSettlerUnitsCreation(): void
     {
@@ -79,6 +81,7 @@ class CreateGameIntegrationTest extends CommonTestBase
 
     /**
      * Тест с разными типами ходов через веб-интерфейс
+     * @medium
      */
     public function testDifferentTurnTypesViaWeb(): void
     {
@@ -109,6 +112,7 @@ class CreateGameIntegrationTest extends CommonTestBase
 
     /**
      * Тест генерации уникальных цветов для игроков через веб-интерфейс
+     * @medium
      */
     public function testUniquePlayerColorsViaWeb(): void
     {
@@ -127,6 +131,7 @@ class CreateGameIntegrationTest extends CommonTestBase
 
     /**
      * Тест порядка ходов игроков через веб-интерфейс
+     * @medium
      */
     public function testPlayerTurnOrderViaWeb(): void
     {
@@ -145,6 +150,7 @@ class CreateGameIntegrationTest extends CommonTestBase
 
     /**
      * Тест начальных параметров игроков через веб-интерфейс
+     * @medium
      */
     public function testInitialPlayerParametersViaWeb(): void
     {
@@ -170,6 +176,7 @@ class CreateGameIntegrationTest extends CommonTestBase
 
     /**
      * Тест обработки ошибок валидации через веб-интерфейс
+     * @small
      */
     public function testValidationErrorsViaWeb(): void
     {
@@ -191,6 +198,7 @@ class CreateGameIntegrationTest extends CommonTestBase
     
     /**
      * Тест обработки неправильного количества игроков
+     * @small
      */
     public function testPlayerCountValidation(): void
     {
@@ -233,6 +241,7 @@ class CreateGameIntegrationTest extends CommonTestBase
 
     /**
      * Тест безопасности: SQL-инъекции
+     * @small
      */
     public function testSQLInjectionProtection(): void
     {
@@ -256,6 +265,7 @@ class CreateGameIntegrationTest extends CommonTestBase
     
     /**
      * Тест обработки XSS в веб-интерфейсе
+     * @small
      */
     public function testXSSProtectionViaWeb(): void
     {
@@ -277,6 +287,7 @@ class CreateGameIntegrationTest extends CommonTestBase
 
     /**
      * Тест создания нескольких игр подряд
+     * @medium
      */
     public function testMultipleGameCreation(): void
     {
@@ -297,6 +308,7 @@ class CreateGameIntegrationTest extends CommonTestBase
     
     /**
      * Тест проверки редиректа после успешного создания игры
+     * @medium
      */
     public function testSuccessRedirect(): void
     {

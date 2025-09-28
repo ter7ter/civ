@@ -2,6 +2,10 @@
 
 namespace App\Tests;
 
+use App\User;
+use App\Game;
+use App\MapCell;
+
 class MapVPageTest extends TestBase
 {
     protected function setUp(): void
@@ -15,14 +19,17 @@ class MapVPageTest extends TestBase
         require_once PROJECT_ROOT . "/includes.php";
     }
 
+    /**
+     * @medium
+     */
     public function testMapVPageLoadsWithoutErrors(): void
     {
         // 1. Создаем тестовую игру, пользователя и планету
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $userData = $this->createTestUser(["game" => $game->id]);
+        $user = $this->createTestUser(["game" => $game->id]);
         $this->createTestCity([
-            "user_id" => $userData["id"],
+            "user_id" => $user->id,
             "planet" => $planetId,
             "x" => 10,
             "y" => 10,
@@ -33,12 +40,12 @@ class MapVPageTest extends TestBase
 
         // 2. Устанавливаем сессию
         $this->setSession([
-            "user_id" => $userData["id"],
+            "user_id" => $user->id,
             "game_id" => $game->id,
         ]);
 
         // 3. Определяем переменные, которые ожидает mapv.php
-        $user = User::get($userData["id"]);
+        $user = User::get($user->id);
         $game = Game::get($game->id);
 
         // 4. Вызываем mapv.php через mockIncludeFile

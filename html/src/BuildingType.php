@@ -125,6 +125,12 @@ class BuildingType
                 MyDB::insert("building_requirements_research", ["building_type_id" => $this->id, "required_research_type_id" => $req->id]);
             }
         }
+        MyDB::query("DELETE FROM building_requirements_resources WHERE building_type_id = :id", ["id" => $this->id]);
+        foreach ($this->req_resources as $req) {
+            if ($req && isset($req->id)) {
+                MyDB::insert("building_requirements_resources", ["building_type_id" => $this->id, "required_resource_type_id" => $req->id]);
+            }
+        }
         BuildingType::$all[$this->id] = $this;
     }
 
@@ -216,6 +222,7 @@ class BuildingType
         if (isset($data["id"])) {
             BuildingType::$all[$data["id"]] = $this;
             $this->loadReqResearch();
+            $this->loadReqResources();
         }
     }
 
@@ -229,10 +236,27 @@ class BuildingType
         }
     }
 
+    public function loadReqResources()
+    {
+        $this->req_resources = [];
+
+        $data = MyDB::query("SELECT required_resource_type_id FROM building_requirements_resources WHERE building_type_id = :id", ["id" => $this->id]);
+        foreach ($data as $row) {
+            $this->req_resources[] = ResourceType::get($row['required_resource_type_id']);
+        }
+    }
+
     public function addReqResearch($req)
     {
         if (!in_array($req, $this->req_research, true)) {
             $this->req_research[] = $req;
+        }
+    }
+
+    public function addReqResources($req)
+    {
+        if (!in_array($req, $this->req_resources, true)) {
+            $this->req_resources[] = $req;
         }
     }
 

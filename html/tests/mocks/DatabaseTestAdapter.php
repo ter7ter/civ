@@ -29,6 +29,7 @@ class DatabaseTestAdapter
             "building", // Сначала здания
             "city", // Потом города
             "building_requirements_research",
+            "building_requirements_resources",
             "building_type",
             "mission_order", // Сначала миссии
             "unit", // Потом юниты

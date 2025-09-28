@@ -9,3 +9,12 @@ CREATE TABLE IF NOT EXISTS `building_requirements_research` (
   FOREIGN KEY (`building_type_id`) REFERENCES `building_type` (`id`) ON DELETE CASCADE,
   FOREIGN KEY (`required_research_type_id`) REFERENCES `research_type` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+DROP TABLE IF EXISTS `building_requirements_resources`;
+CREATE TABLE IF NOT EXISTS `building_requirements_resources` (
+  `building_type_id` int UNSIGNED NOT NULL,
+  `required_resource_type_id` varchar(50) NOT NULL,
+  PRIMARY KEY (`building_type_id`, `required_resource_type_id`),
+  FOREIGN KEY (`building_type_id`) REFERENCES `building_type` (`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`required_resource_type_id`) REFERENCES `resource_type` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -220,5 +220,3 @@ try {
         echo "   ❌ Ошибка при аварийной очистке: " . $cleanupError->getMessage() . "\n";
     }
 }
-
-?>

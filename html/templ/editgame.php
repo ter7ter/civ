@@ -1,6 +1,6 @@
-<?php 
+<?php
 $page_title = 'Редактирование игры';
-include 'partials/header.php'; 
+include 'partials/header.php';
 ?>
 
 <div class="container edit-game-container">
@@ -60,8 +60,8 @@ include 'partials/header.php';
                 <div id="player-list">
                     <?php
                     $user_list = isset($data["users"]) && is_array($data["users"]) ? $data["users"] : [];
-                    $player_count = 1;
-                    foreach ($user_list as $user_login): ?>
+$player_count = 1;
+foreach ($user_list as $user_login): ?>
                     <div class="input-group mb-2 player-field">
                         <span class="input-group-text player-color-swatch"></span>
                         <input type="text" class="form-control" name="users[]" value="<?= htmlspecialchars($user_login) ?>" placeholder="Имя игрока <?= $player_count ?>" readonly>
@@ -103,7 +103,7 @@ $(document).ready(function() {
     updatePlayerColors();
 });
 </script>
-<?php 
+<?php
 $page_scripts = ob_get_clean();
-include 'partials/footer.php'; 
+include 'partials/footer.php';
 ?>

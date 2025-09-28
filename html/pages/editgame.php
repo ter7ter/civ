@@ -1,4 +1,5 @@
 <?php
+
 // Логика страницы редактирования игры
 use App\MyDB;
 use App\Game;
@@ -8,7 +9,7 @@ $error = false;
 $data = [];
 
 if (isset($_REQUEST["name"])) {
-    MyDB::start_transaction();
+    MyDB::startTransaction();
     if (isset($_REQUEST['game_id'])) {
         $game_id = (int)$_REQUEST['game_id'];
     } else {
@@ -67,7 +68,7 @@ if (isset($_REQUEST["name"])) {
         $game->save();
 
         // Завершаем транзакцию и перенаправляем
-        MyDB::end_transaction();
+        MyDB::endTransaction();
         header("Location: index.php?method=editgame&game_id=" . $game->id . "&saved=1");
         terminate_script();
     }
@@ -91,7 +92,7 @@ if (isset($_REQUEST["name"])) {
 
     // Заполняем массив $data для шаблона
     $data = [
-        "game_id" => $game->id, 
+        "game_id" => $game->id,
         "name" => $game->name,
         "map_w" => $game->map_w,
         "map_h" => $game->map_h,
@@ -99,4 +100,3 @@ if (isset($_REQUEST["name"])) {
         "users" => $user_logins,
     ];
 }
-?>

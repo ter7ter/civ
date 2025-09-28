@@ -251,8 +251,7 @@ class CityTest extends TestBase
         [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
-        TestGameDataInitializer::initializeBuildingTypes();
-        $buildingType = BuildingType::get(1); // Granary
+        $buildingType = $this->createTestBuildingType(); // Granary
         $building = $city->create_building($buildingType);
         $this->assertInstanceOf(Building::class, $building);
         $this->assertEquals($buildingType->id, $building->type->id);
@@ -267,12 +266,12 @@ class CityTest extends TestBase
         [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
-        TestGameDataInitializer::initializeBuildingTypes();
-        $buildingType = BuildingType::get(1); // Granary
+        $buildingType = $this->createTestBuildingType(); // Granary
         $city->create_building($buildingType);
         $originalPmoney = $city->pmoney;
         $city->calculate_buildings();
         $this->assertEquals($originalPmoney - $buildingType->upkeep, $city->pmoney);
+
     }
 
     /**
@@ -309,4 +308,3 @@ class CityTest extends TestBase
         $this->assertEquals($unitType->id, $city->production);
     }
 }
-?>

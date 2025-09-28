@@ -157,19 +157,25 @@ class ResearchTest extends TestBase
         $result = $this->createTestGameWithPlanetAndUser();
         $user = $result['user'];
 
-        $data = [
-            'user_id' => $user->id,
-            'type' => 1,
+        $researchTypeData = [
+            "title" => "Test Research Type 1",
+            "age" => 1,
+            "cost" => 50,
         ];
+        $researchType = new ResearchType($researchTypeData);
+        $researchType->save();
 
-        $research = new Research($data);
+        $research = new Research([
+            'user_id' => $user->id,
+            'type' => $researchType->id,
+        ]);
 
         // Проверяем, что исследование связано с правильным пользователем
         $this->assertEquals($user->id, $research->user->id);
         $this->assertEquals($user->login, $research->user->login);
 
         // Проверяем, что тип исследования правильный
-        $this->assertEquals(1, $research->type->id);
-        $this->assertEquals('Гончарное дело', $research->type->title);
+        $this->assertEquals($researchType->id, $research->type->id);
+        $this->assertEquals('Test Research Type 1', $research->type->title);
     }
 }

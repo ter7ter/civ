@@ -28,6 +28,7 @@ class DatabaseTestAdapter
             "city_people",
             "building", // Сначала здания
             "city", // Потом города
+            "building_requirements_research",
             "building_type",
             "mission_order", // Сначала миссии
             "unit", // Потом юниты
@@ -84,6 +85,18 @@ class DatabaseTestAdapter
         }
         if (class_exists("UnitType")) {
             UnitType::clearCache();
+        }
+        if (class_exists("ResearchType")) {
+            ResearchType::clearAll();
+        }
+        if (class_exists("BuildingType")) {
+            BuildingType::clearAll();
+        }
+        if (class_exists("ResourceType")) {
+            ResourceType::clearAll();
+        }
+        if (class_exists("CellType")) {
+            CellType::$all = [];
         }
     }
 }

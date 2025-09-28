@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Exception;
+
 class Resource
 {
     public $id = null;
@@ -59,9 +61,8 @@ class Resource
         }
     }
 
-    function get_title()
+    public function get_title()
     {
         return $this->type ? $this->type->title : "";
     }
 }
-?>

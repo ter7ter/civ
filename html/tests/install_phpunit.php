@@ -21,7 +21,8 @@ $phpunitPhar = $testsDir . DIRECTORY_SEPARATOR . 'phpunit.phar';
 /**
  * Проверка системных требований
  */
-function checkRequirements() {
+function checkRequirements()
+{
     echo "📋 Проверка системных требований:\n";
 
     // Проверка версии PHP
@@ -60,7 +61,8 @@ function checkRequirements() {
 /**
  * Проверка наличия Composer
  */
-function checkComposer() {
+function checkComposer()
+{
     echo "🔍 Проверка Composer:\n";
 
     // Проверяем composer в PATH
@@ -87,7 +89,8 @@ function checkComposer() {
 /**
  * Проверка существующих установок PHPUnit
  */
-function checkExistingPHPUnit($projectDir, $phpunitPhar) {
+function checkExistingPHPUnit($projectDir, $phpunitPhar)
+{
     echo "🔍 Поиск существующих установок PHPUnit:\n";
 
     $found = [];
@@ -125,7 +128,8 @@ function checkExistingPHPUnit($projectDir, $phpunitPhar) {
 /**
  * Установка PHPUnit через Composer
  */
-function installViaComposer($projectDir, $composerType = true) {
+function installViaComposer($projectDir, $composerType = true)
+{
     echo "📦 Установка PHPUnit через Composer:\n";
 
     $composerCmd = ($composerType === 'phar') ? 'php composer.phar' : 'composer';
@@ -196,7 +200,8 @@ function installViaComposer($projectDir, $composerType = true) {
 /**
  * Загрузка PHPUnit PHAR файла
  */
-function downloadPHPUnitPhar($phpunitPhar) {
+function downloadPHPUnitPhar($phpunitPhar)
+{
     echo "📥 Загрузка PHPUnit PHAR:\n";
 
     $url = 'https://phar.phpunit.de/phpunit-9.phar';
@@ -286,7 +291,8 @@ function downloadPHPUnitPhar($phpunitPhar) {
 /**
  * Основная функция установки
  */
-function main() {
+function main()
+{
     global $testsDir, $projectDir, $phpunitPhar;
 
     // Проверяем требования

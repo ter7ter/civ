@@ -1,6 +1,6 @@
-<?php 
+<?php
 $page_title = 'Выбор игры';
-include 'partials/header.php'; 
+include 'partials/header.php';
 ?>
 
 <div class="container game-select-container">
@@ -20,7 +20,7 @@ include 'partials/header.php';
                                 'byturn' => 'По очереди',
                                 'onewindow' => 'По очереди за одним компьютером'
                             ];
-                            foreach ($gamelist as $game):?>
+foreach ($gamelist as $game):?>
                                 <option value="<?=$game['id']?>">
                                     <?=$game['name']?> (<?=$game['map_w']?>x<?=$game['map_h']?>, <?=$game['ucount']?> игрока, <?=$turn_type_labels[$game['turn_type']] ?? $game['turn_type']?>)
                                 </option>
@@ -46,7 +46,7 @@ include 'partials/header.php';
     </div>
 </div>
 
-<?php 
+<?php
 ob_start(); // Start output buffering for page-specific scripts
 ?>
 <script src="js/functions.js"></script>
@@ -65,7 +65,7 @@ ob_start(); // Start output buffering for page-specific scripts
         });
     });
 </script>
-<?php 
+<?php
 $page_scripts = ob_get_clean(); // Get the buffered content into a variable
-include 'partials/footer.php'; 
+include 'partials/footer.php';
 ?>

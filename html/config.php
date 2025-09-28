@@ -1,4 +1,5 @@
 <?php
+
 namespace App;
 
 /**
@@ -15,7 +16,8 @@ define("DB_NAME", "civ");
 define("POPULATION_PEOPLE_DIS", 4); //С какого размера города появляются недовольные жители
 define("BASE_EAT_UP", 20); //Требуется еды для роста города
 
-class GameConfig {
+class GameConfig
+{
     /**
      * Необходимое количество культуры для уровней
      * @var array

@@ -234,28 +234,33 @@ class CellTest extends CommonTestBase
         Cell::$map_height = 10;
 
         // Тест нормального перемещения
-        $x = 5; $y = 5;
+        $x = 5;
+        $y = 5;
         Cell::calc_coord($x, $y, 2, 3);
         $this->assertEquals(7, $x);
         $this->assertEquals(8, $y);
 
         // Тест зацикливания вправо
-        $x = 8; $y = 5;
+        $x = 8;
+        $y = 5;
         Cell::calc_coord($x, $y, 3, 0);
         $this->assertEquals(1, $x);
 
         // Тест зацикливания влево
-        $x = 1; $y = 5;
+        $x = 1;
+        $y = 5;
         Cell::calc_coord($x, $y, -3, 0);
         $this->assertEquals(8, $x);
 
         // Тест зацикливания вниз
-        $x = 5; $y = 8;
+        $x = 5;
+        $y = 8;
         Cell::calc_coord($x, $y, 0, 3);
         $this->assertEquals(1, $y);
 
         // Тест зацикливания вверх
-        $x = 5; $y = 1;
+        $x = 5;
+        $y = 1;
         Cell::calc_coord($x, $y, 0, -3);
         $this->assertEquals(8, $y);
     }

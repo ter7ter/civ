@@ -2,16 +2,16 @@
 
 namespace App;
 
-
-class ResourceType {
+class ResourceType
+{
     /**
      * @var string
      */
-	public $id;
+    public $id;
     /**
      * @var string
      */
-	public $title;
+    public $title;
     /**
      * Тип ресурса
      * bonuce - дающий + к добыче клетки
@@ -19,22 +19,22 @@ class ResourceType {
      * mineral - полезное ископаемое
      * @var string
      */
-	public $type = 'bonuce';
+    public $type = 'bonuce';
     /**
      * Бонус к еде
      * @var int
      */
-	public $eat = 0;
+    public $eat = 0;
     /**
      * Бонус к производству
      * @var int
      */
-	public $work = 0;
+    public $work = 0;
     /**
      * Бонус к деньгам
      * @var int
      */
-	public $money = 0;
+    public $money = 0;
     /**
      * Требуемые исследования
      * @var array
@@ -62,41 +62,47 @@ class ResourceType {
      */
     public $max_amount = 500;
 
-	protected static $all;
-	
-	public static function get($id) {
-		if (isset(ResourceType::$all[$id])) {
-			return ResourceType::$all[$id];
-		} else {
-			return false;
-		}
-	}
+    protected static $all;
 
-	public static function getAll() {
-		return ResourceType::$all;
-	}
+    public static function get($id)
+    {
+        if (isset(ResourceType::$all[$id])) {
+            return ResourceType::$all[$id];
+        } else {
+            return false;
+        }
+    }
 
-	public static function clearAll() {
-		ResourceType::$all = [];
-	}
-	
-	public function __construct($data) {
+    public static function getAll()
+    {
+        return ResourceType::$all;
+    }
+
+    public static function clearAll()
+    {
+        ResourceType::$all = [];
+    }
+
+    public function __construct($data)
+    {
         foreach ($data as $field => $value) {
             $this->$field = $value;
         }
         ResourceType::$all[$this->id] = $this;
-	}
-	
-	public function get_title() {
-		return $this->title;
-	}
+    }
+
+    public function get_title()
+    {
+        return $this->title;
+    }
 
     /**
      * Проверяет может ли данный игрок видеть и использовать такой ресурс
      * @param User $user
      * @return bool
      */
-	public function can_use($user) {
+    public function canUse($user)
+    {
         if (count($this->req_research) == 0) {
             return true;
         }
@@ -131,7 +137,7 @@ new ResourceType([  'id' => 'horse',
                     'money' => 1,
                     'chance' => 0.02,
                     'req_research' => [
-                        //ResearchType::get(4) // Верховая езда
+                        ResearchType::get(4) // Верховая езда
                     ],
                     'cell_types' => [
                         CellType::get('plains'),

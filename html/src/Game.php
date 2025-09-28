@@ -100,8 +100,7 @@ class Game
         }
 
         foreach (
-            ["name", "map_w", "map_h", "turn_type", "turn_num"]
-            as $field
+            ["name", "map_w", "map_h", "turn_type", "turn_num"] as $field
         ) {
             if (isset($data[$field])) {
                 $this->$field = $data[$field];
@@ -135,8 +134,7 @@ class Game
 
         $values = [];
         foreach (
-            ["name", "map_w", "map_h", "turn_type", "turn_num"]
-            as $field
+            ["name", "map_w", "map_h", "turn_type", "turn_num"] as $field
         ) {
             $values[$field] = $this->$field;
         }

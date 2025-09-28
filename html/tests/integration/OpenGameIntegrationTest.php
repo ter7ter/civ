@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Integration;
 
 use App\Game;
 use App\User;
+use App\Tests\FunctionalTestBase;
+use App\Tests\DatabaseTestAdapter;
 
 /**
  * Интеграционные тесты для полного процесса открытия игры через веб-интерфейс.

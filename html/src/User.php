@@ -165,8 +165,7 @@ class User
                 "research_percent",
                 "process_research_complete",
                 "process_research_turns",
-            ]
-            as $field
+            ] as $field
         ) {
             if (isset($data[$field])) {
                 $this->$field = $data[$field];
@@ -207,8 +206,7 @@ class User
                 "research_percent",
                 "process_research_complete",
                 "process_research_turns",
-            ]
-            as $field
+            ] as $field
         ) {
             $values[$field] = $this->$field;
         }

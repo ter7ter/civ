@@ -23,12 +23,12 @@ class PageInfoTest extends TestBase
         // 1. Create test data
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $userData = $this->createTestUser(["game" => $game->id]);
+        $user = $this->createTestUser(["game" => $game->id]);
         $this->createTestMapCells(10, 10, 1, 1, $planetId);
 
         // 2. Set session
         $this->setSession([
-            "user_id" => $userData["id"],
+            "user_id" => $user->id,
             "game_id" => $game->id,
         ]);
 
@@ -36,7 +36,7 @@ class PageInfoTest extends TestBase
         $_REQUEST['x'] = 10;
         $_REQUEST['y'] = 10;
 
-        $user = User::get($userData['id']);
+        $user = User::get($user->id);
         $game = Game::get($game->id);
 
         // 4. Include page and check for errors
@@ -52,15 +52,15 @@ class PageInfoTest extends TestBase
     {
         // 1. Create test data
         $game = $this->createTestGame();
-        $userData = $this->createTestUser(["game" => $game->id]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         // 2. Set session
         $this->setSession([
-            "user_id" => $userData["id"],
+            "user_id" => $user->id,
             "game_id" => $game->id,
         ]);
 
-        $user = User::get($userData['id']);
+        $user = User::get($user->id);
         $game = Game::get($game->id);
 
         // 3. Include page and check for errors

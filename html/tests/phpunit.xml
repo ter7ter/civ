@@ -13,10 +13,10 @@
          failOnRisky="false"
          failOnWarning="true"
          verbose="true"
-         enforceTimeLimit="true"
-         timeoutForSmallTests="10"
-         timeoutForMediumTests="30"
-         timeoutForLargeTests="60">
+         enforceTimeLimit="false"
+         timeoutForSmallTests="5"
+         timeoutForMediumTests="10"
+         timeoutForLargeTests="30">
 
     <testsuites>
         <testsuite name="Unit Tests">

@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . "/bootstrap.php";
 
 echo "Starting debug test for planet column issue...\n";

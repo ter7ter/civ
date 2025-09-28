@@ -9,7 +9,7 @@ class BuildingType
     public $cost;
     /**
      * Требуемые исследования
-     * @var array
+     * @var ResearchType[]
      */
     public $req_research = [];
     /**
@@ -36,11 +36,23 @@ class BuildingType
     /**
      * Дополнительные динамические свойства
      */
-    public $need_research = [];
     public $culture_bonus = 0;
     public $research_bonus = 0;
     public $money_bonus = 0;
     public $description = "";
+
+    /**
+     * @var array эффекты постройки
+     * [
+     *  eat_up_multiplier => 1,
+     *  people_norm => 0
+     *  people_dis => 0
+     *  people_happy => 0
+     *  research_multiplier => 1
+     *  money_multiplier => 1
+     * ]
+     */
+    public $city_effects = [];
 
     protected static $all = [];
 
@@ -56,6 +68,7 @@ class BuildingType
                 "row",
             );
             if ($data) {
+                $data['city_effects'] = json_decode($data['city_effects'], true);
                 return new BuildingType($data);
             } else {
                 return false;
@@ -90,23 +103,29 @@ class BuildingType
         $data = [
             'title' => $this->title,
             'cost' => $this->cost,
-            'req_research' => json_encode($this->req_research),
             'req_resources' => json_encode($this->req_resources),
             'need_coastal' => (int)$this->need_coastal,
             'culture' => $this->culture,
             'upkeep' => $this->upkeep,
-            'need_research' => json_encode($this->need_research),
             'culture_bonus' => $this->culture_bonus,
             'research_bonus' => $this->research_bonus,
             'money_bonus' => $this->money_bonus,
             'description' => $this->description,
+            'city_effects' => json_encode($this->city_effects),
         ];
         if (isset($this->id)) {
             MyDB::update('building_type', $data, $this->id);
         } else {
             $this->id = MyDB::insert('building_type', $data);
-            BuildingType::$all[$this->id] = $this;
         }
+        // Update requirements in join table
+        MyDB::query("DELETE FROM building_requirements_research WHERE building_type_id = :id", ["id" => $this->id]);
+        foreach ($this->req_research as $req) {
+            if ($req && isset($req->id)) {
+                MyDB::insert("building_requirements_research", ["building_type_id" => $this->id, "required_research_type_id" => $req->id]);
+            }
+        }
+        BuildingType::$all[$this->id] = $this;
     }
 
     public function delete()
@@ -130,7 +149,14 @@ class BuildingType
         $this->description = "";
         $this->req_research = [];
         $this->req_resources = [];
-        $this->need_research = [];
+        $this->city_effects = [
+            'eat_up_multiplier' => 1,
+            'people_norm' => 0,
+            'people_dis' => 0,
+            'people_happy' => 0,
+            'research_multiplier' => 1,
+            'money_multiplier' => 1
+        ];
 
         // Список разрешенных свойств
         $allowedProperties = [
@@ -156,11 +182,18 @@ class BuildingType
             }
         }
 
+        $allowedEffects = [
+            "eat_up_multiplier",
+            "people_norm",
+            "people_dis",
+            "people_happy",
+            "research_multiplier",
+            "money_multiplier"
+        ];
+
         // Обрабатываем JSON поля
         $jsonFields = [
-            "req_research",
             "req_resources",
-            "need_research",
         ];
 
         foreach ($jsonFields as $field) {
@@ -174,12 +207,36 @@ class BuildingType
             }
         }
 
+        foreach ($allowedEffects as $field) {
+            if (isset($data['city_effects'][$field])) {
+                $this->city_effects[$field] = $data['city_effects'][$field];
+            }
+        }
+
         if (isset($data["id"])) {
             BuildingType::$all[$data["id"]] = $this;
+            $this->loadReqResearch();
         }
     }
 
-    function get_title()
+    public function loadReqResearch()
+    {
+        $this->req_research = [];
+
+        $data = MyDB::query("SELECT required_research_type_id FROM building_requirements_research WHERE building_type_id = :id", ["id" => $this->id]);
+        foreach ($data as $row) {
+            $this->req_research[] = ResearchType::get($row['required_research_type_id']);
+        }
+    }
+
+    public function addReqResearch($req)
+    {
+        if (!in_array($req, $this->req_research, true)) {
+            $this->req_research[] = $req;
+        }
+    }
+
+    public function get_title()
     {
         return $this->title;
     }
@@ -190,32 +247,37 @@ class BuildingType
      */
     public function city_effect($city)
     {
-        switch ($this->id) {
-            case 2: //Амбар
-                $city->eat_up = (int) (BASE_EAT_UP / 2);
-                break;
-            case 3: //Храм
-                $city->people_norm -= 1;
-                $city->people_happy += 1;
-                if ($city->people_norm < 0) {
-                    $city->people_happy += $city->people_norm;
-                    $city->people_norm = 0;
-                }
-                break;
-            case 4: //Библиотека
-                $city->presearch = $city->presearch * 1.5;
-                break;
-            case 6: //Рынок
-                $city->pmoney = $city->pmoney * 1.5;
-                break;
-            case 10: //Колизей
-                $city->people_dis -= 2;
-                $city->people_norm += 2;
-                if ($city->people_dis < 0) {
-                    $city->people_happy += $city->people_dis;
-                    $city->people_dis = 0;
-                }
-                break;
+        $city->eat_up = (int)($city->eat_up * $this->city_effects['eat_up_multiplier']);
+
+        if ($this->city_effects['people_happy']) {
+            $city->people_norm -= $this->city_effects['people_happy'];
+            $city->people_happy += $this->city_effects['people_happy'];
+            if ($city->people_norm < 0) {
+                $city->people_happy += $city->people_norm;
+                $city->people_norm = 0;
+            }
         }
+        if ($this->city_effects['people_dis']) {
+            $city->people_dis += $this->city_effects['people_dis'];
+            $city->people_norm -= $this->city_effects['people_dis'];
+            if ($city->people_norm < 0) {
+                $city->people_happy += $city->people_norm;
+                $city->people_norm = 0;
+            }
+            if ($city->people_happy < 0) {
+                $city->people_dis += $city->people_happy;
+                $city->people_happy = 0;
+            }
+        }
+        if ($this->city_effects['people_norm']) {
+            $city->people_dis -= $this->city_effects['people_norm'];
+            $city->people_norm += $this->city_effects['people_norm'];
+            if ($city->people_dis < 0) {
+                $city->people_norm += $city->people_dis;
+                $city->people_dis = 0;
+            }
+        }
+        $city->presearch = $city->presearch * $this->city_effects['research_multiplier'];
+        $city->pmoney = $city->pmoney * $this->city_effects['money_multiplier'];
     }
 }

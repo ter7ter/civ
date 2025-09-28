@@ -2,7 +2,6 @@
 
 namespace App;
 
-
 class Planet
 {
     /**
@@ -94,4 +93,3 @@ class Planet
         return Game::get($this->game_id);
     }
 }
-?>

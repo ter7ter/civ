@@ -251,7 +251,7 @@ class MyDBTest extends TestBase
         MyDB::insert($tableName, ['id' => 1, 'balance' => 100]);
 
         // Начинаем транзакцию
-        MyDB::start_transaction();
+        MyDB::startTransaction();
 
         // Обновляем баланс
         MyDB::update($tableName, ['balance' => 150], 1);
@@ -261,7 +261,7 @@ class MyDBTest extends TestBase
         $this->assertEquals(150, $balance);
 
         // Завершаем транзакцию
-        MyDB::end_transaction();
+        MyDB::endTransaction();
 
         // Проверяем, что изменения сохранены
         $finalBalance = MyDB::query("SELECT balance FROM `$tableName` WHERE id = 1", [], 'elem');

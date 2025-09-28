@@ -5,6 +5,7 @@ namespace App\Tests;
 require_once __DIR__ . '/../bootstrap.php';
 
 use App\BuildingType;
+use App\ResearchType;
 use App\MyDB;
 
 class AdminBuildingTypeTest extends TestBase
@@ -26,7 +27,6 @@ class AdminBuildingTypeTest extends TestBase
         $buildingType->need_coastal = false;
         $buildingType->culture = 2;
         $buildingType->upkeep = 1;
-        $buildingType->need_research = [];
         $buildingType->culture_bonus = 50;
         $buildingType->research_bonus = 0;
         $buildingType->money_bonus = 0;
@@ -59,7 +59,7 @@ class AdminBuildingTypeTest extends TestBase
         $buildingType->culture = 3;
         $buildingType->upkeep = 2;
         $buildingType->need_coastal = true;
-        $buildingType->req_research = ['research1'];
+        $buildingType->req_research = [];
 
         $buildingType->save();
 
@@ -120,16 +120,13 @@ class AdminBuildingTypeTest extends TestBase
     {
         $buildingType = new BuildingType([]);
         $buildingType->title = 'JSON Test Building';
-        $buildingType->req_research = ['research1', 'research2'];
         $buildingType->req_resources = ['resource1'];
-        $buildingType->need_research = ['need1'];
         $buildingType->save();
 
         $retrieved = BuildingType::get($buildingType->id);
 
-        $this->assertEquals(['research1', 'research2'], $retrieved->req_research);
+        $this->assertCount(1, $retrieved->req_resources);
         $this->assertEquals(['resource1'], $retrieved->req_resources);
-        $this->assertEquals(['need1'], $retrieved->need_research);
     }
 
     public function testBuildingTypeProperties()
@@ -198,7 +195,6 @@ class AdminBuildingTypeTest extends TestBase
         $this->assertEquals('', $retrieved->description);
         $this->assertIsArray($retrieved->req_research);
         $this->assertIsArray($retrieved->req_resources);
-        $this->assertIsArray($retrieved->need_research);
     }
 
     public function testBuildingTypeWithComplexData()
@@ -213,9 +209,8 @@ class AdminBuildingTypeTest extends TestBase
         $buildingType->research_bonus = 100;
         $buildingType->money_bonus = 150;
         $buildingType->description = 'Advanced building with complex properties';
-        $buildingType->req_research = ['research1', 'research2', 'research3'];
+        $buildingType->req_research = [];
         $buildingType->req_resources = ['resource1', 'resource2'];
-        $buildingType->need_research = ['need1', 'need2'];
         $buildingType->save();
 
         $retrieved = BuildingType::get($buildingType->id);
@@ -229,9 +224,8 @@ class AdminBuildingTypeTest extends TestBase
         $this->assertEquals(100, $retrieved->research_bonus);
         $this->assertEquals(150, $retrieved->money_bonus);
         $this->assertEquals('Advanced building with complex properties', $retrieved->description);
-        $this->assertEquals(['research1', 'research2', 'research3'], $retrieved->req_research);
+        $this->assertIsArray($retrieved->req_research);
         $this->assertEquals(['resource1', 'resource2'], $retrieved->req_resources);
-        $this->assertEquals(['need1', 'need2'], $retrieved->need_research);
     }
 
     public function testBuildingTypeCityEffect()

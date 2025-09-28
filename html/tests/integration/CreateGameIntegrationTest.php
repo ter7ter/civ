@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Integration;
+
+use App\MyDB;
+use App\Tests\CommonTestBase;
 
 require_once __DIR__ . "/../CommonTestBase.php";
 
@@ -35,7 +38,7 @@ class CreateGameIntegrationTest extends CommonTestBase
             "Планета должна быть создана для игры"
         );
     }
-    
+
     /**
      * Тест создания юнитов поселенцев для каждого игрока
      * @medium
@@ -112,8 +115,9 @@ class CreateGameIntegrationTest extends CommonTestBase
 
     /**
      * Тест генерации уникальных цветов для игроков через веб-интерфейс
-     * @medium
+     * @small
      */
+
     public function testUniquePlayerColorsViaWeb(): void
     {
         $players = ["Красный", "Синий", "Зеленый", "Желтый", "Пурпурный", "Циан"];
@@ -195,7 +199,7 @@ class CreateGameIntegrationTest extends CommonTestBase
         $this->assertPageHasError($result, "минимум 2 игрока");
         $this->assertEquals(0, $this->getTableCount("game"));
     }
-    
+
     /**
      * Тест обработки неправильного количества игроков
      * @small
@@ -220,7 +224,7 @@ class CreateGameIntegrationTest extends CommonTestBase
      */
     public function testPerformanceWithMaxPlayers(): void
     {
-        $players = array_map(fn($i) => "Игрок{$i}", range(1, 16));
+        $players = array_map(fn ($i) => "Игрок{$i}", range(1, 16));
         $gameData = [
             "name" => "Тест производительности",
             "map_w" => 50,
@@ -262,7 +266,7 @@ class CreateGameIntegrationTest extends CommonTestBase
         $this->assertContains("game", $tables);
         $this->assertContains("user", $tables);
     }
-    
+
     /**
      * Тест обработки XSS в веб-интерфейсе
      * @small
@@ -305,7 +309,7 @@ class CreateGameIntegrationTest extends CommonTestBase
         $this->assertEquals(1, $this->getTableCount("game"));
         $this->assertEquals(2, $this->getTableCount("user"));
     }
-    
+
     /**
      * Тест проверки редиректа после успешного создания игры
      * @medium
@@ -325,7 +329,7 @@ class CreateGameIntegrationTest extends CommonTestBase
         if (isset($result["headers"])) {
             $this->assertStringContainsString("Location: index.php?method=selectgame", implode("\n", $result["headers"]));
         }
-        
+
         $this->assertTrue($this->recordExists("game", ["name" => "Тест редиректа"]));
     }
 }

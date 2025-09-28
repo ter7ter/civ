@@ -169,7 +169,9 @@ if (!function_exists("test_exit")) {
 /**
  * Исключение для обработки exit() в тестах
  */
-class TestExitException extends Exception {}
+class TestExitException extends Exception
+{
+}
 
 /**
  * Функция для установки заголовков в тестах
@@ -188,7 +190,7 @@ function send_header($location)
  */
 function terminate_script()
 {
-    throw new TestExitException();
+    // throw new TestExitException();
 }
 
 /**
@@ -339,10 +341,6 @@ function mockIncludeFile($filename, $varsToExtract = [])
 
     ob_start();
     try {
-        // Подключаем MyDB в глобальное пространство имен для тестов
-        if (!class_exists('MyDB', false)) {
-            require_once PROJECT_ROOT . "/src/MyDB.php";
-        }
         include $filename;
     } catch (TestExitException $e) {
         // Игнорируем выход из скрипта

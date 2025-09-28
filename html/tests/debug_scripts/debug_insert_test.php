@@ -1,11 +1,14 @@
 <?php
+
 require_once __DIR__ . "/bootstrap.php";
 
 echo "Starting MyDB::insert debug test...\n";
 
 // Create a wrapper class to intercept MyDB::insert calls
-class MyDBDebugWrapper {
-    public static function insert($table, $values) {
+class MyDBDebugWrapper
+{
+    public static function insert($table, $values)
+    {
         echo "DEBUG: MyDB::insert called with table: '$table'\n";
         echo "DEBUG: Values: " . print_r($values, true) . "\n";
 
@@ -55,7 +58,9 @@ try {
 
     foreach ($_REQUEST["users"] as $user_login) {
         $user_login = trim(htmlspecialchars($user_login));
-        if (empty($user_login)) continue;
+        if (empty($user_login)) {
+            continue;
+        }
 
         $num++;
         $user_logins[] = $user_login;
@@ -69,9 +74,21 @@ try {
             $color_num = $num - 8;
         }
 
-        if (($color_num & 4) > 0) $color .= $sym; else $color .= "00";
-        if (($color_num & 2) > 0) $color .= $sym; else $color .= "00";
-        if (($color_num & 1) > 0) $color .= $sym; else $color .= "00";
+        if (($color_num & 4) > 0) {
+            $color .= $sym;
+        } else {
+            $color .= "00";
+        }
+        if (($color_num & 2) > 0) {
+            $color .= $sym;
+        } else {
+            $color .= "00";
+        }
+        if (($color_num & 1) > 0) {
+            $color .= $sym;
+        } else {
+            $color .= "00";
+        }
 
         $users[] = [
             "login" => $user_login,

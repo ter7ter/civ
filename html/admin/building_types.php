@@ -35,7 +35,6 @@ if ($action == 'save') {
 
             $buildingType->req_research = isset($_POST['req_research']) ? (json_decode($_POST['req_research'], true) ?: []) : [];
             $buildingType->req_resources = isset($_POST['req_resources']) ? (json_decode($_POST['req_resources'], true) ?: []) : [];
-            $buildingType->need_research = isset($_POST['need_research']) ? (json_decode($_POST['need_research'], true) ?: []) : [];
 
             $buildingType->save();
             $message = "Building type saved successfully.";

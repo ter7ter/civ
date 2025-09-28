@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Скрипт для запуска всех тестов
  * Запуск: php run_tests.php [опции]
@@ -190,7 +191,7 @@ class TestRunner
             $phpunitConfigContent = preg_replace('/<junit[^>]+>/', '', $phpunitConfigContent);
             file_put_contents($paratestConfigPath, $phpunitConfigContent);
 
-            register_shutdown_function(function() use ($paratestConfigPath) {
+            register_shutdown_function(function () use ($paratestConfigPath) {
                 if (file_exists($paratestConfigPath)) {
                     unlink($paratestConfigPath);
                 }

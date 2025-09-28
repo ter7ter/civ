@@ -1,4 +1,5 @@
 <?php
+
 $methods = [
     'testGetExistingGame',
     'testGetNonExistingGame',

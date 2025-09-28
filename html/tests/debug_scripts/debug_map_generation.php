@@ -193,5 +193,3 @@ try {
     echo "❌ ОШИБКА: " . $e->getMessage() . "\n";
     echo "Стек вызовов:\n" . $e->getTraceAsString() . "\n";
 }
-
-?>

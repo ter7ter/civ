@@ -1,4 +1,8 @@
 <?php
+
+use App\Сity;
+use App\User;
+
 /** @var User $user */
 if ($user->turn_status == 'play') {
     if (isset($_REQUEST['del'])) {

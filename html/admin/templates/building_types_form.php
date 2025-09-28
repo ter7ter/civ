@@ -54,10 +54,6 @@
                 <label for="req_resources" class="form-label">Req Resources (JSON)</label>
                 <textarea name="req_resources" id="req_resources" class="form-control"><?php echo htmlspecialchars(json_encode($buildingType->req_resources ?? [])); ?></textarea>
             </div>
-            <div class="mb-3">
-                <label for="need_research" class="form-label">Need Research (JSON)</label>
-                <textarea name="need_research" id="need_research" class="form-control"><?php echo htmlspecialchars(json_encode($buildingType->need_research ?? [])); ?></textarea>
-            </div>
             <button type="submit" class="btn btn-success">Save</button>
             <a href="index.php?page=building_types" class="btn btn-secondary">Cancel</a>
         </form>

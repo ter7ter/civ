@@ -8,12 +8,14 @@
 Расходы на науку
 <?if ($data['turn_status'] == 'play'):?>
 <select id="emperie-research-percent">
-<?for ($p=0;$p<11;$p++):?>
-<option <?if ($data['research_percent'] == $p) echo 'selected'?> value="<?=$p?>"><?=($p*10)?>%</option>
+<?for ($p = 0;$p < 11;$p++):?>
+<option <?if ($data['research_percent'] == $p) {
+    echo 'selected';
+}?> value="<?=$p?>"><?=($p * 10)?>%</option>
 <?endfor;?>
 </select>
-<?else:?>
-<b><?=($data['research_percent']*10)?></b>
+<? else:?>
+<b><?=($data['research_percent'] * 10)?></b>
 <?endif?>
 </div>
 <table id="empire-city-list">

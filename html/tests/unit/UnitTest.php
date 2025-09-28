@@ -20,9 +20,9 @@ class UnitTest extends TestBase
      */
     public function testGetExistingUnit(): void
     {
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $user = $this->createTestUser(["game" => $game->id]);
+        $result = $this->createTestGameWithPlanetAndUser();
+        $planetId = $this->createTestPlanet(["game_id" => $result['game']->id]);
+        $user = $this->createTestUser(["game" => $result['game']->id]);
 
         // Создаем тип юнита
         $unitTypeData = [
@@ -32,31 +32,17 @@ class UnitTest extends TestBase
         $unitType = new UnitType($unitTypeData);
         $unitType->save();
 
-        $this->createTestCell(['x' => 10, 'y' => 20, 'planet' => $planetId]);
+        $cell = $this->createTestCell(['x' => 5, 'y' => 5, 'planet' => $planetId]);
+        $unit = $cell->create_unit($unitType, $user, 3, 2);
 
-        // Создаем юнит
-        $unitData = [
-            "user_id" => $user->id,
-            "type" => $unitType->id,
-            "x" => 10,
-            "y" => 20,
-            "planet" => $planetId,
-            "health" => 3,
-            "points" => 2,
-        ];
-        $unit = new Unit($unitData);
-        $unit->save();
-        $unitData["id"] = $unit->id;
-
-        $unit = Unit::get($unitData["id"]);
+        $unitGet = Unit::get($unit->id);
 
         $this->assertInstanceOf(Unit::class, $unit);
-        $this->assertEquals($unitData["id"], $unit->id);
-        $this->assertEquals(10, $unit->x);
-        $this->assertEquals(20, $unit->y);
-        $this->assertEquals(3, $unit->health);
-        $this->assertEquals(2, $unit->points);
-        $this->assertEquals("Поселенец", $unit->get_title());
+        $this->assertEquals(5, $unitGet->x);
+        $this->assertEquals(5, $unitGet->y);
+        $this->assertEquals(3, $unitGet->health);
+        $this->assertEquals(2, $unitGet->points);
+        $this->assertEquals("Test Unit", $unit->getTitle());
     }
 
     /**
@@ -76,8 +62,7 @@ class UnitTest extends TestBase
     {
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $userData = $this->createTestUser(["game" => $game->id]);
-        $user = User::get($userData["id"]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
         $unitTypeData = [
@@ -118,8 +103,7 @@ class UnitTest extends TestBase
     {
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $userData = $this->createTestUser(["game" => $game->id]);
-        $user = User::get($userData["id"]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
         $unitTypeData = [
@@ -165,8 +149,7 @@ class UnitTest extends TestBase
     {
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $userData = $this->createTestUser(["game" => $game->id]);
-        $user = User::get($userData["id"]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
         $unitTypeData = [
@@ -215,8 +198,7 @@ class UnitTest extends TestBase
     {
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $userData = $this->createTestUser(["game" => $game->id]);
-        $user = User::get($userData["id"]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
         $unitTypeData = [
@@ -236,7 +218,7 @@ class UnitTest extends TestBase
 
         $unit = new Unit($data);
 
-        $this->assertEquals("Рабочий", $unit->get_title());
+        $this->assertEquals("Рабочий", $unit->getTitle());
     }
 
     /**
@@ -246,8 +228,7 @@ class UnitTest extends TestBase
     {
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $userData = $this->createTestUser(["game" => $game->id]);
-        $user = User::get($userData["id"]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
         $unitTypeData = [
@@ -290,8 +271,7 @@ class UnitTest extends TestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $userData = $this->createTestUser(["game" => $game->id]);
-        $user = User::get($userData["id"]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита с миссиями
         $unitTypeData = [
@@ -337,8 +317,7 @@ class UnitTest extends TestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $userData = $this->createTestUser(["game" => $game->id]);
-        $user = User::get($userData["id"]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
         $unitTypeData = [
@@ -376,8 +355,7 @@ class UnitTest extends TestBase
         $this->initializeGameTypes();
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $userData = $this->createTestUser(["game" => $game->id]);
-        $user = User::get($userData["id"]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
         $unitTypeData = [
@@ -417,8 +395,7 @@ class UnitTest extends TestBase
     {
         $game = $this->createTestGame();
         $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $userData = $this->createTestUser(["game" => $game->id]);
-        $user = User::get($userData["id"]);
+        $user = $this->createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
         $unitTypeData = [
@@ -428,32 +405,23 @@ class UnitTest extends TestBase
         ];
         MyDB::insert("unit_type", $unitTypeData);
 
-        $this->createTestCell(['x' => 11, 'y' => 11, 'planet' => $planetId]);
+        $cell = $this->createTestCell(['x' => 11, 'y' => 11, 'planet' => $planetId]);
 
         // Создаем несколько юнитов
-        $unitData1 = [
-            "user_id" => $user->id,
-            "type" => 10,
-            "x" => 11,
-            "y" => 11,
-            "planet" => $planetId,
-            "health" => 3,
-            "points" => 1,
-        ];
-        MyDB::insert("unit", $unitData1);
+        $cell->create_unit(
+            UnitType::get(10),
+            $user,
+            3,
+            1
+        );
+        $cell->create_unit(
+            UnitType::get(10),
+            $user,
+            3,
+            1
+        );
 
-        $unitData2 = [
-            "user_id" => $user->id,
-            "type" => 10,
-            "x" => 11,
-            "y" => 11,
-            "planet" => $planetId,
-            "health" => 3,
-            "points" => 1,
-        ];
-        MyDB::insert("unit", $unitData2);
-
-        $allUnits = Unit::get_all();
+        $allUnits = Unit::getAll();
 
         $this->assertIsArray($allUnits);
         $this->assertGreaterThanOrEqual(2, count($allUnits));

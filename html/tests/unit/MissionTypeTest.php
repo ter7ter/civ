@@ -64,7 +64,7 @@ class MissionTypeTest extends TestBase
         City::clearCache();
         $this->createTestCity(["planet" => $planetId, "x" => 10, "y" => 10, "user_id" => $user->id]);
         $this->assertTrue($mission->check_cell(10, 10, $planetId)); // Method doesn't check for existing cities
-        
+
         // Test with wrong cell type
         $mission = MissionType::get('build_road');
         $this->createTestCell(["planet" => $planetId, "x" => 11, "y" => 10, "type" => "plains"]);
@@ -87,19 +87,19 @@ class MissionTypeTest extends TestBase
         $city = City::by_coords(10, 10, $planetId);
         $this->assertInstanceOf(City::class, $city);
         $this->assertEquals('Test City', $city->title);
-        
+
         // Test build_road
         $mission = MissionType::get('build_road');
         $mission->complete($unit);
         $cell = Cell::get(10, 10, $planetId);
         $this->assertEquals('road', $cell->road);
-        
+
         // Test irrigation
         $mission = MissionType::get('irrigation');
         $mission->complete($unit);
         $cell = Cell::get(10, 10, $planetId);
         $this->assertEquals('irrigation', $cell->improvement);
-        
+
         // Test mine
         $mission = MissionType::get('mine');
         $mission->complete($unit);

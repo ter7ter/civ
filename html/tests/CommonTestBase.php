@@ -5,6 +5,7 @@ namespace App\Tests;
 require_once __DIR__ . "/FunctionalTestBase.php";
 
 use App\MyDB;
+use App\Tests\DatabaseTestAdapter;
 
 /**
  * Общий базовый класс для всех тестов с устранением дублирования
@@ -105,10 +106,13 @@ class CommonTestBase extends FunctionalTestBase
         $this->assertPageHasNoError($result);
 
         $gameRecord = $this->getLastRecord("game");
-        $this->assertGameBasics($gameRecord, $expectedGameData["name"],
+        $this->assertGameBasics(
+            $gameRecord,
+            $expectedGameData["name"],
             $expectedGameData["map_w"] ?? 50,
             $expectedGameData["map_h"] ?? 50,
-            $expectedGameData["turn_type"] ?? "byturn");
+            $expectedGameData["turn_type"] ?? "byturn"
+        );
 
         if (isset($expectedGameData["users"])) {
             $users = MyDB::query(

@@ -24,7 +24,6 @@ class TestGameDataInitializer
         self::initializeCellTypes();
         self::initializeResearchTypes();
         self::initializeResourceTypes();
-        self::initializeBuildingTypes();
         self::initializeUnitTypes();
         self::initializeMissionTypes();
     }
@@ -43,7 +42,7 @@ class TestGameDataInitializer
                 'title' => 'равнина',
                 'base_chance' => 15,
                 'chance_inc1' => 8,
-                'chance_inc2' =>6,
+                'chance_inc2' => 6,
                 'eat' => 2,
                 'work' => 1,
                 'money' => 1,
@@ -55,7 +54,7 @@ class TestGameDataInitializer
                 'title' => 'равнина',
                 'base_chance' => 15,
                 'chance_inc1' => 8,
-                'chance_inc2' =>6,
+                'chance_inc2' => 6,
                 'eat' => 2,
                 'work' => 0,
                 'money' => 1,
@@ -67,7 +66,7 @@ class TestGameDataInitializer
                 'title' => 'лес',
                 'base_chance' => 15,
                 'chance_inc1' => 10,
-                'chance_inc2' =>6,
+                'chance_inc2' => 6,
                 'eat' => 1,
                 'work' => 2,
                 'money' => 1,
@@ -78,7 +77,7 @@ class TestGameDataInitializer
                 'title' => 'холмы',
                 'base_chance' => 10,
                 'chance_inc1' => 5,
-                'chance_inc2' =>3,
+                'chance_inc2' => 3,
                 'eat' => 1,
                 'work' => 2,
                 'money' => 0,
@@ -90,7 +89,7 @@ class TestGameDataInitializer
                 'title' => 'горы',
                 'base_chance' => 4,
                 'chance_inc1' => 5,
-                'chance_inc2' =>2,
+                'chance_inc2' => 2,
                 'eat' => 0,
                 'work' => 1,
                 'money' => 1,
@@ -113,7 +112,7 @@ class TestGameDataInitializer
                     'title' => 'вода',
                     'base_chance' => 5,
                     'chance_inc1' => 20,
-                    'chance_inc2' =>15,
+                    'chance_inc2' => 15,
                     'eat' => 2,
                     'work' => 0,
                     'money' => 1,
@@ -125,7 +124,7 @@ class TestGameDataInitializer
                     'title' => 'море',
                     'base_chance' => 0,
                     'chance_inc1' => 35,
-                    'chance_inc2' =>16,
+                    'chance_inc2' => 16,
                     'eat' => 1,
                     'work' => 0,
                     'money' => 0,
@@ -137,7 +136,7 @@ class TestGameDataInitializer
                     'title' => 'океан',
                     'base_chance' => 0,
                     'chance_inc1' => 35,
-                    'chance_inc2' =>17,
+                    'chance_inc2' => 17,
                     'eat' => 1,
                     'work' => 0,
                     'money' => 0,
@@ -342,7 +341,8 @@ class TestGameDataInitializer
      */
     public static function initializeResearchTypes(): void
     {
-        if (!empty(ResearchType::getAllLoaded())) {
+        // Проверяем, есть ли базовые данные в базе
+        if (ResearchType::get(1) !== false) {
             return; // Уже инициализированы
         }
 
@@ -495,173 +495,6 @@ class TestGameDataInitializer
         ]);
         $rt14->addRequirement($rt1);
         $rt14->save();
-    }
-
-    /**
-     * Инициализирует типы зданий
-     */
-    public static function initializeBuildingTypes(): void
-    {
-        // Проверяем, есть ли уже данные в БД
-        $existing = MyDB::query("SELECT COUNT(*) FROM building_type", [], "elem");
-        if ($existing > 0) {
-            return; // Уже инициализированы
-        }
-
-        $buildingTypes = [
-            [
-                "id" => 1,
-                "title" => "бараки",
-                "cost" => 30,
-                "upkeep" => 1,
-                "req_research" => [],
-                "req_resources" => [],
-                "need_coastal" => false,
-                "culture" => 0,
-                "culture_bonus" => 0,
-                "research_bonus" => 0,
-                "money_bonus" => 0,
-                "need_research" => [],
-                "description" => "Базовое здание для размещения юнитов",
-            ],
-            [
-                "id" => 2,
-                "title" => "амбар",
-                "cost" => 30,
-                "upkeep" => 1,
-                "req_research" => [5], // Гончарное дело
-                "req_resources" => [],
-                "need_coastal" => false,
-                "culture" => 0,
-                "culture_bonus" => 0,
-                "research_bonus" => 0,
-                "money_bonus" => 0,
-                "need_research" => [],
-                "description" => "Увеличивает производство еды",
-            ],
-            [
-                "id" => 3,
-                "title" => "храм",
-                "cost" => 30,
-                "culture" => 2,
-                "upkeep" => 1,
-                "req_research" => [6], // Мистицизм
-                "req_resources" => [],
-                "need_coastal" => false,
-                "culture_bonus" => 0,
-                "research_bonus" => 0,
-                "money_bonus" => 0,
-                "need_research" => [],
-                "description" => "Увеличивает культуру и счастье",
-            ],
-            [
-                "id" => 4,
-                "title" => "библиотека",
-                "cost" => 50,
-                "culture" => 3,
-                "upkeep" => 1,
-                "req_research" => [15], // Литература
-                "req_resources" => [],
-                "need_coastal" => false,
-                "culture_bonus" => 0,
-                "research_bonus" => 50,
-                "money_bonus" => 0,
-                "need_research" => [],
-                "description" => "Увеличивает производство науки",
-            ],
-            [
-                "id" => 5,
-                "title" => "стены",
-                "cost" => 30,
-                "req_research" => [12], // Строительство
-                "req_resources" => [],
-                "need_coastal" => false,
-                "culture" => 0,
-                "culture_bonus" => 0,
-                "research_bonus" => 0,
-                "money_bonus" => 0,
-                "need_research" => [],
-                "description" => "Защищает город",
-            ],
-            [
-                "id" => 6,
-                "title" => "рынок",
-                "cost" => 50,
-                "req_research" => [19], // Деньги
-                "req_resources" => [],
-                "need_coastal" => false,
-                "culture" => 0,
-                "culture_bonus" => 0,
-                "research_bonus" => 0,
-                "money_bonus" => 50,
-                "need_research" => [],
-                "description" => "Увеличивает производство золота",
-            ],
-            [
-                "id" => 7,
-                "title" => "суд",
-                "cost" => 60,
-                "req_research" => [13], // Свод законов
-                "req_resources" => [],
-                "need_coastal" => false,
-                "culture" => 0,
-                "culture_bonus" => 0,
-                "research_bonus" => 0,
-                "money_bonus" => 0,
-                "need_research" => [],
-                "description" => "Увеличивает довольство граждан",
-            ],
-            [
-                "id" => 8,
-                "title" => "гавань",
-                "cost" => 60,
-                "upkeep" => 1,
-                "req_research" => [16], // Создание карт
-                "req_resources" => [],
-                "need_coastal" => true,
-                "culture" => 0,
-                "culture_bonus" => 0,
-                "research_bonus" => 0,
-                "money_bonus" => 0,
-                "need_research" => [],
-                "description" => "Позволяет строить морские юниты",
-            ],
-            [
-                "id" => 9,
-                "title" => "акведук",
-                "cost" => 80,
-                "upkeep" => 1,
-                "req_research" => [18], // Конструкции
-                "req_resources" => [],
-                "need_coastal" => false,
-                "culture" => 0,
-                "culture_bonus" => 0,
-                "research_bonus" => 0,
-                "money_bonus" => 0,
-                "need_research" => [],
-                "description" => "Увеличивает рост населения",
-            ],
-            [
-                "id" => 10,
-                "title" => "колизей",
-                "cost" => 80,
-                "upkeep" => 2,
-                "req_research" => [18], // Конструкции
-                "req_resources" => [],
-                "need_coastal" => false,
-                "culture" => 0,
-                "culture_bonus" => 0,
-                "research_bonus" => 0,
-                "money_bonus" => 0,
-                "need_research" => [],
-                "description" => "Увеличивает довольство граждан",
-            ],
-        ];
-
-        foreach ($buildingTypes as $type) {
-            $buildingType = new BuildingType($type);
-            $buildingType->save();
-        }
     }
 
     /**
@@ -824,6 +657,7 @@ class TestGameDataInitializer
         $sqlFiles = [
             PROJECT_ROOT . "/sql/civ.sql",
             PROJECT_ROOT . "/sql/add_building_type_table.sql",
+            PROJECT_ROOT . "/sql/add_building_requirements_table.sql",
             PROJECT_ROOT . "/sql/add_planet_table.sql",
             PROJECT_ROOT . "/sql/add_research_type_table.sql",
             PROJECT_ROOT . "/sql/add_unit_type_table.sql",

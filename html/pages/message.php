@@ -1,4 +1,5 @@
 <?php
+
 /** @var User $user */
 $last = (isset($_REQUEST['last']) ? (int)$_REQUEST['last'] : 0);
 $messages = $user->get_messages($last);

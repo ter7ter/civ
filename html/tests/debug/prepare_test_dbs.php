@@ -1,4 +1,5 @@
 <?php
+
 // prepare_test_dbs.php
 
 // Этот скрипт не может использовать bootstrap.php, так как он сам настраивает окружение
@@ -21,7 +22,7 @@ try {
         $pdo->exec("DROP DATABASE IF EXISTS `$dbName`");
         $pdo->exec("CREATE DATABASE `$dbName`");
     }
-    
+
     // Также пересоздадим базу для одиночных запусков
     echo "Dropping and creating database: civ_for_tests\n";
     $pdo->exec("DROP DATABASE IF EXISTS `civ_for_tests`");
@@ -32,4 +33,3 @@ try {
 } catch (PDOException $e) {
     die("Failed: " . $e->getMessage() . "\n");
 }
-

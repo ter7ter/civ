@@ -17,8 +17,8 @@ class ResourceTest extends TestBase
     public function testGet(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         // Создаем ресурс через БД
         $resourceId = MyDB::insert('resource', [
@@ -48,8 +48,8 @@ class ResourceTest extends TestBase
      */
     public function testGetNonExisting(): void
     {
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         $resource = Resource::get(999, 999, $planetId);
 
@@ -62,8 +62,8 @@ class ResourceTest extends TestBase
     public function testConstructor(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         $data = [
             'id' => 1,
@@ -91,8 +91,8 @@ class ResourceTest extends TestBase
     public function testConstructorWithoutId(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         $data = [
             'x' => 15,
@@ -119,8 +119,8 @@ class ResourceTest extends TestBase
     public function testGetTitle(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         $data = [
             'x' => 20,
@@ -157,8 +157,8 @@ class ResourceTest extends TestBase
     public function testSaveNew(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         $data = [
             'x' => 25,
@@ -193,8 +193,8 @@ class ResourceTest extends TestBase
     public function testSaveUpdate(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         // Создаем ресурс через БД
         $resourceId = MyDB::insert('resource', [
@@ -240,7 +240,7 @@ class ResourceTest extends TestBase
             'amount' => 10,
         ]);
 
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
         $this->expectExceptionMessage('Resource type is not set');
         $resource->save();
     }
@@ -251,8 +251,8 @@ class ResourceTest extends TestBase
     public function testDifferentResourceTypes(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         $resourceTypes = ['coal', 'fish', 'furs']; // Уголь, Рыба, Меха
 
@@ -280,8 +280,8 @@ class ResourceTest extends TestBase
     public function testResourceCoordinatesUniqueness(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
 
         // Создаем первый ресурс
         MyDB::insert('resource', [

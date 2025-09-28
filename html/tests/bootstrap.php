@@ -66,7 +66,7 @@ try {
 }
 
 MyDB::setDBConfig(TEST_DB_HOST, TEST_DB_USER, TEST_DB_PASS, TEST_DB_PORT, $dbName);
-    // Подключаемся к MySQL серверу, не указывая базу данных
+// Подключаемся к MySQL серверу, не указывая базу данных
 
 // Затем загружаем моки для БД
 require_once TESTS_ROOT . "/mocks/DatabaseTestAdapter.php";

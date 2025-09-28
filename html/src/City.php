@@ -867,8 +867,7 @@ class City
                 "people_norm",
                 "people_happy",
                 "people_artist",
-            ]
-            as $field
+            ] as $field
         ) {
             $values[$field] = $this->$field;
         }

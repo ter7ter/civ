@@ -1,4 +1,5 @@
 <?php
+
 $servername = "db";
 $username = "civ_test";
 $password = "civ_test";
@@ -14,4 +15,3 @@ if ($conn->connect_error) {
 }
 echo "Connected successfully to database: " . $dbname . "\n";
 $conn->close();
-?>

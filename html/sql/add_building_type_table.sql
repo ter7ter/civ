@@ -18,3 +18,4 @@ CREATE TABLE IF NOT EXISTS `building_type` (
   `description` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ALTER TABLE `building_type` ADD `city_effects` TEXT NOT NULL AFTER `money_bonus`;

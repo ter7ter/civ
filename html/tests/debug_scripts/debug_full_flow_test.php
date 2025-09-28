@@ -1,13 +1,16 @@
 <?php
+
 require_once __DIR__ . "/bootstrap.php";
 
 echo "Starting full creategame.php flow debug test...\n";
 
 // Override MyDB class to intercept all calls
-class MyDBInterceptor {
+class MyDBInterceptor
+{
     private static $original_methods = [];
 
-    public static function insert($table, $values) {
+    public static function insert($table, $values)
+    {
         echo "DEBUG: MyDB::insert called with table: '$table'\n";
         echo "DEBUG: Values: " . print_r($values, true) . "\n";
 
@@ -30,9 +33,9 @@ class MyDBInterceptor {
         // Call original MyDB::insert
         $pdo = MyDB::get();
         $keys = array_keys($values);
-        $placeholders = implode(", ", array_map(fn($k) => ":$k", $keys));
+        $placeholders = implode(", ", array_map(fn ($k) => ":$k", $keys));
         $query = "INSERT INTO `$table` (" .
-                 implode(",", array_map(fn($k) => "`$k`", $keys)) .
+                 implode(",", array_map(fn ($k) => "`$k`", $keys)) .
                  ") VALUES (" . $placeholders . ")";
 
         echo "DEBUG: SQL Query: $query\n";
@@ -47,17 +50,20 @@ class MyDBInterceptor {
         return $pdo->lastInsertId();
     }
 
-    public static function query($query, $params = [], $type = 'all') {
+    public static function query($query, $params = [], $type = 'all')
+    {
         echo "DEBUG: MyDB::query called: " . substr($query, 0, 100) . "...\n";
         return MyDB::query($query, $params, $type);
     }
 
-    public static function update($table, $values, $where) {
+    public static function update($table, $values, $where)
+    {
         echo "DEBUG: MyDB::update called with table: '$table'\n";
         return MyDB::update($table, $values, $where);
     }
 
-    public static function get() {
+    public static function get()
+    {
         return MyDB::get();
     }
 }
@@ -93,7 +99,9 @@ try {
 
     foreach ($_REQUEST["users"] as $user_login) {
         $user_login = trim(htmlspecialchars($user_login));
-        if (empty($user_login)) continue;
+        if (empty($user_login)) {
+            continue;
+        }
 
         $num++;
         $user_logins[] = $user_login;
@@ -107,9 +115,21 @@ try {
             $color_num = $num - 8;
         }
 
-        if (($color_num & 4) > 0) $color .= $sym; else $color .= "00";
-        if (($color_num & 2) > 0) $color .= $sym; else $color .= "00";
-        if (($color_num & 1) > 0) $color .= $sym; else $color .= "00";
+        if (($color_num & 4) > 0) {
+            $color .= $sym;
+        } else {
+            $color .= "00";
+        }
+        if (($color_num & 2) > 0) {
+            $color .= $sym;
+        } else {
+            $color .= "00";
+        }
+        if (($color_num & 1) > 0) {
+            $color .= $sym;
+        } else {
+            $color .= "00";
+        }
 
         $users[] = [
             "login" => $user_login,

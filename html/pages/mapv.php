@@ -1,4 +1,10 @@
 <?php
+
+use App\MyDB;
+use App\Cell;
+use App\User;
+use App\Game;
+
 /** @var User $user */
 /** @var Game $game */
 if (isset($_REQUEST['cx']) && isset($_REQUEST['cy'])) {
@@ -25,7 +31,7 @@ foreach ($map as $row) {
                     'type' => $unit->type->id,
                     'x' => $unit->x,
                     'y' => $unit->y,
-                    'title' => $unit->get_title(),
+                    'title' => $unit->getTitle(),
                     'user_id' => $unit->user->id,
                     'health' => $unit->health,
                     'owner_name' => $unit->user->login,
@@ -93,4 +99,3 @@ $data['center_x'] = $x;
 $data['center_y'] = $y;
 $data['user_id'] = $user->id;
 $data['turn_status'] = $user->turn_status;
-?>

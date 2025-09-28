@@ -1,4 +1,10 @@
 <?php
+
+use App\Сity;
+use App\Game;
+use App\User;
+use App\MyDB;
+
 /**
  * Скрипт для создания новой игры.
  * Обрабатывает форму создания игры, валидирует данные, создает игру, пользователей и карту.
@@ -7,8 +13,6 @@
 // Helper functions for testability
 if (!function_exists("send_header")) {
     function send_header($location)
-
-
     {
         Header($location);
     }
@@ -122,55 +126,50 @@ if (
         ];
     } else {
         // Создаем игру
-        try {
-            $game_data = [
-                "name" => $name,
-                "map_w" => $map_w,
-                "map_h" => $map_h,
-                "turn_type" => $turn_type,
-                "turn_num" => 1,
+        $game_data = [
+            "name" => $name,
+            "map_w" => $map_w,
+            "map_h" => $map_h,
+            "turn_type" => $turn_type,
+            "turn_num" => 1,
+        ];
+
+        $game = new Game($game_data);
+        $game->save();
+
+        // Создаем пользователей
+        foreach ($users as $user_data) {
+            $user_create_data = [
+                "login" => $user_data["login"],
+                "color" => $user_data["color"],
+                "game" => $game->id,
+                "turn_order" => $user_data["order"],
+                "turn_status" => "wait",
+                "money" => 50, // начальные деньги
+                "age" => 1,
             ];
 
-            $game = new Game($game_data);
-            $game->save();
+            $u = new User($user_create_data);
+            $u->save();
 
-            // Создаем пользователей
-            foreach ($users as $user_data) {
-                $user_create_data = [
-                    "login" => $user_data["login"],
-                    "color" => $user_data["color"],
-                    "game" => $game->id,
-                    "turn_order" => $user_data["order"],
-                    "turn_status" => "wait",
-                    "money" => 50, // начальные деньги
-                    "age" => 1,
-                ];
+        }
 
-                $u = new User($user_create_data);
-                $u->save();
-            }
+        // Генерируем карту и начальные условия
+        $game->create_new_game();
 
-            // Генерируем карту и начальные условия
-            $game->create_new_game();
+        // Устанавливаем начальные статусы ходов
+        $game->calculate();
+        $game->turn_num = 1; // calculate() увеличивает номер хода, а нам нужен 1-й
+        $game->save();
 
-            // Устанавливаем начальные статусы ходов
-            $game->calculate();
-            $game->turn_num = 1; // calculate() увеличивает номер хода, а нам нужен 1-й
-            $game->save();
 
-            // Перенаправляем на страницу выбора игры
-            if (isset($_REQUEST["json"])) {
-                $data = ["success" => true, "game_id" => $game->id];
-            } else {
-                MyDB::end_transaction(); // Commit transaction before redirect
-                send_header("Location: index.php?method=selectgame");
-                terminate_script();
-            }
-        } catch (TestExitException $e) {
-            // This exception is used by the test framework to stop execution, so re-throw it.
-            throw $e;
-        } catch (Exception $e) {
-            $error = "Ошибка при создании игры: " . $e->getMessage();
+        // Перенаправляем на страницу выбора игры
+        if (isset($_REQUEST["json"])) {
+            $data = ["success" => true, "game_id" => $game->id];
+        } else {
+            MyDB::endTransaction(); // Commit transaction before redirect
+            send_header("Location: index.php?method=selectgame");
+            terminate_script();
         }
     }
 } else {
@@ -183,4 +182,3 @@ if (
         "users" => ["", ""],
     ];
 }
-?>

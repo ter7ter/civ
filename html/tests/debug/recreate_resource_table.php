@@ -37,4 +37,3 @@ try {
 } catch (Exception $e) {
     echo "❌ Ошибка: " . $e->getMessage() . "\n";
 }
-?>

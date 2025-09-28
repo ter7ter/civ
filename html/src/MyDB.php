@@ -174,7 +174,7 @@ class MyDB
         return $stmt->rowCount();
     }
 
-    public static function start_transaction()
+    public static function startTransaction()
     {
         $db = MyDB::get();
         if (!$db->inTransaction()) {
@@ -182,7 +182,7 @@ class MyDB
         }
     }
 
-    public static function end_transaction()
+    public static function endTransaction()
     {
         $db = MyDB::get();
         if ($db->inTransaction()) {

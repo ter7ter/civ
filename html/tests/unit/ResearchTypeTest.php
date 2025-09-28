@@ -468,7 +468,7 @@ class ResearchTypeTest extends TestBase
         $research3 = ResearchType::get($rt3->id);
         $this->assertIsArray($research3->requirements);
         $this->assertCount(2, $research3->requirements);
-        $reqIds = array_map(fn($r) => $r->id, $research3->requirements);
+        $reqIds = array_map(fn ($r) => $r->id, $research3->requirements);
         $this->assertContains($rt1->id, $reqIds);
         $this->assertContains($rt2->id, $reqIds);
 

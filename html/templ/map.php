@@ -1,6 +1,6 @@
-<?php 
+<?php
 $page_title = 'Карта игры';
-include 'partials/header.php'; 
+include 'partials/header.php';
 ?>
 <!-- Original game styles -->
 <link type="text/css" href="css/city.css" rel="Stylesheet" />
@@ -64,8 +64,8 @@ include 'partials/header.php';
 <div id="event-window-research" eid="">...</div>
 <div id="event-window-city" eid="" cid="">...</div>
 
-<?php 
-ob_start(); 
+<?php
+ob_start();
 ?>
 <script src="js/functions.js"></script>
 <script src="js/map.js"></script>
@@ -74,7 +74,7 @@ ob_start();
 <script src="js/events.js"></script>
 <script src="js/research.js"></script>
 <script src="js/messages.js"></script>
-<?php 
+<?php
 $page_scripts = ob_get_clean();
-include 'partials/footer.php'; 
+include 'partials/footer.php';
 ?>

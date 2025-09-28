@@ -262,6 +262,3 @@ class UnitType
         self::$all = [];
     }
 }
-
-
-?>

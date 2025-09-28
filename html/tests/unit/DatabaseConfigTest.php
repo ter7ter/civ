@@ -188,19 +188,16 @@ class DatabaseConfigTest extends TestBase
             "Должен быть минимум 1 пользователь",
         );
 
-        // Очищаем данные
-        DatabaseTestAdapter::resetTestDatabase();
+        // Удаляем добавленные данные
+        MyDB::query("DELETE FROM user WHERE id = :id", ["id" => $userId]);
+        MyDB::query("DELETE FROM game WHERE id = :id", ["id" => $gameId]);
 
-        // Проверяем, что данные очищены
-        $gameCountAfter = MyDB::query("SELECT COUNT(*) FROM game", [], "elem");
-        $userCountAfter = MyDB::query("SELECT COUNT(*) FROM user", [], "elem");
+        // Проверяем, что данные удалены
+        $gameExists = MyDB::query("SELECT COUNT(*) FROM game WHERE id = :id", ["id" => $gameId], "elem");
+        $userExists = MyDB::query("SELECT COUNT(*) FROM user WHERE id = :id", ["id" => $userId], "elem");
 
-        $this->assertEquals(0, $gameCountAfter, "Игры должны быть удалены");
-        $this->assertEquals(
-            0,
-            $userCountAfter,
-            "Пользователи должны быть удалены",
-        );
+        $this->assertEquals(0, $gameExists, "Игра должна быть удалена");
+        $this->assertEquals(0, $userExists, "Пользователь должен быть удален");
     }
 
     /**
@@ -209,7 +206,7 @@ class DatabaseConfigTest extends TestBase
     public function testTransactionHandling(): void
     {
         // Начинаем транзакцию
-        MyDB::start_transaction();
+        MyDB::startTransaction();
 
         // Добавляем данные
         $gameId = MyDB::insert("game", [
@@ -221,7 +218,7 @@ class DatabaseConfigTest extends TestBase
         $this->assertGreaterThan(0, $gameId, "Игра должна быть создана");
 
         // Завершаем транзакцию
-        MyDB::end_transaction();
+        MyDB::endTransaction();
 
         // Проверяем, что данные сохранены
         $game = MyDB::query(

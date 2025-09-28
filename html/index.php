@@ -1,9 +1,10 @@
 <?php
+
 ob_start();
 require_once("includes.php");
 
 // Устанавливаем обработчик ошибок, который превращает их в исключения
-set_error_handler(function($severity, $message, $file, $line) {
+set_error_handler(function ($severity, $message, $file, $line) {
     if (!(error_reporting() & $severity)) {
         return;
     }

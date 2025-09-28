@@ -5,9 +5,9 @@
 <div style="width: 100%">
 <?if ($data['turn_status'] == 'play'):?>
     Ваш ход...
-<?elseif ($data['turn_status'] == 'wait'):?>
+<? elseif ($data['turn_status'] == 'wait'):?>
     Ждём ваш ход...
-<?elseif ($data['turn_status'] == 'end'):?>
+<? elseif ($data['turn_status'] == 'end'):?>
     Ждём окончания хода
 <?endif;?>
 </div>
@@ -91,7 +91,7 @@
             <input class="unit-cancel-mission" type="button" value="Отменить">
             <?endif;?>
         </div>
-    <?elseif (count($data['unit']['missions']) && $data['turn_status'] == 'play'):?>
+    <? elseif (count($data['unit']['missions']) && $data['turn_status'] == 'play'):?>
     <div style="clear: both;padding-left: 10px;">
     <div style="float: left">Приказы:</div>
         <div style="float: left;padding-left: 10px">

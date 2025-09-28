@@ -3,7 +3,7 @@ var city = {
 	x: 0,
 	y: 0,
 	eat: 0,
-	eat_up: 0,
+	eat_up_multiplier: 1,
 	population: 0,
 	possible_units: [],
 	possible_buildings: [],

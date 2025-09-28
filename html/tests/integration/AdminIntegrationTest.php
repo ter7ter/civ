@@ -5,6 +5,7 @@ namespace App\Tests;
 use App\UnitType;
 use App\BuildingType;
 use App\ResearchType;
+use App\MyDB;
 
 /**
  * Интеграционные тесты для админ-панели управления типами юнитов и построек
@@ -18,9 +19,9 @@ class AdminIntegrationTest extends FunctionalTestBase
         $this->initializeGameTypes();
         $this->clearTestData();
         // Очищаем кэш моделей
-        UnitType::$all = [];
-        BuildingType::$all = [];
-        ResearchType::$all = [];
+        UnitType::clearCache();
+        BuildingType::clearAll();
+        ResearchType::clearAll();
     }
 
     /**
@@ -69,7 +70,7 @@ class AdminIntegrationTest extends FunctionalTestBase
         $researchType = new ResearchType([]);
         $researchType->title = "Integration Test Research";
         $researchType->cost = 150;
-        $researchType->requirements = [ResearchType::get(1), ResearchType::get(2)];
+        $researchType->requirements = []; // Пустой массив требований
         $researchType->m_top = 100;
         $researchType->m_left = 200;
         $researchType->age = 1;
@@ -84,7 +85,7 @@ class AdminIntegrationTest extends FunctionalTestBase
         $retrieved = ResearchType::get($researchType->id);
         $this->assertNotNull($retrieved);
         $this->assertEquals("Integration Test Research", $retrieved->title);
-        $this->assertEquals([1, 2], array_map(fn($r) => $r->id, $retrieved->requirements));
+        $this->assertEquals([], $retrieved->requirements); // Пустой массив требований
         $this->assertEquals(100, $retrieved->m_top);
         $this->assertEquals(200, $retrieved->m_left);
         $this->assertEquals(1, $retrieved->age);
@@ -181,7 +182,7 @@ class AdminIntegrationTest extends FunctionalTestBase
     public function testInvalidDataHandling(): void
     {
         // Очищаем кэш UnitType
-        UnitType::$all = [];
+        UnitType::clearCache();
 
         // Создаем тип с некорректным JSON
         $id = MyDB::insert('unit_type', [

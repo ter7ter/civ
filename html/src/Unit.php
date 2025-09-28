@@ -2,6 +2,8 @@
 
 namespace App;
 
+use Exception;
+
 class Unit
 {
     /**
@@ -16,7 +18,9 @@ class Unit
      * @var User
      */
     public $user;
-    public $x, $y, $planet;
+    public $x;
+    public $y;
+    public $planet;
     /**
      * Текущие HP у юнита
      * @var int
@@ -48,14 +52,14 @@ class Unit
 
     public $lvl = 1;
 
-    protected static $_all = [];
+    protected static $all = [];
 
     /**
      * Очистка кэша для тестов
      */
     public static function clearCache()
     {
-        self::$_all = [];
+        self::$all = [];
     }
 
     /**
@@ -65,8 +69,8 @@ class Unit
      */
     public static function get($id)
     {
-        if (isset(Unit::$_all[$id])) {
-            return Unit::$_all[$id];
+        if (isset(Unit::$all[$id])) {
+            return Unit::$all[$id];
         } else {
             $data = MyDB::query(
                 "SELECT * FROM unit WHERE id = :id",
@@ -81,7 +85,7 @@ class Unit
         }
     }
 
-    public static function get_all()
+    public static function getAll()
     {
         $units = [];
         $data = MyDB::query("SELECT * FROM unit");
@@ -104,8 +108,7 @@ class Unit
                 "points",
                 "mission_points",
                 "auto",
-            ]
-            as $field
+            ] as $field
         ) {
             $data[$field] = $this->$field;
         }
@@ -119,12 +122,13 @@ class Unit
         } else {
             $this->id = MyDB::insert("unit", $data);
         }
+        self::$all[$this->id] = $this;
     }
 
     public function remove()
     {
         MyDB::query("DELETE FROM unit WHERE id = :id", ["id" => $this->id]);
-        unset(Unit::$_all[$this->id]);
+        unset(Unit::$all[$this->id]);
     }
 
     public function __construct($data)
@@ -150,8 +154,7 @@ class Unit
                 "points",
                 "mission_points",
                 "auto",
-            ]
-            as $field
+            ] as $field
         ) {
             if (isset($data[$field])) {
                 $this->$field = $data[$field];
@@ -181,11 +184,11 @@ class Unit
         }
 
         if (isset($data["id"])) {
-            Unit::$_all[$this->id] = $this;
+            Unit::$all[$this->id] = $this;
         }
     }
 
-    public function get_title()
+    public function getTitle()
     {
         return $this->type->get_title();
     }
@@ -764,4 +767,3 @@ class Unit
         return false;
     }
 }
-?>

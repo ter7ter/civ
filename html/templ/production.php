@@ -1,9 +1,11 @@
 <script>
 var possible_production = {
-<?
+<?php
 $first_production = false;
 foreach ($data['possible_production'] as $production):
-	if (!$first_production) $first_production = $production;?>
+    if (!$first_production) {
+        $first_production = $production;
+    }?>
 	'<?=$production['id']?>': 
 	{'need': [
 	<?foreach ($production['need_items'] as $item):?>
@@ -32,19 +34,25 @@ foreach ($data['possible_production'] as $production):
 	<option value="<?=$production['id']?>"><?=$production['title']?>(<?=$production['time']?> ч/дней)</option>
 	<?endforeach;?></select>
 </td></tr>
-<tr id="production-type-info" <?if (!$first_production) echo 'style="display: none"'?>>
+<tr id="production-type-info" <?if (!$first_production) {
+    echo 'style="display: none"';
+}?>>
 	<td colspan="2">
 	<span id="production-type-info-title" style="font-weight: bold;"><?=$first_production['title']?></span><br>
 	<b>Трудоёмкость:</b> <span id="production-type-info-time"><?=$first_production['time']?></span> ч/дней<br>
 	<b>Затраты:</b> <span id="production-type-need"><?foreach ($first_production['need_items'] as $item):?>
 	<?=$item['title']?>(<?=$item['amount']?>) 
 	<?endforeach;?>
-	<?if (count($first_production['need_items']) == 0) echo 'нет'?></span>
+	<?if (count($first_production['need_items']) == 0) {
+	    echo 'нет';
+	}?></span>
 	<br>
 	<b>Требования:</b> <span id="production-type-required"><?foreach ($first_production['required_items'] as $item):?>
 	<?=$item['title']?>(<?=$item['amount']?>) 
 	<?endforeach;?>
-	<?if (count($first_production['required_items']) == 0) echo 'нет'?></span>
+	<?if (count($first_production['required_items']) == 0) {
+	    echo 'нет';
+	}?></span>
 	</td>
 </tr>
 <tr>

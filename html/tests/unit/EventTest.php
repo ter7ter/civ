@@ -20,6 +20,7 @@ class EventTest extends TestBase
      */
     public function testGet(): void
     {
+        $this->initializeGameTypes();
         $result = $this->createTestGameWithPlanetAndUser();
         $game = $result['game'];
         $user = $result['user'];

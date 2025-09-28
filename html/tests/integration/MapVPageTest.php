@@ -5,6 +5,7 @@ namespace App\Tests;
 use App\User;
 use App\Game;
 use App\MapCell;
+use App\MyDB;
 
 class MapVPageTest extends TestBase
 {

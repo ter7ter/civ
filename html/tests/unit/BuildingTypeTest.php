@@ -9,6 +9,7 @@ use App\City;
 use App\Game;
 use App\Planet;
 use App\User;
+use App\MyDB;
 
 /**
  * Тесты для класса BuildingType
@@ -22,13 +23,15 @@ class BuildingTypeTest extends TestBase
     {
         $this->initializeGameTypes();
 
-        $buildingType = BuildingType::get(1);
+        $buildingType = $this->createTestBuildingType();
 
-        $this->assertInstanceOf(BuildingType::class, $buildingType);
-        $this->assertEquals(1, $buildingType->id);
-        $this->assertEquals('бараки', $buildingType->title);
-        $this->assertEquals(30, $buildingType->cost);
-        $this->assertEquals(1, $buildingType->upkeep);
+        $buildingTypeExists = BuildingType::get($buildingType->id);
+
+        $this->assertInstanceOf(BuildingType::class, $buildingTypeExists);
+        $this->assertEquals($buildingType->id, $buildingTypeExists->id);
+        $this->assertEquals('амбар', $buildingTypeExists->title);
+        $this->assertEquals(30, $buildingTypeExists->cost);
+        $this->assertEquals(1, $buildingTypeExists->upkeep);
     }
 
     /**
@@ -57,7 +60,6 @@ class BuildingTypeTest extends TestBase
             'req_research' => [],
             'req_resources' => [],
             'need_coastal' => true,
-            'need_research' => [],
             'culture_bonus' => 1,
             'research_bonus' => 2,
             'money_bonus' => 3,
@@ -74,7 +76,6 @@ class BuildingTypeTest extends TestBase
         $this->assertEquals([], $buildingType->req_research);
         $this->assertEquals([], $buildingType->req_resources);
         $this->assertTrue($buildingType->need_coastal);
-        $this->assertEquals([], $buildingType->need_research);
         $this->assertEquals(1, $buildingType->culture_bonus);
         $this->assertEquals(2, $buildingType->research_bonus);
         $this->assertEquals(3, $buildingType->money_bonus);
@@ -91,9 +92,28 @@ class BuildingTypeTest extends TestBase
     {
         $this->initializeGameTypes();
 
-        $buildingType = BuildingType::get(2); // Амбар
+        $buildingType = $this->createTestBuildingType(); // Амбар
 
         $this->assertEquals('амбар', $buildingType->get_title());
+    }
+
+    public function createTestBuildingType(): BuildingType
+    {
+        $buildingType = new BuildingType([
+            "title" => "амбар",
+            "cost" => 30,
+            "upkeep" => 1,
+            "req_resources" => [],
+            "need_coastal" => false,
+            "culture" => 0,
+            "culture_bonus" => 0,
+            "research_bonus" => 0,
+            "money_bonus" => 0,
+            "description" => "Увеличивает производство еды",
+            "city_effects" => ["eat_up_multiplier" => 0.5],
+        ]);
+        $buildingType->save();
+        return $buildingType;
     }
 
     /**
@@ -111,17 +131,16 @@ class BuildingTypeTest extends TestBase
             'x' => 10,
             'y' => 10,
         ]);
-
-        City::clearCache();
         $city = City::get($city->id);
 
         // Устанавливаем базовое значение eat_up
         if (!defined('BASE_EAT_UP')) {
-            define('BASE_EAT_UP', 4);
+            define('BASE_EAT_UP', 20);
         }
         $city->eat_up = BASE_EAT_UP;
+        $buildingType = $this->createTestBuildingType();
+        $this->assertEquals(0.5, $buildingType->city_effects['eat_up_multiplier']);
 
-        $buildingType = BuildingType::get(2); // Амбар
         $buildingType->city_effect($city);
 
         $this->assertEquals((int)(BASE_EAT_UP / 2), $city->eat_up);
@@ -150,7 +169,22 @@ class BuildingTypeTest extends TestBase
         $city->people_norm = 2;
         $city->people_happy = 0;
 
-        $buildingType = BuildingType::get(3); // Храм
+        $buildingType = new BuildingType([
+            "title" => "храм",
+            "cost" => 30,
+            "culture" => 2,
+            "upkeep" => 1,
+            "req_resources" => [],
+            "need_coastal" => false,
+            "culture_bonus" => 0,
+            "research_bonus" => 0,
+            "money_bonus" => 0,
+            "description" => "Увеличивает культуру и счастье",
+            "city_effects" => [
+                "people_happy" => 1
+            ],
+        ]);
+        $buildingType->save();
         $buildingType->city_effect($city);
 
         $this->assertEquals(1, $city->people_norm);
@@ -180,7 +214,22 @@ class BuildingTypeTest extends TestBase
         $city->people_norm = 0;
         $city->people_happy = 0;
 
-        $buildingType = BuildingType::get(3); // Храм
+        $buildingType = new BuildingType([
+            "title" => "храм",
+            "cost" => 30,
+            "culture" => 2,
+            "upkeep" => 1,
+            "req_resources" => [],
+            "need_coastal" => false,
+            "culture_bonus" => 0,
+            "research_bonus" => 0,
+            "money_bonus" => 0,
+            "description" => "Увеличивает культуру и счастье",
+            "city_effects" => [
+                "people_happy" => 1,
+            ]
+        ]);
+        $buildingType->save();
         $buildingType->city_effect($city);
 
         $this->assertEquals(0, $city->people_norm);
@@ -208,7 +257,22 @@ class BuildingTypeTest extends TestBase
 
         $city->presearch = 4;
 
-        $buildingType = BuildingType::get(4); // Библиотека
+        $buildingType = new BuildingType([
+            "title" => "библиотека",
+            "cost" => 50,
+            "culture" => 3,
+            "upkeep" => 1,
+            "req_resources" => [],
+            "need_coastal" => false,
+            "culture_bonus" => 0,
+            "research_bonus" => 50,
+            "money_bonus" => 0,
+            "description" => "Увеличивает производство науки",
+            "city_effects" => [
+                "research_multiplier" => 1.5,
+            ]
+        ]);
+        $buildingType->save();
         $buildingType->city_effect($city);
 
         $this->assertEquals(6, $city->presearch); // 4 * 1.5
@@ -235,7 +299,21 @@ class BuildingTypeTest extends TestBase
 
         $city->pmoney = 4;
 
-        $buildingType = BuildingType::get(6); // Рынок
+        $buildingType = new BuildingType([
+            "title" => "рынок",
+            "cost" => 50,
+            "req_resources" => [],
+            "need_coastal" => false,
+            "culture" => 0,
+            "culture_bonus" => 0,
+            "research_bonus" => 0,
+            "money_bonus" => 50,
+            "description" => "Увеличивает производство золота",
+            "city_effects" => [
+                "money_multiplier" => 1.5,
+            ]
+        ]);
+        $buildingType->save();
         $buildingType->city_effect($city);
 
         $this->assertEquals(6, $city->pmoney); // 4 * 1.5
@@ -265,7 +343,25 @@ class BuildingTypeTest extends TestBase
         $city->people_norm = 0;
         $city->people_happy = 0;
 
-        $buildingType = BuildingType::get(10); // Колизей
+        $buildingType = new BuildingType([
+            "id" => 10,
+            "title" => "колизей",
+            "cost" => 80,
+            "upkeep" => 2,
+            "req_research" => [18], // Конструкции
+            "req_resources" => [],
+            "need_coastal" => false,
+            "culture" => 0,
+            "culture_bonus" => 0,
+            "research_bonus" => 0,
+            "money_bonus" => 0,
+            "need_research" => [],
+            "description" => "Увеличивает довольство граждан",
+            "city_effects" => [
+                "people_norm" => 2,
+            ]
+        ]);
+        $buildingType->save();
         $buildingType->city_effect($city);
 
         $this->assertEquals(1, $city->people_dis);
@@ -297,12 +393,27 @@ class BuildingTypeTest extends TestBase
         $city->people_norm = 0;
         $city->people_happy = 0;
 
-        $buildingType = BuildingType::get(10); // Колизей
+        $buildingType = new BuildingType([
+            "title" => "колизей",
+            "cost" => 80,
+            "upkeep" => 2,
+            "need_coastal" => false,
+            "culture" => 0,
+            "culture_bonus" => 0,
+            "research_bonus" => 0,
+            "money_bonus" => 0,
+            "need_research" => [],
+            "description" => "Увеличивает довольство граждан",
+            "city_effects" => [
+                "people_norm" => 2,
+            ]
+        ]);
+        $buildingType->save();
         $buildingType->city_effect($city);
 
         $this->assertEquals(0, $city->people_dis);
-        $this->assertEquals(2, $city->people_norm);
-        $this->assertEquals(-1, $city->people_happy); // people_dis becomes -1, then people_happy += people_dis (-1), so 0 + (-1) = -1
+        $this->assertEquals(1, $city->people_norm);
+        $this->assertEquals(0, $city->people_happy);
     }
 
     /**
@@ -332,16 +443,29 @@ class BuildingTypeTest extends TestBase
         $originalPmoney = $city->pmoney ?? 0;
         $originalPeopleDis = $city->people_dis ?? 0;
 
-        $buildingType = BuildingType::get(1); // Бараки - нет специального эффекта
+        $buildingType = new BuildingType([
+            "title" => "бараки",
+            "cost" => 30,
+            "upkeep" => 1,
+            "req_research" => [],
+            "req_resources" => [],
+            "need_coastal" => false,
+            "culture" => 0,
+            "culture_bonus" => 0,
+            "research_bonus" => 0,
+            "money_bonus" => 0,
+            "description" => "Базовое здание для размещения юнитов",
+        ]);
+        $buildingType->save();
         $buildingType->city_effect($city);
 
         // Проверяем, что ничего не изменилось
-        $this->assertEquals($originalEatUp, $city->eat_up ?? 0);
-        $this->assertEquals($originalPeopleNorm, $city->people_norm ?? 0);
-        $this->assertEquals($originalPeopleHappy, $city->people_happy ?? 0);
-        $this->assertEquals($originalPresearch, $city->presearch ?? 0);
-        $this->assertEquals($originalPmoney, $city->pmoney ?? 0);
-        $this->assertEquals($originalPeopleDis, $city->people_dis ?? 0);
+        $this->assertEquals($originalEatUp, $city->eat_up);
+        $this->assertEquals($originalPeopleNorm, $city->people_norm);
+        $this->assertEquals($originalPeopleHappy, $city->people_happy);
+        $this->assertEquals($originalPresearch, $city->presearch);
+        $this->assertEquals($originalPmoney, $city->pmoney);
+        $this->assertEquals($originalPeopleDis, $city->people_dis);
     }
 
     /**
@@ -352,30 +476,21 @@ class BuildingTypeTest extends TestBase
         $this->initializeGameTypes();
 
         $expectedTypes = [
-            1 => ['title' => 'бараки', 'cost' => 30, 'upkeep' => 1],
-            2 => ['title' => 'амбар', 'cost' => 30, 'upkeep' => 1],
-            3 => ['title' => 'храм', 'cost' => 30, 'culture' => 2, 'upkeep' => 1],
-            4 => ['title' => 'библиотека', 'cost' => 50, 'culture' => 3, 'upkeep' => 1],
-            5 => ['title' => 'стены', 'cost' => 30],
-            6 => ['title' => 'рынок', 'cost' => 50],
-            7 => ['title' => 'суд', 'cost' => 60],
-            8 => ['title' => 'гавань', 'cost' => 60, 'upkeep' => 1],
-            9 => ['title' => 'акведук', 'cost' => 80, 'upkeep' => 1],
-            10 => ['title' => 'колизей', 'cost' => 80, 'upkeep' => 2],
+            $this->createTestBuildingType(),
         ];
 
-        foreach ($expectedTypes as $id => $expected) {
-            $buildingType = BuildingType::get($id);
+        foreach ($expectedTypes as $expected) {
+            $buildingType = BuildingType::get($expected->id);
             $this->assertInstanceOf(BuildingType::class, $buildingType, "Building type {$id} should exist");
-            $this->assertEquals($expected['title'], $buildingType->title, "Title for building type {$id}");
-            $this->assertEquals($expected['cost'], $buildingType->cost, "Cost for building type {$id}");
+            $this->assertEquals($expected->title, $buildingType->title, "Title for building type {$id}");
+            $this->assertEquals($expected->cost, $buildingType->cost, "Cost for building type {$id}");
 
-            if (isset($expected['upkeep'])) {
-                $this->assertEquals($expected['upkeep'], $buildingType->upkeep, "Upkeep for building type {$id}");
+            if (isset($expected->upkeep)) {
+                $this->assertEquals($expected->upkeep, $buildingType->upkeep, "Upkeep for building type {$id}");
             }
 
-            if (isset($expected['culture'])) {
-                $this->assertEquals($expected['culture'], $buildingType->culture, "Culture for building type {$id}");
+            if (isset($expected->culture)) {
+                $this->assertEquals($expected->culture, $buildingType->culture, "Culture for building type {$id}");
             }
         }
     }

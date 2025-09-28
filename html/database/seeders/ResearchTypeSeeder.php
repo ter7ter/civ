@@ -30,10 +30,13 @@ if (in_array('--clean', $argv)) {
 }
 
 if ($clear) {
-    MyDB::query("SET FOREIGN_KEY_CHECKS=0");
-    MyDB::query("DELETE FROM research_requirements");
-    MyDB::query("DELETE FROM research_type");
-    MyDB::query("SET FOREIGN_KEY_CHECKS=1");
+    MyDB::startTransaction();
+    MyDB::query("SET FOREIGN_KEY_CHECKS=0;
+        DELETE FROM research_requirements;
+        DELETE FROM research_type;\
+        DELETE FROM research;
+        SET FOREIGN_KEY_CHECKS=1;");
+    MyDB::endTransaction();
     echo "Данные очищены.\n";
 } else {
     echo "Очистка пропущена.\n";
@@ -135,6 +138,9 @@ $researchObjects = [];
 // Сначала создаем все объекты без зависимостей
 foreach ($researches as $data) {
     $rt = new ResearchType($data);
+    foreach ($data['req'] as $id) {
+        $rt->addRequirement(ResearchType::get($id));
+    }
     $rt->save();
     $researchObjects[$rt->id] = $rt;
 }

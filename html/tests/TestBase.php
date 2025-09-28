@@ -10,6 +10,7 @@ use App\MyDB;
 use App\Planet;
 use App\Unit;
 use App\User;
+use PDO;
 
 /**
  * Базовый класс для всех тестов
@@ -17,7 +18,6 @@ use App\User;
  */
 class TestBase extends \PHPUnit\Framework\TestCase
 {
-
     public static function setUpBeforeClass(): void
     {
         // Проверяем, используется ли ParaTest
@@ -34,7 +34,7 @@ class TestBase extends \PHPUnit\Framework\TestCase
 
             // Создаем уникальное имя базы данных
             $uniqueDbName = MyDB::$dbname . '_' . $testToken;
-            
+
             // Устанавливаем уникальное имя базы данных
             MyDB::$dbname = $uniqueDbName;
 
@@ -237,7 +237,7 @@ class TestBase extends \PHPUnit\Framework\TestCase
     /**
      * Создает тестовую клетку
      */
-    protected function createTestCell($data = []): array
+    protected function createTestCell($data = []): Cell
     {
         if (!isset($data["planet"])) {
             throw new Exception("Planet ID is required to create a test cell");
@@ -254,7 +254,7 @@ class TestBase extends \PHPUnit\Framework\TestCase
         $cell = new Cell($cellData);
         $cell->save();
 
-        return $cellData;
+        return $cell;
     }
 
     /**

@@ -1,4 +1,5 @@
 <?php
-use \App\CellType;
+
+use App\CellType;
 
 CellType::initData();

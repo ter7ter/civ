@@ -1,10 +1,16 @@
 <?php
+use App\MyDB;
+use App\UnitType;
+use App\BuildingType;
+use App\ResearchType;
+use App\ResourceType;
+
 require_once(__DIR__ . "/../includes.php");
 MyDB::setDBConfig(DB_HOST, DB_USER, DB_PASS, DB_PORT, DB_NAME);
 if (isset($_REQUEST['page'])) {
-	$page = $_REQUEST['page'];
+    $page = $_REQUEST['page'];
 } else {
-	$page = 'production';
+    $page = 'production';
 }
 error_log("admin/index.php loaded, page: $page, REQUEST: " . json_encode($_REQUEST));
 $page_title = 'Админка - ' . ucfirst($page);

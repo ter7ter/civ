@@ -4,7 +4,9 @@ namespace App;
 
 class Cell
 {
-    public $x, $y, $planet;
+    public $x;
+    public $y;
+    public $planet;
     /**
      * @var CellType
      */
@@ -160,7 +162,9 @@ class Cell
 
     public function get_title()
     {
-        if (!$this->type) return "unknown";
+        if (!$this->type) {
+            return "unknown";
+        }
         return $this->type->get_title();
     }
 
@@ -592,5 +596,32 @@ class Cell
         }
         return $need_points;
     }
+
+    /**
+     * Создать юнит в данной клетке
+     *
+     * @param UnitType $type
+     * @param User $owner
+     * @return Unit
+     *
+     * ToDO: добвить тесты
+     */
+    public function create_unit(
+        UnitType $type,
+        User $owner,
+        int $health = null,
+        int $points = null
+    ): Unit {
+        $unit = new Unit([
+            "x" => $this->x,
+            "y" => $this->y,
+            "planet" => $this->planet,
+            "type" => $type->id,
+            'user_id' => $owner->id,
+            'health' => $health ?? $type->health,
+            'points' => $points ?? $type->points,
+        ]);
+        $unit->save();
+        return $unit;
+    }
 }
-?>

@@ -1,4 +1,7 @@
 <?php
+
+use App\Game;
+
 if ((int)$_REQUEST['id']) {
     $game = Game::get((int)$_REQUEST['id']);
     foreach (['id', 'name', 'map_w', 'map_h'] as $field) {

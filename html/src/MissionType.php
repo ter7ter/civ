@@ -2,44 +2,47 @@
 
 namespace App;
 
+class MissionType
+{
+    //int
+    public $id;
+    //string
+    public $title;
+    //array
+    public $cell_types = [];
 
-class MissionType {
-	//int
-	public $id;
-	//string
-	public $title;
-	//array
-	public $cell_types = [];
-	
-	public $unit_lost = false;
-	//Сколько требуется очков для полного выполнения задания, в зависимости от типа местности
-	public $need_points = [];
-		
-	public static $all = [];
+    public $unit_lost = false;
+    //Сколько требуется очков для полного выполнения задания, в зависимости от типа местности
+    public $need_points = [];
+
+    public static $all = [];
 
     /**
      * @param $id
      * @return bool|MissionType
      */
-	public static function get($id) {
-		return (isset(MissionType::$all[$id])) ? MissionType::$all[$id] : false;
-	}
-	
-	function get_title() {
-		return $this->title;
-	}
-	
-	function check_cell($x, $y, $planet_id) {
-		$cell = Cell::get($x, $y, $planet_id);
-		if (!in_array($cell->type->id, $this->cell_types)) {
-			return false;
-		}
-		if ($this->id == 'build_city' && $cell->city) {
-			return false;
-		}
-		if ($this->id == 'build_road') {
-		    if ($cell->city) {
-		        return false;
+    public static function get($id)
+    {
+        return (isset(MissionType::$all[$id])) ? MissionType::$all[$id] : false;
+    }
+
+    public function get_title()
+    {
+        return $this->title;
+    }
+
+    public function check_cell($x, $y, $planet_id)
+    {
+        $cell = Cell::get($x, $y, $planet_id);
+        if (!in_array($cell->type->id, $this->cell_types)) {
+            return false;
+        }
+        if ($this->id == 'build_city' && $cell->city) {
+            return false;
+        }
+        if ($this->id == 'build_road') {
+            if ($cell->city) {
+                return false;
             }
             if ($cell->road) {
                 return false;
@@ -54,22 +57,26 @@ class MissionType {
             }
         }
 
-		return true;
-	}
-	
-	public function __construct($data) {
-		foreach (['id', 'title', 'unit_lost', 'cell_types', 'need_points'] as $field) {
-			$this->$field = $data[$field];
-		}
-		
-		MissionType::$all[$data['id']] = $this;
-	}
-	
-	//Завершение выполнения миссии
-	public function complete($unit, $title = false) {
-	    switch ($this->id) {
+        return true;
+    }
+
+    public function __construct($data)
+    {
+        foreach (['id', 'title', 'unit_lost', 'cell_types', 'need_points'] as $field) {
+            $this->$field = $data[$field];
+        }
+
+        MissionType::$all[$data['id']] = $this;
+    }
+
+    //Завершение выполнения миссии
+    public function complete($unit, $title = false)
+    {
+        switch ($this->id) {
             case 'build_city':
-                if (!$title) return false;
+                if (!$title) {
+                    return false;
+                }
                 City::new_city($unit->user, $unit->x, $unit->y, $title, $unit->planet);
                 return true;
                 break;
@@ -89,13 +96,13 @@ class MissionType {
                 return true;
                 break;
         }
-	}
+    }
 }
 new MissionType([   'id' => 'build_city',
-				    'title' => 'Основать город',
-				    'unit_lost' => true,
-				    'cell_types' => ['plains', 'plains2', 'forest', 'hills', 'desert'],
-				    'need_points' => []]);
+                    'title' => 'Основать город',
+                    'unit_lost' => true,
+                    'cell_types' => ['plains', 'plains2', 'forest', 'hills', 'desert'],
+                    'need_points' => []]);
 new MissionType([   'id' => 'build_road',
                     'title' => 'Строить дорогу',
                     'unit_lost' => false,

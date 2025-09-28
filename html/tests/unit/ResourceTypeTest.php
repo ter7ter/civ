@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use App\ResourceType;
 use App\User;
+use App\MyDB;
 
 /**
  * Тесты для класса ResourceType
@@ -90,31 +91,27 @@ class ResourceTypeTest extends TestBase
     }
 
     /**
-     * Тест метода can_use без требуемых исследований
+     * Тест метода canUse без требуемых исследований
      */
     public function testCanUseWithoutRequiredResearch(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-
-        $user = User::get($userData['id']);
+        $game = $this->createTestGame();
+        $user = $this->createTestUser(['game' => $game->id]);
 
         $resourceType = ResourceType::get('coal'); // Уголь не требует исследований
 
-        $this->assertTrue($resourceType->can_use($user));
+        $this->assertTrue($resourceType->canUse($user));
     }
 
     /**
-     * Тест метода can_use с требуемыми исследованиями (доступно)
+     * Тест метода canUse с требуемыми исследованиями (доступно)
      */
     public function testCanUseWithRequiredResearchAvailable(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
-
-        $user = User::get($userData['id']);
+        $game = $this->createTestGame();
+        $user = $this->createTestUser(['game' => $game->id]);
 
         // Добавляем исследование пользователю
         MyDB::insert('research', [
@@ -123,27 +120,31 @@ class ResourceTypeTest extends TestBase
         ]);
 
         User::clearCache();
-        $user = User::get($userData['id']);
+        $user = User::get($user->id);
 
         $resourceType = ResourceType::get('horse'); // Лошади требуют верховой езды
 
-        $this->assertTrue($resourceType->can_use($user));
+        $this->assertTrue($resourceType->canUse($user));
     }
 
     /**
-     * Тест метода can_use с требуемыми исследованиями (недоступно)
+     * Тест метода canUse с требуемыми исследованиями (недоступно)
      */
     public function testCanUseWithRequiredResearchUnavailable(): void
     {
         $this->initializeGameTypes();
-        $gameData = $this->createTestGame();
-        $userData = $this->createTestUser(['game' => $gameData['id']]);
+        $game = $this->createTestGame();
+        $user = $this->createTestUser(['game' => $game->id]);
 
-        $user = User::get($userData['id']);
+        // Удалим все исследования пользователя
+        MyDB::query("DELETE FROM research WHERE user_id = :user_id", ["user_id" => $user->id]);
+
+        User::clearCache();
+        $user = User::get($user->id);
 
         $resourceType = ResourceType::get('horse'); // Лошади требуют верховой езды
 
-        $this->assertFalse($resourceType->can_use($user));
+        $this->assertFalse($resourceType->canUse($user));
     }
 
     /**

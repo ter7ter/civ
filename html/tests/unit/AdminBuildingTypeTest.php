@@ -6,6 +6,7 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use App\BuildingType;
 use App\ResearchType;
+use App\ResourceType;
 use App\MyDB;
 
 class AdminBuildingTypeTest extends TestBase
@@ -120,13 +121,13 @@ class AdminBuildingTypeTest extends TestBase
     {
         $buildingType = new BuildingType([]);
         $buildingType->title = 'JSON Test Building';
-        $buildingType->req_resources = ['resource1'];
+        $buildingType->req_resources = [ResourceType::get('iron')];
         $buildingType->save();
 
         $retrieved = BuildingType::get($buildingType->id);
 
         $this->assertCount(1, $retrieved->req_resources);
-        $this->assertEquals(['resource1'], $retrieved->req_resources);
+        $this->assertEquals('iron', $retrieved->req_resources[0]->id);
     }
 
     public function testBuildingTypeProperties()
@@ -210,7 +211,7 @@ class AdminBuildingTypeTest extends TestBase
         $buildingType->money_bonus = 150;
         $buildingType->description = 'Advanced building with complex properties';
         $buildingType->req_research = [];
-        $buildingType->req_resources = ['resource1', 'resource2'];
+        $buildingType->req_resources = [ResourceType::get('iron'), ResourceType::get('horse')];
         $buildingType->save();
 
         $retrieved = BuildingType::get($buildingType->id);
@@ -225,7 +226,9 @@ class AdminBuildingTypeTest extends TestBase
         $this->assertEquals(150, $retrieved->money_bonus);
         $this->assertEquals('Advanced building with complex properties', $retrieved->description);
         $this->assertIsArray($retrieved->req_research);
-        $this->assertEquals(['resource1', 'resource2'], $retrieved->req_resources);
+        $this->assertCount(2, $retrieved->req_resources);
+        $this->assertEquals('iron', $retrieved->req_resources[0]->id);
+        $this->assertEquals('horse', $retrieved->req_resources[1]->id);
     }
 
     public function testBuildingTypeCityEffect()

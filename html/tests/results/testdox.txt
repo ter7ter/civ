@@ -16,11 +16,11 @@ Admin Building Type (App\Tests\AdminBuildingType)
 Building Type (App\Tests\BuildingType)
  [x] All predefined building types
  [x] Get existing building type
- [x] City effect temple
- [x] City effect no effect
- [x] City effect coliseum negative dis
  [x] City effect granary
+ [x] City effect coliseum negative dis
  [x] City effect library
+ [x] City effect no effect
+ [x] City effect temple
  [x] Get non existing building type
  [x] Constructor
  [x] Get title

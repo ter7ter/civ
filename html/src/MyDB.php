@@ -107,7 +107,7 @@ class MyDB
 
     public static function insert($table, $values)
     {
-        $db = MyDB::get();
+        $db = self::get();
         if (isset($values[0]) && is_array($values[0])) {
             // Multiple rows
             $keys = array_keys($values[0]);
@@ -145,6 +145,22 @@ class MyDB
             foreach ($values as $k => $v) {
                 $params[":$k"] = $v === "NULL" ? null : $v;
             }
+        }
+        $stmt = $db->prepare($query);
+        $stmt->execute($params);
+        self::logQuery($query, $params);
+        return $db->lastInsertId();
+    }
+
+    public static function replace($table, $values)
+    {
+        $db = self::get();
+        $keys = array_keys($values);
+        $placeholders = implode(", ", array_map(fn ($k) => ":$k", $keys));
+        $query = "REPLACE INTO `$table` (" . implode(",", array_map(fn ($k) => "`$k`", $keys)) . ") VALUES (" . $placeholders . ")";
+        $params = [];
+        foreach ($values as $k => $v) {
+            $params[":$k"] = $v === "NULL" ? null : $v;
         }
         $stmt = $db->prepare($query);
         $stmt->execute($params);

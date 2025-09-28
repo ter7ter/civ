@@ -155,9 +155,6 @@ class TestGameDataInitializer
      */
     public static function initializeResourceTypes(): void
     {
-        if (!empty(ResourceType::getAll())) {
-            return; // Уже инициализированы
-        }
 
         $resourceTypes = [
             [
@@ -332,7 +329,8 @@ class TestGameDataInitializer
         ];
 
         foreach ($resourceTypes as $type) {
-            new ResourceType($type);
+            $rt = new ResourceType($type);
+            $rt->save();
         }
     }
 

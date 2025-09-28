@@ -78,6 +78,24 @@ class ResourceType
         return ResourceType::$all;
     }
 
+    public function save()
+    {
+        $data = [
+            'id' => $this->id,
+            'title' => $this->title,
+            'type' => $this->type,
+            'work' => $this->work,
+            'eat' => $this->eat,
+            'money' => $this->money,
+            'req_research' => json_encode(array_map(function($req) { return $req ? $req->id : null; }, $this->req_research)),
+            'cell_types' => json_encode(array_map(function($ct) { return $ct ? $ct->id : null; }, $this->cell_types)),
+            'chance' => $this->chance,
+            'min_amount' => $this->min_amount,
+            'max_amount' => $this->max_amount,
+        ];
+        MyDB::replace('resource_type', $data);
+    }
+
     public static function clearAll()
     {
         ResourceType::$all = [];
@@ -115,165 +133,3 @@ class ResourceType
         return true;
     }
 }
-
-new ResourceType([  'id' => 'iron',
-                    'title' => 'железо',
-                    'type' => 'mineral',
-                    'work' => 2,
-                    'money' => 1,
-                    'chance' => 0.015,
-                    'req_research' => [
-                        //ResearchType::get(7) // Обработка железа
-                    ],
-                    'cell_types' => [
-                        CellType::get('hills'),
-                        CellType::get('mountains')
-                    ]
-                ]);
-new ResourceType([  'id' => 'horse',
-                    'title' => 'лошади',
-                    'type' => 'mineral',
-                    'work' => 1,
-                    'money' => 1,
-                    'chance' => 0.02,
-                    'req_research' => [
-                        ResearchType::get(4) // Верховая езда
-                    ],
-                    'cell_types' => [
-                        CellType::get('plains'),
-                        CellType::get('plains2')
-                    ]
-                ]);
-new ResourceType([  'id' => 'coal',
-                    'title' => 'уголь',
-                    'type' => 'mineral',
-                    'work' => 2,
-                    'money' => 1,
-                    'req_research' => [
-                        //ResearchType::get(4) // Верховая езда
-                    ],
-                    'cell_types' => [
-                        CellType::get('hills'),
-                        CellType::get('mountains')
-                    ]
-                ]);
-new ResourceType([  'id' => 'oil',
-                    'title' => 'нефть',
-                    'type' => 'mineral',
-                    'work' => 2,
-                    'money' => 2,
-                    'req_research' => [
-                        //ResearchType::get(4) // Верховая езда
-                    ],
-                    'cell_types' => [
-                        CellType::get('desert'),
-                        CellType::get('plains'),
-                        CellType::get('plains2')
-                    ]
-                ]);
-new ResourceType([  'id' => 'saltpetre',
-                    'title' => 'селитра',
-                    'type' => 'mineral',
-                    'work' => 2,
-                    'money' => 1,
-                    'req_research' => [
-                        //ResearchType::get(4) // Верховая езда
-                    ],
-                    'cell_types' => [
-                        CellType::get('desert'),
-                        CellType::get('plains'),
-                        CellType::get('plains2'),
-                        CellType::get('hills'),
-                        CellType::get('mountains')
-                    ]
-                ]);
-new ResourceType([  'id' => 'rubber',
-                    'title' => 'резина',
-                    'type' => 'mineral',
-                    'work' => 1,
-                    'money' => 2,
-                    'req_research' => [
-                        //ResearchType::get(4) // Верховая езда
-                    ],
-                    'cell_types' => [
-                        CellType::get('desert'),
-                        CellType::get('plains'),
-                        CellType::get('plains2'),
-                        CellType::get('mountains')
-                    ]
-                ]);
-new ResourceType([  'id' => 'uranium',
-                    'title' => 'уран',
-                    'type' => 'mineral',
-                    'work' => 1,
-                    'money' => 1,
-                    'req_research' => [
-                        //ResearchType::get(4) // Верховая езда
-                    ],
-                    'cell_types' => [
-                        CellType::get('desert'),
-                        CellType::get('hills'),
-                        CellType::get('mountains')
-                    ]
-                ]);
-new ResourceType([  'id' => 'vine',
-                    'title' => 'виноград',
-                    'type' => 'luxury',
-                    'eat' => 1,
-                    'money' => 2,
-                    'chance' => 0.02,
-                    'cell_types' => [
-                        CellType::get('plains'),
-                        CellType::get('plains2')
-                    ]
-                ]);
-new ResourceType([  'id' => 'ivory',
-                    'title' => 'слоновая кость',
-                    'type' => 'luxury',
-                    'work' => 1,
-                    'money' => 2,
-                    'cell_types' => [
-                        CellType::get('desert')
-                    ]
-                ]);
-new ResourceType([  'id' => 'silk',
-                    'title' => 'шёлк',
-                    'type' => 'luxury',
-                    'work' => 2,
-                    'money' => 1,
-                    'chance' => 0.02,
-                    'cell_types' => [
-                        CellType::get('plains'),
-                        CellType::get('plains2'),
-                        CellType::get('hills')
-                    ]
-                ]);
-new ResourceType([  'id' => 'furs',
-                    'title' => 'меха',
-                    'type' => 'luxury',
-                    'work' => 1,
-                    'eat' => 1,
-                    'money' => 1,
-                    'cell_types' => [
-                        CellType::get('forest')
-                    ]
-                ]);
-new ResourceType([  'id' => 'fish',
-                    'title' => 'рыба',
-                    'type' => 'bonuce',
-                    'chance' => 0.05,
-                    'eat' => 2,
-                    'cell_types' => [
-                        CellType::get('water1')
-                    ]
-                ]);
-new ResourceType([  'id' => 'whale',
-                    'title' => 'киты',
-                    'type' => 'bonuce',
-                    'chance' => 0.03,
-                    'eat' => 1,
-                    'money' => 1,
-                    'cell_types' => [
-                        CellType::get('water2')
-                    ]
-                ]);

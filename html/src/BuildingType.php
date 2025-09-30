@@ -2,10 +2,8 @@
 
 namespace App;
 
-class BuildingType
+class BuildingType extends BaseType
 {
-    public $id;
-    public $title;
     public $cost;
     /**
      * Требуемые исследования
@@ -243,7 +241,7 @@ class BuildingType
         }
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }

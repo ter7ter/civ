@@ -4,7 +4,7 @@ namespace App;
 
 use PDO;
 
-class MyDB
+class MyDB implements DatabaseInterface
 {
     /**
      * @var PDO
@@ -66,7 +66,7 @@ class MyDB
         return MyDB::$_link;
     }
 
-    public static function query($query, $vars = [], $output = "assoc")
+    public static function query(string $query, array $vars = [], string $output = "assoc")
     {
         $db = MyDB::get();
 
@@ -105,7 +105,7 @@ class MyDB
         return $result;
     }
 
-    public static function insert($table, $values)
+    public static function insert(string $table, array $values)
     {
         $db = self::get();
         if (isset($values[0]) && is_array($values[0])) {
@@ -168,7 +168,7 @@ class MyDB
         return $db->lastInsertId();
     }
 
-    public static function update($table, $values, $where)
+    public static function update(string $table, array $values, mixed $where)
     {
         $db = MyDB::get();
         $setParts = array_map(fn ($k) => "`$k` = :$k", array_keys($values));

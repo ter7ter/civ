@@ -2,7 +2,7 @@
 
 namespace App;
 
-class MissionType
+class MissionType implements MissionInterface
 {
     //int
     public $id;
@@ -26,12 +26,12 @@ class MissionType
         return (isset(MissionType::$all[$id])) ? MissionType::$all[$id] : false;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }
 
-    public function check_cell($x, $y, $planet_id)
+    public function check_cell(int $x, int $y, int $planet_id): bool
     {
         $cell = Cell::get($x, $y, $planet_id);
         if (!in_array($cell->type->id, $this->cell_types)) {
@@ -70,7 +70,7 @@ class MissionType
     }
 
     //Завершение выполнения миссии
-    public function complete($unit, $title = false)
+    public function complete(Unit $unit, string|false $title = false): bool
     {
         switch ($this->id) {
             case 'build_city':
@@ -96,6 +96,7 @@ class MissionType
                 return true;
                 break;
         }
+        return false;
     }
 }
 new MissionType([   'id' => 'build_city',

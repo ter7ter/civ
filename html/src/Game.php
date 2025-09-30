@@ -178,15 +178,8 @@ class Game
      */
     public function all_system_message($text)
     {
-        foreach ($this->users as $user) {
-            $message = new Message([
-                "form_id" => false,
-                "to_id" => $user->id,
-                "text" => $text,
-                "type" => "system",
-            ]);
-            $message->save();
-        }
+        $messageService = new MessageService();
+        $messageService->send_system_to_all($this, $text);
     }
 
     /**

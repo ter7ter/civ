@@ -6,20 +6,32 @@ use Exception;
 
 class Resource
 {
-    public $id = null;
-    //int
-    public $x;
-    //int
-    public $y;
-    //int
-    public $planet = 0;
+    /**
+     * @var mixed string|null
+     */
+    public mixed $id = null;
+    /**
+     * @var int
+     */
+    public int $x;
+    /**
+     * @var int
+     */
+    public int $y;
+    /**
+     * @var int id планеты
+     */
+    public int $planet = 0;
     /**
      * @var ResourceType
      */
-    public $type;
-    public $amount;
+    public mixed $type;
+    /**
+     * @var int
+     */
+    public int $amount;
 
-    public static function get($x, $y, $planet)
+    public static function get($x, $y, $planet): bool|Resource
     {
         $data = MyDB::query(
             "SELECT * FROM resource WHERE x = :x AND y = :y AND planet = :planet",
@@ -44,7 +56,7 @@ class Resource
         $this->type = ResourceType::get($data["type"]);
     }
 
-    public function save()
+    public function save(): void
     {
         if (!$this->type) {
             throw new Exception("Resource type is not set");
@@ -61,7 +73,7 @@ class Resource
         }
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->type ? $this->type->title : "";
     }

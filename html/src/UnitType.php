@@ -2,17 +2,8 @@
 
 namespace App;
 
-class UnitType
+class UnitType extends BaseType
 {
-    /**
-     * @var int
-     */
-    public $id;
-    /**
-     * Название
-     * @var string
-     */
-    public $title;
     /**
      * Максимальные очки движений
      * @var int
@@ -297,7 +288,7 @@ class UnitType
         }
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->title;
     }

@@ -2,12 +2,12 @@
 
 namespace App;
 
-class Planet
+class Planet implements PlanetInterface
 {
     /**
      * @var Planet[]
      */
-    protected static $_all = [];
+    protected static array $_all = [];
 
     /**
      * Очистка кэша для тестов
@@ -20,22 +20,23 @@ class Planet
     /**
      * @var int
      */
-    public $id = null;
+    public mixed $id = null;
     /**
      * @var string
      */
-    public $name;
+    public string $name;
     /**
      * ID игры
      * @var int
      */
-    public $game_id;
+    public int $game_id;
 
     /**
      * @param $id
-     * @return Planet
+     * @return Planet|null
+     * @throws \Exception
      */
-    public static function get($id)
+    public static function get($id): ?Planet
     {
         if (isset(Planet::$_all[$id])) {
             return Planet::$_all[$id];
@@ -72,7 +73,7 @@ class Planet
         }
     }
 
-    public function save()
+    public function save(): void
     {
         $values = [];
         foreach (["name", "game_id"] as $field) {
@@ -86,9 +87,9 @@ class Planet
     }
 
     /**
-     * @return Game
+     * @return Game|null
      */
-    public function get_game()
+    public function get_game(): ?Game
     {
         return Game::get($this->game_id);
     }

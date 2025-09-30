@@ -1,20 +1,3 @@
-Admin Unit Type (App\Tests\AdminUnitType)
- [x] Get all unit types
- [x] Update unit type
- [x] Save new unit type
- [x] Delete unit type
- [x] Get unit type by id
- [x] Json fields handling
- [x] Get non existent unit type
- [x] Unit type constructor with invalid json
- [x] Unit type default values
- [x] Unit type with complex data
-
-Unit Type (App\Tests\UnitType)
- [x] Get existing unit type
- [x] Get non existing unit type
- [x] Construct basic
- [x] Construct with can move
- [x] Caching
- [x] Default properties
+Event (App\Tests\Event)
+ [x] Get text
 

@@ -345,7 +345,7 @@ class City
      * Возвращает название города
      * @return string
      */
-    public function get_title()
+    public function getTitle()
     {
         return $this->title;
     }
@@ -544,35 +544,7 @@ class City
      */
     public function locate_people()
     {
-        $this->people_cells = [];
-        $cells = $this->get_city_cells();
-        $people_count = $this->population;
-        while ($people_count > 0 && count($cells) > 0) {
-            $best = $cells[0];
-            $best_key = 0;
-            foreach ($cells as $key => $cell) {
-                if ($cell->get_eat($this) > $best->get_eat($this)) {
-                    $best = $cell;
-                    $best_key = $key;
-                } elseif (
-                    $cell->get_eat($this) == $best->get_eat($this) &&
-                    $cell->get_work($this) > $best->get_work($this)
-                ) {
-                    $best = $cell;
-                    $best_key = $key;
-                } elseif (
-                    $cell->get_eat($this) == $best->get_eat($this) &&
-                    $cell->get_work($this) == $best->get_work($this) &&
-                    $cell->get_money($this) > $best->get_money($this)
-                ) {
-                    $best = $cell;
-                    $best_key = $key;
-                }
-            }
-            $this->people_cells[] = $best;
-            array_splice($cells, $best_key, 1);
-            $people_count--;
-        }
+        CityPopulationManager::locatePeople($this);
     }
 
     /**
@@ -581,20 +553,7 @@ class City
      */
     public function set_people($people_cells)
     {
-        $this->people_cells = [];
-        $city_cells = $this->get_city_cells();
-        $people_count = $this->population;
-        foreach ($people_cells as $cellp) {
-            if ($people_count == 0) {
-                break;
-            }
-            foreach ($city_cells as $cellc) {
-                if ($cellp["x"] == $cellc->x && $cellp["y"] == $cellc->y) {
-                    $this->people_cells[] = $cellc;
-                    $people_count--;
-                }
-            }
-        }
+        CityPopulationManager::setPeople($this, $people_cells);
     }
 
     /**
@@ -602,30 +561,7 @@ class City
      */
     public function calculate_people()
     {
-        $this->pwork = 1;
-        $this->peat = 2;
-        $money = 1;
-        foreach ($this->people_cells as $cell) {
-            $this->pwork += $cell->get_work();
-            $this->peat += $cell->get_eat();
-            $money += $cell->get_money();
-        }
-        $this->presearch = round(($money * $this->user->research_percent) / 10);
-        $this->pmoney = $money - $this->presearch;
-        $this->people_dis = 0;
-        $this->people_happy = 0;
-        $this->people_norm = count($this->people_cells);
-        if ($this->people_norm >= POPULATION_PEOPLE_DIS) {
-            $this->people_norm = POPULATION_PEOPLE_DIS - 1;
-            $this->people_dis = $this->population - $this->people_norm;
-        }
-        $add_happy = $this->people_artist;
-        $this->people_norm -= $add_happy;
-        if ($this->people_norm < 0) {
-            $add_happy += $this->people_norm;
-            $this->people_norm = 0;
-        }
-        $this->people_happy += $add_happy;
+        CityPopulationManager::calculatePeople($this);
     }
 
     /**
@@ -634,30 +570,7 @@ class City
      */
     public function get_possible_units()
     {
-        $units = UnitType::getAll();
-        $result = [];
-        $have_research = $this->user->get_research();
-        foreach ($units as $unit) {
-            if ($unit->type == "water" && $this->is_coastal == false) {
-                continue;
-            }
-            $can_build = true;
-            foreach ($unit->req_research as $research) {
-                if (!isset($have_research[$research->id])) {
-                    $can_build = false;
-                }
-            }
-            foreach ($unit->req_resources as $res) {
-                if (!isset($this->resources[$res->id])) {
-                    $can_build = false;
-                }
-            }
-            if (!$can_build) {
-                continue;
-            }
-            $result[$unit->id] = $unit;
-        }
-        return $result;
+        return CityProductionManager::getPossibleUnits($this);
     }
 
     /**
@@ -666,30 +579,7 @@ class City
      */
     public function get_possible_buildings()
     {
-        $buildings = BuildingType::getAll();
-        $result = [];
-        $have_research = $this->user->get_research();
-        foreach ($buildings as $building) {
-            if (isset($this->buildings[$building->id])) {
-                continue;
-            }
-            $can_build = true;
-            foreach ($building->req_research as $research) {
-                if (!isset($have_research[$research->id])) {
-                    $can_build = false;
-                }
-            }
-            foreach ($building->req_resources as $res) {
-                if (!isset($this->resources[$res->id])) {
-                    $can_build = false;
-                }
-            }
-            if (!$can_build) {
-                continue;
-            }
-            $result[$building->id] = $building;
-        }
-        return $result;
+        return CityProductionManager::getPossibleBuildings($this);
     }
 
     /**
@@ -698,65 +588,7 @@ class City
      */
     public function calculate_production()
     {
-        if (!$this->production) {
-            return false;
-        }
-        switch ($this->production_type) {
-            case "unit":
-                $production = UnitType::get($this->production);
-                break;
-            case "buil":
-                $production = BuildingType::get($this->production);
-                break;
-            default:
-                throw new Exception(
-                    "Missing production type {$this->production_type}",
-                );
-        }
-        if ($this->production_complete < $production->cost) {
-            $this->production_complete += $this->pwork;
-        }
-        if ($this->production_complete >= $production->cost) {
-            if (
-                $this->production_type == "unit" &&
-                $this->population <= $production->population_cost
-            ) {
-                $this->production_complete = $production->cost;
-                return true;
-            }
-            //Закончили производство
-            switch ($this->production_type) {
-                case "unit":
-                    $this->population -= $production->population_cost;
-                    $this->create_unit($production);
-                    if ($production->population_cost > 0) {
-                        $this->locate_people();
-                        $this->calculate_people();
-                    }
-                    $event = new Event([
-                        "type" => "city_unit",
-                        "user_id" => $this->user->id,
-                        "object" => $production->id,
-                        "source" => $this->id,
-                    ]);
-                    break;
-                case "buil":
-                    $this->create_building($production);
-                    $production->city_effect($this);
-                    $event = new Event([
-                        "type" => "city_building",
-                        "user_id" => $this->user->id,
-                        "object" => $production->id,
-                        "source" => $this->id,
-                    ]);
-                    break;
-                default:
-                    $this->production = false;
-            }
-            $event->save();
-            $this->production_complete = 0;
-            $this->select_next_production();
-        }
+        return CityProductionManager::calculateProduction($this);
     }
 
     /**
@@ -764,12 +596,7 @@ class City
      */
     public function select_next_production()
     {
-        if ($this->production_type == "buil") {
-            $this->production_type = "unit";
-            $units = $this->get_possible_units();
-            $unit = array_shift($units);
-            $this->production = $unit->id;
-        }
+        CityProductionManager::selectNextProduction($this);
     }
 
     /**
@@ -777,29 +604,17 @@ class City
      */
     public function calculate()
     {
-        $this->check_mood();
+        CityPopulationManager::checkMood($this);
         $this->eat += $this->peat - $this->population * 2;
         if ($this->eat >= $this->eat_up) {
             $this->population++;
             $this->eat -= $this->eat_up;
-            $this->locate_people();
+            CityPopulationManager::locatePeople($this);
         }
-        //$this->locate_people();
-        $this->calculate_people();
-        $this->calculate_buildings();
-        $this->calculate_production();
-        foreach ($this->buildings as $building) {
-            $this->culture += $building->type->culture;
-        }
-        if (
-            isset(GameConfig::$CULTURE_LEVELS[$this->culture_level + 1]) &&
-            $this->culture >=
-                GameConfig::$CULTURE_LEVELS[$this->culture_level + 1]
-        ) {
-            //Набралось культуры на следующий уровень
-            $this->culture_level++;
-            $this->culture -= GameConfig::$CULTURE_LEVELS[$this->culture_level];
-        }
+        CityPopulationManager::calculatePeople($this);
+        CityBuildingManager::calculateBuildings($this);
+        CityProductionManager::calculateProduction($this);
+        CityCultureManager::calculateCulture($this);
         $this->save();
     }
 
@@ -810,17 +625,7 @@ class City
      */
     public function create_unit($type)
     {
-        $unit = new Unit([
-            "x" => $this->x,
-            "y" => $this->y,
-            "planet" => $this->planet,
-            "health" => 3,
-            "points" => $type->points,
-            "user_id" => $this->user->id,
-            "type" => $type->id,
-        ]);
-        $unit->save();
-        return $unit;
+        return CityProductionManager::createUnit($this, $type);
     }
 
     /**
@@ -830,10 +635,7 @@ class City
      */
     public function create_building($type)
     {
-        $building = new Building(["type" => $type->id, "city_id" => $this->id]);
-        $building->save();
-        $this->buildings[] = $building;
-        return $building;
+        return CityProductionManager::createBuilding($this, $type);
     }
 
     /**
@@ -917,8 +719,7 @@ class City
      */
     public function add_people()
     {
-        $this->population++;
-        $this->save();
+        CityPopulationManager::addPeople($this);
     }
 
     /**
@@ -926,10 +727,7 @@ class City
      */
     public function remove_people()
     {
-        if ($this->population > 1) {
-            $this->population--;
-            $this->save();
-        }
+        CityPopulationManager::removePeople($this);
     }
 
     /**
@@ -937,12 +735,7 @@ class City
      */
     public function calculate_buildings()
     {
-        foreach ($this->buildings as $building) {
-            $building->type->city_effect($this);
-            if ($building->type->upkeep > 0 && $this->pwork > 0) {
-                $this->pmoney -= $building->type->upkeep;
-            }
-        }
+        CityBuildingManager::calculateBuildings($this);
     }
 
     /**
@@ -950,10 +743,7 @@ class City
      */
     public function check_mood()
     {
-        if ($this->people_dis > $this->people_happy) {
-            $this->pwork = 0;
-            $this->pmoney = 0;
-        }
+        CityPopulationManager::checkMood($this);
     }
 
     /**
@@ -961,54 +751,6 @@ class City
      */
     public function get_culture_cells()
     {
-        $cells = [];
-        $cellsu = [$this->x . "x" . $this->y];
-        $cells[0] = [];
-        $culture_up = GameConfig::$CULTURE_LEVELS[$this->culture_level + 1];
-        for ($dx = -1; $dx < 2; $dx++) {
-            for ($dy = -1; $dy < 2; $dy++) {
-                $x = $this->x;
-                $y = $this->y;
-                if ($dx == 0 && $dy == 0) {
-                    continue;
-                }
-                Cell::calc_coord($x, $y, $dx, $dy);
-                $cells[0][] = [
-                    "x" => $x,
-                    "y" => $y,
-                    "culture" =>
-                        $this->culture_level * 10 +
-                        ceil(($this->culture * 10) / $culture_up),
-                ];
-                $cellsu[] = $x . "x" . $y;
-            }
-        }
-        for ($level = 1; $level <= $this->culture_level; $level++) {
-            $cells[$level] = [];
-            foreach ($cells[$level - 1] as $cell) {
-                foreach ([[-1, 0], [1, 0], [0, -1], [0, 1]] as $diff) {
-                    $x = $cell["x"];
-                    $y = $cell["y"];
-                    Cell::calc_coord($x, $y, $diff[0], $diff[1]);
-                    if (!in_array($x . "x" . $y, $cellsu)) {
-                        $cells[$level][] = [
-                            "x" => $x,
-                            "y" => $y,
-                            "culture" =>
-                                ($this->culture_level - $level) * 10 +
-                                ceil(($this->culture * 10) / $culture_up),
-                        ];
-                        $cellsu[] = $x . "x" . $y;
-                    }
-                }
-            }
-        }
-        $result = [];
-        foreach ($cells as $items) {
-            foreach ($items as $item) {
-                array_push($result, $item);
-            }
-        }
-        return $result;
+        return CityCultureManager::getCultureCells($this);
     }
 }

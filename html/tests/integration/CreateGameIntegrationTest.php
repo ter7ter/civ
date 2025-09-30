@@ -29,7 +29,7 @@ class CreateGameIntegrationTest extends CommonTestBase
             "missions" => ["move_to", "build_city"],
             "can_move" => ["plains" => 1, "plains2" => 1, "forest" => 1, "hills" => 1, "mountains" => 2, "desert" => 1, "city" => 1],
         ]);
-        define(START_UNIT_SETTLER_TYPE, $unitSettlerType->id);
+        \App\GameConfig::$START_UNIT_SETTLER_TYPE = $unitSettlerType->id;
     }
 
     /**

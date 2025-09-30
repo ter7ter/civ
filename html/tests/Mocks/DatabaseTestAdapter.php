@@ -43,7 +43,7 @@ class DatabaseTestAdapter
         MyDB::query("SET FOREIGN_KEY_CHECKS = 0");
 
         foreach ($tables as $table) {
-            echo "\nTruncating table: {$table}\n";
+            //echo "\nTruncating table: {$table}\n";
             MyDB::query("TRUNCATE TABLE `{$table}`");
         }
 

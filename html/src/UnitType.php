@@ -129,7 +129,7 @@ class UnitType
                 ["id" => $id],
                 "row",
             );
-            if ($data) {
+            if ($data && isset($data["id"])) {
                 return new UnitType($data);
             } else {
                 return false;

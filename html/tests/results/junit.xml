@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="/var/www/html/tests/unit" tests="16" assertions="79" errors="0" warnings="0" failures="0" skipped="0" time="0.266041">
-    <testsuite name="App\Tests\AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" tests="10" assertions="47" errors="0" warnings="0" failures="0" skipped="0" time="0.234170">
-      <testcase name="testGetAllUnitTypes" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="14" assertions="6" time="0.158019"/>
-      <testcase name="testUpdateUnitType" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="80" assertions="2" time="0.007946"/>
-      <testcase name="testSaveNewUnitType" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="62" assertions="2" time="0.036436"/>
-      <testcase name="testDeleteUnitType" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="99" assertions="1" time="0.015070"/>
-      <testcase name="testGetUnitTypeById" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="114" assertions="3" time="0.003993"/>
-      <testcase name="testJsonFieldsHandling" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="128" assertions="3" time="0.002715"/>
-      <testcase name="testGetNonExistentUnitType" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="144" assertions="1" time="0.000686"/>
-      <testcase name="testUnitTypeConstructorWithInvalidJson" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="150" assertions="2" time="0.002251"/>
-      <testcase name="testUnitTypeDefaultValues" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="166" assertions="8" time="0.003577"/>
-      <testcase name="testUnitTypeWithComplexData" class="App\Tests\AdminUnitTypeTest" classname="App.Tests.AdminUnitTypeTest" file="/var/www/html/tests/unit/AdminUnitTypeTest.php" line="184" assertions="19" time="0.003477"/>
-    </testsuite>
-    <testsuite name="App\Tests\UnitTypeTest" file="/var/www/html/tests/unit/UnitTypeTest.php" tests="6" assertions="32" errors="0" warnings="0" failures="0" skipped="0" time="0.031871">
-      <testcase name="testGetExistingUnitType" class="App\Tests\UnitTypeTest" classname="App.Tests.UnitTypeTest" file="/var/www/html/tests/unit/UnitTypeTest.php" line="19" assertions="6" time="0.019372"/>
-      <testcase name="testGetNonExistingUnitType" class="App\Tests\UnitTypeTest" classname="App.Tests.UnitTypeTest" file="/var/www/html/tests/unit/UnitTypeTest.php" line="49" assertions="1" time="0.000720"/>
-      <testcase name="testConstructBasic" class="App\Tests\UnitTypeTest" classname="App.Tests.UnitTypeTest" file="/var/www/html/tests/unit/UnitTypeTest.php" line="59" assertions="7" time="0.000111"/>
-      <testcase name="testConstructWithCanMove" class="App\Tests\UnitTypeTest" classname="App.Tests.UnitTypeTest" file="/var/www/html/tests/unit/UnitTypeTest.php" line="85" assertions="6" time="0.000074"/>
-      <testcase name="testCaching" class="App\Tests\UnitTypeTest" classname="App.Tests.UnitTypeTest" file="/var/www/html/tests/unit/UnitTypeTest.php" line="110" assertions="1" time="0.011444"/>
-      <testcase name="testDefaultProperties" class="App\Tests\UnitTypeTest" classname="App.Tests.UnitTypeTest" file="/var/www/html/tests/unit/UnitTypeTest.php" line="128" assertions="11" time="0.000149"/>
+  <testsuite name="" tests="1" assertions="7" errors="0" warnings="0" failures="0" skipped="0" time="0.213682">
+    <testsuite name="Unit Tests" tests="1" assertions="7" errors="0" warnings="0" failures="0" skipped="0" time="0.213682">
+      <testsuite name="App\Tests\EventTest" file="/var/www/html/tests/unit/EventTest.php" tests="1" assertions="7" errors="0" warnings="0" failures="0" skipped="0" time="0.213682">
+        <testcase name="testGetText" class="App\Tests\EventTest" classname="App.Tests.EventTest" file="/var/www/html/tests/unit/EventTest.php" line="361" assertions="7" time="0.213682"/>
+      </testsuite>
     </testsuite>
   </testsuite>
 </testsuites>

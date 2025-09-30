@@ -24,6 +24,12 @@ if (!defined('USE_TRANSACTION_MODE')) {
 class GameConfig
 {
     /**
+     * ID типа юнита поселенца
+     * @var int
+     */
+    public static $START_UNIT_SETTLER_TYPE = 21;
+
+    /**
      * Необходимое количество культуры для уровней
      * @var array
      */

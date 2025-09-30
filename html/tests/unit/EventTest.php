@@ -140,8 +140,8 @@ class EventTest extends CommonTestBase
         $city = TestDataFactory::createTestCity(['user_id' => $user->id, 'planet' => $planetId]);
 
         // Ensure unit type with id=1 exists
-        TestDataFactory::createTestUnitType([
-            'id' => 1,
+        MyDB::enableLogging();
+        $unitType = TestDataFactory::createTestUnitType([
             'title' => 'Поселенец',
         ]);
 
@@ -150,7 +150,7 @@ class EventTest extends CommonTestBase
             'type' => 'city_unit',
             'user_id' => $user->id,
             'source' => $city->id, // ID города
-            'object' => 1, // Поселенец
+            'object' => $unitType->id, // Поселенец
         ];
 
         $event = new Event($data);
@@ -162,7 +162,7 @@ class EventTest extends CommonTestBase
         $this->assertInstanceOf(City::class, $event->soruce);
         $this->assertEquals($city->id, $event->soruce->id);
         $this->assertInstanceOf(UnitType::class, $event->object);
-        $this->assertEquals(1, $event->object->id);
+        $this->assertEquals($unitType->id, $event->object->id);
     }
 
     /**
@@ -367,16 +367,13 @@ class EventTest extends CommonTestBase
         $city = $result['city'];
 
         // Ensure base types exist for text lookups
-        TestDataFactory::createTestResearchType([
-            'id' => 1,
+        $researchType = TestDataFactory::createTestResearchType([
             'title' => 'Гончарное дело',
         ]);
-        TestDataFactory::createTestBuildingType([
-            'id' => 1,
+        $buildingType = TestDataFactory::createTestBuildingType([
             'title' => 'бараки',
         ]);
-        TestDataFactory::createTestUnitType([
-            'id' => 1,
+        $unitType = TestDataFactory::createTestUnitType([
             'title' => 'Поселенец',
         ]);
 
@@ -384,7 +381,7 @@ class EventTest extends CommonTestBase
         $researchEvent = new Event([
             'type' => 'research',
             'user_id' => $user->id,
-            'object' => 1,
+            'object' => $researchType->id,
         ]);
         $this->assertStringContainsString('Вы исследовали', $researchEvent->get_text());
         $this->assertStringContainsString('Гончарное дело', $researchEvent->get_text());
@@ -394,7 +391,7 @@ class EventTest extends CommonTestBase
             'type' => 'city_building',
             'user_id' => $user->id,
             'source' => $city->id,
-            'object' => 1,
+            'object' => $buildingType->id,
         ]);
         $this->assertStringContainsString('построено', $buildingEvent->get_text());
         $this->assertStringContainsString('бараки', $buildingEvent->get_text());
@@ -404,7 +401,7 @@ class EventTest extends CommonTestBase
             'type' => 'city_unit',
             'user_id' => $user->id,
             'source' => $city->id,
-            'object' => 1,
+            'object' => $unitType->id,
         ]);
         $this->assertStringContainsString('создан юнит', $unitEvent->get_text());
         $this->assertStringContainsString('Поселенец', $unitEvent->get_text());

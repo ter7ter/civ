@@ -61,7 +61,7 @@ class Resource
         }
     }
 
-    public function get_title()
+    public function getTitle()
     {
         return $this->type ? $this->type->title : "";
     }

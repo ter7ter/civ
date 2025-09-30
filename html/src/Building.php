@@ -57,7 +57,7 @@ class Building
         }
     }
 
-    public function get_title()
+    public function getTitle()
     {
         return $this->type->getTitle();
     }

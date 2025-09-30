@@ -73,9 +73,9 @@ class MyDB
         // Проверяем, является ли это запросом, который не возвращает данные
         $queryStart = strtoupper(substr(trim($query), 0, 10));
 
+        self::logQuery($query, $vars);
         $stmt = $db->prepare($query);
         $stmt->execute($vars);
-        self::logQuery($query, $vars);
 
         if ($stmt->columnCount() == 0) {
             // Запрос не возвращает столбцы
@@ -146,6 +146,7 @@ class MyDB
                 $params[":$k"] = $v === "NULL" ? null : $v;
             }
         }
+        self::logQuery($query, $params);
         $stmt = $db->prepare($query);
         $stmt->execute($params);
         return $db->lastInsertId();
@@ -162,8 +163,8 @@ class MyDB
             $params[":$k"] = $v === "NULL" ? null : $v;
         }
         $stmt = $db->prepare($query);
-        $stmt->execute($params);
         self::logQuery($query, $params);
+        $stmt->execute($params);
         return $db->lastInsertId();
     }
 
@@ -184,8 +185,8 @@ class MyDB
             // Assuming $where does not have placeholders, or handle separately
         }
         $stmt = $db->prepare($query);
-        $stmt->execute($params);
         self::logQuery($query, $params);
+        $stmt->execute($params);
         return $stmt->rowCount();
     }
 

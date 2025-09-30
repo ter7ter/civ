@@ -322,7 +322,7 @@ class GameTest extends CommonTestBase
         // Initialize cell and unit types required for map/unit creation
         \App\Tests\Base\TestGameDataInitializer::initializeCellTypes();
         $unitSettlerType = \App\Tests\Factory\TestDataFactory::createTestUnitType(['title' => 'Поселенец']);
-        define('START_UNIT_SETTLER_TYPE', $unitSettlerType->id);
+        \App\GameConfig::$START_UNIT_SETTLER_TYPE = $unitSettlerType->id;
 
         $game = TestDataFactory::createTestGame([
             'name' => 'New Game Test',

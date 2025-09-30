@@ -376,6 +376,18 @@ class TestDataFactory
      */
     public static function createTestMissionType($data = []): \App\MissionType
     {
+        // Try to get the existing global mission type first
+        if (isset($data['id']) && \App\MissionType::get($data['id'])) {
+            $missionType = \App\MissionType::get($data['id']);
+            // Override data if provided
+            foreach ($data as $key => $value) {
+                if (property_exists($missionType, $key)) {
+                    $missionType->$key = $value;
+                }
+            }
+            return $missionType;
+        }
+
         $defaultData = [
             "id" => "build_city",
             "title" => "Основать город",
@@ -387,6 +399,12 @@ class TestDataFactory
         $missionData = array_merge($defaultData, $data);
 
         $missionType = new \App\MissionType($missionData);
+
+        // If id matches a global one, set the handler
+        if (isset(\App\MissionType::$all[$missionData['id']])) {
+            $missionType->completeHandler = \App\MissionType::$all[$missionData['id']]->completeHandler;
+        }
+
         return $missionType;
     }
 

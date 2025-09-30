@@ -14,6 +14,8 @@ class MissionType implements MissionInterface
     public $unit_lost = false;
     //Сколько требуется очков для полного выполнения задания, в зависимости от типа местности
     public $need_points = [];
+    // Стратегия для завершения миссии
+    public $completeHandler;
 
     public static $all = [];
 
@@ -72,29 +74,8 @@ class MissionType implements MissionInterface
     //Завершение выполнения миссии
     public function complete(Unit $unit, string|false $title = false): bool
     {
-        switch ($this->id) {
-            case 'build_city':
-                if (!$title) {
-                    return false;
-                }
-                City::new_city($unit->user, $unit->x, $unit->y, $title, $unit->planet);
-                return true;
-                break;
-            case 'build_road':
-                $cell = Cell::get($unit->x, $unit->y, $unit->planet);
-                if (!$cell->road) {
-                    $cell->road = 'road';
-                    $cell->save();
-                }
-                return true;
-                break;
-            case 'irrigation':
-            case 'mine':
-                $cell = Cell::get($unit->x, $unit->y, $unit->planet);
-                $cell->improvement = $this->id;
-                $cell->save();
-                return true;
-                break;
+        if ($this->completeHandler) {
+            return $this->completeHandler->complete($unit, $title);
         }
         return false;
     }
@@ -104,6 +85,8 @@ new MissionType([   'id' => 'build_city',
                     'unit_lost' => true,
                     'cell_types' => ['plains', 'plains2', 'forest', 'hills', 'desert'],
                     'need_points' => []]);
+MissionType::$all['build_city']->completeHandler = new BuildCityMission();
+
 new MissionType([   'id' => 'build_road',
                     'title' => 'Строить дорогу',
                     'unit_lost' => false,
@@ -116,6 +99,8 @@ new MissionType([   'id' => 'build_road',
                         'desert' => 4,
                         'mountains' => 8
                     ]]);
+MissionType::$all['build_road']->completeHandler = new BuildRoadMission();
+
 new MissionType([   'id' => 'mine',
                     'title' => 'Построить рудник',
                     'unit_lost' => false,
@@ -126,6 +111,8 @@ new MissionType([   'id' => 'mine',
                         'hills' => 10,
                         'mountains' => 10
                     ]]);
+MissionType::$all['mine']->completeHandler = new BuildMineAndIrrigationMission('mine');
+
 new MissionType([   'id' => 'irrigation',
                     'title' => 'Орошать',
                     'unit_lost' => false,
@@ -135,8 +122,11 @@ new MissionType([   'id' => 'irrigation',
                         'plains2' => 10,
                         'desert' => 10
                     ]]);
+MissionType::$all['irrigation']->completeHandler = new BuildMineAndIrrigationMission('irrigation');
+
 new MissionType([   'id' => 'move_to',
                     'title' => 'Идти к',
                     'unit_lost' => false,
                     'cell_types' => ['plains', 'plains2', 'forest', 'hills', 'mountains', 'water1', 'water2', 'water3', 'desert'],
                     'need_points' => []]);
+MissionType::$all['move_to']->completeHandler = null; // move_to doesn't complete instantly, it's for movement

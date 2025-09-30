@@ -88,59 +88,60 @@ class CityProductionManager
         }
         switch ($city->production_type) {
             case "unit":
-                $production = UnitType::get($city->production);
+                $productionItem = UnitType::get($city->production);
                 break;
             case "buil":
-                $production = BuildingType::get($city->production);
+                $productionItem = BuildingType::get($city->production);
                 break;
             default:
                 throw new \Exception(
                     "Missing production type {$city->production_type}",
                 );
         }
-        if ($city->production_complete < $production->cost) {
+        if ($city->production_complete < $productionItem->cost) {
             $city->production_complete += $city->pwork;
         }
-        if ($city->production_complete >= $production->cost) {
+        if ($city->production_complete >= $productionItem->cost) {
             if (
                 $city->production_type == "unit" &&
-                $city->population <= $production->population_cost
+                $city->population <= $productionItem->population_cost
             ) {
-                $city->production_complete = $production->cost;
+                $city->production_complete = $productionItem->cost;
                 return true;
             }
             // Закончили производство
-            switch ($city->production_type) {
-                case "unit":
-                    $city->population -= $production->population_cost;
-                    self::createUnit($city, $production);
-                    if ($production->population_cost > 0) {
-                        CityPopulationManager::locatePeople($city);
-                        CityPopulationManager::calculatePeople($city);
-                    }
-                    $event = new Event([
-                        "type" => "city_unit",
-                        "user_id" => $city->user->id,
-                        "object" => $production->id,
-                        "source" => $city->id,
-                    ]);
-                    break;
-                case "buil":
-                    self::createBuilding($city, $production);
-                    $production->city_effect($city);
-                    $event = new Event([
-                        "type" => "city_building",
-                        "user_id" => $city->user->id,
-                        "object" => $production->id,
-                        "source" => $city->id,
-                    ]);
-                    break;
-                default:
-                    $city->production = false;
-            }
+            $productionImpl = self::createProductionStrategy($city->production_type, $productionItem);
+            $productionImpl->complete($city);
+
+            $eventType = $city->production_type == "unit" ? "city_unit" : "city_building";
+            $event = new Event([
+                "type" => $eventType,
+                "user_id" => $city->user->id,
+                "object" => $productionItem->id,
+                "source" => $city->id,
+            ]);
             $event->save();
             $city->production_complete = 0;
             self::selectNextProduction($city);
+        }
+    }
+
+    /**
+     * Создать стратегию для производства
+     * @param string $productionType
+     * @param mixed $productionItem
+     * @return ProductionInterface
+     * @throws \Exception
+     */
+    private static function createProductionStrategy(string $productionType, $productionItem): ProductionInterface
+    {
+        switch ($productionType) {
+            case "unit":
+                return new UnitProduction($productionItem);
+            case "buil":
+                return new BuildingProduction($productionItem);
+            default:
+                throw new \Exception("Unknown production type: {$productionType}");
         }
     }
 

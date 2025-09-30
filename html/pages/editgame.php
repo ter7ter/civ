@@ -9,7 +9,7 @@ $error = false;
 $data = [];
 
 if (isset($_REQUEST["name"])) {
-    MyDB::startTransaction();
+    //MyDB::startTransaction();
     if (isset($_REQUEST['game_id'])) {
         $game_id = (int)$_REQUEST['game_id'];
     } else {

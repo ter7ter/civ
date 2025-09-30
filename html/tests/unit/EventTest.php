@@ -310,7 +310,7 @@ class EventTest extends CommonTestBase
     }
 
     /**
-     * Тест метода get_title для разных типов событий
+     * Тест метода getTitle для разных типов событий
      */
     public function testGetTitle(): void
     {
@@ -326,7 +326,7 @@ class EventTest extends CommonTestBase
             'user_id' => $user->id,
             'object' => 1,
         ]);
-        $this->assertEquals('Исследование завершено', $researchEvent->get_title());
+        $this->assertEquals('Исследование завершено', $researchEvent->getTitle());
 
         // Тест строительства
         $buildingEvent = new Event([
@@ -335,7 +335,7 @@ class EventTest extends CommonTestBase
             'source' => $city->id,
             'object' => 1,
         ]);
-        $this->assertEquals('Строительство завершено', $buildingEvent->get_title());
+        $this->assertEquals('Строительство завершено', $buildingEvent->getTitle());
 
         // Тест создания юнита
         $unitEvent = new Event([
@@ -344,7 +344,7 @@ class EventTest extends CommonTestBase
             'source' => $city->id,
             'object' => 1,
         ]);
-        $this->assertEquals('Юнит создан', $unitEvent->get_title());
+        $this->assertEquals('Юнит создан', $unitEvent->getTitle());
 
         // Тест неизвестного типа
         $unknownEvent = new Event([
@@ -352,7 +352,7 @@ class EventTest extends CommonTestBase
             'user_id' => $user->id,
             'object' => 1,
         ]);
-        $this->assertEquals('Неизвестное событие', $unknownEvent->get_title());
+        $this->assertEquals('Неизвестное событие', $unknownEvent->getTitle());
     }
 
     /**

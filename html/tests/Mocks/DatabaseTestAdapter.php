@@ -14,8 +14,6 @@ class DatabaseTestAdapter
      */
     public static function clearAllTables()
     {
-        $pdo = MyDB::get();
-
         // Порядок важен: сначала таблицы, которые ссылаются на другие (дочерние), потом родительские
         $tables = [
             "event",
@@ -42,25 +40,15 @@ class DatabaseTestAdapter
         ];
 
         // Сначала отключаем foreign key checks
-        $pdo->exec("SET FOREIGN_KEY_CHECKS = 0");
+        MyDB::query("SET FOREIGN_KEY_CHECKS = 0");
 
         foreach ($tables as $table) {
-            try {
-                //echo "\nTruncating table: {$table}\n";
-                $pdo->exec("TRUNCATE TABLE `{$table}`");
-            } catch (Exception $e) {
-                // Если TRUNCATE не работает, используем DELETE
-                try {
-                    echo "\nDeleting from table: {$table}\n";
-                    $pdo->exec("DELETE FROM `{$table}`");
-                } catch (Exception $e2) {
-                    // Игнорируем ошибки при очистке
-                }
-            }
+            echo "\nTruncating table: {$table}\n";
+            MyDB::query("TRUNCATE TABLE `{$table}`");
         }
 
         // Включаем foreign key checks обратно
-        $pdo->exec("SET FOREIGN_KEY_CHECKS = 1");
+        MyDB::query("SET FOREIGN_KEY_CHECKS = 1");
     }
 
 

@@ -4,6 +4,7 @@ use App\MyDB;
 use App\Cell;
 use App\User;
 use App\Game;
+use App\MissionType;
 
 /** @var User $user */
 /** @var Game $game */
@@ -45,7 +46,7 @@ foreach ($map as $row) {
             }
         }
         $city = false;
-        $info = ['title' => $cell->get_title(),
+        $info = ['title' => $cell->getTitle(),
             'type' => $cell->type->id,
             'x' => $cell->x,
             'y' => $cell->y,
@@ -72,15 +73,15 @@ foreach ($map as $row) {
             }
             $info['city'] = false;
         }
-        if ($cell->resource && $cell->resource->type && $cell->resource->type->can_use($user)) {
+        if ($cell->resource && $cell->resource->type && $cell->resource->type->canUse($user)) {
             $info['resource_id'] = $cell->resource->type->id;
-            $info['resource_title'] = $cell->resource->type->get_title();
+            $info['resource_title'] = $cell->resource->type->getTitle();
         }
         if ($cell->improvement) {
             $info['improvement'] = $cell->improvement;
             $mtype = MissionType::get($cell->improvement);
             if ($mtype) {
-                $info['improvement_title'] = $mtype->get_title();
+                $info['improvement_title'] = $mtype->getTitle();
             } else {
                 $info['improvement_title'] = 'Неизв. улучшение';
             }

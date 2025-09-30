@@ -117,7 +117,20 @@ $cellTypes = [
         'money' => 0,
         'chance_inc_other' => ['water2' => [10, 6]],
         'border_no' => ['plains', 'plains2', 'forest', 'hills', 'mountains', 'water1']
-    ]
+    ],
+    [
+        // Клетка с городом
+        'id' => 'city',
+        'title' => 'город',
+        'base_chance' => 0,
+        'chance_inc1' => 0,
+        'chance_inc2' => 0,
+        'eat' => 2,
+        'work' => 1,
+        'money' => 2,
+        'chance_inc_other' => ['water2' => [0, 0]],
+        'border_no' => ['plains', 'plains2', 'forest', 'hills', 'mountains', 'water1']
+    ],
 ];
 
 // Создаем объекты CellType и сохраняем

@@ -113,7 +113,7 @@ class ResourceTest extends CommonTestBase
     }
 
     /**
-     * Тест метода get_title
+     * Тест метода getTitle
      */
     public function testGetTitle(): void
     {
@@ -130,11 +130,11 @@ class ResourceTest extends CommonTestBase
 
         $resource = new Resource($data);
 
-        $this->assertEquals('уголь', $resource->get_title());
+        $this->assertEquals('уголь', $resource->getTitle());
     }
 
     /**
-     * Тест метода get_title без типа
+     * Тест метода getTitle без типа
      */
     public function testGetTitleWithoutType(): void
     {
@@ -146,7 +146,7 @@ class ResourceTest extends CommonTestBase
             'amount' => 10,
         ]);
 
-        $this->assertEquals('', $resource->get_title());
+        $this->assertEquals('', $resource->getTitle());
     }
 
     /**
@@ -263,8 +263,8 @@ class ResourceTest extends CommonTestBase
 
             $this->assertInstanceOf(ResourceType::class, $resource->type);
             $this->assertEquals($typeId, $resource->type->id);
-            $this->assertIsString($resource->get_title());
-            $this->assertNotEmpty($resource->get_title());
+            $this->assertIsString($resource->getTitle());
+            $this->assertNotEmpty($resource->getTitle());
         }
     }
 

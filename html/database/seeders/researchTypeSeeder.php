@@ -2,6 +2,7 @@
 
 require_once 'baseSeeder.php';
 
+use App\MyDB;
 use App\ResearchType;
 
 setupDatabase();
@@ -104,19 +105,28 @@ $researchObjects = [];
 
 // Сначала создаем все объекты без зависимостей
 foreach ($researches as $data) {
-    $rt = new ResearchType($data);
-    foreach ($data['req'] as $id) {
-        $rt->addRequirement(ResearchType::get($id));
+    $data = [
+        'id' => $data['id'],
+        'title' => $data['title'],
+        'm_top' => 30,
+        'cost' => $data['cost'],
+        'm_left' => 0,
+        'age' => $data['age'],
+        'age_need' => (int)$data['age_need'],
+    ];
+    MyDB::insert('research_type', $data);
+}
+MyDB::enableLogging();
+// Затем добавляем зависимости и сохраняем снова
+
+foreach ($researches as $data) {
+    $rt = ResearchType::get($data['id']);
+    foreach ($data['req'] as $req_id) {
+        $rt->addRequirement(ResearchType::get($req_id));
     }
     $rt->save();
-    $researchObjects[$rt->id] = $rt;
 }
 
-// Затем добавляем зависимости и сохраняем снова
-foreach ($researches as $data) {
-    $rt = $researchObjects[$data['id']];
-    $rt->requirements = array_map(fn($id) => $researchObjects[$id], $data['req']);
-    $rt->save();
-}
+
 
 echo "Seeder выполнен успешно. Добавлено " . count($researches) . " исследований.\n";

@@ -104,7 +104,7 @@ class ResearchTypeTest extends CommonTestBase
     }
 
     /**
-     * Тест метода get_title
+     * Тест метода getTitle
      * @small
      */
     public function testGetTitle(): void
@@ -119,7 +119,7 @@ class ResearchTypeTest extends CommonTestBase
             'm_left' => 30,
         ]);
 
-        $this->assertEquals('Test Title Research', $researchType->get_title());
+        $this->assertEquals('Test Title Research', $researchType->getTitle());
 
         // Очищаем
         $researchType->delete();

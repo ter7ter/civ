@@ -12,6 +12,9 @@ checkTables(['resource_type']);
 $clear = parseClearArgv($argv);
 clearData($clear, ["DELETE FROM resource_type;"]);
 
+// Загружаем типы клеток из базы
+CellType::loadAll();
+
 // Данные ресурсов из rt.data
 $resources = [
     [

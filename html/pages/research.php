@@ -1,7 +1,7 @@
 <?php
 
-use app\ResearchType;
-use app\User;
+use App\ResearchType;
+use App\User;
 
 /** @var User $user */
 $age_show = (isset($_REQUEST['age'])) ? (int)$_REQUEST['age'] : $user->age;
@@ -21,7 +21,7 @@ foreach (ResearchType::getAll() as $res) {
         continue;
     }
     $research[$res->id] = [	'id'	=> $res->id,
-                            'title' => $res->get_title(),
+                            'title' => $res->getTitle(),
                             'm_top' => $res->m_top,
                             'm_left' => $res->m_left,
                             'status' => 'none'

@@ -79,7 +79,7 @@ class BuildingTypeTest extends CommonTestBase
     }
 
     /**
-     * Тест метода get_title
+     * Тест метода getTitle
      */
     public function testGetTitle(): void
     {
@@ -97,7 +97,7 @@ class BuildingTypeTest extends CommonTestBase
             "city_effects" => ["eat_up_multiplier" => 0.5],
         ]); // Амбар
 
-        $this->assertEquals('амбар', $buildingType->get_title());
+        $this->assertEquals('амбар', $buildingType->getTitle());
     }
 
     /**

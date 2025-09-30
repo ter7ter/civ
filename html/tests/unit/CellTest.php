@@ -121,7 +121,7 @@ class CellTest extends CommonTestBase
     }
 
     /**
-     * Тест метода get_title
+     * Тест метода getTitle
      */
     public function testGetTitle(): void
     {
@@ -133,8 +133,8 @@ class CellTest extends CommonTestBase
         Cell::clearCache();
         $cell = Cell::get(0, 0, $planetId);
 
-        $this->assertIsString($cell->get_title());
-        $this->assertNotEmpty($cell->get_title());
+        $this->assertIsString($cell->getTitle());
+        $this->assertNotEmpty($cell->getTitle());
     }
 
     /**

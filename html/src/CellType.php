@@ -23,9 +23,25 @@ class CellType
         if (isset($data['id'])) {
             $this->id = $data['id'];
         }
-        foreach (['base_chance', 'chance_inc1', 'chance_inc2', 'chance_inc_other', 'title', 'border_no', 'work', 'eat', 'money'] as $field) {
+        foreach (['base_chance', 'chance_inc1', 'chance_inc2', 'title', 'work', 'eat', 'money'] as $field) {
             if (isset($data[$field])) {
                 $this->$field = $data[$field];
+            }
+        }
+
+        if (isset($data['chance_inc_other'])) {
+            if (is_string($data['chance_inc_other'])) {
+                $this->chance_inc_other = json_decode($data['chance_inc_other'], true);
+            } else {
+                $this->chance_inc_other = $data['chance_inc_other'];
+            }
+        }
+
+        if (isset($data['border_no'])) {
+            if (is_string($data['border_no'])) {
+                $this->border_no = json_decode($data['border_no'], true);
+            } else {
+                $this->border_no = $data['border_no'];
             }
         }
 
@@ -39,7 +55,7 @@ class CellType
         return (isset(CellType::$all[$id])) ? CellType::$all[$id] : false;
     }
 
-    public function get_title()
+    public function getTitle()
     {
         return $this->title;
     }
@@ -134,5 +150,39 @@ class CellType
             'money' => 0,
             'chance_inc_other' => ['water2' => [10, 6]],
             'border_no' => ['plains', 'plains2', 'forest', 'hills', 'mountains', 'water1']]);
+    }
+
+    public static function getAll()
+    {
+        if (empty(CellType::$all)) {
+            self::loadAll();
+        }
+        return CellType::$all;
+    }
+
+    public static function loadAll()
+    {
+        $data = MyDB::query("SELECT * FROM cell_type ORDER BY id");
+        foreach ($data as $row) {
+            new CellType($row);
+        }
+        return CellType::$all;
+    }
+
+    public function save()
+    {
+        $data = [
+            'id' => $this->id,
+            'title' => $this->title,
+            'base_chance' => $this->base_chance,
+            'chance_inc1' => $this->chance_inc1,
+            'chance_inc2' => $this->chance_inc2,
+            'work' => $this->work,
+            'eat' => $this->eat,
+            'money' => $this->money,
+            'chance_inc_other' => json_encode($this->chance_inc_other),
+            'border_no' => json_encode($this->border_no),
+        ];
+        MyDB::replace('cell_type', $data);
     }
 }

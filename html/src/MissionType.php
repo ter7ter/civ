@@ -26,7 +26,7 @@ class MissionType
         return (isset(MissionType::$all[$id])) ? MissionType::$all[$id] : false;
     }
 
-    public function get_title()
+    public function getTitle()
     {
         return $this->title;
     }

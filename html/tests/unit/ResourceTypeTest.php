@@ -85,7 +85,7 @@ class ResourceTypeTest extends CommonTestBase
     }
 
     /**
-     * Тест метода get_title
+     * Тест метода getTitle
      */
     public function testGetTitle(): void
     {
@@ -94,7 +94,7 @@ class ResourceTypeTest extends CommonTestBase
             'title' => 'уголь',
         ]);
 
-        $this->assertEquals('уголь', $resourceType->get_title());
+        $this->assertEquals('уголь', $resourceType->getTitle());
     }
 
     /**

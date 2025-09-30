@@ -148,7 +148,6 @@ class MyDB
         }
         $stmt = $db->prepare($query);
         $stmt->execute($params);
-        self::logQuery($query, $params);
         return $db->lastInsertId();
     }
 
@@ -206,7 +205,7 @@ class MyDB
         }
     }
 
-    public static function rollback_transaction()
+    public static function rollbackTransaction()
     {
         $db = MyDB::get();
         if ($db->inTransaction()) {

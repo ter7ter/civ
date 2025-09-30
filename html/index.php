@@ -1,5 +1,9 @@
 <?php
 
+use App\MyDB;
+use App\Game;
+use App\User;
+
 ob_start();
 require_once("includes.php");
 
@@ -22,7 +26,10 @@ try {
     }
 
     $page = preg_replace('/[^a-z0-9_]+/', '', $page);
-    MyDB::start_transaction();
+    if (USE_TRANSACTION_MODE) {
+        MyDB::startTransaction();
+    }
+
     if ($page == 'login' && isset($_REQUEST['gid']) && isset($_REQUEST['uid'])) {
         $game = Game::get((int)$_REQUEST['gid']);
         if (!$game) {
@@ -61,8 +68,8 @@ try {
     $data = [];
     include "pages/{$page}.php";
 
-    if (!isset($GLOBALS['transaction_ended'])) {
-        MyDB::end_transaction();
+    if (USE_TRANSACTION_MODE) {
+        MyDB::endTransaction();
     }
 
     if (isset($_REQUEST['json'])) {

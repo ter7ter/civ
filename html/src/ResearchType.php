@@ -130,7 +130,7 @@ class ResearchType
         }
     }
 
-    public function get_title()
+    public function getTitle()
     {
         return $this->title;
     }

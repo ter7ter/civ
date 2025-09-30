@@ -59,7 +59,7 @@ class Building
 
     public function get_title()
     {
-        return $this->type->get_title();
+        return $this->type->getTitle();
     }
 
     public function save()

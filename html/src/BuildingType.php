@@ -103,7 +103,6 @@ class BuildingType
         $data = [
             'title' => $this->title,
             'cost' => $this->cost,
-            'req_resources' => json_encode($this->req_resources),
             'need_coastal' => (int)$this->need_coastal,
             'culture' => $this->culture,
             'upkeep' => $this->upkeep,
@@ -197,22 +196,6 @@ class BuildingType
             "money_multiplier"
         ];
 
-        // Обрабатываем JSON поля
-        $jsonFields = [
-            "req_resources",
-        ];
-
-        foreach ($jsonFields as $field) {
-            if (isset($data[$field])) {
-                if (is_string($data[$field])) {
-                    $decoded = json_decode($data[$field], true);
-                    $this->$field = $decoded !== null ? $decoded : [];
-                } else {
-                    $this->$field = $data[$field];
-                }
-            }
-        }
-
         foreach ($allowedEffects as $field) {
             if (isset($data['city_effects'][$field])) {
                 $this->city_effects[$field] = $data['city_effects'][$field];
@@ -260,7 +243,7 @@ class BuildingType
         }
     }
 
-    public function get_title()
+    public function getTitle()
     {
         return $this->title;
     }

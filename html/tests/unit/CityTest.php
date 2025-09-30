@@ -77,14 +77,14 @@ class CityTest extends CommonTestBase
     }
 
     /**
-     * @covers City::get_title
+     * @covers City::getTitle
      */
     public function testGetTitle()
     {
         [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
-        $this->assertEquals('Test City', $city->get_title());
+        $this->assertEquals('Test City', $city->getTitle());
     }
 
     /**

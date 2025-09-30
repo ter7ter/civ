@@ -274,6 +274,6 @@ class AdminBuildingTypeTest extends CommonTestBase
         $buildingType->title = 'Title Test Building';
         $buildingType->save();
 
-        $this->assertEquals('Title Test Building', $buildingType->get_title());
+        $this->assertEquals('Title Test Building', $buildingType->getTitle());
     }
 }

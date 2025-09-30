@@ -48,7 +48,7 @@ class MissionTypeTest extends CommonTestBase
         $mission = TestDataFactory::createTestMissionType([
             'id' => 'build_city'
         ]);
-        $this->assertEquals('Основать город', $mission->get_title());
+        $this->assertEquals('Основать город', $mission->getTitle());
     }
 
     public function testCheckCell()

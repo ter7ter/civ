@@ -17,7 +17,7 @@ if ($cell) {
     $data['y'] = $cell->y;
     $data['type'] = $cell->type->id;
     $data['road'] = $cell->road;
-    $data['title'] = $cell->get_title();
+    $data['title'] = $cell->getTitle();
     $data['work'] = $cell->get_work();
     $data['eat'] = $cell->get_eat();
     $data['money'] = $cell->get_money();
@@ -41,10 +41,10 @@ if ($cell) {
         $data['improvement'] = Cell::$UPGRADE_NAMES[$cell->improvement];
     }
     if ($cell->resource) {
-        $data['resource'] = $cell->resource->get_title();
+        $data['resource'] = $cell->resource->getTitle();
     }
     if ($user->process_research_type) {
-        $data['user_research_type'] = $user->process_research_type->get_title();
+        $data['user_research_type'] = $user->process_research_type->getTitle();
         $data['user_research_turns'] = $user->get_research_need_turns();
         if (!$data['user_research_turns']) {
             $data['user_research_turns'] = '--';
@@ -56,13 +56,13 @@ if ($cell) {
         $unit = Unit::get($unit_id);
         if ($unit && $unit->user == $user) {
             if ($unit->mission) {
-                $mission = $unit->mission->get_title();
+                $mission = $unit->mission->getTitle();
             } else {
                 $mission = false;
             }
 
             $data['unit'] = ['type' => $unit->type->id,
-                             'title' => $unit->get_title(),
+                             'title' => $unit->getTitle(),
                              'points' => $unit->points,
                              'max_points' => $unit->type->points,
                              'health' => $unit->health,
@@ -74,7 +74,7 @@ if ($cell) {
                 $mtypes = $unit->get_mission_types();
                 foreach ($mtypes as $mtype) {
                     $data['unit']['missions'][] = ['id' => $mtype->id,
-                                                   'title' => $mtype->get_title(),
+                                                   'title' => $mtype->getTitle(),
                                                    'points' => (isset($mtype->need_points[$cell->type->id])) ? $mtype->need_points[$cell->type->id] : 0,
                                                    'unit_lost' => $mtype->unit_lost];
                 }

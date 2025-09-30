@@ -1,6 +1,8 @@
 <?php
 
 use App\Game;
+use App\MyDB;
+use App\User;
 
 /**
  * Скрипт для расчета окончания хода игрока.

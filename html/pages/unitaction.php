@@ -1,9 +1,9 @@
 <?php
 
-use app\User;
-use app\Unit;
-use app\Cell;
-use app\Game;
+use App\User;
+use App\Unit;
+use App\Cell;
+use App\Game;
 
 /** @var User $user */
 $uid = @$_REQUEST['uid'];

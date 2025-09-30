@@ -99,7 +99,7 @@ class BuildingTest extends CommonTestBase
     }
 
     /**
-     * Тест метода get_title
+     * Тест метода getTitle
      */
     public function testGetTitle(): void
     {
@@ -115,7 +115,7 @@ class BuildingTest extends CommonTestBase
 
         $building = new Building($data);
 
-        $this->assertEquals($buildingType->title, $building->get_title());
+        $this->assertEquals($buildingType->title, $building->getTitle());
     }
 
     /**
@@ -237,8 +237,8 @@ class BuildingTest extends CommonTestBase
 
             $this->assertInstanceOf(BuildingType::class, $building->type);
             $this->assertEquals($typeId, $building->type->id);
-            $this->assertIsString($building->get_title());
-            $this->assertNotEmpty($building->get_title());
+            $this->assertIsString($building->getTitle());
+            $this->assertNotEmpty($building->getTitle());
         }
     }
 

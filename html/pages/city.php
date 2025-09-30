@@ -74,12 +74,12 @@ if (!isset($_REQUEST['cid']) || !$cid = (int)$_REQUEST['cid']) {
     $data['possible_buildings'] = [];
     foreach ($units_possible as $unit) {
         $data['possible_units'][] = ['id' => $unit->id,
-                                     'title' => $unit->get_title(),
+                                     'title' => $unit->getTitle(),
                                      'cost' => $unit->cost];
     }
     foreach ($buildings_possible as $building) {
         $data['possible_buildings'][] = ['id' => $building->id,
-                                        'title' => $building->get_title(),
+                                        'title' => $building->getTitle(),
                                         'cost' => $building->cost];
     }
     if ($city->production) {
@@ -94,7 +94,7 @@ if (!isset($_REQUEST['cid']) || !$cid = (int)$_REQUEST['cid']) {
         $data['production'] = ['id' => $city->production,
                                'type' => $city->production_type,
                                'cost' => $production->cost,
-                               'title' => $production->get_title(),
+                               'title' => $production->getTitle(),
                                'complete' => $city->production_complete];
     } else {
         $data['production'] = false;
@@ -111,14 +111,14 @@ if (!isset($_REQUEST['cid']) || !$cid = (int)$_REQUEST['cid']) {
     foreach ($city->buildings as $building) {
         $data['buildings'][] = [
             'type' => $building->type,
-            'title' => $building->get_title()
+            'title' => $building->getTitle()
         ];
     }
     $data['resources'] = [];
     foreach ($city->resources as $resource) {
         $data['resources'][] = [
             'type' => $resource['type']->id,
-            'title' => $resource['type']->get_title(),
+            'title' => $resource['type']->getTitle(),
             'count' => $resource['count']
         ];
     }

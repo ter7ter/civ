@@ -111,7 +111,7 @@ class CellTypeTest extends CommonTestBase
     }
 
     /**
-     * Тест метода get_title
+     * Тест метода getTitle
      */
     public function testGetTitle(): void
     {
@@ -121,7 +121,7 @@ class CellTypeTest extends CommonTestBase
             'id' => 'forest',
             'title' => 'лес']);
 
-        $this->assertEquals('лес', $cellType->get_title());
+        $this->assertEquals('лес', $cellType->getTitle());
     }
 
     /**

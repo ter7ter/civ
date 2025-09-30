@@ -16,19 +16,19 @@ if ($user->turn_status == 'play') {
         $data['id'] = $event->id;
         $data['type'] = $event->type;
         if ($event->type == 'research') {
-            $data['research_title'] = $event->object->get_title();
+            $data['research_title'] = $event->object->getTitle();
             $data['aresearch'] = [];
             $aresearch = $user->get_available_research();
             foreach ($aresearch as $research) {
                 $data['aresearch'][] = ['id' => $research->id,
-                                        'title' => $research->get_title(),
+                                        'title' => $research->getTitle(),
                                         'turns' => $user->get_research_need_turns($research)];
             }
         } elseif ($event->type == 'city_building' || $event->type == 'city_unit') {
             $city = $event->soruce;
             $data['city_id'] = $city->id;
-            $data['city_title'] = $city->get_title();
-            $data['build_title'] = $event->object->get_title();
+            $data['city_title'] = $city->getTitle();
+            $data['build_title'] = $event->object->getTitle();
             $data['possible_units'] = [];
             $data['possible_buildings'] = [];
             $units_possible = $city->get_possible_units();
@@ -36,12 +36,12 @@ if ($user->turn_status == 'play') {
 
             foreach ($units_possible as $unit) {
                 $data['possible_units'][] = ['id' => $unit->id,
-                    'title' => $unit->get_title(),
+                    'title' => $unit->getTitle(),
                     'turns' => ceil($unit->cost / $city->pwork) ];
             }
             foreach ($buildings_possible as $building) {
                 $data['possible_buildings'][] = ['id' => $building->id,
-                    'title' => $building->get_title(),
+                    'title' => $building->getTitle(),
                     'turns' => ceil($building->cost / $city->pwork)];
             }
         }

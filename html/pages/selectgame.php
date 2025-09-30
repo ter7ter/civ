@@ -1,5 +1,5 @@
 <?php
 
-use app\Game;
+use App\Game;
 
 $gamelist = Game::game_list();

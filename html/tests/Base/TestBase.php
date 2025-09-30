@@ -20,23 +20,13 @@ class TestBase extends \PHPUnit\Framework\TestCase
 {
     public static function setUpBeforeClass(): void
     {
+
         // Проверяем, используется ли ParaTest
         $testToken = getenv('TEST_TOKEN');
         $paraTestFlag = getenv('PARATEST');
         $isParaTest = !empty($testToken) || $paraTestFlag === '1';
 
-        // Для ParaTest устанавливаем уникальную базу данных
-        if ($isParaTest) {
-            if (empty($testToken)) {
-                // Если TEST_TOKEN не установлен, используем PID
-                $testToken = getmypid();
-            }
-
-            // Создаем уникальное имя базы данных
-            $uniqueDbName = MyDB::$dbname . '_' . $testToken;
-
-            // Устанавливаем уникальное имя базы данных
-            MyDB::$dbname = $uniqueDbName;
+        if (!$isParaTest) {
 
         }
 
@@ -63,13 +53,10 @@ class TestBase extends \PHPUnit\Framework\TestCase
         $isParaTest = !empty($testToken) || $paraTestFlag === '1';
 
         // Для ParaTest удаляем уникальную базу данных
-        if ($isParaTest) {
-            if (empty($testToken)) {
-                // Если TEST_TOKEN не установлен, используем PID
-                $testToken = getmypid();
-            }
 
-            $uniqueDbName = MyDB::$dbname; // Имя базы данных уже установлено в setUpBeforeClass
+        MyDB::rollbackTransaction();
+        if ($isParaTest) {
+            $uniqueDbName = 'civ_for_tests_'.$testToken; // Имя базы данных уже установлено в setUpBeforeClass
 
             // Подключаемся к MySQL без указания базы данных
             $tempDsn = "mysql:host=" . MyDB::$dbhost . ";port=" . MyDB::$dbport . ";charset=utf8";

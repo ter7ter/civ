@@ -12,34 +12,34 @@ class Unit
     /**
      * @var UnitType
      */
-    public $type;
+    public UnitType $type;
     /**
      * @var User
      */
-    public $user;
-    public $x;
-    public $y;
-    public $planet;
+    public User $user;
+    public int $x;
+    public int $y;
+    public int $planet;
     /**
      * Текущие HP у юнита
      * @var int
      */
-    public $health = 3;
+    public int $health = 3;
     /**
      * Максимум HP у этого юнита
      * @var int
      */
-    public $health_max = 3;
+    public int $health_max = 3;
     /**
      * @var MissionType
      */
     public $mission = false;
-    public $points = 0;
+    public int $points = 0;
     /**
      * Сколько уже вложено очков в выполнение текущей миссии
      * @var int
      */
-    public $mission_points = 0;
+    public int $mission_points = 0;
     /**
      * Включена ли автоматизация действий юнита
      * @var string
@@ -189,7 +189,7 @@ class Unit
 
     public function getTitle()
     {
-        return $this->type->get_title();
+        return $this->type->getTitle();
     }
 
     /**

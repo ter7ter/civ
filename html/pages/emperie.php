@@ -31,10 +31,10 @@ foreach ($cities as $city) {
         } else {
             throw new Exception("Unknow production type ".$city->production_type);
         }
-        $production = $production->get_title().' '.ceil(($production->cost - $city->production_complete) / $city->pwork).' ходов ';
+        $production = $production->getTitle().' '.ceil(($production->cost - $city->production_complete) / $city->pwork).' ходов ';
     }
     $data['cities'][] = ['id' => $city->id,
-                         'title' => $city->get_title(),
+                         'title' => $city->getTitle(),
                          'population' => $city->population,
                          'production' => $production,
                          'pwork' => $city->pwork,

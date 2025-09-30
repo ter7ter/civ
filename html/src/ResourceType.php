@@ -129,10 +129,28 @@ class ResourceType
         foreach ($data as $field => $value) {
             $this->$field = $value;
         }
+
+        if (isset($data['cell_types']) && is_string($data['cell_types'])) {
+            $this->cell_types = json_decode($data['cell_types'], true);
+        }
+
+        if (isset($data['req_research']) && is_string($data['req_research'])) {
+            $ids = json_decode($data['req_research'], true);
+            $this->req_research = [];
+            if (is_array($ids)) {
+                foreach ($ids as $id) {
+                    $rt = ResearchType::get($id);
+                    if ($rt) {
+                        $this->req_research[] = $rt;
+                    }
+                }
+            }
+        }
+
         ResourceType::$all[$this->id] = $this;
     }
 
-    public function get_title()
+    public function getTitle()
     {
         return $this->title;
     }

@@ -201,8 +201,30 @@ $units = [
 
 // Создаем объекты UnitType и сохраняем
 foreach ($units as $data) {
+    $can_move = $data['can_move'] ?? null;
+    unset($data['can_move']);
+    if ($can_move) {
+        // Добавляем всем юнитам перемещение по city
+        $can_move['city'] = 1;
+        // Для юнитов не типа 'water' добавляем остальные типы клеток
+        if ($data['type'] !== 'water') {
+            $default_land_moves = [
+                "plains" => 1,
+                "plains2" => 1,
+                "forest" => 1,
+                "hills" => 1,
+                "mountains" => 2,
+                "desert" => 1,
+            ];
+            $can_move = array_merge($default_land_moves, $can_move);
+        }
+    }
     $unit = new UnitType($data);
     $unit->save();
+    if ($can_move) {
+        $unit->can_move = $can_move;
+        $unit->save();
+    }
 }
 
 echo "Seeder выполнен успешно. Добавлено " . count($units) . " типов юнитов.\n";

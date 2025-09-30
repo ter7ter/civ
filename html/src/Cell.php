@@ -4,14 +4,19 @@ namespace App;
 
 class Cell
 {
-    public $x;
-    public $y;
-    public $planet;
+    /**
+     * @var int
+     */
+    public int $x;
+    public int $y;
+    public int $planet;
     /**
      * @var CellType
      */
-    public $type;
-    //Unit[]
+    public CellType $type;
+    /**
+     * @var array Unit[]
+     */
     public $units = [];
     /**
      * @var City
@@ -28,7 +33,7 @@ class Cell
     /**
      * @var int
      */
-    public $owner_culture = 0;
+    public int $owner_culture = 0;
     /**
      * Наличие дороги(false, 'road', 'iron')
      * @var bool | string
@@ -160,12 +165,12 @@ class Cell
         return $this->units;
     }
 
-    public function get_title()
+    public function getTitle()
     {
         if (!$this->type) {
             return "unknown";
         }
-        return $this->type->get_title();
+        return $this->type->getTitle();
     }
 
     /**
@@ -329,7 +334,7 @@ class Cell
 
                 // Генерируем ресурсы
                 foreach (ResourceType::getAll() as $resource_type) {
-                    if (in_array($cell_type, $resource_type->cell_types)) {
+                    if (in_array($cell_type->id, $resource_type->cell_types)) {
                         if (
                             mt_rand(0, 10000) <
                             $resource_type->chance * 10000
@@ -609,8 +614,8 @@ class Cell
     public function create_unit(
         UnitType $type,
         User $owner,
-        int $health = null,
-        int $points = null
+        ?int $health = null,
+        ?int $points = null
     ): Unit {
         $unit = new Unit([
             "x" => $this->x,

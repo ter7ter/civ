@@ -85,7 +85,7 @@ class Event
         MyDB::query("DELETE FROM event WHERE id =:id", ["id" => $this->id]);
     }
 
-    public function get_title()
+    public function getTitle(): string
     {
         switch ($this->type) {
             case 'research':
@@ -98,15 +98,15 @@ class Event
         return 'Неизвестное событие';
     }
 
-    public function get_text()
+    public function get_text(): string
     {
         switch ($this->type) {
             case 'research':
-                return 'Вы исследовали ' . $this->object->get_title();
+                return 'Вы исследовали ' . $this->object->getTitle();
             case 'city_building':
-                return 'В городе ' . $this->soruce->get_title() . ' построено ' . $this->object->get_title();
+                return 'В городе ' . $this->soruce->getTitle() . ' построено ' . $this->object->getTitle();
             case 'city_unit':
-                return 'В городе ' . $this->soruce->get_title() . ' создан юнит ' . $this->object->get_title();
+                return 'В городе ' . $this->soruce->getTitle() . ' создан юнит ' . $this->object->getTitle();
         }
         return 'Неизвестное событие';
     }

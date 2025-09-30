@@ -14,7 +14,7 @@ use App\UnitType;
 
 /**
  * Инициализатор тестовых игровых данных
- * Содержит функции для инициализации базовых типов игровых объектов для тестов
+ * содержит функции для инициализации базовых типов игровых объектов для тестов
  */
 class TestGameDataInitializer
 {
@@ -132,10 +132,23 @@ class TestGameDataInitializer
                 'chance_inc_other' => ['water2' => [10, 6]],
                 'border_no' => ['plains', 'plains2', 'forest', 'hills', 'mountains', 'water1']
             ],
+            [
+                'id' => 'city',
+                'title' => 'город',
+                'base_chance' => 0,
+                'chance_inc1' => 0,
+                'chance_inc2' => 0,
+                'eat' => 0,
+                'work' => 0,
+                'money' => 0,
+                'chance_inc_other' => [],
+                'border_no' => []
+            ],
         ];
 
         foreach ($cellTypes as $type) {
-            new CellType($type);
+            $ct = new CellType($type);
+            $ct->save();
         }
     }
 
@@ -184,6 +197,8 @@ class TestGameDataInitializer
             PROJECT_ROOT . "/sql/add_unit_type_table.sql",
             PROJECT_ROOT . "/sql/add_resource_type_table.sql",
             PROJECT_ROOT . "/sql/add_mission_type_table.sql",
+            PROJECT_ROOT . "/sql/add_cell_type_table.sql",
+            PROJECT_ROOT . "/sql/add_unit_type_can_move_table.sql",
         ];
 
         foreach ($sqlFiles as $sqlFile) {
@@ -203,10 +218,10 @@ class TestGameDataInitializer
                         // или другие незначительные ошибки при создании схемы
                         // Также игнорируем ошибки, связанные с внешними ключами при DROP TABLE,
                         // так как они могут возникать, если таблицы уже были удалены или в другом порядке.
-                        if (strpos($e->getMessage(), "already exists") === false &&
-                            strpos($e->getMessage(), "Cannot delete or update a parent row") === false &&
-                            strpos($e->getMessage(), "a foreign key constraint fails") === false &&
-                            strpos($e->getMessage(), "Unknown table") === false) {
+                        if (!str_contains($e->getMessage(), "already exists") &&
+                            !str_contains($e->getMessage(), "Cannot delete or update a parent row") &&
+                            !str_contains($e->getMessage(), "a foreign key constraint fails") &&
+                            !str_contains($e->getMessage(), "Unknown table")) {
                             throw $e;
                         }
                     }

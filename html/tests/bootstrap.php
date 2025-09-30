@@ -32,6 +32,7 @@ if (!defined("TEST_DB_PASS")) {
 if (!defined("TEST_DB_PORT")) {
     define("TEST_DB_PORT", 3306);
 }
+define("USER_TRANSACTION_MODE", false);
 
 // Загружаем автозагрузчик Composer
 require_once PROJECT_ROOT . "/vendor/autoload.php";
@@ -67,6 +68,7 @@ if (getenv('PARATEST')) {
 } else {
     $dbName = 'civ_for_tests';
 }
+//$dbName = 'civ_for_tests';
 
 // Сначала подключаемся без базы данных, чтобы создать её
 try {
@@ -80,6 +82,7 @@ try {
 
 MyDB::setDBConfig(TEST_DB_HOST, TEST_DB_USER, TEST_DB_PASS, TEST_DB_PORT, $dbName);
 // Подключаемся к MySQL серверу, не указывая базу данных
+MyDB::startTransaction();
 
 // Затем загружаем моки для БД
 require_once TESTS_ROOT . "/Mocks/DatabaseTestAdapter.php";
@@ -91,6 +94,10 @@ TestGameDataInitializer::setupDatabaseSchema();
 
 // Очищаем данные, созданные в оригинальных классах
 TestGameDataInitializer::clearAll();
+
+if (class_exists('App\\CellType')) {
+    TestGameDataInitializer::initializeCellTypes();
+}
 
 // Initialize default resource types for tests
 if (class_exists('App\\ResourceType')) {

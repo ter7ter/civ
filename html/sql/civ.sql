@@ -232,14 +232,6 @@ CREATE TABLE IF NOT EXISTS `resource_group` (
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Дамп данных таблицы `resource_group`
---
-
-INSERT INTO `resource_group` (`group_id`, `user_id`, `resource_id`) VALUES
-(1, 1, 31420),
-(1, 1, 31433),
-(1, 1, 31450);
 
 -- --------------------------------------------------------
 
@@ -266,6 +258,36 @@ CREATE TABLE IF NOT EXISTS `unit` (
   KEY `x` (`x`,`y`,`planet`)
 ) ENGINE=InnoDB AUTO_INCREMENT=189 DEFAULT CHARSET=utf8;
 
+
+--
+-- Структура таблицы `unit_type`
+--
+
+DROP TABLE IF EXISTS `unit_type`;
+CREATE TABLE IF NOT EXISTS `unit_type` (
+  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title` varchar(100) NOT NULL,
+  `points` int UNSIGNED NOT NULL,
+  `cost` int UNSIGNED NOT NULL,
+  `population_cost` int UNSIGNED NOT NULL DEFAULT '0',
+  `type` enum('land','water','air') NOT NULL DEFAULT 'land',
+  `attack` int UNSIGNED NOT NULL DEFAULT '0',
+  `defence` int UNSIGNED NOT NULL DEFAULT '0',
+  `health` int UNSIGNED NOT NULL DEFAULT '1',
+  `movement` int UNSIGNED NOT NULL DEFAULT '1',
+  `upkeep` int NOT NULL DEFAULT '0',
+  `can_found_city` tinyint(1) NOT NULL DEFAULT '0',
+  `can_build` tinyint(1) NOT NULL DEFAULT '0',
+  `need_research` text,
+  `description` varchar(500) DEFAULT NULL,
+  `mission_points` text,
+  `age` int UNSIGNED NOT NULL DEFAULT '1',
+  `missions` text,
+  `req_research` text,
+  `req_resources` text,
+  `can_move` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
 
 --
 -- Структура таблицы `user`

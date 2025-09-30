@@ -279,7 +279,7 @@ class Unit
         if ($this->mission) {
             return false;
         }
-        if (!isset($this->type->can_move[$cell->type->id])) {
+        if (!isset($this->type->getCanMove()[$cell->type->id])) {
             return false;
         }
         if (abs($this->x - $cell->x) > 1 && abs($this->x - $cell->x) != 99) {
@@ -309,9 +309,9 @@ class Unit
             $this->points -= GameConfig::$ROAD_MOVE_POINTS;
         } else {
             if ($cell->city && $cell->city->user->id == $this->user->id) {
-                $this->points -= $this->type->can_move["city"];
+                $this->points -= $this->type->getCanMove()["city"];
             } else {
-                $this->points -= $this->type->can_move[$cell->type->id];
+                $this->points -= $this->type->getCanMove()[$cell->type->id];
             }
         }
         $this->x = $cell->x;
@@ -715,7 +715,7 @@ class Unit
                         continue;
                     }
                     if (
-                        !isset($this->type->can_move[$map_near->type->id]) &&
+                        !isset($this->type->getCanMove()[$map_near->type->id]) &&
                         !$map_near->city
                     ) {
                         continue;
@@ -727,10 +727,10 @@ class Unit
                         $dist_near = GameConfig::$ROAD_MOVE_POINTS; //Есть дорога
                     } else {
                         if ($map_near->city) {
-                            $dist_near = $this->type->can_move["city"];
+                            $dist_near = $this->type->getCanMove()["city"];
                         } else {
                             $dist_near =
-                                $this->type->can_move[$map_near->type->id];
+                                $this->type->getCanMove()[$map_near->type->id];
                         }
                     }
                     $cells_next[] = [

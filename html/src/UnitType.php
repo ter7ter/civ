@@ -45,15 +45,47 @@ class UnitType
      * По каким типам местности может ходить и с какими затратами перемещения
      * @var array
      */
-    public $can_move = [
-        "plains" => 1,
-        "plains2" => 1,
-        "forest" => 1,
-        "hills" => 1,
-        "mountains" => 2,
-        "desert" => 1,
-        "city" => 1,
-    ];
+    protected $can_move = [];
+
+    /**
+     * Получить стоимость перемещения по типам клеток
+     * @return array
+     */
+    public function getCanMove()
+    {
+        if (empty($this->can_move) && isset($this->id)) {
+            $data = MyDB::query("SELECT cell_type, move_cost FROM unit_type_can_move WHERE unit_type_id = :id", ["id" => $this->id]);
+            foreach ($data as $row) {
+                $this->can_move[$row['cell_type']] = (int)$row['move_cost'];
+            }
+        }
+        return $this->can_move;
+    }
+
+    /**
+     * Backward compatibility for $this->can_move
+     * @param string $name
+     * @return array
+     */
+    public function __get($name)
+    {
+        if ($name == 'can_move') {
+            return $this->getCanMove();
+        }
+        return null;
+    }
+
+    /**
+     * Backward compatibility for $this->can_move = value
+     * @param string $name
+     * @param mixed $value
+     */
+    public function __set($name, $value)
+    {
+        if ($name == 'can_move') {
+            $this->can_move = $value;
+        }
+    }
 
     // Дополнительные свойства для устранения динамических свойств
     public $health = 1;
@@ -149,19 +181,32 @@ class UnitType
             'missions' => json_encode($this->missions),
             'req_research' => json_encode($this->req_research),
             'req_resources' => json_encode($this->req_resources),
-            'can_move' => json_encode($this->can_move),
         ];
         if (isset($this->id)) {
             MyDB::update('unit_type', $data, $this->id);
         } else {
             $this->id = MyDB::insert('unit_type', $data);
         }
+
+        // Обновляем can_move в таблице
+        if (!empty($this->can_move)) {
+            MyDB::query("DELETE FROM unit_type_can_move WHERE unit_type_id = :id", ["id" => $this->id]);
+            foreach ($this->can_move as $cell_type => $cost) {
+                MyDB::insert('unit_type_can_move', [
+                    'unit_type_id' => $this->id,
+                    'cell_type' => $cell_type,
+                    'move_cost' => $cost,
+                ]);
+            }
+        }
+
         UnitType::$all[$this->id] = $this;
     }
 
     public function delete()
     {
         if (isset($this->id)) {
+            MyDB::query("DELETE FROM unit_type_can_move WHERE unit_type_id = :id", ["id" => $this->id]);
             MyDB::query("DELETE FROM unit_type WHERE id = :id", ["id" => $this->id]);
             unset(UnitType::$all[$this->id]);
         }

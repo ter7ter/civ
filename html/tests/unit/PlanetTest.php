@@ -2,25 +2,26 @@
 
 namespace App\Tests;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 use App\Planet;
 use App\Game;
 use App\MyDB;
 use Exception;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\Base\CommonTestBase;
 
 /**
  * Тесты для класса Planet
  */
-class PlanetTest extends TestBase
+class PlanetTest extends CommonTestBase
 {
     /**
      * Тест получения существующей планеты
      */
     public function testGetExistingPlanet(): void
     {
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id, 'name' => 'Test Planet']);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id, 'name' => 'Test Planet']);
+        $planetId = $planet->id;
 
         $planet = Planet::get($planetId);
 
@@ -45,7 +46,7 @@ class PlanetTest extends TestBase
      */
     public function testConstructor(): void
     {
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
 
         $data = [
             'id' => 1,
@@ -68,7 +69,7 @@ class PlanetTest extends TestBase
      */
     public function testConstructorWithoutId(): void
     {
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
 
         $data = [
             'name' => 'No ID Planet',
@@ -98,7 +99,7 @@ class PlanetTest extends TestBase
      */
     public function testSaveNew(): void
     {
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
 
         $data = [
             'name' => 'Save New Planet',
@@ -126,8 +127,9 @@ class PlanetTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id, 'name' => 'Original Name']);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id, 'name' => 'Original Name']);
+        $planetId = $planet->id;
 
         Planet::clearCache();
         $planet = Planet::get($planetId);
@@ -149,8 +151,9 @@ class PlanetTest extends TestBase
      */
     public function testGetGame(): void
     {
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
+        $planetId = $planet->id;
 
         Planet::clearCache();
         $planet = Planet::get($planetId);
@@ -163,8 +166,9 @@ class PlanetTest extends TestBase
      */
     public function testClearCache(): void
     {
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
+        $planetId = $planet->id;
 
         // Получаем планету, чтобы она попала в кэш
         $planet1 = Planet::get($planetId);

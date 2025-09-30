@@ -235,7 +235,7 @@ class Game
                 "health" => 3,
                 "points" => 2,
                 "user_id" => $user->id,
-                "type" => 1,
+                "type" => START_UNIT_SETTLER_TYPE,
             ]);
             $citizen->save();
         }

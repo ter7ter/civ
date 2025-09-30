@@ -6,25 +6,36 @@ use App\Research;
 use App\User;
 use App\ResearchType;
 use App\MyDB;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\Base\CommonTestBase;
 
 /**
  * Тесты для класса Research
  */
-class ResearchTest extends TestBase
+class ResearchTest extends CommonTestBase
 {
     /**
      * Тест получения исследования по ID
      */
     public function testGet(): void
     {
-        $result = $this->createTestGameWithPlanetAndUser();
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
         $game = $result['game'];
         $user = $result['user'];
+
+        $researchType = TestDataFactory::createTestResearchType([
+            "title" => "Гончарное дело",
+            "age" => 1,
+            "cost" => 50,
+            "m_top" => 30,
+            "m_left" => 30,
+            "age_need" => true
+        ]);
 
         // Создаем исследование через БД
         $researchId = MyDB::insert('research', [
             'user_id' => $user->id,
-            'type' => 1, // Гончарное дело
+            'type' => $researchType->id, // Гончарное дело
         ]);
 
         $research = Research::get($researchId);
@@ -34,7 +45,7 @@ class ResearchTest extends TestBase
         $this->assertInstanceOf(User::class, $research->user);
         $this->assertEquals($user->id, $research->user->id);
         $this->assertInstanceOf(ResearchType::class, $research->type);
-        $this->assertEquals(1, $research->type->id);
+        $this->assertEquals($researchType->id, $research->type->id);
     }
 
     /**
@@ -42,7 +53,7 @@ class ResearchTest extends TestBase
      */
     public function testConstructorWithoutId(): void
     {
-        $result = $this->createTestGameWithPlanetAndUser();
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
         $game = $result['game'];
         $user = $result['user'];
 
@@ -64,13 +75,22 @@ class ResearchTest extends TestBase
      */
     public function testSaveNew(): void
     {
-        $result = $this->createTestGameWithPlanetAndUser();
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
         $game = $result['game'];
         $user = $result['user'];
 
+        $researchType = TestDataFactory::createTestResearchType([
+            "title" => "Гончарное дело",
+            "age" => 1,
+            "cost" => 50,
+            "m_top" => 30,
+            "m_left" => 30,
+            "age_need" => true
+        ]);
+
         $data = [
             'user_id' => $user->id,
-            'type' => 1, // Гончарное дело
+            'type' => $researchType->id, // Гончарное дело
         ];
 
         $research = new Research($data);
@@ -86,7 +106,7 @@ class ResearchTest extends TestBase
         );
         $this->assertNotNull($savedData);
         $this->assertEquals($user->id, $savedData['user_id']);
-        $this->assertEquals(1, $savedData['type']);
+        $this->assertEquals($researchType->id, $savedData['type']);
     }
 
     /**
@@ -94,24 +114,40 @@ class ResearchTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $result = $this->createTestGameWithPlanetAndUser();
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
         $game = $result['game'];
         $user = $result['user'];
 
         // Создаем исследование через БД
+        $researchType = TestDataFactory::createTestResearchType([
+            "title" => "Гончарное дело",
+            "age" => 1,
+            "cost" => 50,
+            "m_top" => 30,
+            "m_left" => 30,
+            "age_need" => true
+        ]);
         $researchId = MyDB::insert('research', [
             'user_id' => $user->id,
-            'type' => 1, // Гончарное дело
+            'type' => $researchType->id, // Гончарное дело
         ]);
 
         $data = [
             'id' => $researchId,
             'user_id' => $user->id,
-            'type' => 1,
+            'type' => $researchType->id,
         ];
 
         $research = new Research($data);
-        $research->type = ResearchType::get(2); // Меняем тип на Бронзовое дело
+        $researchTypeBronze = TestDataFactory::createTestResearchType([
+            'title' => 'Бронзовое дело',
+            'age' => 1,
+            'cost' => 80,
+            'm_top' => 130,
+            'm_left' => 30,
+            'age_need' => true
+        ]);
+        $research->type = $researchTypeBronze; // Меняем тип на Бронзовое дело
         $research->save();
 
         // Проверяем обновление в БД
@@ -128,22 +164,48 @@ class ResearchTest extends TestBase
      */
     public function testDifferentResearchTypes(): void
     {
-        $result = $this->createTestGameWithPlanetAndUser();
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
         $game = $result['game'];
         $user = $result['user'];
 
-        $researchTypes = [1, 2, 3]; // Гончарное дело, Бронзовое дело, Письменность
+        $researchTypes = [
+            TestDataFactory::createTestResearchType([
+                "title" => "Гончарное дело",
+                "age" => 1,
+                "cost" => 50,
+                "m_top" => 30,
+                "m_left" => 30,
+                "age_need" => true
+            ]),
+            TestDataFactory::createTestResearchType([
+                'title' => 'Бронзовое дело',
+                'age' => 1,
+                'cost' => 80,
+                'm_top' => 130,
+                'm_left' => 30,
+                'age_need' => true
+            ]),
+            TestDataFactory::createTestResearchType([
+                "title" => "Письменность",
+                "age" => 1,
+                "cost" => 50,
+                "m_top" => 30,
+                "m_left" => 30,
+                "age_need" => true
+            ])
+        ];
 
-        foreach ($researchTypes as $typeId) {
+        foreach ($researchTypes as $researchType) {
             $data = [
                 'user_id' => $user->id,
-                'type' => $typeId,
+                'type' => $researchType->id,
             ];
 
             $research = new Research($data);
+            $research->save();
 
             $this->assertInstanceOf(ResearchType::class, $research->type);
-            $this->assertEquals($typeId, $research->type->id);
+            $this->assertEquals($researchType->id, $research->type->id);
             $this->assertInstanceOf(User::class, $research->user);
             $this->assertEquals($user->id, $research->user->id);
         }
@@ -154,7 +216,7 @@ class ResearchTest extends TestBase
      */
     public function testResearchUserRelationship(): void
     {
-        $result = $this->createTestGameWithPlanetAndUser();
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
         $user = $result['user'];
 
         $researchTypeData = [

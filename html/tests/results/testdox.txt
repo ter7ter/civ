@@ -1,6 +1,6 @@
 Admin Building Type (App\Tests\AdminBuildingType)
- [x] Building type with complex data
  [x] Save new building type
+ [x] Building type with complex data
  [ ] Building type city effect
  [x] Get all building types
  [x] Update building type
@@ -13,18 +13,52 @@ Admin Building Type (App\Tests\AdminBuildingType)
  [x] Building type default values
  [x] Building type get title
 
+Admin Unit Type (App\Tests\AdminUnitType)
+ [x] Get all unit types
+ [x] Save new unit type
+ [x] Update unit type
+ [x] Delete unit type
+ [x] Get unit type by id
+ [x] Json fields handling
+ [x] Get non existent unit type
+ [x] Unit type constructor with invalid json
+ [x] Unit type default values
+ [x] Unit type with complex data
+
+Building (App\Tests\Building)
+ [x] Constructor without id
+ [x] Get title
+ [x] Get
+ [x] Constructor
+ [ ] City effect
+ [x] Save new
+ [x] Save update
+ [x] Caching
+ [x] Different building types
+
 Building Type (App\Tests\BuildingType)
  [x] All predefined building types
- [x] Get existing building type
+ [x] City effect market
  [x] City effect granary
- [x] City effect coliseum negative dis
- [x] City effect library
  [x] City effect no effect
  [x] City effect temple
+ [x] Get existing building type
+ [x] City effect library
+ [x] City effect coliseum negative dis
  [x] Get non existing building type
  [x] Constructor
  [x] Get title
  [x] City effect temple negative norm
- [x] City effect market
  [x] City effect coliseum
+
+Cell (App\Tests\Cell)
+ [x] Constructor without owner
+ [x] Get work
+ [x] Generate map
+ [x] Get units
+ [x] Get money
+ [x] Get title
+ [x] Get eat
+ [x] Get non existing cell
+ [ ] Get planet
 

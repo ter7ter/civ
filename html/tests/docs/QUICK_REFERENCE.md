@@ -3,23 +3,15 @@
 ## 🚀 Быстрый старт
 
 ```bash
-# Запустить все рабочие тесты (35 сек)
-tests\run_quick_tests.bat
+# Тесты запускаем через докер
+docker compose exec php php /var/www/html/tests/_run.php
+# Скрипт запуска тестов
+tests\run_tests.bat
 
 # Один конкретный тест
-php tests\phpunit.phar --no-coverage tests\unit\UserTest.php
+tests\run_tests.bat --filter UserTest
 ```
 
-## ✅ Работающие тесты
-
-| Файл | Время | Статус |
-|------|-------|---------|
-| `CreateGameSimpleTest.php` | 7с | ✅ 11 тестов |
-| `DatabaseConfigTest.php` | 4с | ✅ 7 тестов |
-| `UserTest.php` | 10с | ✅ 13 тестов |
-| `MessageTest.php` | 2с | ✅ 3 теста |
-| `PlanetTest.php` | 2с | ✅ 2 теста |
-| `ResourceTest.php` | 2с | ✅ 2 теста |
 
 ## ⚠️ Избегайте этих тестов
 
@@ -40,7 +32,7 @@ tests\run_tests.bat clean
 tests\run_tests.bat install-phpunit
 
 # Один тест из CreateGameTest
-php tests\phpunit.phar --no-coverage --filter testWhitespaceGameName tests\unit\CreateGameTest.php
+run_tests.bat --filter testWhitespaceGameName tests\unit\CreateGameTest.php
 ```
 
 ## 📝 Создание новых тестов
@@ -51,9 +43,9 @@ php tests\phpunit.phar --no-coverage --filter testWhitespaceGameName tests\unit\
 $game = new Game($data);
 $game->save();
 
-// Создавай тестовые данные через TestBase методы
-$gameData = $this->createTestGame();
-$userData = $this->createTestUser();
+// Создавай тестовые данные через TestDataFactory
+$gameData = TestDataFactory::createTestGame();
+$userData = TestDataFactory::createTestUser();
 ```
 
 ### DON'T ❌

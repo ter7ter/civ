@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Base;
 
-require_once __DIR__ . "/FunctionalTestBase.php";
 
 use App\MyDB;
-use App\Tests\DatabaseTestAdapter;
+use App\Tests\Mocks\DatabaseTestAdapter;
+use App\Tests\Factory\TestDataFactory;
 
 /**
  * Общий базовый класс для всех тестов с устранением дублирования
@@ -31,7 +31,6 @@ class CommonTestBase extends FunctionalTestBase
         $this->clearRequest();
         $this->clearSession();
         $this->headers = [];
-        $this->initializeGameTypes();
         $this->clearTestData();
     }
 
@@ -40,33 +39,7 @@ class CommonTestBase extends FunctionalTestBase
      */
     protected function createCompleteTestGame($gameData = [], $userNames = ["Игрок1", "Игрок2"]): array
     {
-        $defaultGameData = [
-            "name" => "Тестовая игра",
-            "map_w" => 50,
-            "map_h" => 50,
-            "turn_type" => "byturn",
-        ];
-        $gameData = array_merge($defaultGameData, $gameData);
-
-        $game = $this->createTestGame($gameData);
-        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-
-        $users = [];
-        foreach ($userNames as $index => $name) {
-            $user = $this->createTestUser([
-                "game" => $game->id,
-                "login" => $name,
-                "turn_order" => $index + 1,
-                "turn_status" => $index === 0 ? "play" : "wait",
-            ]);
-            $users[] = $user;
-        }
-
-        return [
-            "game" => $game,
-            "planet" => $planetId,
-            "users" => $users,
-        ];
+        return TestDataFactory::createCompleteTestGame($gameData, $userNames);
     }
 
     /**

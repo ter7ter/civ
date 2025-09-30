@@ -4,10 +4,11 @@ namespace App\Tests;
 
 use App\User;
 use App\Game;
-use App\MapCell;
 use App\MyDB;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\base\CommonTestBase;
 
-class MapVPageTest extends TestBase
+class MapVPageTest extends CommonTestBase
 {
     protected function setUp(): void
     {
@@ -26,10 +27,11 @@ class MapVPageTest extends TestBase
     public function testMapVPageLoadsWithoutErrors(): void
     {
         // 1. Создаем тестовую игру, пользователя и планету
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $user = $this->createTestUser(["game" => $game->id]);
-        $this->createTestCity([
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $planetId = $planet->id;
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
+        $city = TestDataFactory::createTestCity([
             "user_id" => $user->id,
             "planet" => $planetId,
             "x" => 10,

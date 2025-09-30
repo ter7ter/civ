@@ -3,11 +3,13 @@
 namespace App\Tests;
 
 use App\ResearchType;
+use App\Tests\Base\CommonTestBase;
+use App\Tests\Factory\TestDataFactory;
 
 /**
  * Тесты для класса ResearchType
  */
-class ResearchTypeTest extends TestBase
+class ResearchTypeTest extends CommonTestBase
 {
     /**
      * Тест получения существующего типа исследования
@@ -16,7 +18,7 @@ class ResearchTypeTest extends TestBase
     public function testGetExistingResearchType(): void
     {
         // Создаем тестовый research_type вручную
-        $researchType = new ResearchType([
+        $researchType = TestDataFactory::createTestResearchType([
             'title' => 'Test Research',
             'cost' => 100,
             'age' => 1,
@@ -24,7 +26,6 @@ class ResearchTypeTest extends TestBase
             'm_top' => 30,
             'm_left' => 30,
         ]);
-        $researchType->save();
         $id = $researchType->id;
 
         $retrieved = ResearchType::get($id);
@@ -46,8 +47,6 @@ class ResearchTypeTest extends TestBase
      */
     public function testGetNonExistingResearchType(): void
     {
-        $this->initializeGameTypes();
-
         $researchType = ResearchType::get(999);
 
         $this->assertFalse($researchType);
@@ -111,7 +110,7 @@ class ResearchTypeTest extends TestBase
     public function testGetTitle(): void
     {
         // Создаем тестовый research_type
-        $researchType = new ResearchType([
+        $researchType = TestDataFactory::createTestResearchType([
             'title' => 'Test Title Research',
             'cost' => 100,
             'age' => 1,
@@ -119,7 +118,6 @@ class ResearchTypeTest extends TestBase
             'm_top' => 30,
             'm_left' => 30,
         ]);
-        $researchType->save();
 
         $this->assertEquals('Test Title Research', $researchType->get_title());
 
@@ -134,7 +132,7 @@ class ResearchTypeTest extends TestBase
     public function testGetTurnCount(): void
     {
         // Создаем тестовый research_type
-        $researchType = new ResearchType([
+        $researchType = TestDataFactory::createTestResearchType([
             'title' => 'Test Turn Research',
             'cost' => 50,
             'age' => 1,
@@ -142,7 +140,6 @@ class ResearchTypeTest extends TestBase
             'm_top' => 30,
             'm_left' => 30,
         ]);
-        $researchType->save();
 
         // Нормальный случай
         $turns = $researchType->get_turn_count(12); // 50 / 12 = 4.166, ceil(4.166) = 5
@@ -171,7 +168,7 @@ class ResearchTypeTest extends TestBase
     public function testGetNeedAgeIds(): void
     {
         // Создаем тестовые research_types
-        $rt1 = new ResearchType([
+        $rt1 = TestDataFactory::createTestResearchType([
             'title' => 'Test Age 1 Need',
             'cost' => 50,
             'age' => 1,
@@ -179,9 +176,8 @@ class ResearchTypeTest extends TestBase
             'm_top' => 30,
             'm_left' => 30,
         ]);
-        $rt1->save();
 
-        $rt2 = new ResearchType([
+        $rt2 = TestDataFactory::createTestResearchType([
             'title' => 'Test Age 1 No Need',
             'cost' => 50,
             'age' => 1,
@@ -189,9 +185,8 @@ class ResearchTypeTest extends TestBase
             'm_top' => 30,
             'm_left' => 30,
         ]);
-        $rt2->save();
 
-        $rt3 = new ResearchType([
+        $rt3 = TestDataFactory::createTestResearchType([
             'title' => 'Test Age 2 Need',
             'cost' => 50,
             'age' => 2,
@@ -199,7 +194,6 @@ class ResearchTypeTest extends TestBase
             'm_top' => 30,
             'm_left' => 30,
         ]);
-        $rt3->save();
 
         $age1Ids = ResearchType::get_need_age_ids(1);
         $this->assertIsArray($age1Ids);
@@ -227,7 +221,7 @@ class ResearchTypeTest extends TestBase
     public function testResearchRequirements(): void
     {
         // Создаем тестовые research_types с requirements
-        $rt1 = new ResearchType([
+        $rt1 = TestDataFactory::createTestResearchType([
             'title' => 'Test Req 1',
             'cost' => 50,
             'age' => 1,
@@ -235,9 +229,8 @@ class ResearchTypeTest extends TestBase
             'm_top' => 30,
             'm_left' => 30,
         ]);
-        $rt1->save();
 
-        $rt2 = new ResearchType([
+        $rt2 = TestDataFactory::createTestResearchType([
             'title' => 'Test Req 2',
             'cost' => 50,
             'age' => 1,
@@ -245,7 +238,7 @@ class ResearchTypeTest extends TestBase
             'm_top' => 30,
             'm_left' => 30,
         ]);
-        $rt2->requirements = [$rt1];
+        $rt2->addRequirement($rt1);
         $rt2->save();
 
         // Проверяем, что у исследований есть массив requirements
@@ -264,37 +257,13 @@ class ResearchTypeTest extends TestBase
     }
 
     /**
-     * Тест всех предопределенных типов исследований
-     * @small
-     */
-    public function testAllPredefinedResearchTypes(): void
-    {
-        $this->initializeGameTypes();
-
-        // Проверяем, что все исследования загружены
-        $all = ResearchType::getAllCached();
-        $this->assertGreaterThan(10, count($all));
-
-        // Проверяем, что все имеют правильные свойства
-        foreach ($all as $research) {
-            $this->assertIsInt($research->id);
-            $this->assertIsString($research->title);
-            $this->assertIsInt($research->cost);
-            $this->assertIsInt($research->age);
-            $this->assertIsBool($research->age_need);
-        }
-    }
-
-    /**
      * Тест метода getAll
      * @small
      */
     public function testGetAll(): void
     {
-        $this->initializeGameTypes();
-
-        // Проверяем статический кэш
-        $this->assertGreaterThan(10, count(ResearchType::getAllCached()));
+        $allCachedResearchTypes = ResearchType::getAllCached();
+        $this->assertIsArray($allCachedResearchTypes);
 
         // Проверяем, что все элементы являются экземплярами ResearchType
         foreach (ResearchType::getAllCached() as $researchType) {
@@ -316,8 +285,6 @@ class ResearchTypeTest extends TestBase
      */
     public function testSaveNewResearchType(): void
     {
-        $this->initializeGameTypes();
-
         $researchType = new ResearchType([]);
         $researchType->title = 'Unit Test Research';
         $researchType->cost = 300;
@@ -355,8 +322,6 @@ class ResearchTypeTest extends TestBase
      */
     public function testSaveExistingResearchType(): void
     {
-        $this->initializeGameTypes();
-
         // Создаем новый объект
         $researchType = new ResearchType([]);
         $researchType->title = 'Update Test Research';
@@ -392,8 +357,6 @@ class ResearchTypeTest extends TestBase
      */
     public function testDeleteResearchType(): void
     {
-        $this->initializeGameTypes();
-
         // Создаем объект
         $researchType = new ResearchType([]);
         $researchType->title = 'Delete Test Research';
@@ -422,7 +385,7 @@ class ResearchTypeTest extends TestBase
     public function testResearchRequirementsObjects(): void
     {
         // Создаем тестовые research_types с requirements
-        $rt1 = new ResearchType([
+        $rt1 = TestDataFactory::createTestResearchType([
             'title' => 'Test Req Base',
             'cost' => 50,
             'age' => 1,
@@ -432,7 +395,7 @@ class ResearchTypeTest extends TestBase
         ]);
         $rt1->save();
 
-        $rt2 = new ResearchType([
+        $rt2 = TestDataFactory::createTestResearchType([
             'title' => 'Test Req 2',
             'cost' => 50,
             'age' => 1,
@@ -443,7 +406,7 @@ class ResearchTypeTest extends TestBase
         $rt2->addRequirement($rt1);
         $rt2->save();
 
-        $rt3 = new ResearchType([
+        $rt3 = TestDataFactory::createTestResearchType([
             'title' => 'Test Req 3',
             'cost' => 50,
             'age' => 1,

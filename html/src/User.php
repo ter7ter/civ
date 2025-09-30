@@ -440,7 +440,7 @@ class User
     {
         $result = [];
         $research = $this->get_research();
-        foreach (ResearchType::getAllLoaded() as $res) {
+        foreach (ResearchType::getAllCached() as $res) {
             if (isset($research[$res->id])) {
                 continue;
             }

@@ -159,7 +159,7 @@ class ResearchType
     public static function get_need_age_ids($age)
     {
         $result = [];
-        foreach (ResearchType::getAllLoaded() as $research) {
+        foreach (ResearchType::getAllCached() as $research) {
             if ($research->age == $age && $research->age_need) {
                 $result[] = $research->id;
             }
@@ -221,15 +221,6 @@ class ResearchType
     }
 
     public static function getAllCached()
-    {
-        return ResearchType::$all;
-    }
-
-    /**
-     * Получить все загруженные типы исследований
-     * @return ResearchType[]
-     */
-    public static function getAllLoaded()
     {
         return ResearchType::$all;
     }

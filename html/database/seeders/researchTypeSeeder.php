@@ -1,46 +1,13 @@
 <?php
 
+require_once 'baseSeeder.php';
 
-require_once __DIR__ . '/../../includes.php';
-
-use App\MyDB;
 use App\ResearchType;
 
-MyDB::setDBConfig('localhost', DB_USER, DB_PASS, DB_PORT, DB_NAME);
-
-// Проверяем существование таблиц
-$tables = ['research_type', 'research_requirements', 'research'];
-foreach ($tables as $table) {
-    $exists = MyDB::query("SHOW TABLES LIKE '$table'");
-    if (empty($exists)) {
-        die("Таблица $table не существует. Сначала запустите database/migrations.php для создания таблиц.\n");
-    }
-}
-
-// Парсим аргументы командной строки
-$clear = false;
-if (in_array('--clean', $argv)) {
-    $clear = true;
-} elseif (in_array('--no-clean', $argv)) {
-    $clear = false;
-} else {
-    // Запрос на очистку данных
-    $clearInput = readline("Очищать существующие данные исследований? (y/n): ");
-    $clear = strtolower($clearInput) === 'y';
-}
-
-if ($clear) {
-    MyDB::startTransaction();
-    MyDB::query("SET FOREIGN_KEY_CHECKS=0;
-        DELETE FROM research_requirements;
-        DELETE FROM research_type;\
-        DELETE FROM research;
-        SET FOREIGN_KEY_CHECKS=1;");
-    MyDB::endTransaction();
-    echo "Данные очищены.\n";
-} else {
-    echo "Очистка пропущена.\n";
-}
+setupDatabase();
+checkTables(['research_type', 'research_requirements', 'research']);
+$clear = parseClearArgv($argv);
+clearData($clear, ["DELETE FROM research_requirements;", "DELETE FROM research_type;", "DELETE FROM research;"]);
 
 // Данные исследований Civilization 3 с деревом зависимостей
 $researches = [

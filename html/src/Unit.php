@@ -3,7 +3,6 @@
 namespace App;
 
 use Exception;
-
 class Unit
 {
     /**

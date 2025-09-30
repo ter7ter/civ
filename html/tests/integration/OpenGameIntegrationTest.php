@@ -4,8 +4,9 @@ namespace App\Tests\Integration;
 
 use App\Game;
 use App\User;
-use App\Tests\FunctionalTestBase;
-use App\Tests\DatabaseTestAdapter;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\Mocks\DatabaseTestAdapter;
+use App\Tests\Base\FunctionalTestBase;
 
 /**
  * Интеграционные тесты для полного процесса открытия игры через веб-интерфейс.
@@ -19,7 +20,6 @@ class OpenGameIntegrationTest extends FunctionalTestBase
         $this->clearRequest();
         $this->clearSession();
         $this->headers = [];
-        $this->initializeGameTypes(); // Возможно, потребуется для некоторых сценариев
         $this->clearTestData(); // Добавлено для обеспечения чистого состояния перед каждым тестом
     }
 
@@ -28,8 +28,8 @@ class OpenGameIntegrationTest extends FunctionalTestBase
      */
     public function testFullGameOpeningProcess(): void
     {
-        $game = $this->createTestGame(["name" => "Интеграционная игра"]);
-        $player = $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        $game = TestDataFactory::createTestGame(["name" => "Интеграционная игра"]);
+        $player = TestDataFactory::createTestUser(["login" => "Игрок1", "game" => $game->id]);
 
         $_REQUEST = [
             "method" => "login",
@@ -51,8 +51,8 @@ class OpenGameIntegrationTest extends FunctionalTestBase
      */
     public function testGameOpeningSessionPersistence(): void
     {
-        $game = $this->createTestGame(["name" => "Тест сессии"]);
-        $user = $this->createTestUser(["login" => "Тестовый пользователь", "game" => $game->id]);
+        $game = TestDataFactory::createTestGame(["name" => "Тест сессии"]);
+        $user = TestDataFactory::createTestUser(["login" => "Тестовый пользователь", "game" => $game->id]);
 
         $_REQUEST = [
             "method" => "login",
@@ -88,8 +88,8 @@ class OpenGameIntegrationTest extends FunctionalTestBase
             $this->clearTestData();
             $this->clearSession();
 
-            $game = $this->createTestGame($config);
-            $user = $this->createTestUser(["login" => "Игрок", "game" => $game->id]);
+            $game = TestDataFactory::createTestGame($config);
+            $user = TestDataFactory::createTestUser(["login" => "Игрок", "game" => $game->id]);
 
             $_REQUEST = [
                 "method" => "login",
@@ -114,9 +114,9 @@ class OpenGameIntegrationTest extends FunctionalTestBase
         ];
 
         foreach ($gameConfigs as $config) {
-            $game = $this->createTestGame(["name" => $config["name"]]);
+            $game = TestDataFactory::createTestGame(["name" => $config["name"]]);
             for ($i = 1; $i <= $config["players"]; $i++) {
-                $this->createTestUser(["login" => "Игрок{$i}", "game" => $game->id]);
+                TestDataFactory::createTestUser(["login" => "Игрок{$i}", "game" => $game->id]);
             }
         }
 
@@ -137,7 +137,7 @@ class OpenGameIntegrationTest extends FunctionalTestBase
         $this->assertEquals("game error", $output);
 
         // Тест с несуществующим пользователем
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
         $_REQUEST = ["method" => "login", "gid" => $game->id, "uid" => 999];
         ob_start();
         $this->simulateGameOpening();
@@ -145,9 +145,9 @@ class OpenGameIntegrationTest extends FunctionalTestBase
         $this->assertEquals("user error", $output);
 
         // Тест с пользователем из другой игры
-        $game1 = $this->createTestGame(["name" => "Игра 1"]);
-        $game2 = $this->createTestGame(["name" => "Игра 2"]);
-        $userFromGame2 = $this->createTestUser(["game" => $game2->id]);
+        $game1 = TestDataFactory::createTestGame(["name" => "Игра 1"]);
+        $game2 = TestDataFactory::createTestGame(["name" => "Игра 2"]);
+        $userFromGame2 = TestDataFactory::createTestUser(["game" => $game2->id]);
         $_REQUEST = ["method" => "login", "gid" => $game1->id, "uid" => $userFromGame2->id];
         ob_start();
         $this->simulateGameOpening();
@@ -160,8 +160,8 @@ class OpenGameIntegrationTest extends FunctionalTestBase
      */
     public function testPerformanceGameOpening(): void
     {
-        $game = $this->createTestGame(["map_w" => 500, "map_h" => 500]);
-        $player = $this->createTestUser(["game" => $game->id]);
+        $game = TestDataFactory::createTestGame(["map_w" => 500, "map_h" => 500]);
+        $player = TestDataFactory::createTestUser(["game" => $game->id]);
 
         $_REQUEST = ["method" => "login", "gid" => $game->id, "uid" => $player->id];
 
@@ -204,8 +204,8 @@ class OpenGameIntegrationTest extends FunctionalTestBase
     {
         $games = [];
         for ($i = 1; $i <= 2; $i++) {
-            $game = $this->createTestGame(["name" => "Игра {$i}"]);
-            $user = $this->createTestUser(["login" => "Игрок игры {$i}", "game" => $game->id]);
+            $game = TestDataFactory::createTestGame(["name" => "Игра {$i}"]);
+            $user = TestDataFactory::createTestUser(["login" => "Игрок игры {$i}", "game" => $game->id]);
             $games[] = ["game" => $game, "user" => $user];
         }
 
@@ -222,8 +222,8 @@ class OpenGameIntegrationTest extends FunctionalTestBase
      */
     public function testGameOpeningDataIntegrity(): void
     {
-        $game = $this->createTestGame(["turn_num" => 5]);
-        $user = $this->createTestUser(["game" => $game->id, "money" => 200, "age" => 3]);
+        $game = TestDataFactory::createTestGame(["turn_num" => 5]);
+        $user = TestDataFactory::createTestUser(["game" => $game->id, "money" => 200, "age" => 3]);
 
         $_REQUEST = ["method" => "login", "gid" => $game->id, "uid" => $user->id];
         $this->simulateGameOpening();
@@ -241,10 +241,10 @@ class OpenGameIntegrationTest extends FunctionalTestBase
      */
     public function testGameOpeningObjectRelationships(): void
     {
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
         $users = [];
         for ($i = 1; $i <= 2; $i++) {
-            $users[] = $this->createTestUser(["login" => "Игрок{$i}", "game" => $game->id]);
+            $users[] = TestDataFactory::createTestUser(["login" => "Игрок{$i}", "game" => $game->id]);
         }
 
         $_REQUEST = ["method" => "login", "gid" => $game->id, "uid" => $users[0]->id];

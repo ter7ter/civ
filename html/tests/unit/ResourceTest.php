@@ -5,39 +5,40 @@ namespace App\Tests;
 use App\Resource;
 use App\ResourceType;
 use App\MyDB;
+use App\Tests\Base\CommonTestBase;
+use App\Tests\Factory\TestDataFactory;
 
 /**
  * Тесты для класса Resource
  */
-class ResourceTest extends TestBase
+class ResourceTest extends CommonTestBase
 {
     /**
      * Тест получения ресурса по координатам
      */
     public function testGet(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
 
         // Создаем ресурс через БД
         $resourceId = MyDB::insert('resource', [
             'x' => 5,
             'y' => 5,
-            'planet' => $planetId,
+            'planet' => $planet->id,
             'type' => 'coal', // Уголь
             'amount' => 100,
         ]);
 
         // Resource::clearCache(); // Нет такого метода
-        $resource = Resource::get(5, 5, $planetId);
+        $resource = Resource::get(5, 5, $planet->id);
 
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertIsInt($resource->id);
         $this->assertGreaterThan(0, $resource->id);
         $this->assertEquals(5, $resource->x);
         $this->assertEquals(5, $resource->y);
-        $this->assertEquals($planetId, $resource->planet);
+        $this->assertEquals($planet->id, $resource->planet);
         $this->assertInstanceOf(ResourceType::class, $resource->type);
         $this->assertEquals('coal', $resource->type->id);
         $this->assertEquals(100, $resource->amount);
@@ -48,10 +49,10 @@ class ResourceTest extends TestBase
      */
     public function testGetNonExisting(): void
     {
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
 
-        $resource = Resource::get(999, 999, $planetId);
+        $resource = Resource::get(999, 999, $planet->id);
 
         $this->assertFalse($resource);
     }
@@ -61,15 +62,14 @@ class ResourceTest extends TestBase
      */
     public function testConstructor(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
 
         $data = [
             'id' => 1,
             'x' => 10,
             'y' => 10,
-            'planet' => $planetId,
+            'planet' => $planet->id,
             'type' => 'coal', // Уголь
             'amount' => 50,
         ];
@@ -79,7 +79,7 @@ class ResourceTest extends TestBase
         $this->assertEquals(1, $resource->id);
         $this->assertEquals(10, $resource->x);
         $this->assertEquals(10, $resource->y);
-        $this->assertEquals($planetId, $resource->planet);
+        $this->assertEquals($planet->id, $resource->planet);
         $this->assertInstanceOf(ResourceType::class, $resource->type);
         $this->assertEquals('coal', $resource->type->id);
         $this->assertEquals(50, $resource->amount);
@@ -90,14 +90,13 @@ class ResourceTest extends TestBase
      */
     public function testConstructorWithoutId(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
 
         $data = [
             'x' => 15,
             'y' => 15,
-            'planet' => $planetId,
+            'planet' => $planet->id,
             'type' => 'fish', // Рыба
             'amount' => 75,
         ];
@@ -107,7 +106,7 @@ class ResourceTest extends TestBase
         $this->assertNull($resource->id);
         $this->assertEquals(15, $resource->x);
         $this->assertEquals(15, $resource->y);
-        $this->assertEquals($planetId, $resource->planet);
+        $this->assertEquals($planet->id, $resource->planet);
         $this->assertInstanceOf(ResourceType::class, $resource->type);
         $this->assertEquals('fish', $resource->type->id);
         $this->assertEquals(75, $resource->amount);
@@ -118,14 +117,13 @@ class ResourceTest extends TestBase
      */
     public function testGetTitle(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
 
         $data = [
             'x' => 20,
             'y' => 20,
-            'planet' => $planetId,
+            'planet' => $planet->id,
             'type' => 'coal', // Уголь
             'amount' => 25,
         ];
@@ -156,14 +154,13 @@ class ResourceTest extends TestBase
      */
     public function testSaveNew(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
 
         $data = [
             'x' => 25,
             'y' => 25,
-            'planet' => $planetId,
+            'planet' => $planet->id,
             'type' => 'coal', // Уголь
             'amount' => 200,
         ];
@@ -182,7 +179,7 @@ class ResourceTest extends TestBase
         $this->assertNotNull($savedData);
         $this->assertEquals(25, $savedData['x']);
         $this->assertEquals(25, $savedData['y']);
-        $this->assertEquals($planetId, $savedData['planet']);
+        $this->assertEquals($planet->id, $savedData['planet']);
         $this->assertEquals('coal', $savedData['type']);
         $this->assertEquals(200, $savedData['amount']);
     }
@@ -192,15 +189,14 @@ class ResourceTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
 
         // Создаем ресурс через БД
         $resourceId = MyDB::insert('resource', [
             'x' => 30,
             'y' => 30,
-            'planet' => $planetId,
+            'planet' => $planet->id,
             'type' => 'coal',
             'amount' => 50,
         ]);
@@ -209,7 +205,7 @@ class ResourceTest extends TestBase
             'id' => $resourceId,
             'x' => 30,
             'y' => 30,
-            'planet' => $planetId,
+            'planet' => $planet->id,
             'type' => 'coal',
             'amount' => 50,
         ];
@@ -250,9 +246,7 @@ class ResourceTest extends TestBase
      */
     public function testDifferentResourceTypes(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $planet = TestDataFactory::createTestPlanet();
 
         $resourceTypes = ['coal', 'fish', 'furs']; // Уголь, Рыба, Меха
 
@@ -260,7 +254,7 @@ class ResourceTest extends TestBase
             $data = [
                 'x' => rand(1, 100),
                 'y' => rand(1, 100),
-                'planet' => $planetId,
+                'planet' => $planet->id,
                 'type' => $typeId,
                 'amount' => rand(10, 100),
             ];
@@ -279,32 +273,30 @@ class ResourceTest extends TestBase
      */
     public function testResourceCoordinatesUniqueness(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
+        $planet = TestDataFactory::createTestPlanet();
 
         // Создаем первый ресурс
         MyDB::insert('resource', [
             'x' => 40,
             'y' => 40,
-            'planet' => $planetId,
+            'planet' => $planet->id,
             'type' => 'coal',
             'amount' => 100,
         ]);
 
-        $resource1 = Resource::get(40, 40, $planetId);
+        $resource1 = Resource::get(40, 40, $planet->id);
         $this->assertInstanceOf(Resource::class, $resource1);
 
         // Создаем второй ресурс на других координатах
         MyDB::insert('resource', [
             'x' => 41,
             'y' => 41,
-            'planet' => $planetId,
+            'planet' => $planet->id,
             'type' => 'fish',
             'amount' => 200,
         ]);
 
-        $resource2 = Resource::get(41, 41, $planetId);
+        $resource2 = Resource::get(41, 41, $planet->id);
         $this->assertInstanceOf(Resource::class, $resource2);
 
         // Проверяем, что ресурсы разные

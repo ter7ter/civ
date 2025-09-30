@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Base;
 
 use App\Building;
 use App\Cell;
-use App\City;
 use App\Game;
 use App\MyDB;
 use App\Planet;
-use App\Unit;
 use App\User;
+use App\Tests\Mocks\DatabaseTestAdapter;
+use App\Tests\Factory\TestDataFactory;
 use PDO;
 
 /**
@@ -106,14 +106,12 @@ class TestBase extends \PHPUnit\Framework\TestCase
         $isParaTest = !empty($testToken);
 
         if (!$isParaTest) {
-            // Для обычных тестов откатываем транзакцию
+            // Для ParaTest не очищаем таблицы в tearDown, поскольку каждый процесс имеет свою базу данных
+            // и данные будут очищены в следующем setUp()
             if (MyDB::get()->inTransaction()) {
                 MyDB::get()->rollBack();
             }
         }
-        // Для ParaTest не очищаем таблицы в tearDown, поскольку каждый процесс имеет свою базу данных
-        // и данные будут очищены в следующем setUp()
-
         // Очищаем все кэши и статические переменные
         Game::clearCache();
         User::clearCache();
@@ -139,66 +137,6 @@ class TestBase extends \PHPUnit\Framework\TestCase
         // Устанавливаем глобальные переменные для тестов
         Cell::$map_width = 20;
         Cell::$map_height = 20;
-    }
-
-    /**
-     * Создает тестовую игру
-     */
-    protected function createTestGame($data = []): Game
-    {
-        $defaultData = [
-            "name" => "Test Game",
-            "map_w" => 20,
-            "map_h" => 20,
-            "turn_type" => "byturn",
-            "turn_num" => 1,
-        ];
-
-        $gameData = array_merge($defaultData, $data);
-
-        $game = new Game($gameData);
-        $game->save();
-
-        return $game;
-    }
-
-    /**
-     * Создает тестового пользователя
-     */
-    protected function createTestUser($data = []): User
-    {
-        // Создаем игру, если её нет
-        if (!isset($data["game"])) {
-            $game = $this->createTestGame();
-            $gameId = $game->id;
-        } else {
-            $gameId = $data["game"];
-        }
-
-        $defaultData = [
-            "login" => "TestUser" . rand(1000, 9999),
-            "color" => "#ff0000",
-            "game" => $gameId,
-            "turn_order" => 1,
-            "turn_status" => "wait",
-            "money" => 50,
-            "age" => 1,
-        ];
-
-        $userData = array_merge($defaultData, $data);
-
-        $user = new User($userData);
-        $user->save();
-
-        return $user;
-    }
-
-    /**
-     * Инициализирует базовые игровые типы
-     */
-    protected function initializeGameTypes(): void
-    {
-        TestGameDataInitializer::initializeAll();
     }
 
     /**
@@ -232,158 +170,6 @@ class TestBase extends \PHPUnit\Framework\TestCase
             " ON DUPLICATE KEY UPDATE type = VALUES(type)";
 
         MyDB::query($sql, $params);
-    }
-
-    /**
-     * Создает тестовую клетку
-     */
-    protected function createTestCell($data = []): Cell
-    {
-        if (!isset($data["planet"])) {
-            throw new Exception("Planet ID is required to create a test cell");
-        }
-
-        $defaultData = [
-            "x" => 0,
-            "y" => 0,
-            "type" => "plains",
-        ];
-
-        $cellData = array_merge($defaultData, $data);
-
-        $cell = new Cell($cellData);
-        $cell->save();
-
-        return $cell;
-    }
-
-    /**
-     * Создает тестовый город
-     */
-    protected function createTestCity($data = []): City
-    {
-        if (!isset($data["planet"])) {
-            throw new Exception("Planet ID is required to create a test city");
-        }
-
-        $defaultData = [
-            "user_id" => 1,
-            "x" => 10,
-            "y" => 10,
-            "title" => "Test City",
-            "population" => 1,
-            "pmoney" => 0,
-            "presearch" => 0,
-        ];
-
-        $cityData = array_merge($defaultData, $data);
-
-        // Создаем клетку, если она не существует
-        $this->createTestCell([
-            "x" => $cityData["x"],
-            "y" => $cityData["y"],
-            "planet" => $cityData["planet"],
-            "type" => "plains",
-        ]);
-
-        $user = User::get($cityData["user_id"]);
-        $city = City::new_city($user, $cityData["x"], $cityData["y"], $cityData["title"], $cityData["planet"]);
-
-        return $city;
-    }
-
-    /**
-     * Создает тестовый юнит
-     */
-    protected function createTestUnit($data = []): Unit
-    {
-        if (!isset($data["planet"])) {
-            throw new Exception("Planet ID is required to create a test unit");
-        }
-
-        $defaultData = [
-            "x" => 5,
-            "y" => 5,
-            "user_id" => 1,
-            "type" => 1,
-            "health" => 3,
-            "points" => 2,
-        ];
-
-        $unitData = array_merge($defaultData, $data);
-
-        $unit = new Unit($unitData);
-        $unit->save();
-
-        return $unit;
-    }
-
-    /**
-     * Создает тестовую планету
-     */
-    protected function createTestPlanet($data = []): int
-    {
-        // Создаем игру, если её нет
-        if (!isset($data["game_id"])) {
-            $game = $this->createTestGame();
-            $gameId = $game->id;
-        } else {
-            $gameId = $data["game_id"];
-        }
-
-        $defaultData = [
-            "name" => "Test Planet",
-            "game_id" => $gameId,
-        ];
-
-        $planetData = array_merge($defaultData, $data);
-
-        $planet = new Planet($planetData);
-        $planet->save();
-        return $planet->id;
-    }
-
-    /**
-     * Создает тестовую игру с планетой
-     */
-    protected function createTestGameWithPlanet($gameData = [], $planetData = []): array
-    {
-        $game = $this->createTestGame($gameData);
-        $planetId = $this->createTestPlanet(array_merge(['game_id' => $game->id], $planetData));
-
-        return [
-            'game' => $game,
-            'planet' => $planetId,
-        ];
-    }
-
-    /**
-     * Создает тестовую игру с планетой и пользователем
-     */
-    protected function createTestGameWithPlanetAndUser($gameData = [], $planetData = [], $userData = []): array
-    {
-        $result = $this->createTestGameWithPlanet($gameData, $planetData);
-        $user = $this->createTestUser(array_merge(['game' => $result['game']->id], $userData));
-
-        return array_merge($result, [
-            'user' => $user,
-        ]);
-    }
-
-    /**
-     * Создает тестовую игру с планетой, пользователем и городом
-     */
-    protected function createTestGameWithPlanetUserAndCity($gameData = [], $planetData = [], $userData = [], $cityData = []): array
-    {
-        $result = $this->createTestGameWithPlanetAndUser($gameData, $planetData, $userData);
-        $city = $this->createTestCity(array_merge([
-            'user_id' => $result['user']->id,
-            'planet' => $result['planet']
-        ], $cityData));
-
-        return array_merge($result, [
-            'city' => $city,
-        ]);
     }
 
     /**
@@ -531,11 +317,7 @@ class TestBase extends \PHPUnit\Framework\TestCase
 
     protected function createTestUsers(array $usersData): array
     {
-        $result = [];
-        foreach ($usersData as $userData) {
-            $result[] = $this->createTestUser($userData);
-        }
-        return $result;
+        return TestDataFactory::createTestUsers($usersData);
     }
 
     /**

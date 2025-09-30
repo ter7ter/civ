@@ -3,8 +3,9 @@
 namespace App\Tests\Integration;
 
 use App\MyDB;
-use App\Tests\DatabaseTestAdapter;
-use App\Tests\FunctionalTestBase;
+use App\Tests\Mocks\DatabaseTestAdapter;
+use App\Tests\Base\FunctionalTestBase;
+use App\Tests\Factory\TestDataFactory;
 
 /**
  * Интеграционные тесты для полного процесса редактирования игры через веб-интерфейс.
@@ -44,7 +45,6 @@ class EditGameIntegrationTest extends FunctionalTestBase
         $this->clearRequest();
         $this->clearSession();
         $this->headers = [];
-        $this->initializeGameTypes();
         $this->clearTestData(); // Добавлено для обеспечения чистого состояния перед каждым тестом
     }
 
@@ -53,8 +53,8 @@ class EditGameIntegrationTest extends FunctionalTestBase
      */
     public function testFullGameEditProcess(): void
     {
-        $originalGame = $this->createTestGame(["name" => "Исходная игра"]);
-        $this->createTestUser(["login" => "Алиса", "game" => $originalGame->id]);
+        $originalGame = TestDataFactory::createTestGame(["name" => "Исходная игра"]);
+        TestDataFactory::createTestUser(["login" => "Алиса", "game" => $originalGame->id]);
 
         $editData = [
             "game_id" => $originalGame->id,
@@ -77,7 +77,7 @@ class EditGameIntegrationTest extends FunctionalTestBase
      */
     public function testEditedGameDataPersistence(): void
     {
-        $originalGame = $this->createTestGame();
+        $originalGame = TestDataFactory::createTestGame();
         $editData = [
             "game_id" => $originalGame->id,
             "name" => "Обновленное название",
@@ -102,7 +102,7 @@ class EditGameIntegrationTest extends FunctionalTestBase
      */
     public function testEditDifferentTurnTypes(string $turnType): void
     {
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
 
         $editData = [
             "game_id" => $game->id,
@@ -124,10 +124,10 @@ class EditGameIntegrationTest extends FunctionalTestBase
      */
     public function testPlayerOrderPreservationOnEdit(): void
     {
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
         $players = ["Альфа", "Бета", "Гамма"];
         foreach ($players as $i => $name) {
-            $this->createTestUser(["login" => $name, "game" => $game->id, "turn_order" => $i + 1]);
+            TestDataFactory::createTestUser(["login" => $name, "game" => $game->id, "turn_order" => $i + 1]);
         }
 
         $editData = ["game_id" => $game->id, "name" => "Новое имя"];
@@ -142,8 +142,8 @@ class EditGameIntegrationTest extends FunctionalTestBase
      */
     public function testPlayerParametersPreservationOnEdit(): void
     {
-        $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Богач", "game" => $game->id, "money" => 100, "age" => 2]);
+        $game = TestDataFactory::createTestGame();
+        TestDataFactory::createTestUser(["login" => "Богач", "game" => $game->id, "money" => 100, "age" => 2]);
 
         $editData = ["game_id" => $game->id, "name" => "Новое имя"];
         $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
@@ -158,7 +158,7 @@ class EditGameIntegrationTest extends FunctionalTestBase
      */
     public function testValidationErrorsOnEdit(): void
     {
-        $game = $this->createTestGame(["name" => "Исходная игра"]);
+        $game = TestDataFactory::createTestGame(["name" => "Исходная игра"]);
         $invalidData = [
             "game_id" => $game->id,
             "name" => "",
@@ -181,7 +181,7 @@ class EditGameIntegrationTest extends FunctionalTestBase
      */
     public function testSQLInjectionProtectionOnEdit(): void
     {
-        $game = $this->createTestGame(["name" => "Безопасная игра"]);
+        $game = TestDataFactory::createTestGame(["name" => "Безопасная игра"]);
         $maliciousData = [
             "game_id" => $game->id,
             "name" => "'; DROP TABLE game; --",
@@ -199,8 +199,8 @@ class EditGameIntegrationTest extends FunctionalTestBase
      */
     public function testEditWithRelatedDataPreservation(): void
     {
-        $game = $this->createTestGame(["turn_num" => 5]);
-        $this->createTestUser(["game" => $game->id, "money" => 150, "age" => 3]);
+        $game = TestDataFactory::createTestGame(["turn_num" => 5]);
+        TestDataFactory::createTestUser(["game" => $game->id, "money" => 150, "age" => 3]);
 
         $editData = ["game_id" => $game->id, "name" => "Переименованная игра"];
         $this->executePage(PROJECT_ROOT . "/pages/editgame.php", $editData);
@@ -216,7 +216,7 @@ class EditGameIntegrationTest extends FunctionalTestBase
     // Тест производительности редактирования игры с максимальным количеством игроков
     public function testPerformanceEditWithMaxPlayers(): void
     {
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "Тест производительности редактирования",
             "map_w" => 200,
             "map_h" => 200,
@@ -225,7 +225,7 @@ class EditGameIntegrationTest extends FunctionalTestBase
 
         // Создаем максимальное количество игроков
         for ($i = 1; $i <= 16; $i++) {
-            $this->createTestUser([
+            TestDataFactory::createTestUser([
                 "login" => "Игрок{$i}",
                 "game" => $game->id,
                 "turn_order" => $i,
@@ -281,15 +281,15 @@ class EditGameIntegrationTest extends FunctionalTestBase
 
         // Создаем несколько игр
         for ($i = 1; $i <= 3; $i++) {
-            $game = $this->createTestGame([
+            $game = TestDataFactory::createTestGame([
                 "name" => "Игра {$i}",
                 "map_w" => 100,
                 "map_h" => 100,
                 "turn_type" => "byturn",
             ]);
 
-            $this->createTestUser(["login" => "А{$i}", "game" => $game->id]);
-            $this->createTestUser(["login" => "Б{$i}", "game" => $game->id]);
+            TestDataFactory::createTestUser(["login" => "А{$i}", "game" => $game->id]);
+            TestDataFactory::createTestUser(["login" => "Б{$i}", "game" => $game->id]);
 
             $games[] = $game;
         }

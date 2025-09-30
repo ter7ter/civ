@@ -2,18 +2,19 @@
 
 namespace App\Tests;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 use App\Game;
 use App\User;
 use App\MyDB;
 use App\Planet;
 use App\Cell;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\Base\CommonTestBase;
+use App\Tests\Mocks\DatabaseTestAdapter;
 
 /**
  * Тесты для класса Game
  */
-class GameTest extends TestBase
+class GameTest extends CommonTestBase
 {
     protected function setUp(): void
     {
@@ -26,7 +27,7 @@ class GameTest extends TestBase
      */
     public function testGetExistingGame(): void
     {
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             'name' => 'Test Game',
             'map_w' => 100,
             'map_h' => 100,
@@ -111,7 +112,7 @@ class GameTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             'name' => 'Original Name',
             'turn_num' => 1
         ]);
@@ -133,12 +134,12 @@ class GameTest extends TestBase
     public function testGameList(): void
     {
         // Создаем игры и пользователей
-        $game1 = $this->createTestGame(['name' => 'Game 1']);
-        $this->createTestUser(['game' => $game1->id]);
+        $game1 = TestDataFactory::createTestGame(['name' => 'Game 1']);
+        TestDataFactory::createTestUser(['game' => $game1->id]);
 
-        $game2 = $this->createTestGame(['name' => 'Game 2']);
-        $this->createTestUser(['game' => $game2->id]);
-        $this->createTestUser(['game' => $game2->id]);
+        $game2 = TestDataFactory::createTestGame(['name' => 'Game 2']);
+        TestDataFactory::createTestUser(['game' => $game2->id]);
+        TestDataFactory::createTestUser(['game' => $game2->id]);
 
         $games = Game::game_list();
 
@@ -155,9 +156,9 @@ class GameTest extends TestBase
      */
     public function testAllSystemMessage(): void
     {
-        $game = $this->createTestGame();
-        $user1 = $this->createTestUser(['game' => $game->id, 'login' => 'User1']);
-        $user2 = $this->createTestUser(['game' => $game->id, 'login' => 'User2']);
+        $game = TestDataFactory::createTestGame();
+        $user1 = TestDataFactory::createTestUser(['game' => $game->id, 'login' => 'User1']);
+        $user2 = TestDataFactory::createTestUser(['game' => $game->id, 'login' => 'User2']);
 
         // Заполняем пользователей
         $users = MyDB::query("SELECT id FROM user WHERE game = :gameid", ["gameid" => $game->id]);
@@ -194,9 +195,9 @@ class GameTest extends TestBase
      */
     public function testGetActivePlayerByTurn(): void
     {
-        $game = $this->createTestGame(['turn_type' => 'byturn']);
-        $user1 = $this->createTestUser(['game' => $game->id, 'turn_order' => 1, 'turn_status' => 'play']);
-        $user2 = $this->createTestUser(['game' => $game->id, 'turn_order' => 2, 'turn_status' => 'wait']);
+        $game = TestDataFactory::createTestGame(['turn_type' => 'byturn']);
+        $user1 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_order' => 1, 'turn_status' => 'play']);
+        $user2 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_order' => 2, 'turn_status' => 'wait']);
 
         $game = Game::get($game->id);
         $activePlayer = $game->getActivePlayer();
@@ -209,9 +210,9 @@ class GameTest extends TestBase
      */
     public function testGetActivePlayerConcurrently(): void
     {
-        $game = $this->createTestGame(['turn_type' => 'concurrently']);
-        $user1 = $this->createTestUser(['game' => $game->id, 'turn_status' => 'play']);
-        $user2 = $this->createTestUser(['game' => $game->id, 'turn_status' => 'play']);
+        $game = TestDataFactory::createTestGame(['turn_type' => 'concurrently']);
+        $user1 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_status' => 'play']);
+        $user2 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_status' => 'play']);
 
         $game = Game::get($game->id);
         $activePlayer = $game->getActivePlayer();
@@ -226,9 +227,9 @@ class GameTest extends TestBase
      */
     public function testGetActivePlayerNoActive(): void
     {
-        $game = $this->createTestGame();
-        $this->createTestUser(['game' => $game->id, 'turn_status' => 'wait']);
-        $this->createTestUser(['game' => $game->id, 'turn_status' => 'end']);
+        $game = TestDataFactory::createTestGame();
+        TestDataFactory::createTestUser(['game' => $game->id, 'turn_status' => 'wait']);
+        TestDataFactory::createTestUser(['game' => $game->id, 'turn_status' => 'end']);
 
         $game = Game::get($game->id);
         $activePlayer = $game->getActivePlayer();
@@ -241,17 +242,17 @@ class GameTest extends TestBase
      */
     public function testGetFirstPlanet(): void
     {
-        $result = $this->createTestGameWithPlanet(['name' => 'Planet Game'], ['name' => 'First Planet']);
+        $result = TestDataFactory::createTestGameWithPlanet(['name' => 'Planet Game'], ['name' => 'First Planet']);
         $game = $result['game'];
-        $planetId = $result['planet'];
+        $planet = $result['planet'];
 
         $this->assertNotNull($game, 'Game should be found');
-        $planet = $game->get_first_planet();
+        $planetFirst = $game->get_first_planet();
 
-        $this->assertInstanceOf(Planet::class, $planet);
-        $this->assertEquals($planetId, $planet->id);
-        $this->assertEquals('First Planet', $planet->name);
-        $this->assertEquals($game->id, $planet->game_id);
+        $this->assertInstanceOf(Planet::class, $planetFirst);
+        $this->assertEquals($planet->id, $planetFirst->id);
+        $this->assertEquals('First Planet', $planetFirst->name);
+        $this->assertEquals($game->id, $planetFirst->game_id);
     }
 
     /**
@@ -259,7 +260,7 @@ class GameTest extends TestBase
      */
     public function testGetFirstPlanetNoPlanets(): void
     {
-        $game = $this->createTestGame(['name' => 'Empty Game']);
+        $game = TestDataFactory::createTestGame(['name' => 'Empty Game']);
 
         $game = Game::get($game->id);
         $planet = $game->get_first_planet();
@@ -272,9 +273,9 @@ class GameTest extends TestBase
      */
     public function testCalculateByTurn(): void
     {
-        $game = $this->createTestGame(['turn_type' => 'byturn', 'turn_num' => 1]);
-        $user1 = $this->createTestUser(['game' => $game->id, 'turn_order' => 1]);
-        $user2 = $this->createTestUser(['game' => $game->id, 'turn_order' => 2]);
+        $game = TestDataFactory::createTestGame(['turn_type' => 'byturn', 'turn_num' => 1]);
+        $user1 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_order' => 1]);
+        $user2 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_order' => 2]);
 
         $game = Game::get($game->id);
         $game->calculate();
@@ -295,9 +296,9 @@ class GameTest extends TestBase
      */
     public function testCalculateConcurrently(): void
     {
-        $game = $this->createTestGame(['turn_type' => 'concurrently', 'turn_num' => 1]);
-        $user1 = $this->createTestUser(['game' => $game->id]);
-        $user2 = $this->createTestUser(['game' => $game->id]);
+        $game = TestDataFactory::createTestGame(['turn_type' => 'concurrently', 'turn_num' => 1]);
+        $user1 = TestDataFactory::createTestUser(['game' => $game->id]);
+        $user2 = TestDataFactory::createTestUser(['game' => $game->id]);
 
         $game = Game::get($game->id);
         $game->calculate();
@@ -318,8 +319,12 @@ class GameTest extends TestBase
      */
     public function testCreateNewGame(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame([
+        // Initialize cell and unit types required for map/unit creation
+        \App\Tests\Base\TestGameDataInitializer::initializeCellTypes();
+        $unitSettlerType = \App\Tests\Factory\TestDataFactory::createTestUnitType(['title' => 'Поселенец']);
+        define('START_UNIT_SETTLER_TYPE', $unitSettlerType->id);
+
+        $game = TestDataFactory::createTestGame([
             'name' => 'New Game Test',
             'map_w' => 20,
             'map_h' => 20,
@@ -327,8 +332,8 @@ class GameTest extends TestBase
         ]);
 
         // Добавляем пользователей
-        $user1 = $this->createTestUser(['game' => $game->id, 'turn_order' => 1]);
-        $user2 = $this->createTestUser(['game' => $game->id, 'turn_order' => 2]);
+        $user1 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_order' => 1]);
+        $user2 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_order' => 2]);
 
         $game = Game::get($game->id);
 

@@ -2,10 +2,14 @@
 
 namespace App\Tests;
 
+use App\Tests\Mocks\DatabaseTestAdapter;
+use App\Tests\Base\FunctionalTestBase;
 use App\UnitType;
 use App\BuildingType;
 use App\ResearchType;
+use App\ResourceType;
 use App\MyDB;
+use App\Tests\Factory\TestDataFactory;
 
 /**
  * Интеграционные тесты для админ-панели управления типами юнитов и построек
@@ -16,12 +20,12 @@ class AdminIntegrationTest extends FunctionalTestBase
     {
         DatabaseTestAdapter::resetTestDatabase();
         parent::setUp();
-        $this->initializeGameTypes();
         $this->clearTestData();
         // Очищаем кэш моделей
         UnitType::clearCache();
         BuildingType::clearAll();
         ResearchType::clearAll();
+        ResourceType::clearAll();
     }
 
     /**
@@ -321,8 +325,6 @@ class AdminIntegrationTest extends FunctionalTestBase
      */
     public function testProductionPageLoad(): void
     {
-        $this->initializeGameTypes();
-
         // Проверяем, что страница production загружается без ошибок
         $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", ["page" => "production"]);
 
@@ -336,8 +338,6 @@ class AdminIntegrationTest extends FunctionalTestBase
      */
     public function testUnitTypesPageLoad(): void
     {
-        $this->initializeGameTypes();
-
         // Проверяем, что страница unit_types загружается без ошибок
         $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", ["page" => "unit_types"]);
 
@@ -351,8 +351,6 @@ class AdminIntegrationTest extends FunctionalTestBase
      */
     public function testBuildingTypesPageLoad(): void
     {
-        $this->initializeGameTypes();
-
         // Проверяем, что страница building_types загружается без ошибок
         $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", ["page" => "building_types"]);
 
@@ -366,13 +364,187 @@ class AdminIntegrationTest extends FunctionalTestBase
      */
     public function testResearchTypesPageLoad(): void
     {
-        $this->initializeGameTypes();
-
         // Проверяем, что страница research_types загружается без ошибок
         $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", ["page" => "research_types"]);
 
         $this->assertPageHasNoError($result);
         // Проверяем наличие элементов страницы research_types
         $this->assertStringContainsString("research_types", $result["output"]); // Или другой маркер
+    }
+
+    /**
+     * Тест комплексного сценария редактирования типа постройки с требованиями
+     */
+    public function testBuildingTypeEditWorkflow(): void
+    {
+        // 1. Создание типа постройки
+        $buildingData = [
+            "page" => "building_types",
+            "action" => "save",
+            "title" => "Edit Building Test",
+            "cost" => 100,
+            "culture" => 5,
+            "upkeep" => 2,
+        ];
+
+        $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", $buildingData);
+        $this->assertPageHasNoError($result);
+
+        // Проверяем, что постройка создана
+        $this->assertDatabaseHas("building_type", ["title" => "Edit Building Test"]);
+
+        $building = MyDB::query("SELECT * FROM building_type WHERE title = ?", ["Edit Building Test"], "row");
+        $this->assertNotNull($building);
+        $buildingId = $building["id"];
+
+        // Создаем требуемые исследования и ресурсы для теста
+        $requiredResearch = new ResearchType([]);
+        $requiredResearch->title = "Required Research for Building";
+        $requiredResearch->cost = 50;
+        $requiredResearch->save();
+
+        $requiredResource = new ResourceType([
+            'id' => 'test_resource_building_' . time(),
+            'title' => "Required Resource for Building",
+            'type' => 'mineral',
+            'work' => 1,
+            'eat' => 0,
+            'money' => 0,
+            'chance' => 0.01,
+            'min_amount' => 20,
+            'max_amount' => 100,
+        ]);
+        $requiredResource->save();
+
+        // 2. Редактирование через страницу админки с добавлением требований
+        $editData = [
+            "page" => "building_types",
+            "action" => "save",
+            "id" => $buildingId,
+            "title" => "Edit Building Test Updated",
+            "cost" => 120,
+            "culture" => 8,
+            "upkeep" => 3,
+            "req_research" => [$requiredResearch->id],
+            "req_resources" => [$requiredResource->id],
+        ];
+
+        $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", $editData);
+        $this->assertPageHasNoError($result);
+
+        // Проверяем изменения в главной таблице
+        $editedBuilding = MyDB::query("SELECT * FROM building_type WHERE id = ?", [$buildingId], "row");
+        $this->assertEquals("Edit Building Test Updated", $editedBuilding["title"]);
+        $this->assertEquals(120, $editedBuilding["cost"]);
+        $this->assertEquals(8, $editedBuilding["culture"]);
+        $this->assertEquals(3, $editedBuilding["upkeep"]);
+
+        // Проверяем через объект (что требования загружаются правильно)
+        $retrievedBuilding = BuildingType::get($buildingId);
+        $this->assertCount(1, $retrievedBuilding->req_research);
+        $this->assertEquals($requiredResearch->id, $retrievedBuilding->req_research[0]->id);
+        $this->assertCount(1, $retrievedBuilding->req_resources);
+        $this->assertEquals($requiredResource->id, $retrievedBuilding->req_resources[0]->id);
+
+        // 3. Удаление
+        $deleteData = [
+            "page" => "building_types",
+            "action" => "delete",
+            "id" => $buildingId,
+        ];
+
+        $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", $deleteData);
+        $this->assertPageHasNoError($result);
+
+        // Проверяем, что постройка и требования удалены
+        $this->assertDatabaseMissing("building_type", ["id" => $buildingId]);
+        $this->assertDatabaseMissing("building_requirements_research", ["building_type_id" => $buildingId]);
+        $this->assertDatabaseMissing("building_requirements_resources", ["building_type_id" => $buildingId]);
+
+        // Очищаем тестовые данные
+        $requiredResearch->delete();
+        $requiredResource->delete();
+    }
+
+    /**
+     * Тест комплексного сценария редактирования типа исследования с требованиями
+     */
+    public function testResearchTypeEditWorkflow(): void
+    {
+        // 1. Создание типа исследования
+        $researchData = [
+            "page" => "research_types",
+            "action" => "save",
+            "title" => "Edit Research Test",
+            "cost" => 200,
+            "m_top" => 50,
+            "m_left" => 100,
+            "age" => 2,
+            "age_need" => 0, // без галочки
+        ];
+
+        $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", $researchData);
+        $this->assertPageHasNoError($result);
+
+        // Проверяем, что исследование создано
+        $this->assertDatabaseHas("research_type", ["title" => "Edit Research Test"]);
+
+        $research = MyDB::query("SELECT * FROM research_type WHERE title = ?", ["Edit Research Test"], "row");
+        $this->assertNotNull($research);
+        $researchId = $research["id"];
+
+        // Создаем требуемое исследование для теста
+        $requiredResearch = new ResearchType([]);
+        $requiredResearch->title = "Required Research for Test";
+        $requiredResearch->cost = 75;
+        $requiredResearch->save();
+
+        // 2. Редактирование с добавлением требований
+        $editData = [
+            "page" => "research_types",
+            "action" => "save",
+            "id" => $researchId,
+            "title" => "Edit Research Test Updated",
+            "cost" => 250,
+            "m_top" => 60,
+            "m_left" => 110,
+            "age" => 3,
+            "age_need" => 1, // с галочкой
+            "requirements" => [$requiredResearch->id],
+        ];
+
+        $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", $editData);
+        $this->assertPageHasNoError($result);
+
+        // Проверяем изменения в главной таблице
+        $editedResearch = MyDB::query("SELECT * FROM research_type WHERE id = ?", [$researchId], "row");
+        $this->assertEquals("Edit Research Test Updated", $editedResearch["title"]);
+        $this->assertEquals(250, $editedResearch["cost"]);
+        $this->assertEquals(60, $editedResearch["m_top"]);
+        $this->assertEquals(110, $editedResearch["m_left"]);
+        $this->assertEquals(3, $editedResearch["age"]);
+        $this->assertEquals(1, $editedResearch["age_need"]);
+
+        // Проверяем через объект (что требования загружаются правильно)
+        $retrievedResearch = ResearchType::get($researchId);
+        $this->assertCount(1, $retrievedResearch->requirements);
+        $this->assertEquals($requiredResearch->id, $retrievedResearch->requirements[0]->id);
+
+        // 3. Удаление
+        $deleteData = [
+            "page" => "research_types",
+            "action" => "delete",
+            "id" => $researchId,
+        ];
+
+        $result = $this->executePage(PROJECT_ROOT . "/admin/index.php", $deleteData);
+        $this->assertPageHasNoError($result);
+
+        // Проверяем, что исследование и требования удалены
+        $this->assertDatabaseMissing("research_type", ["id" => $researchId]);
+        $this->assertDatabaseMissing("research_requirements", ["research_type_id" => $researchId]);
+
+        // Очищаем тестовые данные
+        $requiredResearch->delete();
     }
 }

@@ -3,10 +3,9 @@
 namespace App\Tests\Integration;
 
 use App\MyDB;
-use App\Tests\CommonTestBase;
-
-require_once __DIR__ . "/../CommonTestBase.php";
-
+use App\Tests\Base\CommonTestBase;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\Base\TestGameDataInitializer;
 /**
  * Интеграционные тесты для процесса создания игры через веб-интерфейс.
  */
@@ -15,6 +14,22 @@ class CreateGameIntegrationTest extends CommonTestBase
     protected function setUp(): void
     {
         $this->setUpIntegrationTest();
+
+        $unitSettlerType = TestDataFactory::createTestUnitType([
+            "title" => "Поселенец",
+            "cost" => 40,
+            "upkeep" => 1,
+            "attack" => 0,
+            "defence" => 1,
+            "health" => 1,
+            "movement" => 1,
+            "can_found_city" => true,
+            "need_research" => [],
+            "description" => "Основывает новые города",
+            "missions" => ["move_to", "build_city"],
+            "can_move" => ["plains" => 1, "plains2" => 1, "forest" => 1, "hills" => 1, "mountains" => 2, "desert" => 1, "city" => 1],
+        ]);
+        define(START_UNIT_SETTLER_TYPE, $unitSettlerType->id);
     }
 
     /**
@@ -23,6 +38,9 @@ class CreateGameIntegrationTest extends CommonTestBase
      */
     public function testGameCreationAndDataPersistence(): void
     {
+        // Инициализация типов клеток для создания игры
+        TestGameDataInitializer::initializeCellTypes();
+
         $gameData = [
             "name" => "Веб-тест игры",
             "map_w" => 50,

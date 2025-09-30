@@ -1,6 +1,6 @@
 <?php
 
-require_once "mocks/MockLoader.php";
+require_once "Mocks/MockLoader.php";
 
 initializeTestEnvironment();
 

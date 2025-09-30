@@ -6,8 +6,10 @@ require_once __DIR__ . '/../bootstrap.php';
 
 use App\UnitType;
 use App\MyDB;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\base\CommonTestBase;
 
-class AdminUnitTypeTest extends TestBase
+class AdminUnitTypeTest extends CommonTestBase
 {
     public function testGetAllUnitTypes()
     {
@@ -37,7 +39,7 @@ class AdminUnitTypeTest extends TestBase
             'can_move' => json_encode(['plains' => 1]),
         ];
 
-        MyDB::insert('unit_type', $unitTypeData);
+        TestDataFactory::createTestUnitType($unitTypeData);
 
         $unitTypes = UnitType::getAll();
 

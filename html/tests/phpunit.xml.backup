@@ -53,7 +53,7 @@
 
         <!-- Константы для тестового окружения -->
         <const name="TESTING" value="true"/>
-        <const name="TEST_DB_HOST" value="localhost"/>
+        <const name="TEST_DB_HOST" value="db"/>
         <const name="TEST_DB_USER" value="test_user"/>
         <const name="TEST_DB_PASS" value="test_pass"/>
         <const name="TEST_DB_NAME" value="test_db"/>

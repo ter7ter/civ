@@ -3,11 +3,13 @@
 namespace App\Tests;
 
 use Exception;
+use App\Tests\Base\CommonTestBase;
+use App\Tests\Factory\TestDataFactory;
 
 /**
  * Тесты для функции редактирования игры
  */
-class EditGameTest extends TestBase
+class EditGameTest extends CommonTestBase
 {
     protected function setUp(): void
     {
@@ -36,7 +38,7 @@ class EditGameTest extends TestBase
     public function testEditBasicGameParameters(): void
     {
         // Создаем тестовую игру
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "Старое название",
             "map_w" => 100,
             "map_h" => 100,
@@ -44,12 +46,12 @@ class EditGameTest extends TestBase
         ]);
 
         // Создаем тестовых пользователей
-        $this->createTestUser([
+        TestDataFactory::createTestUser([
             "login" => "Игрок1",
             "game" => $game->id,
             "turn_order" => 1,
         ]);
-        $this->createTestUser([
+        TestDataFactory::createTestUser([
             "login" => "Игрок2",
             "game" => $game->id,
             "turn_order" => 2,
@@ -87,15 +89,15 @@ class EditGameTest extends TestBase
      */
     public function testEditGameNameOnly(): void
     {
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "Старое название",
             "map_w" => 100,
             "map_h" => 100,
             "turn_type" => "byturn",
         ]);
 
-        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
+        TestDataFactory::createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        TestDataFactory::createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $this->simulatePostRequest([
             "game_id" => $game->id,
@@ -125,9 +127,9 @@ class EditGameTest extends TestBase
      */
     public function testEditMapSize(): void
     {
-        $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        TestDataFactory::createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        TestDataFactory::createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $this->simulatePostRequest([
             "game_id" => $game->id,
@@ -156,9 +158,9 @@ class EditGameTest extends TestBase
      */
     public function testEditTurnType(): void
     {
-        $game = $this->createTestGame(["turn_type" => "byturn"]);
-        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
+        $game = TestDataFactory::createTestGame(["turn_type" => "byturn"]);
+        TestDataFactory::createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        TestDataFactory::createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $turnTypes = ["concurrently", "byturn", "onewindow"];
 
@@ -190,24 +192,24 @@ class EditGameTest extends TestBase
      */
     public function testLoadGameDataForEditing(): void
     {
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "Тестовая игра для загрузки",
             "map_w" => 150,
             "map_h" => 200,
             "turn_type" => "concurrently",
         ]);
 
-        $this->createTestUser([
+        TestDataFactory::createTestUser([
             "login" => "Первый игрок",
             "game" => $game->id,
             "turn_order" => 1,
         ]);
-        $this->createTestUser([
+        TestDataFactory::createTestUser([
             "login" => "Второй игрок",
             "game" => $game->id,
             "turn_order" => 2,
         ]);
-        $this->createTestUser([
+        TestDataFactory::createTestUser([
             "login" => "Третий игрок",
             "game" => $game->id,
             "turn_order" => 3,
@@ -237,9 +239,9 @@ class EditGameTest extends TestBase
      */
     public function testEditWithEmptyName(): void
     {
-        $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        TestDataFactory::createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        TestDataFactory::createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $this->simulatePostRequest([
             "game_id" => $game->id,
@@ -264,9 +266,9 @@ class EditGameTest extends TestBase
      */
     public function testEditWithInvalidMapSize(): void
     {
-        $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        TestDataFactory::createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        TestDataFactory::createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         // Тест слишком маленькой карты
         $this->simulatePostRequest([
@@ -310,9 +312,9 @@ class EditGameTest extends TestBase
      */
     public function testEditWithInvalidTurnType(): void
     {
-        $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        TestDataFactory::createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        TestDataFactory::createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $this->simulatePostRequest([
             "game_id" => $game->id,
@@ -399,13 +401,13 @@ class EditGameTest extends TestBase
      */
     public function testDataPreservationOnValidationError(): void
     {
-        $game = $this->createTestGame();
-        $this->createTestUser([
+        $game = TestDataFactory::createTestGame();
+        TestDataFactory::createTestUser([
             "login" => "Игрок1",
             "game" => $game->id,
             "turn_order" => 1,
         ]);
-        $this->createTestUser([
+        TestDataFactory::createTestUser([
             "login" => "Игрок2",
             "game" => $game->id,
             "turn_order" => 2,
@@ -455,9 +457,9 @@ class EditGameTest extends TestBase
      */
     public function testXSSInEditedGameName(): void
     {
-        $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        TestDataFactory::createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        TestDataFactory::createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $maliciousName = '<script>alert("XSS")</script>';
 
@@ -493,7 +495,7 @@ class EditGameTest extends TestBase
      */
     public function testVeryLongStringsInEdit(): void
     {
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
         $longName = str_repeat("A", 250); // разумная длина для тестирования
 
         $this->simulatePostRequest([
@@ -547,9 +549,9 @@ class EditGameTest extends TestBase
      */
     public function testMultipleValidationErrors(): void
     {
-        $game = $this->createTestGame();
-        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        TestDataFactory::createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        TestDataFactory::createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $this->simulatePostRequest([
             "game_id" => $game->id,
@@ -581,9 +583,9 @@ class EditGameTest extends TestBase
             "map_h" => 100,
             "turn_type" => "byturn",
         ];
-        $game = $this->createTestGame($originalData);
-        $this->createTestUser(["login" => "Игрок1", "game" => $game->id]);
-        $this->createTestUser(["login" => "Игрок2", "game" => $game->id]);
+        $game = TestDataFactory::createTestGame($originalData);
+        TestDataFactory::createTestUser(["login" => "Игрок1", "game" => $game->id]);
+        TestDataFactory::createTestUser(["login" => "Игрок2", "game" => $game->id]);
 
         $this->simulatePostRequest([
             "game_id" => $game->id,

@@ -5,20 +5,22 @@ namespace App\Tests;
 use App\Message;
 use App\User;
 use App\MyDB;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\Base\CommonTestBase;
 
 /**
  * Тесты для класса Message
  */
-class MessageTest extends TestBase
+class MessageTest extends CommonTestBase
 {
     /**
      * Тест конструктора Message с полными данными
      */
     public function testConstructorWithFullData(): void
     {
-        $game = $this->createTestGame();
-        $userFrom = $this->createTestUser(['game' => $game->id]);
-        $userTo = $this->createTestUser(['game' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $userFrom = TestDataFactory::createTestUser(['game' => $game->id]);
+        $userTo = TestDataFactory::createTestUser(['game' => $game->id]);
 
         $data = [
             'id' => 1,
@@ -44,8 +46,8 @@ class MessageTest extends TestBase
      */
     public function testConstructorWithoutFrom(): void
     {
-        $game = $this->createTestGame();
-        $userTo = $this->createTestUser(['game' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $userTo = TestDataFactory::createTestUser(['game' => $game->id]);
 
         $data = [
             'id' => 2,
@@ -69,8 +71,8 @@ class MessageTest extends TestBase
      */
     public function testConstructorWithoutTo(): void
     {
-        $game = $this->createTestGame();
-        $userFrom = $this->createTestUser(['game' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $userFrom = TestDataFactory::createTestUser(['game' => $game->id]);
 
         $data = [
             'id' => 3,
@@ -94,9 +96,9 @@ class MessageTest extends TestBase
      */
     public function testSaveNew(): void
     {
-        $game = $this->createTestGame();
-        $userFrom = $this->createTestUser(['game' => $game->id]);
-        $userTo = $this->createTestUser(['game' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $userFrom = TestDataFactory::createTestUser(['game' => $game->id]);
+        $userTo = TestDataFactory::createTestUser(['game' => $game->id]);
 
         $data = [
             'from_id' => $userFrom->id,
@@ -128,9 +130,9 @@ class MessageTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $game = $this->createTestGame();
-        $userFrom = $this->createTestUser(['game' => $game->id]);
-        $userTo = $this->createTestUser(['game' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $userFrom = TestDataFactory::createTestUser(['game' => $game->id]);
+        $userTo = TestDataFactory::createTestUser(['game' => $game->id]);
 
         // Создаем сообщение через БД
         $messageId = MyDB::insert('message', [
@@ -168,8 +170,8 @@ class MessageTest extends TestBase
      */
     public function testSaveSystemMessage(): void
     {
-        $game = $this->createTestGame();
-        $userTo = $this->createTestUser(['game' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $userTo = TestDataFactory::createTestUser(['game' => $game->id]);
 
         $data = [
             'to_id' => $userTo->id,

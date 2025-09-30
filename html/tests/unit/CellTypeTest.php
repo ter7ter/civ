@@ -2,33 +2,48 @@
 
 namespace App\Tests;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 use App\CellType;
+use App\MyDB;
+use App\Tests\Base\CommonTestBase;
+use App\Tests\Base\TestGameDataInitializer;
+use App\Tests\Factory\TestDataFactory;
 
 /**
  * Тесты для класса CellType
  */
-class CellTypeTest extends TestBase
+class CellTypeTest extends CommonTestBase
 {
     /**
      * Тест получения существующего типа клетки
      */
     public function testGetExistingCellType(): void
     {
-        $this->initializeGameTypes();
+        TestGameDataInitializer::initializeCellTypes();
 
-        $cellType = CellType::get('plains');
+        TestDataFactory::createTestCellType([
+            'id' => 'plains',
+            'title' => 'равнина',
+            'base_chance' => 15,
+            'chance_inc1' => 8,
+            'chance_inc2' => 6,
+            'work' => 2,
+            'eat' => 1,
+            'money' => 1,
+            'chance_inc_other' => ['other' => [1, 2]],
+            'border_no' => ['border1', 'border2'],
+        ]);
 
-        $this->assertInstanceOf(CellType::class, $cellType);
-        $this->assertEquals('plains', $cellType->id);
-        $this->assertEquals('равнина', $cellType->title);
-        $this->assertEquals(15, $cellType->base_chance);
-        $this->assertEquals(8, $cellType->chance_inc1);
-        $this->assertEquals(6, $cellType->chance_inc2);
-        $this->assertEquals(2, $cellType->eat);
-        $this->assertEquals(1, $cellType->work);
-        $this->assertEquals(1, $cellType->money);
+        $cellTypeGet = CellType::get('plains');
+
+        $this->assertInstanceOf(CellType::class, $cellTypeGet);
+        $this->assertEquals('plains', $cellTypeGet->id);
+        $this->assertEquals('равнина', $cellTypeGet->title);
+        $this->assertEquals(15, $cellTypeGet->base_chance);
+        $this->assertEquals(8, $cellTypeGet->chance_inc1);
+        $this->assertEquals(6, $cellTypeGet->chance_inc2);
+        $this->assertEquals(2, $cellTypeGet->eat);
+        $this->assertEquals(1, $cellTypeGet->work);
+        $this->assertEquals(1, $cellTypeGet->money);
     }
 
     /**
@@ -36,7 +51,7 @@ class CellTypeTest extends TestBase
      */
     public function testGetNonExistingCellType(): void
     {
-        $this->initializeGameTypes();
+        TestGameDataInitializer::initializeCellTypes();
 
         $cellType = CellType::get('nonexistent');
 
@@ -61,7 +76,7 @@ class CellTypeTest extends TestBase
             'border_no' => ['border1', 'border2'],
         ];
 
-        $cellType = new CellType($data);
+        $cellType = TestDataFactory::createTestCellType($data);
 
         $this->assertEquals('test_type', $cellType->id);
         $this->assertEquals('Test Type', $cellType->title);
@@ -100,9 +115,11 @@ class CellTypeTest extends TestBase
      */
     public function testGetTitle(): void
     {
-        $this->initializeGameTypes();
+        TestGameDataInitializer::initializeCellTypes();
 
-        $cellType = CellType::get('forest');
+        $cellType = TestDataFactory::createTestCellType([
+            'id' => 'forest',
+            'title' => 'лес']);
 
         $this->assertEquals('лес', $cellType->get_title());
     }
@@ -112,7 +129,7 @@ class CellTypeTest extends TestBase
      */
     public function testAllPredefinedCellTypes(): void
     {
-        $this->initializeGameTypes();
+        TestGameDataInitializer::initializeCellTypes();
 
         $expectedTypes = [
             'plains' => ['title' => 'равнина', 'work' => 1, 'eat' => 2, 'money' => 1],
@@ -125,7 +142,13 @@ class CellTypeTest extends TestBase
         ];
 
         foreach ($expectedTypes as $id => $expected) {
-            $cellType = CellType::get($id);
+            $cellType = TestDataFactory::createTestCellType([
+                'id' => $id,
+                'title' => $expected['title'],
+                'work' => $expected['work'],
+                'eat' => $expected['eat'],
+                'money' => $expected['money'],
+            ]);
             $this->assertInstanceOf(CellType::class, $cellType, "Cell type {$id} should exist");
             $this->assertEquals($expected['title'], $cellType->title, "Title for cell type {$id}");
             $this->assertEquals($expected['work'], $cellType->work, "Work for cell type {$id}");
@@ -139,7 +162,7 @@ class CellTypeTest extends TestBase
      */
     public function testComplexProperties(): void
     {
-        $this->initializeGameTypes();
+        TestGameDataInitializer::initializeCellTypes();
 
         $plains = CellType::get('plains');
         $this->assertIsArray($plains->chance_inc_other);

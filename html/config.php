@@ -15,6 +15,7 @@ define("DB_NAME", "civ");
  */
 define("POPULATION_PEOPLE_DIS", 4); //С какого размера города появляются недовольные жители
 define("BASE_EAT_UP", 20); //Требуется еды для роста города
+define("START_UNIT_SETTLER_TYPE", 1);
 
 class GameConfig
 {

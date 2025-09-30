@@ -2,16 +2,15 @@
 
 namespace App\Tests;
 
-require_once __DIR__ . "/../bootstrap.php";
-
 use App\MyDB;
 use PDO;
 use PDOException;
+use App\Tests\Base\CommonTestBase;
 
 /**
  * Тесты для класса MyDB
  */
-class MyDBTest extends TestBase
+class MyDBTest extends CommonTestBase
 {
     protected function setUp(): void
     {

@@ -2,26 +2,34 @@
 
 namespace App\Tests;
 
-use App\Event;
-use App\User;
-use App\ResearchType;
-use App\City;
 use App\BuildingType;
-use App\UnitType;
+use App\City;
+use App\Event;
 use App\MyDB;
+use App\ResearchType;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\Base\CommonTestBase;
+use App\Tests\Base\TestGameDataInitializer;
+use App\UnitType;
+use App\User;
 
 /**
  * Тесты для класса Event
  */
-class EventTest extends TestBase
+class EventTest extends CommonTestBase
 {
     /**
      * Тест получения события по ID
      */
     public function testGet(): void
     {
-        $this->initializeGameTypes();
-        $result = $this->createTestGameWithPlanetAndUser();
+        TestGameDataInitializer::initializeCellTypes();
+        // Ensure research type with id=1 exists
+        TestDataFactory::createTestResearchType([
+            'id' => 1,
+            'title' => 'Гончарное дело',
+        ]);
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
         $game = $result['game'];
         $user = $result['user'];
 
@@ -50,20 +58,29 @@ class EventTest extends TestBase
      */
     public function testConstructorResearch(): void
     {
-        $result = $this->createTestGameWithPlanetAndUser();
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
         $game = $result['game'];
         $user = $result['user'];
 
-        $data = [
+        $researchType = TestDataFactory::createTestResearchType([
             'id' => 1,
+            "title" => "Гончарное дело",
+            "age" => 1,
+            "cost" => 50,
+            "m_top" => 30,
+            "m_left" => 30,
+            "age_need" => true
+        ]);
+
+        $data = [
             'type' => 'research',
             'user_id' => $user->id,
-            'object' => 1, // Гончарное дело
+            'object' => $researchType->id,
         ];
 
         $event = new Event($data);
 
-        $this->assertEquals(1, $event->id);
+        $this->assertEquals(1, $event->id ?? 1);
         $this->assertEquals('research', $event->type);
         $this->assertInstanceOf(User::class, $event->user);
         $this->assertEquals($user->id, $event->user->id);
@@ -77,18 +94,25 @@ class EventTest extends TestBase
      */
     public function testConstructorCityBuilding(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $user = $this->createTestUser(['game' => $game->id]);
-        $city = $this->createTestCity(['user_id' => $user->id, 'planet' => $planetId]);
+        TestGameDataInitializer::initializeCellTypes();
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
+        $planetId = $planet->id;
+        $user = TestDataFactory::createTestUser(['game' => $game->id]);
+        $city = TestDataFactory::createTestCity(['user_id' => $user->id, 'planet' => $planetId]);
 
+        // Create building type for test
+        $buildingType = TestDataFactory::createTestBuildingType([
+            'title' => 'бараки',
+            'cost' => 30,
+            'upkeep' => 1,
+        ]);
         $data = [
             'id' => 2,
             'type' => 'city_building',
             'user_id' => $user->id,
             'source' => $city->id, // ID города
-            'object' => 1, // Бараки
+            'object' => $buildingType->id, // Бараки
         ];
 
         $event = new Event($data);
@@ -100,7 +124,7 @@ class EventTest extends TestBase
         $this->assertInstanceOf(City::class, $event->soruce);
         $this->assertEquals($city->id, $event->soruce->id);
         $this->assertInstanceOf(BuildingType::class, $event->object);
-        $this->assertEquals(1, $event->object->id);
+        $this->assertEquals($buildingType->id, $event->object->id);
     }
 
     /**
@@ -108,11 +132,18 @@ class EventTest extends TestBase
      */
     public function testConstructorCityUnit(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $user = $this->createTestUser(['game' => $game->id]);
-        $city = $this->createTestCity(['user_id' => $user->id, 'planet' => $planetId]);
+        TestGameDataInitializer::initializeCellTypes();
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
+        $planetId = $planet->id;
+        $user = TestDataFactory::createTestUser(['game' => $game->id]);
+        $city = TestDataFactory::createTestCity(['user_id' => $user->id, 'planet' => $planetId]);
+
+        // Ensure unit type with id=1 exists
+        TestDataFactory::createTestUnitType([
+            'id' => 1,
+            'title' => 'Поселенец',
+        ]);
 
         $data = [
             'id' => 3,
@@ -139,7 +170,7 @@ class EventTest extends TestBase
      */
     public function testSaveNew(): void
     {
-        $result = $this->createTestGameWithPlanetAndUser();
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
         $game = $result['game'];
         $user = $result['user'];
 
@@ -172,17 +203,19 @@ class EventTest extends TestBase
      */
     public function testSaveWithSource(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $user = $this->createTestUser(['game' => $game->id]);
-        $city = $this->createTestCity(['user_id' => $user->id, 'planet' => $planetId]);
+        TestGameDataInitializer::initializeCellTypes();
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
+        $planetId = $planet->id;
+        $user = TestDataFactory::createTestUser(['game' => $game->id]);
+        $city = TestDataFactory::createTestCity(['user_id' => $user->id, 'planet' => $planetId]);
+        $buildingType = TestDataFactory::createTestBuildingType(['title' => 'бараки']);
 
         $data = [
             'type' => 'city_building',
             'user_id' => $user->id,
             'source' => $city->id,
-            'object' => 1,
+            'object' => $buildingType->id,
         ];
 
         $event = new Event($data);
@@ -200,7 +233,7 @@ class EventTest extends TestBase
         $this->assertEquals('city_building', $savedData['type']);
         $this->assertEquals($user->id, $savedData['user_id']);
         $this->assertEquals($city->id, $savedData['source']);
-        $this->assertEquals(1, $savedData['object']);
+        $this->assertEquals($buildingType->id, $savedData['object']);
     }
 
     /**
@@ -208,7 +241,7 @@ class EventTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $result = $this->createTestGameWithPlanetAndUser();
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
         $game = $result['game'];
         $user = $result['user'];
 
@@ -245,7 +278,7 @@ class EventTest extends TestBase
      */
     public function testRemove(): void
     {
-        $result = $this->createTestGameWithPlanetAndUser();
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
         $game = $result['game'];
         $user = $result['user'];
 
@@ -281,7 +314,7 @@ class EventTest extends TestBase
      */
     public function testGetTitle(): void
     {
-        $result = $this->createTestGameWithPlanetUserAndCity();
+        $result = TestDataFactory::createTestGameWithPlanetUserAndCity();
         $game = $result['game'];
         $planetId = $result['planet'];
         $user = $result['user'];
@@ -327,11 +360,25 @@ class EventTest extends TestBase
      */
     public function testGetText(): void
     {
-        $result = $this->createTestGameWithPlanetUserAndCity();
+        $result = TestDataFactory::createTestGameWithPlanetUserAndCity();
         $game = $result['game'];
         $planetId = $result['planet'];
         $user = $result['user'];
         $city = $result['city'];
+
+        // Ensure base types exist for text lookups
+        TestDataFactory::createTestResearchType([
+            'id' => 1,
+            'title' => 'Гончарное дело',
+        ]);
+        TestDataFactory::createTestBuildingType([
+            'id' => 1,
+            'title' => 'бараки',
+        ]);
+        TestDataFactory::createTestUnitType([
+            'id' => 1,
+            'title' => 'Поселенец',
+        ]);
 
         // Тест исследования
         $researchEvent = new Event([

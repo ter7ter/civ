@@ -69,12 +69,35 @@ class ResourceType
         if (isset(ResourceType::$all[$id])) {
             return ResourceType::$all[$id];
         } else {
-            return false;
+            $data = MyDB::query(
+                "SELECT * FROM resource_type WHERE id = :id",
+                ["id" => $id],
+                "row",
+            );
+            if ($data) {
+                $rt = new ResourceType($data);
+                ResourceType::$all[$id] = $rt;
+                return $rt;
+            } else {
+                return false;
+            }
         }
     }
 
     public static function getAll()
     {
+        if (empty(ResourceType::$all)) {
+            self::loadAll();
+        }
+        return ResourceType::$all;
+    }
+
+    public static function loadAll()
+    {
+        $data = MyDB::query("SELECT * FROM resource_type ORDER BY id");
+        foreach ($data as $row) {
+            new ResourceType($row);
+        }
         return ResourceType::$all;
     }
 
@@ -131,5 +154,18 @@ class ResourceType
             }
         }
         return true;
+    }
+
+    public function addReqResearch(ResearchType $researchType): void
+    {
+        $this->req_research[] = $researchType;
+    }
+
+    public function delete()
+    {
+        if (isset($this->id)) {
+            MyDB::query("DELETE FROM resource_type WHERE id = :id", ["id" => $this->id]);
+            unset(ResourceType::$all[$this->id]);
+        }
     }
 }

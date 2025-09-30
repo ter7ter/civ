@@ -7,7 +7,7 @@
 echo "Проверка подключения к MySQL...\n\n";
 
 // Параметры подключения как в тестах
-$host = "localhost";
+$host = "db";
 $user = "civ_test";
 $pass = "civ_test";
 $dbname = "civ_for_tests";

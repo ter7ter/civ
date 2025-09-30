@@ -4,8 +4,10 @@ namespace App\Tests;
 
 use App\User;
 use App\Game;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\base\CommonTestBase;
 
-class PageInfoTest extends TestBase
+class PageInfoTest extends CommonTestBase
 {
     protected function setUp(): void
     {
@@ -21,9 +23,10 @@ class PageInfoTest extends TestBase
     public function testCellInfoPage()
     {
         // 1. Create test data
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $user = $this->createTestUser(["game" => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $planetId = $planet->id;
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
         $this->createTestMapCells(10, 10, 1, 1, $planetId);
 
         // 2. Set session
@@ -51,8 +54,8 @@ class PageInfoTest extends TestBase
     public function testTurnInfoPage()
     {
         // 1. Create test data
-        $game = $this->createTestGame();
-        $user = $this->createTestUser(["game" => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
 
         // 2. Set session
         $this->setSession([

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests;
+namespace App\Tests\Base;
 
 require_once __DIR__ . "/TestBase.php";
 

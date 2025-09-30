@@ -1,36 +1,37 @@
 <?php
 
-namespace App\Tests\Unit;
+namespace App\Tests;
 
 use App\Building;
 use App\BuildingType;
 use App\City;
 use App\MyDB;
-use App\Tests\TestBase;
-
-require_once __DIR__ . "/../bootstrap.php";
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\base\CommonTestBase;
+use App\Tests\Base\TestGameDataInitializer;
 
 /**
  * Тесты для класса Building
  */
-class BuildingTest extends TestBase
+class BuildingTest extends CommonTestBase
 {
     /**
      * Тест получения здания по ID
      */
     public function testGet(): void
     {
-        $this->initializeGameTypes();
-        $testData = $this->createTestGameWithPlanetUserAndCity();
-        $game = $testData['game'];
-        $planetId = $testData['planet'];
-        $user = $testData['user'];
-        $city = $testData['city'];
+        TestGameDataInitializer::initializeCellTypes();
+        $buildingType = TestDataFactory::createTestBuildingType(['title' => 'бараки']);
+
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
+        $user = TestDataFactory::createTestUser(['game' => $game->id]);
+        $city = TestDataFactory::createTestCity(['user_id' => $user->id, 'planet' => $planet->id]);
 
         // Создаем здание через объект
         $building = new Building([
             'city_id' => $city->id,
-            'type' => 1, // Бараки
+            'type' => $buildingType->id, // Бараки
         ]);
         $building->save();
 
@@ -41,7 +42,7 @@ class BuildingTest extends TestBase
         $this->assertInstanceOf(City::class, $building->city);
         $this->assertGreaterThan(0, (int)$building->city->id);
         $this->assertInstanceOf(BuildingType::class, $building->type);
-        $this->assertEquals(1, $building->type->id);
+        $this->assertEquals($buildingType->id, $building->type->id);
     }
 
     /**
@@ -49,9 +50,12 @@ class BuildingTest extends TestBase
      */
     public function testConstructor(): void
     {
-        $this->initializeGameTypes();
-        $testData = $this->createTestGameWithPlanetUserAndCity();
-        $city = $testData['city'];
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
+        $user = TestDataFactory::createTestUser(['game' => $game->id]);
+        $city = TestDataFactory::createTestCity(['user_id' => $user->id, 'planet' => $planet->id]);
+        // Ensure BuildingType with id=1 exists ("бараки")
+        TestDataFactory::createTestBuildingType(['id' => 1, 'title' => 'бараки']);
 
         $data = [
             'id' => 1,
@@ -76,13 +80,15 @@ class BuildingTest extends TestBase
      */
     public function testConstructorWithoutId(): void
     {
-        $this->initializeGameTypes();
-        $testData = $this->createTestGameWithPlanetUserAndCity();
-        $city = $testData['city'];
+        $buildingType = TestDataFactory::createTestBuildingType(['title' => 'храм']);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
+        $user = TestDataFactory::createTestUser(['game' => $game->id]);
+        $city = TestDataFactory::createTestCity(['user_id' => $user->id, 'planet' => $planet->id]);
 
         $data = [
             'city_id' => $city->id,
-            'type' => 2, // Храм
+            'type' => $buildingType->id, // Храм
         ];
 
         $building = new Building($data);
@@ -97,18 +103,19 @@ class BuildingTest extends TestBase
      */
     public function testGetTitle(): void
     {
-        $this->initializeGameTypes();
-        $testData = $this->createTestGameWithPlanetUserAndCity();
+        $testData = TestDataFactory::createTestGameWithPlanetUserAndCity();
         $city = $testData['city'];
+
+        $buildingType = TestDataFactory::createTestBuildingType(['title' => 'бараки']);
 
         $data = [
             'city_id' => $city->id,
-            'type' => 1, // Бараки
+            'type' => $buildingType->id, // Бараки
         ];
 
         $building = new Building($data);
 
-        $this->assertEquals('бараки', $building->get_title());
+        $this->assertEquals($buildingType->title, $building->get_title());
     }
 
     /**
@@ -116,13 +123,13 @@ class BuildingTest extends TestBase
      */
     public function testSaveNew(): void
     {
-        $this->initializeGameTypes();
-        $testData = $this->createTestGameWithPlanetUserAndCity();
+        $testData = TestDataFactory::createTestGameWithPlanetUserAndCity();
         $city = $testData['city'];
 
+        $buildingType = TestDataFactory::createTestBuildingType(['title' => 'бараки']);
         $data = [
             'city_id' => $city->id,
-            'type' => 1, // Бараки
+            'type' => $buildingType->id, // Бараки
         ];
 
         $building = new Building($data);
@@ -138,7 +145,7 @@ class BuildingTest extends TestBase
         );
         $this->assertNotNull($savedData);
         $this->assertEquals($city->id, $savedData['city_id']);
-        $this->assertEquals(1, $savedData['type']);
+        $this->assertEquals($buildingType->id, $savedData['type']);
     }
 
     /**
@@ -146,8 +153,8 @@ class BuildingTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $this->initializeGameTypes();
-        $testData = $this->createTestGameWithPlanetUserAndCity();
+        TestGameDataInitializer::initializeCellTypes();
+        $testData = TestDataFactory::createTestGameWithPlanetUserAndCity();
         $city = $testData['city'];
 
         // Создаем здание через объект
@@ -157,7 +164,15 @@ class BuildingTest extends TestBase
         ]);
         $building->save();
 
-        $building->type = BuildingType::get(2); // Меняем тип на Храм
+        $buildingTypeTemple = TestDataFactory::createTestBuildingType([
+            'title' => 'храм',
+            'cost' => 30,
+            'culture' => 2,
+            'upkeep' => 1,
+            'city_effects' => ['people_happy' => 1]
+        ]);
+
+        $building->type = $buildingTypeTemple;
         $building->save();
 
         // Проверяем обновление в БД
@@ -166,7 +181,7 @@ class BuildingTest extends TestBase
             ["id" => $building->id],
             "row"
         );
-        $this->assertEquals(2, $updatedData['type']);
+        $this->assertEquals($buildingTypeTemple->id, $updatedData['type']);
     }
 
     /**
@@ -174,8 +189,8 @@ class BuildingTest extends TestBase
      */
     public function testCaching(): void
     {
-        $this->initializeGameTypes();
-        $testData = $this->createTestGameWithPlanetUserAndCity();
+        TestGameDataInitializer::initializeCellTypes();
+        $testData = TestDataFactory::createTestGameWithPlanetUserAndCity();
         $city = $testData['city'];
 
         // Создаем здание через объект
@@ -199,11 +214,18 @@ class BuildingTest extends TestBase
      */
     public function testDifferentBuildingTypes(): void
     {
-        $this->initializeGameTypes();
-        $testData = $this->createTestGameWithPlanetUserAndCity();
+        TestGameDataInitializer::initializeCellTypes();
+        $buildingType1 = TestDataFactory::createTestBuildingType(['title' => 'храм']);
+        $buildingType2 = TestDataFactory::createTestBuildingType(['title' => 'рынок']);
+        $buildingType3 = TestDataFactory::createTestBuildingType(['title' => 'бараки']);
+        $testData = TestDataFactory::createTestGameWithPlanetUserAndCity();
         $city = $testData['city'];
 
-        $buildingTypes = [1, 2, 3]; // Бараки, Храм, Рынок
+        $buildingTypes = [
+            $buildingType1->id,
+            $buildingType2->id,
+            $buildingType3->id
+        ]; // Бараки, Храм, Рынок
 
         foreach ($buildingTypes as $typeId) {
             $data = [
@@ -228,14 +250,19 @@ class BuildingTest extends TestBase
     {
         $this->markTestIncomplete('Тест недоделан - будет переделан после доработки объекта BuildingType');
         return;
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(['game_id' => $game->id]);
-        $user = $this->createTestUser(['game' => $game->id]);
-        $city = $this->createTestCity(['user_id' => $user['id'], 'planet' => $planetId]);
+        TestGameDataInitializer::initializeAll();
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
+        $user = TestDataFactory::createTestUser(['game' => $game->id]);
+        $city = TestDataFactory::createTestCity(['user_id' => $user['id'], 'planet_id' => $planet->id]);
 
         // Тест Амбара (id=2) - уменьшает eat_up вдвое
-        $buildingType2 = BuildingType::get(2);
+        TestDataFactory::createTestBuildingType([
+            'title' => 'амбар',
+            'cost' => 30,
+            'upkeep' => 1,
+            'city_effects' => ['eat_up_multiplier' => 0.5]
+        ]);
         $originalEatUp = $city->eat_up;
         $buildingType2->city_effect($city);
         $this->assertEquals((int) (BASE_EAT_UP / 2), $city->eat_up);
@@ -244,7 +271,13 @@ class BuildingTest extends TestBase
         $city->eat_up = $originalEatUp;
 
         // Тест Храма (id=3) - изменяет people_norm и people_happy
-        $buildingType3 = BuildingType::get(3);
+        $buildingType3 = TestDataFactory::createTestBuildingType([
+            'title' => 'храм',
+            'cost' => 30,
+            'culture' => 2,
+            'upkeep' => 1,
+            'city_effects' => ['people_happy' => 1]
+        ]);
         $this->assertNotNull($buildingType3, 'BuildingType 3 should exist');
         $this->assertEquals(3, $buildingType3->id);
         $originalNorm = $city->people_norm;
@@ -258,7 +291,14 @@ class BuildingTest extends TestBase
         $city->people_happy = $originalHappy;
 
         // Тест Библиотеки (id=4) - увеличивает presearch в 1.5 раза
-        $buildingType4 = BuildingType::get(4);
+        $buildingType4 = TestDataFactory::createTestBuildingType([
+            'title' => 'библиотека',
+            'cost' => 50,
+            'culture' => 3,
+            'upkeep' => 1,
+            'research_bonus' => 50,
+            'city_effects' => ['research_multiplier' => 1.5]
+        ]);
         $originalPresearch = $city->presearch;
         $buildingType4->city_effect($city);
         $this->assertEquals($originalPresearch * 1.5, $city->presearch);
@@ -267,7 +307,13 @@ class BuildingTest extends TestBase
         $city->presearch = $originalPresearch;
 
         // Тест Рынка (id=6) - увеличивает pmoney в 1.5 раза
-        $buildingType6 = BuildingType::get(6);
+        $buildingType6 = TestDataFactory::createTestBuildingType([
+            'title' => 'рынок',
+            'cost' => 50,
+            'upkeep' => 1,
+            'money_bonus' => 50,
+            'city_effects' => ['money_multiplier' => 1.5]
+        ]);
         $originalPmoney = $city->pmoney;
         $buildingType6->city_effect($city);
         $this->assertEquals($originalPmoney * 1.5, $city->pmoney);
@@ -276,7 +322,13 @@ class BuildingTest extends TestBase
         $city->pmoney = $originalPmoney;
 
         // Тест Колизая (id=10) - изменяет people_dis и people_norm
-        $buildingType10 = BuildingType::get(10);
+        $buildingType10 = TestDataFactory::createTestBuildingType([
+            'title' => 'колизей',
+            'cost' => 80,
+            'upkeep' => 2,
+            'req_research' => [], // Further adjust if needed
+            'city_effects' => ['people_norm' => 2]
+        ]);
         $originalDis = $city->people_dis;
         $originalNorm = $city->people_norm;
         $originalHappy = $city->people_happy;

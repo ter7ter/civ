@@ -4,12 +4,15 @@ namespace App\Tests;
 
 use App\Game;
 use App\MyDB;
+use App\Tests\Factory\TestDataFactory;
 use App\User;
+use App\Tests\Base\CommonTestBase;
+use App\Tests\Mocks\DatabaseTestAdapter;
 
 /**
  * Простые unit-тесты для создания игр (только классы, без веб-страниц)
  */
-class CreateGameSimpleTest extends TestBase
+class CreateGameSimpleTest extends CommonTestBase
 {
     protected function setUp(): void
     {
@@ -162,7 +165,7 @@ class CreateGameSimpleTest extends TestBase
      */
     public function testUserColorGeneration(): void
     {
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
 
         // Создаем пользователей с автоматической генерацией цветов
         $users = [];
@@ -211,17 +214,17 @@ class CreateGameSimpleTest extends TestBase
     public function testGameList(): void
     {
         // Создаем несколько игр с пользователями
-        $game1 = $this->createTestGame(["name" => "Первая игра"]);
-        $this->createTestUser(["game" => $game1->id, "login" => "Игрок1"]);
+        $game1 = TestDataFactory::createTestGame(["name" => "Первая игра"]);
+        TestDataFactory::createTestUser(["game" => $game1->id, "login" => "Игрок1"]);
 
-        $game2 = $this->createTestGame(["name" => "Вторая игра"]);
-        $this->createTestUser(["game" => $game2->id, "login" => "Игрок2"]);
-        $this->createTestUser(["game" => $game2->id, "login" => "Игрок3"]);
+        $game2 = TestDataFactory::createTestGame(["name" => "Вторая игра"]);
+        TestDataFactory::createTestUser(["game" => $game2->id, "login" => "Игрок2"]);
+        TestDataFactory::createTestUser(["game" => $game2->id, "login" => "Игрок3"]);
 
-        $game3 = $this->createTestGame(["name" => "Третья игра"]);
-        $this->createTestUser(["game" => $game3->id, "login" => "Игрок4"]);
-        $this->createTestUser(["game" => $game3->id, "login" => "Игрок5"]);
-        $this->createTestUser(["game" => $game3->id, "login" => "Игрок6"]);
+        $game3 = TestDataFactory::createTestGame(["name" => "Третья игра"]);
+        TestDataFactory::createTestUser(["game" => $game3->id, "login" => "Игрок4"]);
+        TestDataFactory::createTestUser(["game" => $game3->id, "login" => "Игрок5"]);
+        TestDataFactory::createTestUser(["game" => $game3->id, "login" => "Игрок6"]);
 
         // Получаем список игр
         $games = Game::game_list();
@@ -244,7 +247,7 @@ class CreateGameSimpleTest extends TestBase
      */
     public function testGameGetMethod(): void
     {
-        $gameData = $this->createTestGame(["name" => "Test Get Game"]);
+        $gameData = TestDataFactory::createTestGame(["name" => "Test Get Game"]);
 
         $game = Game::get($gameData->id);
 
@@ -258,7 +261,7 @@ class CreateGameSimpleTest extends TestBase
      */
     public function testGameCaching(): void
     {
-        $gameData = $this->createTestGame(["name" => "Cached Game"]);
+        $gameData = TestDataFactory::createTestGame(["name" => "Cached Game"]);
 
         $game1 = Game::get($gameData->id);
         $game2 = Game::get($gameData->id);
@@ -279,7 +282,7 @@ class CreateGameSimpleTest extends TestBase
      */
     public function testUpdateGameData(): void
     {
-        $gameData = $this->createTestGame([
+        $gameData = TestDataFactory::createTestGame([
             "name" => "Оригинальное название",
             "turn_num" => 1,
         ]);
@@ -328,7 +331,7 @@ class CreateGameSimpleTest extends TestBase
      */
     public function testHtmlEscapingInUserLogin(): void
     {
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
         $maliciousLogin = '<img src=x onerror=alert(1)>';
 
         $userData = [

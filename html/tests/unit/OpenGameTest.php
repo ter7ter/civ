@@ -4,11 +4,14 @@ namespace App\Tests;
 
 use App\Game;
 use App\User;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\Base\CommonTestBase;
+use App\Tests\Mocks\DatabaseTestAdapter;
 
 /**
- * Тесты для функции открытия игры
+ * Тесты для проверки открытия игр
  */
-class OpenGameTest extends TestBase
+class OpenGameTest extends CommonTestBase
 {
     protected function setUp(): void
     {
@@ -26,10 +29,10 @@ class OpenGameTest extends TestBase
     {
         $this->clearSession(); // Очищаем сессию перед тестом
 
-        $game1 = $this->createTestGame(['name' => 'Игра 1']);
-        $game2 = $this->createTestGame(['name' => 'Игра 2']);
+        $game1 = TestDataFactory::createTestGame(['name' => 'Игра 1']);
+        $game2 = TestDataFactory::createTestGame(['name' => 'Игра 2']);
 
-        $userFromGame2 = $this->createTestUser([
+        $userFromGame2 = TestDataFactory::createTestUser([
             'login' => 'Игрок из игры 2',
             'game' => $game2->id
         ]);
@@ -57,7 +60,7 @@ class OpenGameTest extends TestBase
     public function testSuccessfulGameOpening(): void
     {
         // Создаем тестовую игру
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             'name' => 'Тестовая игра для открытия',
             'map_w' => 100,
             'map_h' => 100,
@@ -65,7 +68,7 @@ class OpenGameTest extends TestBase
         ]);
 
         // Создаем тестового пользователя
-        $user = $this->createTestUser([
+        $user = TestDataFactory::createTestUser([
             'login' => 'Тестовый игрок',
             'game' => $game->id,
             'turn_order' => 1
@@ -93,7 +96,7 @@ class OpenGameTest extends TestBase
      */
     public function testOpenGameWithMultiplePlayers(): void
     {
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             'name' => 'Игра с несколькими игроками',
             'map_w' => 150,
             'map_h' => 150,
@@ -102,7 +105,7 @@ class OpenGameTest extends TestBase
 
         $players = [];
         for ($i = 1; $i <= 4; $i++) {
-            $players[] = $this->createTestUser([
+            $players[] = TestDataFactory::createTestUser([
                 'login' => "Игрок{$i}",
                 'game' => $game->id,
                 'turn_order' => $i
@@ -137,14 +140,14 @@ class OpenGameTest extends TestBase
             $this->clearTestData();
             $this->clearSession();
 
-            $game = $this->createTestGame([
+            $game = TestDataFactory::createTestGame([
                 'name' => "Игра с типом {$turnType}",
                 'map_w' => 100,
                 'map_h' => 100,
                 'turn_type' => $turnType
             ]);
 
-            $user = $this->createTestUser([
+            $user = TestDataFactory::createTestUser([
                 'login' => 'Игрок',
                 'game' => $game->id
             ]);
@@ -169,7 +172,7 @@ class OpenGameTest extends TestBase
      */
     public function testOpenNonExistentGame(): void
     {
-        $user = $this->createTestUser(['login' => 'Игрок']);
+        $user = TestDataFactory::createTestUser(['login' => 'Игрок']);
 
         $this->simulatePostRequest([
             'method' => 'login',
@@ -188,7 +191,7 @@ class OpenGameTest extends TestBase
      */
     public function testOpenGameWithNonExistentUser(): void
     {
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
 
         $this->simulatePostRequest([
             'method' => 'login',
@@ -209,7 +212,7 @@ class OpenGameTest extends TestBase
      */
     public function testOpenGameWithoutGameId(): void
     {
-        $user = $this->createTestUser();
+        $user = TestDataFactory::createTestUser();
 
         $this->simulatePostRequest([
             'method' => 'login',
@@ -228,7 +231,7 @@ class OpenGameTest extends TestBase
      */
     public function testOpenGameWithoutUserId(): void
     {
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
 
         $this->simulatePostRequest([
             'method' => 'login',
@@ -250,7 +253,7 @@ class OpenGameTest extends TestBase
         // Создаем несколько игр с игроками
         $games = [];
         for ($i = 1; $i <= 3; $i++) {
-            $game = $this->createTestGame([
+            $game = TestDataFactory::createTestGame([
                 'name' => "Игра {$i}",
                 'map_w' => 100,
                 'map_h' => 100,
@@ -259,7 +262,7 @@ class OpenGameTest extends TestBase
 
             // Добавляем игроков к каждой игре
             for ($j = 1; $j <= $i; $j++) { // игра 1 - 1 игрок, игра 2 - 2 игрока, игра 3 - 3 игрока
-                $this->createTestUser([
+                TestDataFactory::createTestUser([
                     'login' => "Игрок{$j} игры{$i}",
                     'game' => $game->id,
                     'turn_order' => $j
@@ -300,8 +303,8 @@ class OpenGameTest extends TestBase
      */
     public function testSessionStateAfterGameOpening(): void
     {
-        $game = $this->createTestGame();
-        $user = $this->createTestUser(['game' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $user = TestDataFactory::createTestUser(['game' => $game->id]);
 
         // Устанавливаем начальную сессию
         $_SESSION = ['some_other_data' => 'test'];
@@ -327,15 +330,15 @@ class OpenGameTest extends TestBase
      */
     public function testReopenGameWithDifferentUser(): void
     {
-        $game = $this->createTestGame();
+        $game = TestDataFactory::createTestGame();
 
-        $user1 = $this->createTestUser([
+        $user1 = TestDataFactory::createTestUser([
             'login' => 'Игрок1',
             'game' => $game->id,
             'turn_order' => 1
         ]);
 
-        $user2 = $this->createTestUser([
+        $user2 = TestDataFactory::createTestUser([
             'login' => 'Игрок2',
             'game' => $game->id,
             'turn_order' => 2
@@ -374,7 +377,7 @@ class OpenGameTest extends TestBase
      */
     public function testOpenGameWithMaxPlayers(): void
     {
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             'name' => 'Игра с максимумом игроков',
             'map_w' => 500,
             'map_h' => 500,
@@ -384,7 +387,7 @@ class OpenGameTest extends TestBase
         // Создаем максимальное количество игроков
         $players = [];
         for ($i = 1; $i <= 16; $i++) {
-            $players[] = $this->createTestUser([
+            $players[] = TestDataFactory::createTestUser([
                 'login' => "Игрок{$i}",
                 'game' => $game->id,
                 'turn_order' => $i

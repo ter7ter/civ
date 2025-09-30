@@ -5,17 +5,36 @@ namespace App\Tests;
 require_once __DIR__ . "/../bootstrap.php";
 
 use App\UnitType;
+use App\TestDataFactory;
+use App\Tests\base\CommonTestBase;
 
 /**
  * Тесты для класса UnitType
  */
-class UnitTypeTest extends TestBase
+class UnitTypeTest extends CommonTestBase
 {
     /**
      * Тест получения существующего типа юнита
      */
     public function testGetExistingUnitType(): void
     {
+        // Ensure default unit types exist
+        \App\Tests\Factory\TestDataFactory::createTestUnitType([
+            'id' => 1,
+            'title' => 'Поселенец',
+            'cost' => 40,
+            'attack' => 0,
+            'defence' => 1,
+            'health' => 1,
+            'movement' => 1,
+            'can_found_city' => true,
+            'missions' => ['move_to'],
+        ]);
+        \App\Tests\Factory\TestDataFactory::createTestUnitType([
+            'id' => 2,
+            'title' => 'Воин',
+        ]);
+
         $unitType = UnitType::get(1);
 
         $this->assertInstanceOf(UnitType::class, $unitType);

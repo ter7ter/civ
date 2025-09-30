@@ -2,10 +2,10 @@
 
 namespace App\Tests;
 
-require_once __DIR__ . "/../CommonTestBase.php";
-
 use App\Game;
 use App\MyDB;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\Base\CommonTestBase;
 
 /**
  * Тесты для функции создания игры
@@ -23,7 +23,7 @@ class CreateGameTest extends CommonTestBase
     public function testCreateBasicGame(): void
     {
         // Создаем игру напрямую через класс Game, избегая сложной генерации карты
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "Тестовая игра",
             "map_w" => 100,
             "map_h" => 100,
@@ -32,7 +32,7 @@ class CreateGameTest extends CommonTestBase
         ]);
 
         // Создаем пользователей
-        $user1 = $this->createTestUser([
+        $user1 = TestDataFactory::createTestUser([
             "login" => "Игрок1",
             "color" => "#ff0000",
             "game" => $game->id,
@@ -42,7 +42,7 @@ class CreateGameTest extends CommonTestBase
             "age" => 1,
         ]);
 
-        $user2 = $this->createTestUser([
+        $user2 = TestDataFactory::createTestUser([
             "login" => "Игрок2",
             "color" => "#00ff00",
             "game" => $game->id,
@@ -77,7 +77,7 @@ class CreateGameTest extends CommonTestBase
     public function testCreateConcurrentGame(): void
     {
         // Создаем игру с одновременными ходами напрямую
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "Игра с одновременными ходами",
             "map_w" => 100,
             "map_h" => 100,
@@ -87,7 +87,7 @@ class CreateGameTest extends CommonTestBase
 
         // Создаем трех пользователей
         for ($i = 1; $i <= 3; $i++) {
-            $this->createTestUser([
+            TestDataFactory::createTestUser([
                 "login" => "Игрок$i",
                 "color" =>
                     "#" . str_pad(dechex($i * 100000), 6, "0", STR_PAD_LEFT),
@@ -114,7 +114,7 @@ class CreateGameTest extends CommonTestBase
     public function testCreateOneWindowGame(): void
     {
         // Создаем игру в одном окне напрямую
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "Игра в одном окне",
             "map_w" => 100,
             "map_h" => 100,
@@ -124,7 +124,7 @@ class CreateGameTest extends CommonTestBase
 
         // Создаем двух пользователей
         for ($i = 1; $i <= 2; $i++) {
-            $this->createTestUser([
+            TestDataFactory::createTestUser([
                 "login" => "Игрок$i",
                 "color" =>
                     "#" . str_pad(dechex($i * 200000), 6, "0", STR_PAD_LEFT),
@@ -146,7 +146,7 @@ class CreateGameTest extends CommonTestBase
     public function testWhitespaceGameName(): void
     {
         // Проверяем только логику валидации пробельных названий
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "   ",
             "map_w" => 20,
             "map_h" => 20,
@@ -165,7 +165,7 @@ class CreateGameTest extends CommonTestBase
     public function testEmptyGameName(): void
     {
         // Проверяем только логику валидации названия
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "",
             "map_w" => 20,
             "map_h" => 20,
@@ -184,15 +184,15 @@ class CreateGameTest extends CommonTestBase
     public function testDuplicatePlayerNames(): void
     {
         // Проверяем логику дублирующихся имен на уровне классов
-        $game = $this->createTestGame(["name" => "Тестовая игра"]);
+        $game = TestDataFactory::createTestGame(["name" => "Тестовая игра"]);
 
         // Создаем пользователей с одинаковыми именами
-        $user1 = $this->createTestUser([
+        $user1 = TestDataFactory::createTestUser([
             "game" => $game->id,
             "login" => "Игрок1",
         ]);
 
-        $user2 = $this->createTestUser([
+        $user2 = TestDataFactory::createTestUser([
             "game" => $game->id,
             "login" => "Игрок1", // дублирующееся имя
         ]);
@@ -212,7 +212,7 @@ class CreateGameTest extends CommonTestBase
     public function testTooSmallMapSize(): void
     {
         // Проверяем создание игры с маленькой картой
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "Тестовая игра",
             "map_w" => 30,
             "map_h" => 30,
@@ -232,7 +232,7 @@ class CreateGameTest extends CommonTestBase
     public function testTooLargeMapSize(): void
     {
         // Проверяем создание игры с большой картой
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "Тестовая игра",
             "map_w" => 600,
             "map_h" => 600,
@@ -252,11 +252,11 @@ class CreateGameTest extends CommonTestBase
     public function testTooManyPlayers(): void
     {
         // Проверяем создание игры с большим количеством игроков
-        $game = $this->createTestGame(["name" => "Тестовая игра"]);
+        $game = TestDataFactory::createTestGame(["name" => "Тестовая игра"]);
 
         // Создаем много пользователей
         for ($i = 1; $i <= 10; $i++) {
-            $this->createTestUser([
+            TestDataFactory::createTestUser([
                 "game" => $game->id,
                 "login" => "Игрок$i",
             ]);
@@ -277,7 +277,7 @@ class CreateGameTest extends CommonTestBase
     public function testDataPreservationOnError(): void
     {
         // Проверяем только логику сохранения данных классов
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "", // пустое имя
             "map_w" => 150,
             "map_h" => 120,
@@ -300,7 +300,7 @@ class CreateGameTest extends CommonTestBase
     {
         $maliciousName = '<script>alert("xss")</script>';
 
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => $maliciousName,
             "map_w" => 20,
             "map_h" => 20,
@@ -320,9 +320,9 @@ class CreateGameTest extends CommonTestBase
     {
         $maliciousPlayer = '<img src=x onerror=alert(1)>';
 
-        $game = $this->createTestGame(["name" => "Тестовая игра"]);
+        $game = TestDataFactory::createTestGame(["name" => "Тестовая игра"]);
 
-        $user = $this->createTestUser([
+        $user = TestDataFactory::createTestUser([
             "game" => $game->id,
             "login" => $maliciousPlayer,
         ]);
@@ -345,7 +345,7 @@ class CreateGameTest extends CommonTestBase
         $longName = str_repeat("A", 250); // VARCHAR(255) в БД
         $longPlayerName = str_repeat("B", 200);
 
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => $longName,
             "map_w" => 20,
             "map_h" => 20,
@@ -355,7 +355,7 @@ class CreateGameTest extends CommonTestBase
 
         // Создаем пользователя с длинным именем
         $testGame = $this->getLastRecord("game");
-        $user = $this->createTestUser([
+        $user = TestDataFactory::createTestUser([
             "game" => $testGame["id"],
             "login" => $longPlayerName,
         ]);
@@ -379,7 +379,7 @@ class CreateGameTest extends CommonTestBase
      */
     public function testPlayerColorGeneration(): void
     {
-        $game = $this->createTestGame(["name" => "Тестовая игра"]);
+        $game = TestDataFactory::createTestGame(["name" => "Тестовая игра"]);
 
         // Создаем пользователей с автогенерированными цветами
         $userNames = ["Игрок1", "Игрок2", "Игрок3", "Игрок4"];
@@ -387,7 +387,7 @@ class CreateGameTest extends CommonTestBase
 
         foreach ($userNames as $index => $name) {
             $color = $this->generatePlayerColor($index + 1);
-            $user = $this->createTestUser([
+            $user = TestDataFactory::createTestUser([
                 "game" => $game->id,
                 "login" => $name,
                 "color" => $color,
@@ -424,7 +424,7 @@ class CreateGameTest extends CommonTestBase
      */
     public function testEmptyPlayerFields(): void
     {
-        $game = $this->createTestGame(["name" => "Тестовая игра"]);
+        $game = TestDataFactory::createTestGame(["name" => "Тестовая игра"]);
 
         // Создаем пользователей, включая пустые/пробельные имена
         $userNames = ["Игрок1", "", "Игрок2", "   ", "Игрок3"];
@@ -432,7 +432,7 @@ class CreateGameTest extends CommonTestBase
 
         foreach ($userNames as $index => $name) {
             if (trim($name) !== "") {
-                $this->createTestUser([
+                TestDataFactory::createTestUser([
                     "game" => $game->id,
                     "login" => $name,
                     "turn_order" => $index + 1,
@@ -460,7 +460,7 @@ class CreateGameTest extends CommonTestBase
     public function testInvalidTurnType(): void
     {
         // Создаем игру напрямую через класс, без генерации карты
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "Тестовая игра",
             "map_w" => 20,
             "map_h" => 20,
@@ -482,7 +482,7 @@ class CreateGameTest extends CommonTestBase
         $this->clearRequest();
 
         // Должна быть возможность создать игру с пустыми данными (они заполнятся по умолчанию)
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "",
             "map_w" => 20,
             "map_h" => 20,
@@ -499,20 +499,20 @@ class CreateGameTest extends CommonTestBase
     public function testGameInitialConditions(): void
     {
         // Создаем игру напрямую без генерации карты
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "Тестовая игра",
             "turn_num" => 1,
         ]);
 
         // Создаем пользователей вручную
-        $user1 = $this->createTestUser([
+        $user1 = TestDataFactory::createTestUser([
             "game" => $game->id,
             "login" => "Игрок1",
             "money" => 50,
             "age" => 1,
         ]);
 
-        $user2 = $this->createTestUser([
+        $user2 = TestDataFactory::createTestUser([
             "game" => $game->id,
             "login" => "Игрок2",
             "money" => 50,
@@ -544,12 +544,12 @@ class CreateGameTest extends CommonTestBase
     public function testMinimumPlayers(): void
     {
         // Проверяем только логику валидации
-        $game = $this->createTestGame([
+        $game = TestDataFactory::createTestGame([
             "name" => "Тестовая игра с одним игроком",
         ]);
 
         // Создаем только одного пользователя
-        $user = $this->createTestUser([
+        $user = TestDataFactory::createTestUser([
             "game" => $game->id,
             "login" => "Единственный игрок",
         ]);

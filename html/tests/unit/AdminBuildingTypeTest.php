@@ -5,16 +5,20 @@ namespace App\Tests;
 require_once __DIR__ . '/../bootstrap.php';
 
 use App\BuildingType;
-use App\ResearchType;
-use App\ResourceType;
 use App\MyDB;
+use App\City;
+use App\Game;
+use App\ResourceType;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\Mocks\DatabaseTestAdapter;
+use App\Tests\Base\CommonTestBase;
+use App\Tests\Base\TestGameDataInitializer;
 
-class AdminBuildingTypeTest extends TestBase
+class AdminBuildingTypeTest extends CommonTestBase
 {
     protected function setUp(): void
     {
         parent::setUp();
-        $this->initializeGameTypes();
     }
 
     public function testGetAllBuildingTypes()
@@ -121,6 +125,10 @@ class AdminBuildingTypeTest extends TestBase
     {
         $buildingType = new BuildingType([]);
         $buildingType->title = 'JSON Test Building';
+        $resourceType = TestDataFactory::createTestResourceType([
+            'id' => 'iron',
+            'title' => 'железо',
+        ]);
         $buildingType->req_resources = [ResourceType::get('iron')];
         $buildingType->save();
 
@@ -200,6 +208,14 @@ class AdminBuildingTypeTest extends TestBase
 
     public function testBuildingTypeWithComplexData()
     {
+        TestDataFactory::createTestResourceType([
+            'id' => 'iron',
+            'title' => 'железо',
+        ]);
+        TestDataFactory::createTestResourceType([
+            'id' => 'horse',
+            'title' => 'лошадь',
+        ]);
         $buildingType = new BuildingType([]);
         $buildingType->title = 'Complex Building Test';
         $buildingType->cost = 500;
@@ -241,9 +257,9 @@ class AdminBuildingTypeTest extends TestBase
         $buildingType->save();
 
         // Создаем тестового пользователя, планету и город
-        $userData = $this->createTestUser();
-        $planetId = $this->createTestPlanet();
-        $city = $this->createTestCity(['user_id' => $userData['id'], 'planet' => $planetId]);
+        $userData = TestDataFactory::createTestUser();
+        $planetId = TestDataFactory::createTestPlanet();
+        $city = TestDataFactory::createTestCity(['user_id' => $userData['id'], 'planet' => $planetId]);
 
         // Применяем эффект здания
         $buildingType->city_effect($city);

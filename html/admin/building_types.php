@@ -33,8 +33,31 @@ if ($action == 'save') {
             $buildingType->money_bonus = (int)($_POST['money_bonus'] ?? 0);
             $buildingType->description = $_POST['description'] ?? '';
 
-            $buildingType->req_research = isset($_POST['req_research']) ? (json_decode($_POST['req_research'], true) ?: []) : [];
-            $buildingType->req_resources = isset($_POST['req_resources']) ? (json_decode($_POST['req_resources'], true) ?: []) : [];
+            $buildingType->req_research = $_POST['req_research'] ?? [];
+            // Convert to objects
+            $reqObjs = [];
+            foreach ($buildingType->req_research as $reqId) {
+                if ($reqId) {
+                    $obj = \App\ResearchType::get($reqId);
+                    if ($obj) {
+                        $reqObjs[] = $obj;
+                    }
+                }
+            }
+            $buildingType->req_research = $reqObjs;
+
+            $buildingType->req_resources = $_POST['req_resources'] ?? [];
+            // Convert to objects
+            $reqObjs = [];
+            foreach ($buildingType->req_resources as $reqId) {
+                if ($reqId) {
+                    $obj = \App\ResourceType::get($reqId);
+                    if ($obj) {
+                        $reqObjs[] = $obj;
+                    }
+                }
+            }
+            $buildingType->req_resources = $reqObjs;
 
             $buildingType->save();
             $message = "Building type saved successfully.";
@@ -61,6 +84,8 @@ if ($action == 'edit' && $id) {
 }
 
 $buildingTypes = BuildingType::getAll();
+$researchTypes = \App\ResearchType::loadAll();
+$resourceTypes = \App\ResourceType::loadAll();
 
 if ($action == 'edit' || $action == 'add') {
     include 'templates/building_types_form.php';

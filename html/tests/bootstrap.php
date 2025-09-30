@@ -1,6 +1,8 @@
 <?php
 
 use App\MyDB;
+use App\Tests\Base\TestGameDataInitializer;
+use App\Tests\Mocks\DatabaseTestAdapter;
 
 /**
  * Bootstrap файл для PHPUnit тестов
@@ -36,9 +38,20 @@ require_once PROJECT_ROOT . "/vendor/autoload.php";
 
 // Ручная автозагрузка для App namespace, если composer autoload не работает
 spl_autoload_register(function ($class) {
-    if (strpos($class, 'App\\') === 0) {
+    if (strpos($class, 'App\\') === 0 && strpos($class, 'App\\Tests\\') === false) {
         $relativeClass = substr($class, 4);
         $file = PROJECT_ROOT . '/src/' . str_replace('\\', '/', $relativeClass) . '.php';
+        if (file_exists($file)) {
+            require_once $file;
+        }
+    }
+});
+
+// Автозагрузка для App\\Tests namespace
+spl_autoload_register(function ($class) {
+    if (strpos($class, 'App\\Tests\\') === 0) {
+        $relativeClass = substr($class, 10);
+        $file = PROJECT_ROOT . '/tests/' . str_replace('\\', '/', $relativeClass) . '.php';
         if (file_exists($file)) {
             require_once $file;
         }
@@ -69,27 +82,71 @@ MyDB::setDBConfig(TEST_DB_HOST, TEST_DB_USER, TEST_DB_PASS, TEST_DB_PORT, $dbNam
 // Подключаемся к MySQL серверу, не указывая базу данных
 
 // Затем загружаем моки для БД
-require_once TESTS_ROOT . "/mocks/DatabaseTestAdapter.php";
-require_once TESTS_ROOT . "/mocks/MockLoader.php";
-require_once TESTS_ROOT . "/mocks/TestHelpers.php";
-
-// Подключаем инициализатор игровых данных
-require_once TESTS_ROOT . "/TestGameDataInitializer.php";
-
-use App\Tests\TestGameDataInitializer;
+require_once TESTS_ROOT . "/Mocks/DatabaseTestAdapter.php";
+require_once TESTS_ROOT . "/Mocks/MockLoader.php";
+require_once TESTS_ROOT . "/Mocks/TestHelpers.php";
 
 // Устанавливаем схему базы данных
 TestGameDataInitializer::setupDatabaseSchema();
 
-// Загружаем тестовые базовые классы только если PHPUnit доступен
-if (class_exists("PHPUnit\Framework\TestCase")) {
-    require_once TESTS_ROOT . "/TestBase.php";
-    require_once TESTS_ROOT . "/FunctionalTestBase.php";
-}
-
-// Очищаем данные, созданные в оригинальных классах, и инициализируем тестовые данные
+// Очищаем данные, созданные в оригинальных классах
 TestGameDataInitializer::clearAll();
-TestGameDataInitializer::initializeAll();
+
+// Initialize default resource types for tests
+if (class_exists('App\\ResourceType')) {
+    $defaultResourceTypes = [
+        [
+            'id' => 'coal',
+            'title' => 'уголь',
+            'type' => 'mineral',
+            'work' => 1,
+            'eat' => 0,
+            'money' => 1,
+            'chance' => 0.02,
+            'min_amount' => 50,
+            'max_amount' => 200,
+        ],
+        [
+            'id' => 'fish',
+            'title' => 'рыба',
+            'type' => 'food',
+            'work' => 0,
+            'eat' => 2,
+            'money' => 0,
+            'chance' => 0.02,
+            'min_amount' => 30,
+            'max_amount' => 150,
+        ],
+        [
+            'id' => 'furs',
+            'title' => 'меха',
+            'type' => 'luxury',
+            'work' => 0,
+            'eat' => 0,
+            'money' => 2,
+            'chance' => 0.01,
+            'min_amount' => 20,
+            'max_amount' => 100,
+        ],
+        [
+            'id' => 'horse',
+            'title' => 'Лошади',
+            'type' => 'strategic',
+            'work' => 0,
+            'eat' => 0,
+            'money' => 0,
+            'chance' => 0.005,
+            'min_amount' => 10,
+            'max_amount' => 50,
+        ],
+    ];
+    foreach ($defaultResourceTypes as $rt) {
+        if (!\App\ResourceType::get($rt['id'])) {
+            $res = new \App\ResourceType($rt);
+            $res->save();
+        }
+    }
+}
 
 // Настройка обработки ошибок для тестов
 error_reporting(E_ALL); // Максимальный уровень ошибок

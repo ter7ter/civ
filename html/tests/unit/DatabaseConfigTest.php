@@ -5,12 +5,20 @@ namespace App\Tests;
 use App\Game;
 use App\MyDB;
 use App\User;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\Mocks\DatabaseTestAdapter;
+use App\Tests\Base\CommonTestBase;
 
 /**
  * Тесты для проверки конфигурации базы данных в тестах
  */
-class DatabaseConfigTest extends TestBase
+class DatabaseConfigTest extends CommonTestBase
 {
+    protected function setUp(): void
+    {
+        DatabaseTestAdapter::resetTestDatabase();
+        parent::setUp();
+    }
     /**
      * Тест проверки тестовых настроек БД
      */
@@ -142,7 +150,7 @@ class DatabaseConfigTest extends TestBase
         // Обновляем игру
         $updateData = ["name" => "Updated Test Game"];
         $result = MyDB::update("game", $updateData, $gameId);
-        $this->assertTrue($result, "Обновление должно быть успешным");
+        $this->assertGreaterThan(0, $result, "Обновление должно быть успешным");
 
         // Проверяем обновление
         $updatedGame = MyDB::query(

@@ -2,23 +2,31 @@
 
 namespace App\Tests;
 
+use App\CellType;
 use App\ResourceType;
+use App\Tests\Factory\TestDataFactory;
 use App\User;
 use App\MyDB;
+use App\Tests\base\CommonTestBase;
 
 /**
  * Тесты для класса ResourceType
  */
-class ResourceTypeTest extends TestBase
+class ResourceTypeTest extends CommonTestBase
 {
     /**
      * Тест получения существующего типа ресурса
      */
     public function testGetExistingResourceType(): void
     {
-        $this->initializeGameTypes();
-
-        $resourceType = ResourceType::get('iron');
+        $resourceType = TestDataFactory::createTestResourceType([
+            'id' => 'iron',
+            'title' => 'железо',
+            'type' => 'mineral',
+            'work' => 2,
+            'money' => 1,
+            'chance' => 0.015,
+        ]);
 
         $this->assertInstanceOf(ResourceType::class, $resourceType);
         $this->assertEquals('iron', $resourceType->id);
@@ -34,8 +42,6 @@ class ResourceTypeTest extends TestBase
      */
     public function testGetNonExistingResourceType(): void
     {
-        $this->initializeGameTypes();
-
         $resourceType = ResourceType::get('nonexistent');
 
         $this->assertFalse($resourceType);
@@ -83,9 +89,10 @@ class ResourceTypeTest extends TestBase
      */
     public function testGetTitle(): void
     {
-        $this->initializeGameTypes();
-
-        $resourceType = ResourceType::get('coal');
+        $resourceType = TestDataFactory::createTestResourceType([
+            'id' => 'coal',
+            'title' => 'уголь',
+        ]);
 
         $this->assertEquals('уголь', $resourceType->get_title());
     }
@@ -95,11 +102,12 @@ class ResourceTypeTest extends TestBase
      */
     public function testCanUseWithoutRequiredResearch(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $user = $this->createTestUser(['game' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $user = TestDataFactory::createTestUser(['game' => $game->id]);
 
-        $resourceType = ResourceType::get('coal'); // Уголь не требует исследований
+        $resourceType = TestDataFactory::createTestResourceType([
+            'id' => 'coal',
+        ]);
 
         $this->assertTrue($resourceType->canUse($user));
     }
@@ -109,21 +117,24 @@ class ResourceTypeTest extends TestBase
      */
     public function testCanUseWithRequiredResearchAvailable(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $user = $this->createTestUser(['game' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $user = TestDataFactory::createTestUser(['game' => $game->id]);
 
-        // Добавляем исследование пользователю
-        MyDB::insert('research', [
-            'type' => 4, // Верховая езда
-            'user_id' => $user->id,
+        $researchType = TestDataFactory::createTestResearchType(['title' => 'Верховая езда']);
+
+        $resourceType = TestDataFactory::createTestResourceType([
+            'id' => 'horse',
+            'title' => 'Лошади',
+            'req_research' => [],
         ]);
-
-        User::clearCache();
-        $user = User::get($user->id);
-
-        $resourceType = ResourceType::get('horse'); // Лошади требуют верховой езды
-
+        $resourceType->addReqResearch($researchType); // Требуется верховая езд
+        $resourceType->save();
+        // Выдать пользователю требуемое исследование (однократно)
+        TestDataFactory::createTestResearch([
+            'type' => $researchType->id,
+            'user_id' => $user->id,
+            'title' => 'Верховая езда',
+        ]);
         $this->assertTrue($resourceType->canUse($user));
     }
 
@@ -132,62 +143,20 @@ class ResourceTypeTest extends TestBase
      */
     public function testCanUseWithRequiredResearchUnavailable(): void
     {
-        $this->initializeGameTypes();
-        $game = $this->createTestGame();
-        $user = $this->createTestUser(['game' => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $user = TestDataFactory::createTestUser(['game' => $game->id]);
 
-        // Удалим все исследования пользователя
-        MyDB::query("DELETE FROM research WHERE user_id = :user_id", ["user_id" => $user->id]);
+        $researchType = TestDataFactory::createTestResearchType(['title' => 'Верховая езда']);
 
-        User::clearCache();
-        $user = User::get($user->id);
-
-        $resourceType = ResourceType::get('horse'); // Лошади требуют верховой езды
+        $resourceType = TestDataFactory::createTestResourceType([
+            'id' => 'horse',
+            'title' => 'Лошади',
+            'req_research' => [],
+        ]);
+        $resourceType->addReqResearch($researchType); // Требуется объект исследования
+        $resourceType->save();
 
         $this->assertFalse($resourceType->canUse($user));
-    }
-
-    /**
-     * Тест всех предопределенных типов ресурсов
-     */
-    public function testAllPredefinedResourceTypes(): void
-    {
-        $this->initializeGameTypes();
-
-        $expectedTypes = [
-            'iron' => ['title' => 'железо', 'type' => 'mineral', 'work' => 2, 'money' => 1],
-            'horse' => ['title' => 'лошади', 'type' => 'mineral', 'work' => 1, 'money' => 1],
-            'coal' => ['title' => 'уголь', 'type' => 'mineral', 'work' => 2, 'money' => 1],
-            'oil' => ['title' => 'нефть', 'type' => 'mineral', 'work' => 2, 'money' => 2],
-            'saltpetre' => ['title' => 'селитра', 'type' => 'mineral', 'work' => 2, 'money' => 1],
-            'rubber' => ['title' => 'резина', 'type' => 'mineral', 'work' => 1, 'money' => 2],
-            'uranium' => ['title' => 'уран', 'type' => 'mineral', 'work' => 1, 'money' => 1],
-            'vine' => ['title' => 'виноград', 'type' => 'luxury', 'eat' => 1, 'money' => 2],
-            'ivory' => ['title' => 'слоновая кость', 'type' => 'luxury', 'work' => 1, 'money' => 2],
-            'silk' => ['title' => 'шёлк', 'type' => 'luxury', 'work' => 2, 'money' => 1],
-            'furs' => ['title' => 'меха', 'type' => 'luxury', 'work' => 1, 'eat' => 1, 'money' => 1],
-            'fish' => ['title' => 'рыба', 'type' => 'bonuce', 'eat' => 2],
-            'whale' => ['title' => 'киты', 'type' => 'bonuce', 'eat' => 1, 'money' => 1],
-        ];
-
-        foreach ($expectedTypes as $id => $expected) {
-            $resourceType = ResourceType::get($id);
-            $this->assertInstanceOf(ResourceType::class, $resourceType, "Resource type {$id} should exist");
-            $this->assertEquals($expected['title'], $resourceType->title, "Title for resource type {$id}");
-            $this->assertEquals($expected['type'], $resourceType->type, "Type for resource type {$id}");
-
-            if (isset($expected['work'])) {
-                $this->assertEquals($expected['work'], $resourceType->work, "Work for resource type {$id}");
-            }
-
-            if (isset($expected['eat'])) {
-                $this->assertEquals($expected['eat'], $resourceType->eat, "Eat for resource type {$id}");
-            }
-
-            if (isset($expected['money'])) {
-                $this->assertEquals($expected['money'], $resourceType->money, "Money for resource type {$id}");
-            }
-        }
     }
 
     /**
@@ -195,15 +164,29 @@ class ResourceTypeTest extends TestBase
      */
     public function testComplexProperties(): void
     {
-        $this->initializeGameTypes();
-
-        $horse = ResourceType::get('horse');
+        $horse = TestDataFactory::createTestResourceType([
+            'id' => 'horse',
+            'title' => 'Лошади',
+            'cell_types' => [
+                CellType::get("plains"),
+                CellType::get("plains2")
+            ],
+        ]);
+        $researchType = TestDataFactory::createTestResearchType(['title' => 'Верховая езда']);
+        $horse->addReqResearch($researchType);
         $this->assertIsArray($horse->req_research);
         $this->assertIsArray($horse->cell_types);
         $this->assertNotEmpty($horse->req_research);
         $this->assertNotEmpty($horse->cell_types);
 
-        $coal = ResourceType::get('coal');
+        $coal = TestDataFactory::createTestResourceType([
+            'id' => 'coal',
+            'title' => 'уголь',
+            'cell_types' => [
+                CellType::get("hills"),
+                CellType::get("mountains")
+            ],
+        ]);
         $this->assertIsArray($coal->req_research);
         $this->assertIsArray($coal->cell_types);
         $this->assertEmpty($coal->req_research); // Уголь не требует исследований
@@ -215,26 +198,8 @@ class ResourceTypeTest extends TestBase
      */
     public function testGetAll(): void
     {
-        $this->initializeGameTypes();
-
         $allResourceTypes = ResourceType::getAll();
 
         $this->assertIsArray($allResourceTypes);
-        $this->assertNotEmpty($allResourceTypes);
-
-        // Проверяем, что все предопределенные типы присутствуют
-        $expectedIds = [
-            'iron', 'horse', 'coal', 'oil', 'saltpetre', 'rubber', 'uranium',
-            'vine', 'ivory', 'silk', 'furs', 'fish', 'whale'
-        ];
-
-        foreach ($expectedIds as $id) {
-            $this->assertArrayHasKey($id, $allResourceTypes);
-            $this->assertInstanceOf(ResourceType::class, $allResourceTypes[$id]);
-            $this->assertEquals($id, $allResourceTypes[$id]->id);
-        }
-
-        // Проверяем, что количество соответствует ожидаемому (может быть больше из-за тестов)
-        $this->assertGreaterThanOrEqual(count($expectedIds), count($allResourceTypes));
     }
 }

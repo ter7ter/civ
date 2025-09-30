@@ -10,11 +10,13 @@ use App\Research;
 use App\ResearchType;
 use App\Event;
 use App\Message;
+use App\Tests\Factory\TestDataFactory;
+use App\Tests\base\CommonTestBase;
 
 /**
  * Тесты для класса User
  */
-class UserTest extends TestBase
+class UserTest extends CommonTestBase
 {
     /**
      * Тест получения существующего пользователя
@@ -22,7 +24,7 @@ class UserTest extends TestBase
      */
     public function testGetExistingUser(): void
     {
-        $user = $this->createTestUser([
+        $user = TestDataFactory::createTestUser([
             "login" => "TestUser",
             "money" => 100,
             "age" => 2,
@@ -126,7 +128,7 @@ class UserTest extends TestBase
      */
     public function testSaveUpdate(): void
     {
-        $user = $this->createTestUser([
+        $user = TestDataFactory::createTestUser([
             "login" => "OriginalUser",
             "money" => 50,
         ]);
@@ -151,18 +153,18 @@ class UserTest extends TestBase
      */
     public function testCalculateIncome(): void
     {
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $user = $this->createTestUser(["game" => $game->id, "money" => 100]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $user = TestDataFactory::createTestUser(["game" => $game->id, "money" => 100]);
 
-        $this->createTestCell(['x' => 10, 'y' => 10, 'planet' => $planetId]);
+        TestDataFactory::createTestCell(['x' => 10, 'y' => 10, 'planet' => $planet->id]);
 
         // Создаем город для пользователя
-        $city = $this->createTestCity([
+        TestDataFactory::createTestCity([
             "user_id" => $user->id,
             "x" => 10,
             "y" => 10,
-            "planet" => $planetId,
+            "planet" => $planet->id,
             "title" => "Test City",
             "pmoney" => 25,
             "presearch" => 5,
@@ -181,27 +183,27 @@ class UserTest extends TestBase
      */
     public function testGetCities(): void
     {
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $user = $this->createTestUser(["game" => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
 
-        $this->createTestCell(['x' => 5, 'y' => 5, 'planet' => $planetId]);
-        $this->createTestCell(['x' => 15, 'y' => 15, 'planet' => $planetId]);
+        TestDataFactory::createTestCell(['x' => 5, 'y' => 5, 'planet' => $planet->id]);
+        TestDataFactory::createTestCell(['x' => 15, 'y' => 15, 'planet' => $planet->id]);
 
         // Создаем города для пользователя
-        $city1 = $this->createTestCity([
+        $city1 = TestDataFactory::createTestCity([
             "user_id" => $user->id,
             "x" => 5,
             "y" => 5,
-            "planet" => $planetId,
+            "planet" => $planet->id,
             "title" => "City 1",
         ]);
 
-        $city2 = $this->createTestCity([
+        $city2 = TestDataFactory::createTestCity([
             "user_id" => $user->id,
             "x" => 15,
             "y" => 15,
-            "planet" => $planetId,
+            "planet" => $planet->id,
             "title" => "City 2",
         ]);
 
@@ -220,19 +222,23 @@ class UserTest extends TestBase
      */
     public function testGetResearch(): void
     {
-        $user = $this->createTestUser();
+        $user = TestDataFactory::createTestUser();
+
+        // Создаем типы исследований
+        $researchType1 = TestDataFactory::createTestResearchType(['id' => 1, 'title' => 'Research 1']);
+        $researchType2 = TestDataFactory::createTestResearchType(['id' => 3, 'title' => 'Research 3']);
 
         // Создаем исследования для пользователя
         $research1Data = [
             "user_id" => $user->id,
-            "type" => 1,
+            "type" => $researchType1->id,
         ];
         $research1 = new Research($research1Data);
         $research1->save();
 
         $research2Data = [
             "user_id" => $user->id,
-            "type" => 3,
+            "type" => $researchType2->id,
         ];
         $research2 = new Research($research2Data);
         $research2->save();
@@ -252,19 +258,17 @@ class UserTest extends TestBase
      */
     public function testStartResearch(): void
     {
-        $user = $this->createTestUser(["age" => 1]);
+        $user = TestDataFactory::createTestUser(["age" => 1]);
 
         // Создаем тип исследования
-        $researchTypeData = [
-            "id" => 1,
-            "title" => "Test Research",
+        $researchType = TestDataFactory::createTestResearchType([
+            "title" => "Гончарное дело",
             "age" => 1,
-            "cost" => 100,
-        ];
-        $researchType = new ResearchType($researchTypeData);
-        $researchType->save();
-
-        $researchType = ResearchType::get(1);
+            "cost" => 50,
+            "m_top" => 30,
+            "m_left" => 30,
+            "age_need" => true
+        ]);
 
         $result = $user->start_research($researchType);
 
@@ -277,17 +281,23 @@ class UserTest extends TestBase
      */
     public function testStartResearchAlreadyDone(): void
     {
-        $user = $this->createTestUser(["age" => 1]);
+        $user = TestDataFactory::createTestUser(["age" => 1]);
 
+        $researchType = TestDataFactory::createTestResearchType([
+            "title" => "Гончарное дело",
+            "age" => 1,
+            "cost" => 50,
+            "m_top" => 30,
+            "m_left" => 30,
+            "age_need" => true
+        ]);
         // Добавляем исследование как уже проведенное
         $researchData = [
             "user_id" => $user->id,
-            "type" => 1, // Гончарное дело
+            "type" => $researchType->id, // Гончарное дело
         ];
         $research = new Research($researchData);
         $research->save();
-
-        $researchType = ResearchType::get(1);
 
         $result = $user->start_research($researchType);
 
@@ -300,7 +310,7 @@ class UserTest extends TestBase
      */
     public function testNewSystemMessage(): void
     {
-        $user = $this->createTestUser();
+        $user = TestDataFactory::createTestUser();
 
         $userObj = User::get($user->id);
         $message = $userObj->new_system_message("Test system message");
@@ -321,7 +331,7 @@ class UserTest extends TestBase
      */
     public function testGetNextEventNoEvents(): void
     {
-        $user = $this->createTestUser();
+        $user = TestDataFactory::createTestUser();
 
         $userObj = User::get($user->id);
         $event = $userObj->get_next_event();
@@ -334,7 +344,7 @@ class UserTest extends TestBase
      */
     public function testGetNextEventWithEvent(): void
     {
-        $user = $this->createTestUser();
+        $user = TestDataFactory::createTestUser();
 
         // Создаем событие исследования (research event)
         $eventData = [
@@ -359,7 +369,7 @@ class UserTest extends TestBase
      */
     public function testCalculateResearchNoActive(): void
     {
-        $user = $this->createTestUser();
+        $user = TestDataFactory::createTestUser();
 
         $userObj = User::get($user->id);
         $result = $userObj->calculate_research();
@@ -372,7 +382,7 @@ class UserTest extends TestBase
      */
     public function testCalculateResearchActive(): void
     {
-        $user = $this->createTestUser([
+        $user = TestDataFactory::createTestUser([
             "research_amount" => 10,
             "process_research_complete" => 0,
             "process_research_turns" => 0,
@@ -402,7 +412,7 @@ class UserTest extends TestBase
      */
     public function testCalculateResearchComplete(): void
     {
-        $user = $this->createTestUser([
+        $user = TestDataFactory::createTestUser([
             "research_amount" => 30,
             "process_research_complete" => 20,
             "process_research_turns" => 2,
@@ -410,7 +420,15 @@ class UserTest extends TestBase
         ]);
 
         // Используем существующий тип исследования (id=1)
-        $user->process_research_type = ResearchType::get(1); // Гончарное дело, cost=50
+        $researchType = TestDataFactory::createTestResearchType([
+            "title" => "Гончарное дело",
+            "age" => 1,
+            "cost" => 50,
+            "m_top" => 30,
+            "m_left" => 30,
+            "age_need" => true
+        ]); // Гончарное дело, cost=50
+        $user->process_research_type = $researchType;
         $user->save();
 
         $result = $user->calculate_research();
@@ -439,7 +457,7 @@ class UserTest extends TestBase
      */
     public function testGetAvailableResearch(): void
     {
-        $user = $this->createTestUser(["age" => 1]);
+        $user = TestDataFactory::createTestUser(["age" => 1]);
 
         $available = $user->get_available_research();
 
@@ -454,13 +472,21 @@ class UserTest extends TestBase
      */
     public function testGetResearchNeedTurns(): void
     {
-        $user = $this->createTestUser([
+        $user = TestDataFactory::createTestUser([
             "research_amount" => 10,
             "process_research_complete" => 20,
             "process_research_turns" => 1,
         ]);
 
-        $user->process_research_type = ResearchType::get(1); // Гончарное дело, cost=50
+        $researchType = TestDataFactory::createTestResearchType([
+            "title" => "Гончарное дело",
+            "age" => 1,
+            "cost" => 50,
+            "m_top" => 30,
+            "m_left" => 30,
+            "age_need" => true
+        ]); // Гончарное дело, cost=50
+        $user->process_research_type = $researchType;
 
         $turns = $user->get_research_need_turns();
 
@@ -474,18 +500,18 @@ class UserTest extends TestBase
      */
     public function testCalculateCities(): void
     {
-        $game = $this->createTestGame();
-        $planetId = $this->createTestPlanet(["game_id" => $game->id]);
-        $user = $this->createTestUser(["game" => $game->id]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
 
-        $this->createTestCell(['x' => 10, 'y' => 10, 'planet' => $planetId]);
+        TestDataFactory::createTestCell(['x' => 10, 'y' => 10, 'planet' => $planet->id]);
 
         // Создаем город для пользователя
-        $city = $this->createTestCity([
+        $city = TestDataFactory::createTestCity([
             "user_id" => $user->id,
             "x" => 10,
             "y" => 10,
-            "planet" => $planetId,
+            "planet" => $planet->id,
             "title" => "Test City",
         ]);
 
@@ -502,7 +528,7 @@ class UserTest extends TestBase
      */
     public function testGetMessages(): void
     {
-        $user = $this->createTestUser();
+        $user = TestDataFactory::createTestUser();
 
         // Создаем сообщения для пользователя
         $message1Data = [

@@ -2,7 +2,6 @@
 
 namespace App\Tests\Base;
 
-
 use App\MyDB;
 use App\Tests\Mocks\DatabaseTestAdapter;
 use App\Tests\Factory\TestDataFactory;
@@ -13,15 +12,6 @@ use App\Tests\Factory\TestDataFactory;
 class CommonTestBase extends FunctionalTestBase
 {
     /**
-     * Настройка для unit тестов
-     */
-    protected function setUpUnitTest(): void
-    {
-        DatabaseTestAdapter::resetTestDatabase();
-        parent::setUp();
-    }
-
-    /**
      * Настройка для integration тестов
      */
     protected function setUpIntegrationTest(): void
@@ -31,15 +21,6 @@ class CommonTestBase extends FunctionalTestBase
         $this->clearRequest();
         $this->clearSession();
         $this->headers = [];
-        $this->clearTestData();
-    }
-
-    /**
-     * Создает полную тестовую игру с пользователями и планетой
-     */
-    protected function createCompleteTestGame($gameData = [], $userNames = ["Игрок1", "Игрок2"]): array
-    {
-        return TestDataFactory::createCompleteTestGame($gameData, $userNames);
     }
 
     /**

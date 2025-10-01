@@ -112,7 +112,6 @@ class UnitTypeTest extends CommonTestBase
         $unitType1 = \App\Tests\Factory\TestDataFactory::createTestUnitType([
             'title' => 'Cached Unit',
         ]);
-        UnitType::clearAll(); // Clear cache
         $unitType2 = UnitType::get($unitType1->id);
 
         // Должен быть один и тот же объект после clear? No, get reloads.

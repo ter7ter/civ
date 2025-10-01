@@ -21,7 +21,6 @@ class CellTest extends CommonTestBase
 {
     protected function setUp(): void
     {
-        $this->setUpUnitTest();
         CellType::$all = []; // Очистить кэш CellType
         TestGameDataInitializer::initializeCellTypes();
     }

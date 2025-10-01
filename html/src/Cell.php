@@ -152,7 +152,7 @@ class Cell
         self::$_all[$this->planet][$this->x][$this->y] = $this;
     }
 
-    public function get_units()
+    public function get_units(): array
     {
         $rows = MyDB::query(
             "SELECT * FROM unit WHERE x =:x AND y =:y AND planet =:planet",

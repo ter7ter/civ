@@ -1,4 +1,5 @@
 <?php
+
 use App\ResearchType;
 
 require_once(__DIR__ . "/../includes.php");
@@ -9,15 +10,12 @@ $message = '';
 
 // Обработка действий перед выводом HTML
 if ($action == 'save') {
-    error_log("Action: $action, ID: $id");
     if ($id) {
-        error_log("Editing id: $id");
         $researchType = ResearchType::get($id);
         if (!$researchType) {
             $message = "Research type not found.";
         }
     } else {
-        error_log("Creating new");
         $researchType = new ResearchType([]);
     }
 
@@ -45,7 +43,6 @@ if ($action == 'save') {
             $researchType->age = (int)($_POST['age'] ?? 1);
             $researchType->age_need = isset($_POST['age_need']);
 
-            error_log("Before save");
             $researchType->save();
             $message = "Research type saved successfully.";
             $action = 'list'; // Переходим к списку после сохранения

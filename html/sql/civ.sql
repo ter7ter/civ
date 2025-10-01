@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `city` (
   `culture` int NOT NULL DEFAULT '0',
   `culture_level` int NOT NULL DEFAULT '0',
   `production` int DEFAULT NULL,
-  `production_type` enum('unit','buil') NOT NULL,
+  `production_type` enum('unit','building') NOT NULL,
   `production_complete` int UNSIGNED NOT NULL DEFAULT '0',
   `pwork` int UNSIGNED NOT NULL DEFAULT '1',
   `peat` int UNSIGNED NOT NULL DEFAULT '3',

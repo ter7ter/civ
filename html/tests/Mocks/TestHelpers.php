@@ -326,7 +326,7 @@ function safeMethodCall($object, $methodName, $args = [])
  * Вспомогательная функция для подмены include/require в тестах
  * Предотвращает подключение includes.php в тестах
  */
-function mockIncludeFile($filename, $varsToExtract = [])
+function mockIncludeFile($filename, $varsToExtract = []): array
 {
     // Предотвращаем подключение includes.php в тестах
     if (basename($filename) === "includes.php") {
@@ -345,17 +345,16 @@ function mockIncludeFile($filename, $varsToExtract = [])
     } catch (TestExitException $e) {
         // Игнорируем выход из скрипта
     } finally {
-        // Гарантированно закрываем буфер вывода
-        if (ob_get_level() > 0) {
-            ob_end_clean();
-        }
+        $output = ob_get_clean();
     }
 
     // Получаем переменные после выполнения
     $afterVars = get_defined_vars();
 
     // Возвращаем все переменные, которые были определены или изменены в файле
-    $resultVars = [];
+    $resultVars = [
+        'output' => $output,
+    ];
     foreach ($afterVars as $key => $value) {
         if (
             !array_key_exists($key, $beforeVars) ||

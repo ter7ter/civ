@@ -26,23 +26,20 @@ class TestBase extends \PHPUnit\Framework\TestCase
         $paraTestFlag = getenv('PARATEST');
         $isParaTest = !empty($testToken) || $paraTestFlag === '1';
 
-        if (!$isParaTest) {
-
-        }
-
         // Очищаем БД один раз перед всеми тестами класса
         DatabaseTestAdapter::resetTestDatabase();
+        self::clearAllCache();
+        // Устанавливаем глобальные переменные для тестов
+        Cell::$map_width = 20;
+        Cell::$map_height = 20;
+    }
 
-        // Очищаем кэши реальных классов
+    protected static function clearAllCache(): void
+    {
         Game::clearCache();
         User::clearCache();
         Cell::clearCache();
         Planet::clearCache();
-        Building::clearCache();
-
-        // Устанавливаем глобальные переменные для тестов
-        Cell::$map_width = 20;
-        Cell::$map_height = 20;
     }
 
     public static function tearDownAfterClass(): void
@@ -71,17 +68,11 @@ class TestBase extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
+        //DatabaseTestAdapter::resetTestDatabase();
+        $this->setGlobalVars();
         // Проверяем, используется ли ParaTest
         $testToken = getenv('TEST_TOKEN');
         $isParaTest = !empty($testToken);
-
-        // Только кэши и переменные, не всю БД
-        Game::clearCache();
-        User::clearCache();
-        Cell::clearCache();
-        Planet::clearCache();
-        Building::clearCache();
         Cell::$map_width = 20;
         Cell::$map_height = 20;
     }
@@ -99,13 +90,6 @@ class TestBase extends \PHPUnit\Framework\TestCase
                 MyDB::get()->rollBack();
             }
         }
-        // Очищаем все кэши и статические переменные
-        Game::clearCache();
-        User::clearCache();
-        Cell::clearCache();
-        Planet::clearCache();
-        Building::clearCache();
-        TestGameDataInitializer::clearAll();
         Cell::$map_width = 20;
         Cell::$map_height = 20;
         parent::tearDown();
@@ -114,13 +98,9 @@ class TestBase extends \PHPUnit\Framework\TestCase
     /**
      * Очищает тестовые данные (оставлено для совместимости, но не вызывает resetTestDatabase)
      */
-    protected function clearTestData(): void
+    protected function setGlobalVars(): void
     {
         // Не вызываем DatabaseTestAdapter::resetTestDatabase();
-        Game::clearCache();
-        User::clearCache();
-        Cell::clearCache();
-        Planet::clearCache();
         // Устанавливаем глобальные переменные для тестов
         Cell::$map_width = 20;
         Cell::$map_height = 20;

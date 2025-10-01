@@ -698,7 +698,8 @@ class City
                         "user_id" => $this->user ? $this->user->id : "null",
                     ]),
             );
-            return; // Не можем сохранить city_people без ID города
+            // Не можем сохранить city_people без ID города
+            throw new \Exception("City::save() - Attempting to save city_people but city ID is null");
         }
 
         MyDB::query("DELETE FROM city_people WHERE city_id =:id", [

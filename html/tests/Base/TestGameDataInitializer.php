@@ -35,7 +35,7 @@ class TestGameDataInitializer
                 'eat' => 2,
                 'work' => 1,
                 'money' => 1,
-                'chance_inc_other' => ['mountians' => [15, 8]],
+                'chance_inc_other' => ['mountains' => [15, 8]],
                 'border_no' => ['water2', 'water3']
             ],
             [
@@ -70,7 +70,7 @@ class TestGameDataInitializer
                 'eat' => 1,
                 'work' => 2,
                 'money' => 0,
-                'chance_inc_other' => ['mountians' => [3, 2]],
+                'chance_inc_other' => ['mountains' => [3, 2]],
                 'border_no' => ['water2', 'water3']
             ],
             [
@@ -149,32 +149,6 @@ class TestGameDataInitializer
         foreach ($cellTypes as $type) {
             $ct = new CellType($type);
             $ct->save();
-        }
-    }
-
-    public static function initializeUnitTypes(): void
-    {
-        // Initialize unit types if needed, but for now, assume they are handled elsewhere
-        // Since the test is calling it, let's add a simple implementation
-        // For now, just create a test unit type
-    }
-
-    public static function clearAll(): void
-    {
-        if (class_exists("CellType")) {
-            CellType::$all = [];
-        }
-        if (class_exists("ResourceType")) {
-            ResourceType::clearAll();
-        }
-        if (class_exists("ResearchType")) {
-            ResearchType::clearAll();
-        }
-        if (class_exists("BuildingType")) {
-            BuildingType::clearAll();
-        }
-        if (class_exists("UnitType")) {
-            UnitType::clearAll();
         }
     }
 

@@ -358,10 +358,10 @@ class EditGameTest extends CommonTestBase
             echo "Debug: No exception thrown, vars = " .
                 json_encode($vars) .
                 "\n";
+            $this->assertEquals(true, "Игра должна быть не найдена");
         } catch (Exception $e) {
             $exceptionThrown = true;
             $exceptionMessage = $e->getMessage();
-            echo "Debug: Exception thrown: " . $exceptionMessage . "\n";
             $this->assertStringContainsString(
                 "Игра не найдена",
                 $e->getMessage(),

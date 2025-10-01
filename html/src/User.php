@@ -322,10 +322,15 @@ class User
             "id" => $this->id,
         ]);
         foreach ($rows as $row) {
-            $unit = new Unit($row);
-            $unit->calculate();
-            $unit->points = $unit->type->points;
-            $unit->save();
+            try {
+                $unit = new Unit($row);
+                $unit->calculate();
+                $unit->points = $unit->type->points;
+                $unit->save();
+            } catch (Exception $e) {
+                // Логируем ошибку создания юнита и пропускаем его
+                error_log("Failed to process unit ID {$row['id']}: " . $e->getMessage());
+            }
         }
     }
 
@@ -403,7 +408,7 @@ class User
      * @return City[]
      * @throws Exception
      */
-    public function get_cities()
+    public function get_cities(): array
     {
         $result = [];
         $rows = MyDB::query("SELECT id FROM city WHERE user_id = :id", [

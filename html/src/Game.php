@@ -12,7 +12,7 @@ class Game
      * Кэш всех загруженных игр
      * @var Game[]
      */
-    protected static $_all = [];
+    public static $_all = [];
 
     /**
      * Очистка кэша для тестов

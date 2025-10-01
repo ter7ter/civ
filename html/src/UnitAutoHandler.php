@@ -15,7 +15,7 @@ class UnitAutoHandler
     {
         $auto_ok = false;
         $number = 0;
-        if (!$unit->order && $unit->auto == "work") {
+        if ($unit->auto == "work") {
             //Проверяем есть ли задачи
             if (
                 MyDB::query(
@@ -52,7 +52,7 @@ class UnitAutoHandler
                     $path = array_shift($paths);
                     $paths_to = [];
                     foreach ($cities as $city) {
-                        if ($city == array_shift($cities)) { # fixed to check if current city
+                        if ($city === array_shift($cities)) { # fixed to check if current city
                             continue;
                         }
                         $path_to = UnitMovement::calculatePath(

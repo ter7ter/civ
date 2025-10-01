@@ -57,9 +57,13 @@ class ResearchTest extends CommonTestBase
         $game = $result['game'];
         $user = $result['user'];
 
+        $researchType = TestDataFactory::createTestResearchType([
+            "title" => "Бронзовое дело",
+        ]);
+
         $data = [
             'user_id' => $user->id,
-            'type' => 2, // Бронзовое дело
+            'type' => $researchType->id, // Бронзовое дело
         ];
 
         $research = new Research($data);
@@ -67,7 +71,7 @@ class ResearchTest extends CommonTestBase
         $this->assertNull($research->id);
         $this->assertInstanceOf(User::class, $research->user);
         $this->assertInstanceOf(ResearchType::class, $research->type);
-        $this->assertEquals(2, $research->type->id);
+        $this->assertEquals($researchType->id, $research->type->id);
     }
 
     /**
@@ -156,7 +160,7 @@ class ResearchTest extends CommonTestBase
             ["id" => $research->id],
             "row"
         );
-        $this->assertEquals(2, $updatedData['type']);
+        $this->assertEquals($researchTypeBronze->id, $updatedData['type']);
     }
 
     /**

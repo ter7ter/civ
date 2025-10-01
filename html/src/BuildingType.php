@@ -75,7 +75,7 @@ class BuildingType extends BaseType
     }
 
 
-    public static function clearAll()
+    public static function clearAll(): void
     {
         BuildingType::$all = [];
     }

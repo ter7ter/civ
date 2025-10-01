@@ -68,8 +68,17 @@ class UnitMovement
         if ($unit->points < 0) {
             $unit->points = 0;
         }
-        $cell->units = $unit;
         $unit->save();
+
+        // Обновляем массивы units в клетках после перемещения
+        $cell_from = Cell::get($unit->x, $unit->y, $unit->planet);
+        $cell_from->get_units();
+        $cell->get_units();
+        $cell_from->units = array_filter($cell_from->units, function ($u) use ($unit) {
+            return $u->id != $unit->id;
+        });
+        $cell->units[] = $unit;
+
         return true;
     }
 

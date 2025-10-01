@@ -16,12 +16,6 @@ use App\Tests\Mocks\DatabaseTestAdapter;
  */
 class GameTest extends CommonTestBase
 {
-    protected function setUp(): void
-    {
-        DatabaseTestAdapter::resetTestDatabase();
-        parent::setUp();
-    }
-
     /**
      * Тест получения существующей игры
      */

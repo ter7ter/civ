@@ -18,7 +18,7 @@
                 <div class="input-group mb-2">
                     <select id="need-items-select" class="form-select">
                         <?php foreach ($item_types as $item): ?>
-                        <option value="<?php echo htmlspecialchars($item->id); ?>"><?php echo htmlspecialchars($item->get_title()); ?></option>
+                        <option value="<?php echo htmlspecialchars($item->id); ?>"><?php echo htmlspecialchars($item->getTitle()); ?></option>
                         <?php endforeach; ?>
                     </select>
                     <input type="text" id="need-items-amount" value="1" class="form-control" style="width: auto;">
@@ -32,7 +32,7 @@
                 <div class="input-group mb-2">
                     <select id="required-items-select" class="form-select">
                         <?php foreach ($item_types as $item): ?>
-                        <option value="<?php echo htmlspecialchars($item->id); ?>"><?php echo htmlspecialchars($item->get_title()); ?></option>
+                        <option value="<?php echo htmlspecialchars($item->id); ?>"><?php echo htmlspecialchars($item->getTitle()); ?></option>
                         <?php endforeach; ?>
                     </select>
                     <input type="text" id="required-items-amount" value="1" class="form-control" style="width: auto;">

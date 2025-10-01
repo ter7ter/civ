@@ -2,6 +2,10 @@
 
 namespace App\Tests\Base;
 
+use App\Tests\Mocks\DatabaseTestAdapter;
+use Exception;
+use TestExitException;
+
 require_once __DIR__ . "/TestBase.php";
 
 /**
@@ -57,7 +61,7 @@ class FunctionalTestBase extends TestBase
                     $variables[$key] = $value;
                 }
             }
-        } catch (TestExitException $e) {
+        } catch (TestExitException) {
             // Нормальное завершение через terminate_script()
         } catch (Exception $e) {
             $error = $e->getMessage();
@@ -149,12 +153,18 @@ class FunctionalTestBase extends TestBase
     protected function assertPageHasNoError($result)
     {
         $hasError =
-            isset($result["variables"]["error"]) &&
-            (bool)$result["variables"]["error"];
+            (isset($result["variables"]["error"]) && (bool)$result["variables"]["error"]) ||
+            (isset($result["error"]) && (bool)$result["error"]);
+
+        $errorMessage = "Страница не должна содержать ошибок";
+        if ($hasError) {
+            $errorDetails = $result["error"] ?? $result["variables"]["error"] ?? 'Неизвестная ошибка';
+            $errorMessage .= ": " . (is_array($errorDetails) ? json_encode($errorDetails) : $errorDetails);
+        }
+
         $this->assertFalse(
             $hasError,
-            "Страница не должна содержать ошибок: " .
-                ($hasError ? $result["variables"]["error"] : ""),
+            $errorMessage
         );
     }
 
@@ -258,10 +268,6 @@ class FunctionalTestBase extends TestBase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->clearRequest();
-        $this->clearSession();
-        $this->clearTestHeaders();
-        $this->setupHeaderMock();
     }
 
     protected function tearDown(): void

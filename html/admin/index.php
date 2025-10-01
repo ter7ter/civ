@@ -12,7 +12,6 @@ if (isset($_REQUEST['page'])) {
 } else {
     $page = 'production';
 }
-error_log("admin/index.php loaded, page: $page, REQUEST: " . json_encode($_REQUEST));
 $page_title = 'Админка - ' . ucfirst($page);
 include __DIR__ . '/../templ/partials/header.php';
 ?>

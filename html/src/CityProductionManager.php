@@ -48,7 +48,7 @@ class CityProductionManager
      * @param City $city
      * @return array
      */
-    public static function getPossibleBuildings(City $city)
+    public static function getPossibleBuildings(City $city): array
     {
         $buildings = BuildingType::getAll();
         $result = [];
@@ -81,23 +81,18 @@ class CityProductionManager
      * @param City $city
      * @return bool
      */
-    public static function calculateProduction(City $city)
+    public static function calculateProduction(City $city): bool
     {
         if (!$city->production) {
             return false;
         }
-        switch ($city->production_type) {
-            case "unit":
-                $productionItem = UnitType::get($city->production);
-                break;
-            case "buil":
-                $productionItem = BuildingType::get($city->production);
-                break;
-            default:
-                throw new \Exception(
-                    "Missing production type {$city->production_type}",
-                );
-        }
+        $productionItem = match ($city->production_type) {
+            "unit" => UnitType::get($city->production),
+            "build" => BuildingType::get($city->production),
+            default => throw new \Exception(
+                "Missing production type {$city->production_type}",
+            ),
+        };
         if ($city->production_complete < $productionItem->cost) {
             $city->production_complete += $city->pwork;
         }

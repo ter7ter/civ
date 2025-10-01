@@ -4,7 +4,6 @@ use App\MyDB;
 use App\Game;
 use App\User;
 
-ob_start();
 require_once("includes.php");
 
 // Устанавливаем обработчик ошибок, который превращает их в исключения
@@ -15,7 +14,9 @@ set_error_handler(function ($severity, $message, $file, $line) {
     throw new ErrorException($message, 0, $severity, $file, $line);
 });
 
-MyDB::setDBConfig(DB_HOST, DB_USER, DB_PASS, DB_PORT, DB_NAME);
+if (!defined('RUNNING_TESTS')) {
+    MyDB::setDBConfig(DB_HOST, DB_USER, DB_PASS, DB_PORT, DB_NAME);
+}
 
 try {
     session_start();
@@ -104,12 +105,14 @@ try {
         print json_encode($error_details);
     } else {
         // Если это обычный запрос, выводим ошибку в HTML
-        echo "<pre>Критическая ошибка на сервере:\n";
-        echo htmlspecialchars($e->getMessage()) . "\n";
-        echo "Файл: " . htmlspecialchars($e->getFile()) . "\n";
-        echo "Строка: " . htmlspecialchars($e->getLine()) . "\n";
-        echo "\nСтек вызовов:\n" . htmlspecialchars($e->getTraceAsString());
-        echo "</pre>";
+        /*$error = "Критическая ошибка на сервере: " . $e->getMessage() .
+            "\nФайл: " . $e->getFile() .
+            "\nСтрока: " . $e->getLine() .
+            "\nСтек вызовов:\n" . $e->getTraceAsString();
+        // Очищаем буфер вывода
+        echo $error;
+        echo "</pre>";*/
+        throw $e;
     }
 } finally {
     // Восстанавливаем стандартный обработчик ошибок

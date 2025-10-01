@@ -1,5 +1,7 @@
 <?php
 
+use App\BuildingType;
+use App\UnitType;
 use App\Сity;
 
 /**
@@ -54,10 +56,10 @@ if (!isset($_REQUEST['cid']) || !$cid = (int)$_REQUEST['cid']) {
                         $city->production_type = 'unit';
                     }
                     break;
-                case 'buil':
+                case 'building':
                     if (isset($buildings_possible[$production_id])) {
                         $city->production = $production_id;
-                        $city->production_type = 'buil';
+                        $city->production_type = 'building';
                     }
                     break;
             }
@@ -87,7 +89,7 @@ if (!isset($_REQUEST['cid']) || !$cid = (int)$_REQUEST['cid']) {
             case 'unit':
                 $production = UnitType::get($city->production);
                 break;
-            case 'buil':
+            case 'building':
                 $production = BuildingType::get($city->production);
                 break;
         }

@@ -14,12 +14,6 @@ use App\Tests\Mocks\DatabaseTestAdapter;
  */
 class CreateGameSimpleTest extends CommonTestBase
 {
-    protected function setUp(): void
-    {
-        DatabaseTestAdapter::resetTestDatabase();
-        parent::setUp();
-    }
-
     /**
      * Тест 1.1: Создание базовой игры через класс Game
      */
@@ -57,7 +51,7 @@ class CreateGameSimpleTest extends CommonTestBase
         $turnTypes = ["concurrently", "byturn", "onewindow"];
 
         foreach ($turnTypes as $turnType) {
-            $this->clearTestData(); // Очищаем данные между тестами
+            $this->setGlobalVars(); // Очищаем данные между тестами
 
             $gameData = [
                 "name" => "Игра с типом $turnType",
@@ -83,7 +77,7 @@ class CreateGameSimpleTest extends CommonTestBase
         $mapSizes = [[50, 50], [100, 100], [200, 150], [500, 500]];
 
         foreach ($mapSizes as [$width, $height]) {
-            $this->clearTestData();
+            $this->setGlobalVars();
 
             $gameData = [
                 "name" => "Игра {$width}x{$height}",

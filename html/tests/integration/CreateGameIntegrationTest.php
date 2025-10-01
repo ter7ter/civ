@@ -109,8 +109,7 @@ class CreateGameIntegrationTest extends CommonTestBase
         $turnTypes = ["byturn", "concurrently", "onewindow"];
 
         foreach ($turnTypes as $turnType) {
-            $this->clearTestData();
-
+            $this->setGlobalVars();
             $gameData = [
                 "name" => "Тест типа $turnType",
                 "map_w" => 50,

@@ -58,34 +58,5 @@ class DatabaseTestAdapter
     public static function resetTestDatabase()
     {
         self::clearAllTables();
-
-        // Очистка кэшей классов
-        if (class_exists("City") && method_exists("City", "clearCache")) {
-            City::clearCache();
-        }
-        if (class_exists("User") && method_exists("User", "clearCache")) {
-            User::clearCache();
-        }
-        if (class_exists("Game") && method_exists("Game", "clearCache")) {
-            Game::clearCache();
-        }
-        if (class_exists("Unit") && method_exists("Unit", "clearCache")) {
-            Unit::clearCache();
-        }
-        if (class_exists("UnitType")) {
-            UnitType::clearCache();
-        }
-        if (class_exists("ResearchType")) {
-            ResearchType::clearAll();
-        }
-        if (class_exists("BuildingType")) {
-            BuildingType::clearAll();
-        }
-        if (class_exists("ResourceType")) {
-            ResourceType::clearAll();
-        }
-        if (class_exists("CellType")) {
-            CellType::$all = [];
-        }
     }
 }

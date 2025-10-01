@@ -7,25 +7,18 @@ global $error;
 
 $error = '';
 
-error_log("Error at start: $error");
-
 $action = $_REQUEST['action'] ?? 'list';
 $id = $_REQUEST['id'] ?? null;
 $message = '';
 
-error_log("unit_types.php loaded, action: $action, id: $id, REQUEST: " . json_encode($_REQUEST));
-
 // Обработка действий перед выводом HTML
 if ($action == 'save') {
-    error_log("Action: $action, ID: $id");
     if ($id) {
-        error_log("Editing id: $id");
         $unitType = UnitType::get($id);
         if (!$unitType) {
             $message = "Unit type not found.";
         }
     } else {
-        error_log("Creating new");
         $unitType = new UnitType([]);
     }
 
@@ -60,7 +53,6 @@ if ($action == 'save') {
                 "city" => 1,
             ];
 
-            error_log("Before save");
             $unitType->save();
             $message = "Unit type saved successfully.";
             $action = 'list'; // Переходим к списку после сохранения
@@ -86,8 +78,6 @@ if ($action == 'edit' && $id) {
 }
 
 $unitTypes = UnitType::getAll();
-
-error_log("Final error: $error");
 
 if ($action == 'edit' || $action == 'add') {
     include 'templates/unit_types_form.php';

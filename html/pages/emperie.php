@@ -1,5 +1,7 @@
 <?php
 
+use App\BuildingType;
+use App\UnitType;
 use App\Сity;
 use App\User;
 
@@ -26,7 +28,7 @@ foreach ($cities as $city) {
     if ($city->production) {
         if ($city->production_type == 'unit') {
             $production = UnitType::get($city->production);
-        } elseif ($city->production_type == 'buil') {
+        } elseif ($city->production_type == 'building') {
             $production = BuildingType::get($city->production);
         } else {
             throw new Exception("Unknow production type ".$city->production_type);

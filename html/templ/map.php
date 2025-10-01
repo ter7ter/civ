@@ -64,9 +64,6 @@ include 'partials/header.php';
 <div id="event-window-research" eid="">...</div>
 <div id="event-window-city" eid="" cid="">...</div>
 
-<?php
-ob_start();
-?>
 <script src="js/functions.js"></script>
 <script src="js/map.js"></script>
 <script src="js/unit.js"></script>

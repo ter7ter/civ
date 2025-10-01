@@ -110,8 +110,9 @@ class CityTest extends CommonTestBase
     public function testGetPossibleUnits()
     {
         [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
-        TestGameDataInitializer::initializeUnitTypes();
-        City::clearCache();
+
+        TestDataFactory::createTestUnitType();
+
         $city = City::get($cityData->id);
         $units = $city->get_possible_units();
         $this->assertIsArray($units);
@@ -234,7 +235,6 @@ class CityTest extends CommonTestBase
         [$game, $user, $planetId, $cityData] = $this->setUpTestCity();
         City::clearCache();
         $city = City::get($cityData->id);
-        TestGameDataInitializer::initializeUnitTypes();
         $unitType = TestDataFactory::createTestUnitType([
             'title' => 'Поселенец',
             'cost' => 40,

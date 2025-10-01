@@ -46,9 +46,6 @@ foreach ($gamelist as $game):?>
     </div>
 </div>
 
-<?php
-ob_start(); // Start output buffering for page-specific scripts
-?>
 <script src="js/functions.js"></script>
 <script src="js/forms.js"></script>
 <script>

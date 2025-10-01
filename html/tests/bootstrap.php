@@ -92,9 +92,6 @@ require_once TESTS_ROOT . "/Mocks/TestHelpers.php";
 // Устанавливаем схему базы данных
 TestGameDataInitializer::setupDatabaseSchema();
 
-// Очищаем данные, созданные в оригинальных классах
-TestGameDataInitializer::clearAll();
-
 if (class_exists('App\\CellType')) {
     TestGameDataInitializer::initializeCellTypes();
 }
@@ -223,7 +220,7 @@ foreach ($requiredExtensions as $extension) {
 if (!empty($missingExtensions)) {
     $message =
         "Missing required PHP extensions: " . implode(", ", $missingExtensions);
-    if (php_sapi_name() === "cli") {
+    if (php_sapi_name() === "cli" && !defined('RUNNING_TESTS')) {
         echo "Warning: " . $message . "\n";
     }
     error_log($message);

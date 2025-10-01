@@ -80,7 +80,6 @@ foreach ($user_list as $user_login): ?>
     </div>
 </div>
 
-<?php ob_start(); ?>
 <script>
 $(document).ready(function() {
     function updatePlayerColors() {

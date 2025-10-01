@@ -456,8 +456,6 @@ class BuildingTypeTest extends CommonTestBase
      */
     public function testAllPredefinedBuildingTypes(): void
     {
-        TestGameDataInitializer::clearAll();
-
         $expectedTypes = [
             TestDataFactory::createTestBuildingType(),
         ];

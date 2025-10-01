@@ -15,12 +15,10 @@ class OpenGameIntegrationTest extends FunctionalTestBase
 {
     protected function setUp(): void
     {
-        DatabaseTestAdapter::resetTestDatabase();
         parent::setUp();
         $this->clearRequest();
         $this->clearSession();
         $this->headers = [];
-        $this->clearTestData(); // Добавлено для обеспечения чистого состояния перед каждым тестом
     }
 
     /**
@@ -85,9 +83,8 @@ class OpenGameIntegrationTest extends FunctionalTestBase
         ];
 
         foreach ($configurations as $config) {
-            $this->clearTestData();
-            $this->clearSession();
-
+            $this->setGlobalVars();
+            $this->setGlobalVars();
             $game = TestDataFactory::createTestGame($config);
             $user = TestDataFactory::createTestUser(["login" => "Игрок", "game" => $game->id]);
 

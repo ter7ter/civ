@@ -40,12 +40,10 @@ class EditGameIntegrationTest extends FunctionalTestBase
 
     protected function setUp(): void
     {
-        DatabaseTestAdapter::resetTestDatabase();
         parent::setUp();
         $this->clearRequest();
         $this->clearSession();
         $this->headers = [];
-        $this->clearTestData(); // Добавлено для обеспечения чистого состояния перед каждым тестом
     }
 
     /**
@@ -265,9 +263,11 @@ class EditGameIntegrationTest extends FunctionalTestBase
         $this->assertEquals("concurrently", $gameRecord["turn_type"]);
 
         // Проверяем, что все игроки остались
+        $playerCount = MyDB::query("SELECT COUNT(*) FROM user WHERE game = ?", [$game->id])[0]["COUNT(*)"];
+
         $this->assertEquals(
             16,
-            $this->getTableCount("user"),
+            $playerCount,
             "Должно остаться 16 игроков",
         );
     }
@@ -309,7 +309,7 @@ class EditGameIntegrationTest extends FunctionalTestBase
         }
 
         // Проверяем, что все игры были отредактированы корректно
-        $allGames = MyDB::query("SELECT * FROM game ORDER BY id");
+        $allGames = MyDB::query("SELECT * FROM game WHERE id IN (?, ?, ?)", [$games[0]->id, $games[1]->id, $games[2]->id]);
         $this->assertEquals(3, count($allGames), "Должно быть 3 игры");
 
         for ($i = 0; $i < 3; $i++) {

@@ -22,7 +22,7 @@ class Building
     /**
      * Очищает кэш зданий
      */
-    public static function clearCache()
+    public static function clearCache(): void
     {
         Building::$_all = [];
     }

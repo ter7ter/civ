@@ -10,9 +10,15 @@ use App\User;
  */
 
 /** @var User $user Текущий пользователь */
+if (!$user) {
+    throw new Exception('User not found');
+}
 if ($user->turn_status == 'play') {
     $user->calculate_units(); //Конец хода
     $game = Game::get($user->game);
+    if (!$game) {
+        throw new Exception('Game not found for user: ' . $user->id);
+    }
     $user->turn_status = 'end';
     $user->save();
     $game->all_system_message('Игрок '.$user->login. ' закончил свой ход');
@@ -26,10 +32,13 @@ if ($user->turn_status == 'play') {
 
         //Если следующий игрок, который должен ходить, найден
         if ($next_user) {
-            $next_user = User::get($next_user);
-            $next_user->turn_status = 'play';
-            $next_user->new_system_message('Вы начинаете свой ход');
-            $next_user->save();
+            $next_user_obj = User::get($next_user);
+            if (!$next_user_obj) {
+                throw new Exception('Next user not found: ' . $next_user);
+            }
+            $next_user_obj->turn_status = 'play';
+            $next_user_obj->new_system_message('Вы начинаете свой ход');
+            $next_user_obj->save();
         }
     }
     if (MyDB::query(

@@ -16,17 +16,6 @@ use App\Tests\Factory\TestDataFactory;
  */
 class AdminIntegrationTest extends FunctionalTestBase
 {
-    protected function setUp(): void
-    {
-        DatabaseTestAdapter::resetTestDatabase();
-        parent::setUp();
-        $this->clearTestData();
-        // Очищаем кэш моделей
-        UnitType::clearCache();
-        BuildingType::clearAll();
-        ResearchType::clearAll();
-        ResourceType::clearAll();
-    }
 
     /**
      * Тест создания типа юнита через прямой вызов функций

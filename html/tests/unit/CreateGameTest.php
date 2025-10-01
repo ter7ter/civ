@@ -12,11 +12,6 @@ use App\Tests\Base\CommonTestBase;
  */
 class CreateGameTest extends CommonTestBase
 {
-    protected function setUp(): void
-    {
-        $this->setUpUnitTest();
-    }
-
     /**
      * Тест 1.1: Создание базовой игры
      */

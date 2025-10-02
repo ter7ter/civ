@@ -2,7 +2,10 @@
 
 namespace App;
 
-class Building
+use App\Interfaces\IModel;
+use App\Interfaces\BuildingInterface;
+
+class Building implements IModel, BuildingInterface
 {
     /**
      * @var int

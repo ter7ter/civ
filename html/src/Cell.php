@@ -2,7 +2,9 @@
 
 namespace App;
 
-class Cell
+use App\Interfaces\CellInterface;
+
+class Cell implements CellInterface
 {
     /**
      * @var int

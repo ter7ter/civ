@@ -2,11 +2,13 @@
 
 namespace App;
 
+use App\Interfaces\IModel;
+
 /**
  * Класс, представляющий игру в Civilization.
  * Управляет пользователями, картой, ходами и общими механиками игры.
  */
-class Game
+class Game implements IModel
 {
     /**
      * Кэш всех загруженных игр
@@ -40,6 +42,12 @@ class Game
      * @var User[]
      */
     public $users = [];
+
+    /**
+     * Менеджер логики игры
+     * @var GameManager
+     */
+    private GameManager $manager;
 
     /**
      * Ширина карты
@@ -125,6 +133,7 @@ class Game
                 }
             }
         }
+        $this->manager = new GameManager($this);
     }
 
     /**
@@ -152,7 +161,7 @@ class Game
      */
     public function create_new_game()
     {
-        MapGenerator::generateNewGame($this);
+        $this->manager->createNewGame();
     }
 
     /**
@@ -169,7 +178,7 @@ class Game
      */
     public function calculate()
     {
-        TurnCalculator::calculateTurn($this);
+        $this->manager->calculateTurn();
     }
 
     /**
@@ -178,8 +187,7 @@ class Game
      */
     public function all_system_message($text)
     {
-        $messageService = new MessageService();
-        $messageService->send_system_to_all($this, $text);
+        $this->manager->sendSystemMessageToAll($text);
     }
 
     /**
@@ -188,7 +196,7 @@ class Game
      */
     public function getActivePlayer()
     {
-        return TurnCalculator::getActivePlayer($this);
+        return $this->manager->getActivePlayer();
     }
 
     /**
@@ -197,14 +205,6 @@ class Game
      */
     public function get_first_planet()
     {
-        $planet_id = MyDB::query(
-            "SELECT id FROM planet WHERE game_id = :game_id ORDER BY id LIMIT 1",
-            ["game_id" => $this->id],
-            "elem",
-        );
-        if ($planet_id) {
-            return Planet::get($planet_id);
-        }
-        return null;
+        return $this->manager->getFirstPlanet();
     }
 }

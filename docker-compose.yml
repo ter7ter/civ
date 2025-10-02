@@ -9,6 +9,8 @@ services:
    - ./html:/var/www/html
    - ./html/apache_logs:/var/log/apache2
    - ./mysite.conf:/usr/local/apache2/conf/extra/mysite.conf
+   - ./php/custom.ini:/usr/local/etc/php/conf.d/custom.ini
+   - ./logs:/var/log/php
   depends_on:
    - db
   environment:
@@ -53,6 +55,10 @@ services:
    - '80:80'
   networks:
    - pr1_network
+  depends_on:
+   - php
+   - phpmyadmin
+   - phpredisadmin
  redis:
   image: redis:latest
   networks:

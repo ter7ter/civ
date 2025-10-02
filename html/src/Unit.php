@@ -3,7 +3,10 @@
 namespace App;
 
 use Exception;
-class Unit
+use App\Interfaces\IModel;
+use App\Interfaces\UnitInterface;
+
+class Unit implements IModel, UnitInterface
 {
     /**
      * @var int
@@ -35,6 +38,12 @@ class Unit
      */
     public $mission = false;
     public int $points = 0;
+
+    /**
+     * Менеджер статистики юнита
+     * @var UnitStats
+     */
+    private UnitStats $stats;
     /**
      * Сколько уже вложено очков в выполнение текущей миссии
      * @var int
@@ -185,6 +194,7 @@ class Unit
         if (isset($data["id"])) {
             Unit::$all[$this->id] = $this;
         }
+        $this->stats = new UnitStats($this);
     }
 
     public function getTitle()

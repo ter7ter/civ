@@ -3,46 +3,63 @@
 namespace App;
 
 /**
- * Менеджер игры, отвечающий за логику управления игрой.
- * Реализует SRP, разделяя ответственность от модели данных Game.
+ * Класс для управления логикой игры (расчет ходов, генерация, сообщения)
  */
 class GameManager
 {
-    /**
-     * Создание новой игры.
-     * @param Game $game
-     */
-    public static function createNewGame(Game $game)
+    private Game $game;
+
+    public function __construct(Game $game)
     {
-        $game->create_new_game();
+        $this->game = $game;
     }
 
     /**
-     * Расчет хода для игры.
-     * @param Game $game
+     * Создать новую игру
      */
-    public static function calculateTurn(Game $game)
+    public function createNewGame(): void
     {
-        $game->calculate();
+        MapGenerator::generateNewGame($this->game);
     }
 
     /**
-     * Получить активного игрока.
-     * @param Game $game
-     * @return int|null
+     * Рассчитать ход для игры
      */
-    public static function getActivePlayer(Game $game)
+    public function calculateTurn(): void
     {
-        return $game->getActivePlayer();
+        TurnCalculator::calculateTurn($this->game);
     }
 
     /**
-     * Отправить системное сообщение всем пользователям игры.
-     * @param Game $game
-     * @param string $message
+     * Отправить системное сообщение всем пользователям
      */
-    public static function sendSystemMessageToAll(Game $game, string $message)
+    public function sendSystemMessageToAll(string $text): void
     {
-        $game->all_system_message($message);
+        $messageService = new MessageService();
+        $messageService->send_system_to_all($this->game, $text);
+    }
+
+    /**
+     * Получить активного игрока
+     */
+    public function getActivePlayer(): ?int
+    {
+        return TurnCalculator::getActivePlayer($this->game);
+    }
+
+    /**
+     * Получить первую планету
+     */
+    public function getFirstPlanet(): ?Planet
+    {
+        $planet_id = MyDB::query(
+            "SELECT id FROM planet WHERE game_id = :game_id ORDER BY id LIMIT 1",
+            ["game_id" => $this->game->id],
+            "elem",
+        );
+        if ($planet_id) {
+            return Planet::get($planet_id);
+        }
+        return null;
     }
 }

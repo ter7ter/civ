@@ -149,7 +149,7 @@ class NextTurnIntegrationTest extends CommonTestBase
 
         $this->assertEquals(2, $gameData['game']->turn_num); // Предполагаем, что начальный turn был 1
 
-        //User::clearCache();
+        User::clearCache();
         // Для нового хода: первый 'play', второй 'wait'
         $firstUser = User::get($firstUser->id); // Обновляем данные
         $this->assertEquals('play', $firstUser->turn_status);

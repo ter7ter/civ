@@ -305,7 +305,7 @@ class City
                 ["id" => $this->id],
             );
             foreach ($people_cells as $pcell) {
-                $this->people_cells[] = Cell::get($pcell["x"], $pcell["y"]);
+                $this->people_cells[] = Cell::get($pcell["x"], $pcell["y"], $pcell["planet"]);
             }
             $buildings = MyDB::query(
                 "SELECT * FROM building WHERE city_id =:id ORDER BY `type`",

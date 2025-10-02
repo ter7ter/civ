@@ -41,7 +41,7 @@ class CityTest extends CommonTestBase
             "x" => 10,
             "y" => 10,
         ], $cityOverrides));
-        $this->createTestMapCells(10, 10, 1, 1, $result['planet']->id);
+        $this->createTestMapCells(10, 10, 3, 3, $result['planet']->id);
         return [$result['game'], $result['user'], $result['planet'], $result['city']];
     }
 
@@ -331,5 +331,16 @@ class CityTest extends CommonTestBase
         $city->select_next_production();
         $this->assertEquals("unit", $city->production_type);
         $this->assertGreaterThan(0, $city->production);
+    }
+
+    /**
+     * @covers City::locate_people
+     */
+    public function testLocatePeople()
+    {
+        [$game, $user, $planet, $city] = $this->setUpTestCity();
+        $city->population = 3;
+        $city->locate_people();
+        $this->assertCount(3, $city->people_cells);
     }
 }

@@ -249,17 +249,31 @@ class AdminBuildingTypeTest extends CommonTestBase
 
     public function testBuildingTypeCityEffect()
     {
-        $this->markTestIncomplete('Тест недоделан - дублирует BuildingTypeTest.php');
-        return;
-        $buildingType = new BuildingType([]);
-        $buildingType->title = 'Effect Test Building';
-        $buildingType->id = 2; // Амбар
-        $buildingType->save();
+        if (!defined('BASE_EAT_UP')) {
+            define('BASE_EAT_UP', 20);
+        }
+
+        $buildingType = TestDataFactory::createTestBuildingType([
+            'title' => 'амбар',
+            'cost' => 30,
+            'upkeep' => 1,
+            'culture' => 0,
+            'culture_bonus' => 0,
+            'research_bonus' => 0,
+            'money_bonus' => 0,
+            'description' => 'Увеличивает производство еды',
+            'city_effects' => ['eat_up_multiplier' => 0.5],
+        ]);
 
         // Создаем тестового пользователя, планету и город
-        $userData = TestDataFactory::createTestUser();
-        $planetId = TestDataFactory::createTestPlanet();
-        $city = TestDataFactory::createTestCity(['user_id' => $userData['id'], 'planet' => $planetId]);
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
+        $user = TestDataFactory::createTestUser(['game' => $game->id]);
+        $city = TestDataFactory::createTestCity(['user_id' => $user->id, 'planet' => $planet->id]);
+
+        City::clearCache();
+        $city = City::get($city->id);
+        $city->eat_up = BASE_EAT_UP;
 
         // Применяем эффект здания
         $buildingType->city_effect($city);

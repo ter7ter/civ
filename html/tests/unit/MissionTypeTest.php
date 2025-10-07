@@ -3,6 +3,7 @@
 namespace App\Tests;
 
 use App\MissionType;
+use App\Tests\Base\TestGameDataInitializer;
 use App\Unit;
 use App\City;
 use App\Cell;
@@ -18,8 +19,7 @@ class MissionTypeTest extends CommonTestBase
         $this->clearSession();
         $this->headers = [];
 
-        // Подключаем классы проекта
-        require_once PROJECT_ROOT . "/includes.php";
+        TestGameDataInitializer::initializeCellTypes();
     }
 
     public function testConstructor()

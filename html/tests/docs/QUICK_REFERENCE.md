@@ -60,15 +60,6 @@ $game->create_new_game(); // Медленно!
 $this->createGameViaPage($data); // Медленно!
 ```
 
-## 🐛 Частые проблемы
-
-| Ошибка | Решение |
-|---------|---------|
-| `sqlite_master doesn't exist` | Используй `SHOW TABLES` вместо SQLite команд |
-| `Timeout/Memory limit` | Уменьши размер карты до 20x20 |
-| `PHPUnit not found` | Запусти `tests\run_tests.bat install-phpunit` |
-| `Table not found` | Проверь что `DatabaseTestAdapter::createTestTables()` вызван |
-
 ## 📊 Покрытие тестами
 
 - ✅ Базовые классы: 95%
@@ -102,4 +93,4 @@ $this->createGameViaPage($data); // Медленно!
 
 ---
 
-💡 **Совет:** Запускай `tests\run_quick_tests.bat` перед каждым коммитом!
+💡 **Совет:** Запускай `tests\run_tests.bat` перед каждым коммитом!

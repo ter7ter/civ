@@ -1,3 +1,72 @@
-Building (App\Tests\Building)
- [x] City effect
+Create Game (App\Tests\CreateGame)
+ [x] Create basic game
+ [x] Create concurrent game
+ [x] Create one window game
+ [x] Whitespace game name
+ [x] Empty game name
+ [x] Duplicate player names
+ [x] Too small map size
+ [x] Too large map size
+ [x] Too many players
+ [x] Data preservation on error
+ [x] X s s in game name
+ [x] X s s in player names
+ [x] Very long strings
+ [x] Player color generation
+ [x] Empty player fields
+ [x] Invalid turn type
+ [x] No post data
+ [x] Game initial conditions
+ [x] Minimum players
+
+Game (App\Tests\Game)
+ [x] Create new game
+ [x] Get existing game
+ [x] Calculate concurrently
+ [x] Calculate by turn
+ [x] Get first planet
+ [x] Get non existing game
+ [x] Construct
+ [x] Save new
+ [x] Save update
+ [x] Game list
+ [x] All system message
+ [x] Get active player by turn
+ [x] Get active player concurrently
+ [x] Get active player no active
+ [x] Get first planet no planets
+
+Edit Game (App\Tests\EditGame)
+ [x] Load game without id
+ [x] Edit basic game parameters
+ [x] Edit game name only
+ [x] Edit map size
+ [x] Edit turn type
+ [x] Load game data for editing
+ [x] Edit with empty name
+ [x] Edit with invalid map size
+ [x] Edit with invalid turn type
+ [x] Edit non existent game
+ [x] Edit without game id
+ [x] Data preservation on validation error
+ [x] X s s in edited game name
+ [x] Very long strings in edit
+ [x] Load non existent game for editing
+ [x] Multiple validation errors
+ [x] Game not changed on validation error
+
+Open Game (App\Tests\OpenGame)
+ [x] Open game with user from different game
+ [x] Successful game opening
+ [x] Open game with multiple players
+ [x] Open game with different turn types
+ [x] Open non existent game
+ [x] Open game with non existent user
+ [x] Open game without game id
+ [x] Open game without user id
+ [x] Game list loading
+ [x] Empty game list
+ [x] Session state after game opening
+ [x] Reopen game with different user
+ [x] Open game with max players
 

@@ -173,6 +173,7 @@ class TestGameDataInitializer
             PROJECT_ROOT . "/sql/add_mission_type_table.sql",
             PROJECT_ROOT . "/sql/add_cell_type_table.sql",
             PROJECT_ROOT . "/sql/add_unit_type_can_move_table.sql",
+            PROJECT_ROOT . "/sql/add_unit_level_column.sql",
         ];
 
         foreach ($sqlFiles as $sqlFile) {

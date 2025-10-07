@@ -55,7 +55,7 @@ class DatabaseTestAdapter
     /**
      * Полная очистка тестовой БД
      */
-    public static function resetTestDatabase()
+    public static function resetTestDatabase(): void
     {
         self::clearAllTables();
     }

@@ -15,8 +15,10 @@ class CreateGameIntegrationTest extends CommonTestBase
     {
         $this->setUpIntegrationTest();
 
+        \App\Tests\Base\TestGameDataInitializer::initializeCellTypes();
+
         $unitSettlerType = TestDataFactory::createTestUnitType([
-            "title" => "Поселенец",
+            "title" => "Поселенеец",
             "cost" => 40,
             "upkeep" => 1,
             "attack" => 0,

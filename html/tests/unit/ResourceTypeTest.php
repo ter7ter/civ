@@ -2,7 +2,6 @@
 
 namespace App\Tests;
 
-use App\CellType;
 use App\ResourceType;
 use App\Tests\Factory\TestDataFactory;
 use App\User;
@@ -66,7 +65,7 @@ class ResourceTypeTest extends CommonTestBase
             'max_amount' => 100,
         ];
 
-        $resourceType = new ResourceType($data);
+        $resourceType = TestDataFactory::createTestResourceType($data);
 
         $this->assertEquals('test_resource', $resourceType->id);
         $this->assertEquals('Test Resource', $resourceType->title);
@@ -85,7 +84,7 @@ class ResourceTypeTest extends CommonTestBase
     }
 
     /**
-     * Тест метода getTitle
+     * Тест метода get_title
      */
     public function testGetTitle(): void
     {
@@ -120,7 +119,7 @@ class ResourceTypeTest extends CommonTestBase
         $game = TestDataFactory::createTestGame();
         $user = TestDataFactory::createTestUser(['game' => $game->id]);
 
-        $researchType = TestDataFactory::createTestResearchType(['title' => 'Верховая езда']);
+        $researchType = TestDataFactory::createTestResearchType(['id' => 1001, 'title' => 'Верховая езда']);
 
         $resourceType = TestDataFactory::createTestResourceType([
             'id' => 'horse',
@@ -146,14 +145,14 @@ class ResourceTypeTest extends CommonTestBase
         $game = TestDataFactory::createTestGame();
         $user = TestDataFactory::createTestUser(['game' => $game->id]);
 
-        $researchType = TestDataFactory::createTestResearchType(['title' => 'Верховая езда']);
+        $researchType = TestDataFactory::createTestResearchType(['id' => 2001, 'title' => 'Верховая езда']);
 
         $resourceType = TestDataFactory::createTestResourceType([
             'id' => 'horse',
             'title' => 'Лошади',
             'req_research' => [],
         ]);
-        $resourceType->addReqResearch($researchType); // Требуется объект исследования
+        $resourceType->addReqResearch($researchType); // Требуется верховая езд
         $resourceType->save();
 
         $this->assertFalse($resourceType->canUse($user));
@@ -164,29 +163,15 @@ class ResourceTypeTest extends CommonTestBase
      */
     public function testComplexProperties(): void
     {
-        $horse = TestDataFactory::createTestResourceType([
-            'id' => 'horse',
-            'title' => 'Лошади',
-            'cell_types' => [
-                CellType::get("plains"),
-                CellType::get("plains2")
-            ],
-        ]);
-        $researchType = TestDataFactory::createTestResearchType(['title' => 'Верховая езда']);
-        $horse->addReqResearch($researchType);
+        $horse = TestDataFactory::createTestResourceType(['id' => 'horse']);
+        $horse->addReqResearch(TestDataFactory::createTestResearchType(['title' => 'Верховая езда']));
+        $horse->save();
         $this->assertIsArray($horse->req_research);
         $this->assertIsArray($horse->cell_types);
         $this->assertNotEmpty($horse->req_research);
         $this->assertNotEmpty($horse->cell_types);
 
-        $coal = TestDataFactory::createTestResourceType([
-            'id' => 'coal',
-            'title' => 'уголь',
-            'cell_types' => [
-                CellType::get("hills"),
-                CellType::get("mountains")
-            ],
-        ]);
+        $coal = TestDataFactory::createTestResourceType(['id' => 'coal']);
         $this->assertIsArray($coal->req_research);
         $this->assertIsArray($coal->cell_types);
         $this->assertEmpty($coal->req_research); // Уголь не требует исследований

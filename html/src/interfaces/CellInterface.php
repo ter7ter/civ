@@ -2,6 +2,8 @@
 
 namespace App\Interfaces;
 
+use App\City;
+
 /**
  * Интерфейс для клеток: информация и ресурсы
  */

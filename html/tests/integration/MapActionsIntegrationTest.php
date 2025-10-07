@@ -42,33 +42,37 @@ class MapActionsIntegrationTest extends TestBase
         $user = TestDataFactory::createTestUser(["game" => $game->id]);
 
         // Создаем клетку старта юнита
-        TestDataFactory::createTestCell([
+        MyDB::insert("cell", [
             "x" => 10,
             "y" => 10,
             "planet" => $planet->id,
             "type" => "plains",
         ]);
-        // Создаем клетку цели
-        $targetCell = TestDataFactory::createTestCell([
-            "x" => 11,
-            "y" => 10,
-            "planet" => $planet->id,
-            "type" => "plains",
-        ]);
-
-        $unitType = TestDataFactory::createTestUnitType();
 
         // Создаем юнит
         $unitData = [
             "user_id" => $user->id,
-            "type" => $unitType->id, // Предполагаем, что тип 1 существует
+            "type" => 1, // Предполагаем, что тип 1 существует
             "x" => 10,
             "y" => 10,
             "planet" => $planet->id,
             "health" => 3,
             "points" => 5,
         ];
-        $unit = TestDataFactory::createTestUnit($unitData);
+        $unitId = MyDB::insert("unit", $unitData);
+
+        // Создаем клетку назначения
+        $cellData = [
+            "x" => 11,
+            "y" => 10,
+            "planet" => $planet->id,
+            "type" => "plains",
+        ];
+        MyDB::insert("cell", $cellData);
+
+        // Получаем юнит и перемещаем
+        $unit = Unit::get($unitId);
+        $targetCell = Cell::get(11, 10, $planet->id);
 
         $this->assertTrue(
             $unit->can_move($targetCell),
@@ -79,7 +83,7 @@ class MapActionsIntegrationTest extends TestBase
         $this->assertTrue($result, "Перемещение должно быть успешным");
 
         // Проверяем новые координаты
-        $updatedUnit = Unit::get($unit->id);
+        $updatedUnit = Unit::get($unitId);
         $this->assertEquals(
             11,
             $updatedUnit->x,

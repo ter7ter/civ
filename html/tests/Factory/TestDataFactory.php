@@ -2,15 +2,19 @@
 
 namespace App\Tests\Factory;
 
+use App\Building;
+use App\BuildingType;
 use App\Cell;
 use App\CellType;
 use App\City;
+use App\Event;
 use App\Game;
 use App\MyDB;
 use App\Planet;
 use App\Research;
 use App\ResourceType;
 use App\Unit;
+use App\UnitType;
 use App\User;
 use App\Tests\Base\TestGameDataInitializer;
 
@@ -94,6 +98,11 @@ class TestDataFactory
 
         $cellData = array_merge($defaultData, $data);
 
+        // Ensure planet is ID, not object
+        if ($cellData["planet"] instanceof Planet) {
+            $cellData["planet"] = $cellData["planet"]->id;
+        }
+
         $cell = new Cell($cellData);
         $cell->save();
 
@@ -126,6 +135,11 @@ class TestDataFactory
 
         $cityData = array_merge($defaultData, $data);
 
+        // Ensure planet is ID, not object
+        if ($cityData["planet"] instanceof Planet) {
+            $cityData["planet"] = $cityData["planet"]->id;
+        }
+
         // Создаем клетку, если она не существует
         self::createTestCell([
             "x" => $cityData["x"],
@@ -151,8 +165,8 @@ class TestDataFactory
         }
 
         // Ensure at least one unit type exists
-        if (!class_exists('App\\UnitType') || !method_exists('App\\UnitType','get') || !\App\UnitType::get(1)) {
-            self::createTestUnitType();
+        if (!isset($data["type"]) || !UnitType::get($data["type"])) {
+            $data["type"] = self::createTestUnitType()->id;
         }
 
         $defaultData = [
@@ -165,6 +179,21 @@ class TestDataFactory
         ];
 
         $unitData = array_merge($defaultData, $data);
+
+        // Ensure planet is ID, not object
+        if ($unitData["planet"] instanceof Planet) {
+            $unitData["planet"] = $unitData["planet"]->id;
+        }
+
+        $cell = Cell::get($unitData["x"], $unitData["y"], $unitData["planet"]);
+        if (!$cell) {
+            self::createTestCell([
+                "x" => $unitData["x"],
+                "y" => $unitData["y"],
+                "planet" => $unitData["planet"],
+                "type" => "plains",
+            ]);
+        }
 
         $unit = new Unit($unitData);
         $unit->save();
@@ -376,18 +405,6 @@ class TestDataFactory
      */
     public static function createTestMissionType($data = []): \App\MissionType
     {
-        // Try to get the existing global mission type first
-        if (isset($data['id']) && \App\MissionType::get($data['id'])) {
-            $missionType = \App\MissionType::get($data['id']);
-            // Override data if provided
-            foreach ($data as $key => $value) {
-                if (property_exists($missionType, $key)) {
-                    $missionType->$key = $value;
-                }
-            }
-            return $missionType;
-        }
-
         $defaultData = [
             "id" => "build_city",
             "title" => "Основать город",
@@ -399,12 +416,6 @@ class TestDataFactory
         $missionData = array_merge($defaultData, $data);
 
         $missionType = new \App\MissionType($missionData);
-
-        // If id matches a global one, set the handler
-        if (isset(\App\MissionType::$all[$missionData['id']])) {
-            $missionType->completeHandler = \App\MissionType::$all[$missionData['id']]->completeHandler;
-        }
-
         return $missionType;
     }
 
@@ -462,6 +473,7 @@ class TestDataFactory
             'chance' => 0.01,
             'min_amount' => 50,
             'max_amount' => 500,
+            'cell_types' => ['plains', 'plains2'],
         ];
         $resourceTypeData = array_merge($defaultData, $data);
         $resourceType = new ResourceType($resourceTypeData);
@@ -471,9 +483,36 @@ class TestDataFactory
 
     }
 
-    // Backward compatible alias used by some tests
-    public static function createResourceType(array $data): ResourceType
+    public static function createTestBuilding(array $data): Building
     {
-        return self::createTestResourceType($data);
+        if (!isset($data['city_id']) || !City::get($data['city_id'])) {
+            throw new \Exception("City ID is required to create a test building");
+        }
+        if (!isset($data['type']) || !BuildingType::get($data['type'])) {
+            throw new \Exception("Building type ID is required to create a test building");
+        }
+        $building = new Building($data);
+        $building->save();
+        $city = City::get($data['city_id']);
+        $city->buildings[] = $building;
+        return $building;
+    }
+
+    public static function createTestEvent(array $data): Event
+    {
+        if (!isset($data['user_id']) || !User::get($data['user_id'])) {
+            throw new \Exception("User ID is required to create an event");
+        }
+        if (!isset($data['object'])) {
+            throw new \Exception("Object ID is required to create an event");
+        }
+        $defaultData = [
+            'type' => 'research',
+            'source' => null,
+        ];
+        $eventData = array_merge($defaultData, $data);
+        $event = new Event($eventData);
+        $event->save();
+        return $event;
     }
 }

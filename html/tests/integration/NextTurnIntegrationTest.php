@@ -188,8 +188,6 @@ class NextTurnIntegrationTest extends CommonTestBase
             "user" => $firstUser,
             "game" => $gameData['game'],
         ]);
-        error_log(var_export($gameData['game'], true));
-        error_log($result['output']);
 
         // Проверяем переключение сессии
         $this->assertArrayHasKey('data', $result);

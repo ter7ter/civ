@@ -32,7 +32,6 @@ if (!defined("TEST_DB_PASS")) {
 if (!defined("TEST_DB_PORT")) {
     define("TEST_DB_PORT", 3306);
 }
-define("USER_TRANSACTION_MODE", false);
 
 // Загружаем автозагрузчик Composer
 require_once PROJECT_ROOT . "/vendor/autoload.php";
@@ -68,7 +67,6 @@ if (getenv('PARATEST')) {
 } else {
     $dbName = 'civ_for_tests';
 }
-//$dbName = 'civ_for_tests';
 
 // Сначала подключаемся без базы данных, чтобы создать её
 try {
@@ -82,7 +80,6 @@ try {
 
 MyDB::setDBConfig(TEST_DB_HOST, TEST_DB_USER, TEST_DB_PASS, TEST_DB_PORT, $dbName);
 // Подключаемся к MySQL серверу, не указывая базу данных
-MyDB::startTransaction();
 
 // Затем загружаем моки для БД
 require_once TESTS_ROOT . "/Mocks/DatabaseTestAdapter.php";
@@ -91,10 +88,6 @@ require_once TESTS_ROOT . "/Mocks/TestHelpers.php";
 
 // Устанавливаем схему базы данных
 TestGameDataInitializer::setupDatabaseSchema();
-
-if (class_exists('App\\CellType')) {
-    TestGameDataInitializer::initializeCellTypes();
-}
 
 // Initialize default resource types for tests
 if (class_exists('App\\ResourceType')) {
@@ -220,7 +213,7 @@ foreach ($requiredExtensions as $extension) {
 if (!empty($missingExtensions)) {
     $message =
         "Missing required PHP extensions: " . implode(", ", $missingExtensions);
-    if (php_sapi_name() === "cli" && !defined('RUNNING_TESTS')) {
+    if (php_sapi_name() === "cli") {
         echo "Warning: " . $message . "\n";
     }
     error_log($message);

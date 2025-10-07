@@ -7,13 +7,61 @@
 
 define("PROJECT_ROOT", dirname(__DIR__));
 
+// Конфигурация тестовой БД для очистки
+define("TEST_DB_HOST", "db");
+define("TEST_DB_USER", "civ_test");
+define("TEST_DB_PASS", "civ_test");
+define("TEST_DB_NAME", "civ_for_tests");
+
 if (php_sapi_name() !== "cli") {
     die("Этот скрипт должен запускаться из командной строки\n");
 }
 
 // Устанавливаем временную зону
-
 date_default_timezone_set("Europe/Moscow");
+
+class TestDatabaseCleaner
+{
+    public static function cleanup()
+    {
+        echo "🧹 Очистка старых тестовых баз данных...\n";
+
+        $host = defined("TEST_DB_HOST") ? TEST_DB_HOST : "localhost";
+        $user = defined("TEST_DB_USER") ? TEST_DB_USER : "";
+        $pass = defined("TEST_DB_PASS") ? TEST_DB_PASS : "";
+        $dbNamePrefix = defined("TEST_DB_NAME") ? TEST_DB_NAME : "";
+
+        if (empty($user) || empty($dbNamePrefix)) {
+            echo "⚠️  Не удалось определить креды для подключения к БД или префикс имени БД. Пропускаем очистку.\n";
+            return;
+        }
+
+        try {
+            $pdo = new PDO("mysql:host={$host}", $user, $pass);
+            $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+            $stmt = $pdo->query("SHOW DATABASES LIKE '{$dbNamePrefix}_%'");
+            $databases = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+            if (empty($databases)) {
+                echo "✅ Старых баз данных не найдено.\n\n";
+                return;
+            }
+
+            echo "Найдены следующие базы для удаления:\n";
+            foreach ($databases as $db) {
+                echo "  - " . $db . "\n";
+                $pdo->exec("DROP DATABASE `{$db}`");
+            }
+            echo "✅ Старые базы данных успешно удалены.\n\n";
+
+        } catch (PDOException $e) {
+            echo "❌ Ошибка при очистке баз данных: " . $e->getMessage() . "\n";
+            // Не прерываем выполнение, просто выводим ошибку
+        }
+    }
+}
+
 
 class TestRunner
 {
@@ -36,7 +84,7 @@ class TestRunner
             "coverage" => false,
             "generate-coverage-report-only" => false,
             "verbose" => false,
-            "stop-on-failure" => true,
+            "stop-on-failure" => false,
             "filter" => null,
             "help" => false,
             "no-parallel" => false,
@@ -62,11 +110,6 @@ class TestRunner
                     $this->options["js"] = true;
                     break;
                 case "--with-js":
-                    $this->options["js"] = true;
-                    break;
-                case "--js-only":
-                    $this->options["unit"] = false;
-                    $this->options["integration"] = false;
                     $this->options["js"] = true;
                     break;
                 case "--coverage":
@@ -98,6 +141,7 @@ class TestRunner
                     break;
                 case "--no-parallel":
                     $this->options["no-parallel"] = true;
+                    $this->options["stop-on-failure"] = true;
                     break;
                 case "--processes":
                     if (isset($argv[$i + 1])) {
@@ -238,7 +282,8 @@ class TestRunner
             if ($this->options["coverage"]) {
                 $cmd[] = "--coverage-html";
                 $cmd[] = __DIR__ . "/coverage-html";
-                $cmd[] = "--coverage-text=" . __DIR__ . "/coverage.txt";
+                $cmd[] = "--coverage-text";
+                $cmd[] = __DIR__ . "/coverage.txt";
                 $cmd[] = "--coverage-php";
                 $cmd[] = __DIR__ . "/coverage.php";
             }
@@ -317,7 +362,7 @@ class TestRunner
 
         foreach ($testFiles as $testFile) {
             try {
-                $cmd = "\"" . $browser . "\" \"" . $testFile . "\"";
+                $cmd = escapeshellarg($browser) . ' ' . escapeshellarg($testFile);
                 echo "🌐 Открываем JavaScript тесты в браузере: " . $testFile . "\n";
                 echo "   После завершения тестов закройте браузер\n";
                 if ($this->options["verbose"]) {
@@ -557,6 +602,9 @@ class TestRunner
 
 // Запуск тестового раннера
 try {
+    // Сначала очищаем старые БД
+    TestDatabaseCleaner::cleanup();
+
     $runner = new TestRunner($argv);
     $exitCode = $runner->run();
     exit($exitCode);

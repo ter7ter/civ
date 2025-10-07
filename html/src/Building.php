@@ -60,7 +60,7 @@ class Building implements IModel, BuildingInterface
         }
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         return $this->type->getTitle();
     }

@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\Tests\Base\TestGameDataInitializer;
 use App\Unit;
 use App\User;
 use App\UnitType;
@@ -15,6 +16,11 @@ use App\Tests\base\CommonTestBase;
  */
 class UnitTest extends CommonTestBase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        TestGameDataInitializer::initializeCellTypes();
+    }
     /**
      * Тест получения существующего юнита
      */
@@ -154,7 +160,8 @@ class UnitTest extends CommonTestBase
         ]);
 
         // Создаем юнит
-        $data = [
+        TestDataFactory::createTestCell(['x' => 3, 'y' => 4, 'planet' => $planet->id]);
+        $unit = TestDataFactory::createTestUnit([
             "user_id" => $user->id,
             "type" => $unitType->id,
             "x" => 3,
@@ -162,9 +169,7 @@ class UnitTest extends CommonTestBase
             "planet" => $planet->id,
             "health" => 3,
             "points" => 2,
-        ];
-        TestDataFactory::createTestCell(['x' => 3, 'y' => 4, 'planet' => $planet->id]);
-        $unit = TestDataFactory::createTestUnit($data);
+        ]);
         $originalId = $unit->id;
 
         // Обновляем
@@ -194,21 +199,18 @@ class UnitTest extends CommonTestBase
         $user = TestDataFactory::createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
-        $unitTypeData = [
+        $unitType = TestDataFactory::createTestUnitType([
             "title" => "Рабочий",
             "points" => 1,
-        ];
-        $unitType = TestDataFactory::CreateTestUnitType($unitTypeData);
-        TestDataFactory::createTestCell(['x' => 6, 'y' => 7, 'planet' => $planet->id, 'type' => 'plains']);
-        $data = [
+        ]);
+
+        $unit = TestDataFactory::createTestUnit([
             "user_id" => $user->id,
             "type" => $unitType->id,
             "x" => 6,
             "y" => 7,
             "planet" => $planet->id,
-        ];
-
-        $unit = TestDataFactory::CreateTestUnit($data);
+        ]);
 
         $this->assertEquals("Рабочий", $unit->getTitle());
     }
@@ -223,24 +225,21 @@ class UnitTest extends CommonTestBase
         $user = TestDataFactory::createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
-        $unitTypeData = [
-            "id" => 6,
+        $unitType = TestDataFactory::createTestUnitType([
             "title" => "Remove Unit",
             "points" => 1,
-        ];
-        MyDB::insert("unit_type", $unitTypeData);
+        ]);
 
         // Создаем юнит
-        $data = [
+        TestDataFactory::createTestCell(['x' => 8, 'y' => 9, 'planet' => $planet->id]);
+        $unit = TestDataFactory::createTestUnit([
             "user_id" => $user->id,
-            "type" => 6,
+            "type" => $unitType->id,
             "x" => 8,
             "y" => 9,
             "planet" => $planet->id,
-        ];
-        TestDataFactory::createTestCell(['x' => 8, 'y' => 9, 'planet' => $planet->id]);
-        $unit = new Unit($data);
-        $unit->save();
+        ]);
+
         $unitId = $unit->id;
 
         // Удаляем
@@ -265,32 +264,20 @@ class UnitTest extends CommonTestBase
         $user = TestDataFactory::createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита с миссиями
-        $unitTypeData = [
-            "id" => 7,
+        $unitType = TestDataFactory::createTestUnitType([
             "title" => "Mission Unit",
             "points" => 1,
-        ];
-        MyDB::insert("unit_type", $unitTypeData);
-
-        // Создаем объект UnitType с миссиями
-        new UnitType([
-            "id" => 7,
-            "title" => "Mission Unit",
-            "points" => 1,
-            "missions" => ["move_to"], // Только move_to, так как MissionType не определен
         ]);
 
         TestDataFactory::createTestCell(['x' => 10, 'y' => 10, 'planet' => $planet->id, 'type' => 'plains']);
 
-        $data = [
+        $unit = TestDataFactory::createTestUnit([
             "user_id" => $user->id,
-            "type" => 7,
+            "type" => $unitType->id,
             "x" => 10,
             "y" => 10,
             "planet" => $planet->id,
-        ];
-
-        $unit = new Unit($data);
+        ]);
 
         $missionTypes = $unit->get_mission_types();
 
@@ -311,26 +298,23 @@ class UnitTest extends CommonTestBase
         $user = TestDataFactory::createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
-        $unitTypeData = [
-            "id" => 8,
+        $unitType = TestDataFactory::createTestUnitType([
             "title" => "Move Unit",
             "points" => 2,
-        ];
-        MyDB::insert("unit_type", $unitTypeData);
+        ]);
 
         TestDataFactory::createTestCell(['x' => 5, 'y' => 5, 'planet' => $planetId, 'type' => 'plains']);
         TestDataFactory::createTestCell(['x' => 6, 'y' => 5, 'planet' => $planetId, 'type' => 'plains']);
 
-        $data = [
+        $unit = TestDataFactory::createTestUnit([
             "user_id" => $user->id,
-            "type" => 8,
+            "type" => $unitType->id,
             "x" => 5,
             "y" => 5,
             "planet" => $planetId,
             "points" => 2,
-        ];
+        ]);
 
-        $unit = new Unit($data);
         $targetCell = Cell::get(6, 5, $planetId);
 
         $canMove = $unit->can_move($targetCell);
@@ -349,26 +333,23 @@ class UnitTest extends CommonTestBase
         $user = TestDataFactory::createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
-        $unitTypeData = [
-            "id" => 9,
+        $unitType = TestDataFactory::createTestUnitType([
             "title" => "Move To Unit",
             "points" => 2,
-        ];
-        MyDB::insert("unit_type", $unitTypeData);
+        ]);
 
         TestDataFactory::createTestCell(['x' => 7, 'y' => 7, 'planet' => $planetId, 'type' => 'plains']);
         TestDataFactory::createTestCell(['x' => 8, 'y' => 7, 'planet' => $planetId, 'type' => 'plains']);
 
-        $data = [
+        $unit = TestDataFactory::createTestUnit([
             "user_id" => $user->id,
-            "type" => 9,
+            "type" => $unitType->id,
             "x" => 7,
             "y" => 7,
             "planet" => $planetId,
             "points" => 2,
-        ];
+        ]);
 
-        $unit = new Unit($data);
         $targetCell = Cell::get(8, 7, $planetId);
 
         $moved = $unit->move_to($targetCell);
@@ -390,24 +371,22 @@ class UnitTest extends CommonTestBase
         $user = TestDataFactory::createTestUser(["game" => $game->id]);
 
         // Создаем тип юнита
-        $unitTypeData = [
-            "id" => 10,
+        $unitType = TestDataFactory::createTestUnitType([
             "title" => "Get All Unit",
             "points" => 1,
-        ];
-        MyDB::insert("unit_type", $unitTypeData);
+        ]);
 
         $cell = TestDataFactory::createTestCell(['x' => 11, 'y' => 11, 'planet' => $planetId]);
 
         // Создаем несколько юнитов
         $cell->create_unit(
-            UnitType::get(10),
+            $unitType,
             $user,
             3,
             1
         );
         $cell->create_unit(
-            UnitType::get(10),
+            $unitType,
             $user,
             3,
             1

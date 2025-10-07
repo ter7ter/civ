@@ -15,6 +15,7 @@ class OpenGameTest extends CommonTestBase
 {
     protected function setUp(): void
     {
+        DatabaseTestAdapter::resetTestDatabase();
         parent::setUp();
         $this->clearRequest();
         $this->clearSession();
@@ -136,7 +137,6 @@ class OpenGameTest extends CommonTestBase
         $turnTypes = ['byturn', 'concurrently', 'onewindow'];
 
         foreach ($turnTypes as $turnType) {
-            $this->setGlobalVars();
             $this->clearSession();
 
             $game = TestDataFactory::createTestGame([

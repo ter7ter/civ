@@ -4,6 +4,7 @@ namespace App\Tests;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+use App\Tests\Base\TestGameDataInitializer;
 use App\UnitType;
 use App\MyDB;
 use App\Tests\Factory\TestDataFactory;
@@ -11,6 +12,12 @@ use App\Tests\base\CommonTestBase;
 
 class AdminUnitTypeTest extends CommonTestBase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        TestGameDataInitializer::initializeCellTypes();
+    }
+
     public function testGetAllUnitTypes()
     {
         UnitType::clearCache();

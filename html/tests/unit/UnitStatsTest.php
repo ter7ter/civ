@@ -2,6 +2,7 @@
 
 namespace App\Tests;
 
+use App\Tests\Base\TestGameDataInitializer;
 use App\Unit;
 use App\UnitStats;
 use App\Tests\Factory\TestDataFactory;
@@ -12,9 +13,17 @@ use App\Tests\Base\CommonTestBase;
  */
 class UnitStatsTest extends CommonTestBase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        TestGameDataInitializer::initializeCellTypes();
+    }
     public function testGetHealth()
     {
-        $unit = TestDataFactory::createTestUnit(['health' => 5]);
+        $result = TestDataFactory::createTestGameWithPlanetUserAndCity();
+        $planet = $result['planet'];
+        $user = $result['user'];
+        $unit = TestDataFactory::createTestUnit(['health' => 5, 'planet' => $planet->id, 'user_id' => $user->id, 'x' => 10, 'y' => 10]);
         $stats = new UnitStats($unit);
 
         $this->assertEquals(5, $stats->getHealth());
@@ -22,7 +31,11 @@ class UnitStatsTest extends CommonTestBase
 
     public function testSetHealth()
     {
-        $unit = TestDataFactory::createTestUnit(['health' => 5, 'health_max' => 10]);
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
+        $planet = $result['planet'];
+        $user = $result['user'];
+        TestDataFactory::createTestCell(['x' => 5, 'y' => 5, 'planet' => $planet->id]);
+        $unit = TestDataFactory::createTestUnit(['health' => 5, 'health_max' => 10, 'planet' => $planet->id, 'user_id' => $user->id]);
         $stats = new UnitStats($unit);
 
         $stats->setHealth(3);
@@ -34,7 +47,11 @@ class UnitStatsTest extends CommonTestBase
 
     public function testSetPoints()
     {
-        $unit = TestDataFactory::createTestUnit(['points' => 5]);
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
+        $planet = $result['planet'];
+        $user = $result['user'];
+        TestDataFactory::createTestCell(['x' => 5, 'y' => 5, 'planet' => $planet->id]);
+        $unit = TestDataFactory::createTestUnit(['points' => 5, 'planet' => $planet->id, 'user_id' => $user->id]);
         $stats = new UnitStats($unit);
 
         $stats->setPoints(3);
@@ -46,7 +63,11 @@ class UnitStatsTest extends CommonTestBase
 
     public function testGetLevel()
     {
-        $unit = TestDataFactory::createTestUnit(['lvl' => 2]);
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
+        $planet = $result['planet'];
+        $user = $result['user'];
+        TestDataFactory::createTestCell(['x' => 5, 'y' => 5, 'planet' => $planet->id]);
+        $unit = TestDataFactory::createTestUnit(['lvl' => 2, 'planet' => $planet->id, 'user_id' => $user->id]);
         $stats = new UnitStats($unit);
 
         $this->assertEquals(2, $stats->getLevel());
@@ -54,7 +75,11 @@ class UnitStatsTest extends CommonTestBase
 
     public function testLevelUp()
     {
-        $unit = TestDataFactory::createTestUnit(['lvl' => 1]);
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
+        $planet = $result['planet'];
+        $user = $result['user'];
+        TestDataFactory::createTestCell(['x' => 5, 'y' => 5, 'planet' => $planet->id]);
+        $unit = TestDataFactory::createTestUnit(['lvl' => 1, 'planet' => $planet->id, 'user_id' => $user->id]);
         $stats = new UnitStats($unit);
 
         $stats->levelUp();
@@ -63,7 +88,11 @@ class UnitStatsTest extends CommonTestBase
 
     public function testIsAlive()
     {
-        $unit = TestDataFactory::createTestUnit(['health' => 1]);
+        $result = TestDataFactory::createTestGameWithPlanetAndUser();
+        $planet = $result['planet'];
+        $user = $result['user'];
+        TestDataFactory::createTestCell(['x' => 5, 'y' => 5, 'planet' => $planet->id]);
+        $unit = TestDataFactory::createTestUnit(['health' => 1, 'planet' => $planet->id, 'user_id' => $user->id]);
         $stats = new UnitStats($unit);
 
         $this->assertTrue($stats->isAlive());

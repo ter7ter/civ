@@ -12,6 +12,7 @@ use App\Tests\Base\CommonTestBase;
  */
 class CreateGameTest extends CommonTestBase
 {
+
     /**
      * Тест 1.1: Создание базовой игры
      */

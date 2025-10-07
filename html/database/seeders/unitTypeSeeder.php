@@ -8,7 +8,7 @@ use App\CellType;
 
 setupDatabase();
 checkTables(['unit_type']);
-$clear = parseClearArgv($argv);
+$clear = ($SHOULD_CLEAN ?? false) || parseClearArgv($argv);
 clearData($clear, ["DELETE FROM unit_type;"]);
 
 // Загружаем типы клеток из базы

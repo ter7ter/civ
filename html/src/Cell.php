@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Interfaces\CellInterface;
+use App\City;
 
 class Cell implements CellInterface
 {
@@ -167,7 +168,7 @@ class Cell implements CellInterface
         return $this->units;
     }
 
-    public function getTitle()
+    public function getTitle(): string
     {
         if (!$this->type) {
             return "unknown";
@@ -526,7 +527,7 @@ class Cell implements CellInterface
      * @param null $city City
      * @return int
      */
-    public function get_work($city = null)
+    public function get_work(?City $city = null): int
     {
         $work = $this->type->work;
         if ($this->resource) {
@@ -541,7 +542,7 @@ class Cell implements CellInterface
      * @param null $city City
      * @return int
      */
-    public function get_eat($city = null)
+    public function get_eat(?City $city = null): int
     {
         $eat = $this->type->eat;
         if ($city) {
@@ -562,7 +563,7 @@ class Cell implements CellInterface
      * @param null $city City
      * @return int
      */
-    public function get_money($city = null)
+    public function get_money(?City $city = null): int
     {
         $money = $this->type->money;
         if ($this->resource) {

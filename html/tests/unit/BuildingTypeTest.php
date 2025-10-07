@@ -79,7 +79,7 @@ class BuildingTypeTest extends CommonTestBase
     }
 
     /**
-     * Тест метода getTitle
+     * Тест метода get_title
      */
     public function testGetTitle(): void
     {

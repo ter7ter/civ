@@ -17,6 +17,11 @@ use App\Tests\Factory\TestDataFactory;
 class AdminIntegrationTest extends FunctionalTestBase
 {
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        \App\Tests\Base\TestGameDataInitializer::initializeCellTypes();
+    }
     /**
      * Тест создания типа юнита через прямой вызов функций
      */

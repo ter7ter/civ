@@ -211,6 +211,9 @@ class EditGameIntegrationTest extends FunctionalTestBase
         $this->assertEquals(3, $user["age"]);
     }
 
+    /**
+     * @large
+     */
     // Тест производительности редактирования игры с максимальным количеством игроков
     public function testPerformanceEditWithMaxPlayers(): void
     {
@@ -323,9 +326,13 @@ class EditGameIntegrationTest extends FunctionalTestBase
         }
 
         // Проверяем общее количество игроков
+        $userCount = MyDB::query(
+            "SELECT COUNT(*) FROM user WHERE game IN (?, ?, ?)",
+            [$games[0]->id, $games[1]->id, $games[2]->id]
+        )[0]["COUNT(*)"];
         $this->assertEquals(
             6,
-            $this->getTableCount("user"),
+            $userCount,
             "Должно быть 6 игроков всего",
         );
     }

@@ -116,6 +116,7 @@ class Unit implements IModel, UnitInterface
                 "points",
                 "mission_points",
                 "auto",
+                "lvl",
             ] as $field
         ) {
             $data[$field] = $this->$field;
@@ -162,6 +163,7 @@ class Unit implements IModel, UnitInterface
                 "points",
                 "mission_points",
                 "auto",
+                "lvl",
             ] as $field
         ) {
             if (isset($data[$field])) {
@@ -208,7 +210,7 @@ class Unit implements IModel, UnitInterface
      * @param $y int
      * @return array
      */
-    public function get_mission_types($x = null, $y = null)
+    public function get_mission_types($x = null, $y = null): array
     {
         return UnitMissionHandler::getMissionTypes($this, $x, $y);
     }
@@ -220,7 +222,7 @@ class Unit implements IModel, UnitInterface
      * @return bool|string
      * @throws Exception
      */
-    public function start_mission($mtype, $title = "")
+    public function start_mission($mtype, $title = ""): bool|string
     {
         return UnitMissionHandler::startMission($this, $mtype, $title);
     }
@@ -230,7 +232,7 @@ class Unit implements IModel, UnitInterface
      * @param Cell $cell
      * @return bool
      */
-    public function can_move($cell)
+    public function can_move($cell): bool
     {
         return UnitMovement::canMove($this, $cell);
     }
@@ -240,7 +242,7 @@ class Unit implements IModel, UnitInterface
      * @param Cell $cell
      * @return bool
      */
-    public function move_to($cell)
+    public function move_to($cell): bool
     {
         return UnitMovement::moveTo($this, $cell);
     }

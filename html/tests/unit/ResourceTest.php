@@ -113,7 +113,7 @@ class ResourceTest extends CommonTestBase
     }
 
     /**
-     * Тест метода getTitle
+     * Тест метода get_title
      */
     public function testGetTitle(): void
     {
@@ -134,7 +134,7 @@ class ResourceTest extends CommonTestBase
     }
 
     /**
-     * Тест метода getTitle без типа
+     * Тест метода get_title без типа
      */
     public function testGetTitleWithoutType(): void
     {

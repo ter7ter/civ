@@ -7,7 +7,7 @@ use App\CellType;
 
 setupDatabase();
 checkTables(['cell_type']);
-$clear = parseClearArgv($argv);
+$clear = ($SHOULD_CLEAN ?? false) || parseClearArgv($argv);
 clearData($clear, ["DELETE FROM cell_type;"]);
 
 // Данные типов клеток из ct.data

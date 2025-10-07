@@ -7,7 +7,7 @@ use App\ResearchType;
 
 setupDatabase();
 checkTables(['research_type', 'research_requirements', 'research']);
-$clear = parseClearArgv($argv);
+$clear = ($SHOULD_CLEAN ?? false) || parseClearArgv($argv);
 clearData($clear, ["DELETE FROM research_requirements;", "DELETE FROM research_type;", "DELETE FROM research;"]);
 
 // Данные исследований Civilization 3 с деревом зависимостей

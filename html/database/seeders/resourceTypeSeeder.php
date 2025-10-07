@@ -9,7 +9,7 @@ use App\MyDB;
 
 setupDatabase();
 checkTables(['resource_type']);
-$clear = parseClearArgv($argv);
+$clear = ($SHOULD_CLEAN ?? false) || parseClearArgv($argv);
 clearData($clear, ["DELETE FROM resource_type;"]);
 
 // Загружаем типы клеток из базы

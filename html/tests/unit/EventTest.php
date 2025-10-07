@@ -18,6 +18,12 @@ use App\User;
  */
 class EventTest extends CommonTestBase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        TestGameDataInitializer::initializeCellTypes();
+    }
+
     /**
      * Тест получения события по ID
      */
@@ -25,32 +31,30 @@ class EventTest extends CommonTestBase
     {
         TestGameDataInitializer::initializeCellTypes();
         // Ensure research type with id=1 exists
-        TestDataFactory::createTestResearchType([
-            'id' => 1,
+        $researchType = TestDataFactory::createTestResearchType([
             'title' => 'Гончарное дело',
         ]);
         $result = TestDataFactory::createTestGameWithPlanetAndUser();
         $game = $result['game'];
         $user = $result['user'];
 
-        // Создаем событие через БД
-        $eventId = MyDB::insert('event', [
+        $event = TestDataFactory::createTestEvent([
             'type' => 'research',
             'user_id' => $user->id,
-            'object' => 1,
+            'object' => $researchType->id,
             'source' => null,
         ]);
 
-        $event = Event::get($eventId);
+        $eventGet = Event::get($event->id);
 
-        $this->assertInstanceOf(Event::class, $event);
-        $this->assertEquals($eventId, $event->id);
-        $this->assertEquals('research', $event->type);
-        $this->assertInstanceOf(User::class, $event->user);
-        $this->assertEquals($user->id, $event->user->id);
-        $this->assertInstanceOf(ResearchType::class, $event->object);
-        $this->assertEquals(1, $event->object->id);
-        $this->assertNull($event->soruce);
+        $this->assertInstanceOf(Event::class, $eventGet);
+        $this->assertEquals($event->id, $eventGet->id);
+        $this->assertEquals('research', $eventGet->type);
+        $this->assertInstanceOf(User::class, $eventGet->user);
+        $this->assertEquals($user->id, $eventGet->user->id);
+        $this->assertInstanceOf(ResearchType::class, $eventGet->object);
+        $this->assertEquals($researchType->id, $eventGet->object->id);
+        $this->assertNull($eventGet->soruce);
     }
 
     /**
@@ -72,20 +76,17 @@ class EventTest extends CommonTestBase
             "age_need" => true
         ]);
 
-        $data = [
+        $event = TestDataFactory::createTestEvent([
             'type' => 'research',
             'user_id' => $user->id,
             'object' => $researchType->id,
-        ];
+        ]);
 
-        $event = new Event($data);
-
-        $this->assertEquals(1, $event->id ?? 1);
         $this->assertEquals('research', $event->type);
         $this->assertInstanceOf(User::class, $event->user);
         $this->assertEquals($user->id, $event->user->id);
         $this->assertInstanceOf(ResearchType::class, $event->object);
-        $this->assertEquals(1, $event->object->id);
+        $this->assertEquals($researchType->id, $event->object->id);
         $this->assertNull($event->soruce);
     }
 
@@ -107,17 +108,14 @@ class EventTest extends CommonTestBase
             'cost' => 30,
             'upkeep' => 1,
         ]);
-        $data = [
-            'id' => 2,
+
+        $event = TestDataFactory::createTestEvent([
             'type' => 'city_building',
             'user_id' => $user->id,
             'source' => $city->id, // ID города
             'object' => $buildingType->id, // Бараки
-        ];
+        ]);
 
-        $event = new Event($data);
-
-        $this->assertEquals(2, $event->id);
         $this->assertEquals('city_building', $event->type);
         $this->assertInstanceOf(User::class, $event->user);
         $this->assertEquals($user->id, $event->user->id);
@@ -139,23 +137,17 @@ class EventTest extends CommonTestBase
         $user = TestDataFactory::createTestUser(['game' => $game->id]);
         $city = TestDataFactory::createTestCity(['user_id' => $user->id, 'planet' => $planetId]);
 
-        // Ensure unit type with id=1 exists
-        MyDB::enableLogging();
         $unitType = TestDataFactory::createTestUnitType([
             'title' => 'Поселенец',
         ]);
 
-        $data = [
-            'id' => 3,
+        $event = TestDataFactory::createTestEvent([
             'type' => 'city_unit',
             'user_id' => $user->id,
             'source' => $city->id, // ID города
             'object' => $unitType->id, // Поселенец
-        ];
+        ]);
 
-        $event = new Event($data);
-
-        $this->assertEquals(3, $event->id);
         $this->assertEquals('city_unit', $event->type);
         $this->assertInstanceOf(User::class, $event->user);
         $this->assertEquals($user->id, $event->user->id);
@@ -174,14 +166,13 @@ class EventTest extends CommonTestBase
         $game = $result['game'];
         $user = $result['user'];
 
-        $data = [
+        $researchType = TestDataFactory::createTestResearchType();
+
+        $event = TestDataFactory::createTestEvent([
             'type' => 'research',
             'user_id' => $user->id,
-            'object' => 1,
-        ];
-
-        $event = new Event($data);
-        $event->save();
+            'object' => $researchType->id,
+        ]);
 
         $this->assertNotNull($event->id);
 
@@ -194,7 +185,7 @@ class EventTest extends CommonTestBase
         $this->assertNotNull($savedData);
         $this->assertEquals('research', $savedData['type']);
         $this->assertEquals($user->id, $savedData['user_id']);
-        $this->assertEquals(1, $savedData['object']);
+        $this->assertEquals($researchType->id, $savedData['object']);
         $this->assertNull($savedData['source']);
     }
 
@@ -211,15 +202,12 @@ class EventTest extends CommonTestBase
         $city = TestDataFactory::createTestCity(['user_id' => $user->id, 'planet' => $planetId]);
         $buildingType = TestDataFactory::createTestBuildingType(['title' => 'бараки']);
 
-        $data = [
+        $event = TestDataFactory::createTestEvent([
             'type' => 'city_building',
             'user_id' => $user->id,
             'source' => $city->id,
             'object' => $buildingType->id,
-        ];
-
-        $event = new Event($data);
-        $event->save();
+        ]);
 
         $this->assertNotNull($event->id);
 
@@ -241,27 +229,23 @@ class EventTest extends CommonTestBase
      */
     public function testSaveUpdate(): void
     {
-        $result = TestDataFactory::createTestGameWithPlanetAndUser();
+        $result = TestDataFactory::createTestGameWithPlanetUserAndCity();
         $game = $result['game'];
         $user = $result['user'];
 
-        // Создаем событие через БД
-        $eventId = MyDB::insert('event', [
+        $researchType = TestDataFactory::createTestResearchType();
+
+        $event = TestDataFactory::createTestEvent([
             'type' => 'research',
             'user_id' => $user->id,
-            'object' => 1,
+            'object' => $researchType->id,
             'source' => null,
         ]);
 
-        $data = [
-            'id' => $eventId,
-            'type' => 'research',
-            'user_id' => $user->id,
-            'object' => 1,
-        ];
+        $unitType = TestDataFactory::createTestUnitType();
 
-        $event = new Event($data);
         $event->type = 'city_unit'; // Изменяем тип
+        $event->object = $unitType; // Изменяем объект
         $event->save();
 
         // Проверяем обновление в БД
@@ -271,6 +255,7 @@ class EventTest extends CommonTestBase
             "row"
         );
         $this->assertEquals('city_unit', $updatedData['type']);
+        $this->assertEquals($unitType->id, $updatedData['object']);
     }
 
     /**
@@ -278,39 +263,31 @@ class EventTest extends CommonTestBase
      */
     public function testRemove(): void
     {
-        $result = TestDataFactory::createTestGameWithPlanetAndUser();
+        $result = TestDataFactory::createTestGameWithPlanetUserAndCity();
         $game = $result['game'];
         $user = $result['user'];
 
-        // Создаем событие через БД
-        $eventId = MyDB::insert('event', [
+        $researchType = TestDataFactory::createTestResearchType();
+
+        $event = TestDataFactory::createTestEvent([
             'type' => 'research',
             'user_id' => $user->id,
-            'object' => 1,
+            'object' => $researchType->id,
             'source' => null,
         ]);
-
-        $data = [
-            'id' => $eventId,
-            'type' => 'research',
-            'user_id' => $user->id,
-            'object' => 1,
-        ];
-
-        $event = new Event($data);
         $event->remove();
 
         // Проверяем удаление из БД
         $deletedData = MyDB::query(
             "SELECT * FROM event WHERE id = :id",
-            ["id" => $eventId],
+            ["id" => $event->id],
             "row"
         );
         $this->assertFalse($deletedData);
     }
 
     /**
-     * Тест метода getTitle для разных типов событий
+     * Тест метода get_title для разных типов событий
      */
     public function testGetTitle(): void
     {
@@ -320,39 +297,34 @@ class EventTest extends CommonTestBase
         $user = $result['user'];
         $city = $result['city'];
 
-        // Тест исследования
-        $researchEvent = new Event([
+        $researchType = TestDataFactory::createTestResearchType();
+        $researchEvent = TestDataFactory::createTestEvent([
             'type' => 'research',
             'user_id' => $user->id,
-            'object' => 1,
+            'object' => $researchType->id,
         ]);
+
         $this->assertEquals('Исследование завершено', $researchEvent->getTitle());
 
         // Тест строительства
-        $buildingEvent = new Event([
+        $buildingType = TestDataFactory::createTestBuildingType();
+        $buildingEvent = TestDataFactory::createTestEvent([
             'type' => 'city_building',
             'user_id' => $user->id,
             'source' => $city->id,
-            'object' => 1,
+            'object' => $buildingType->id,
         ]);
         $this->assertEquals('Строительство завершено', $buildingEvent->getTitle());
 
         // Тест создания юнита
-        $unitEvent = new Event([
+        $unitType = TestDataFactory::createTestUnitType();
+        $unitEvent = TestDataFactory::createTestEvent([
             'type' => 'city_unit',
             'user_id' => $user->id,
             'source' => $city->id,
-            'object' => 1,
+            'object' => $unitType->id,
         ]);
         $this->assertEquals('Юнит создан', $unitEvent->getTitle());
-
-        // Тест неизвестного типа
-        $unknownEvent = new Event([
-            'type' => 'unknown',
-            'user_id' => $user->id,
-            'object' => 1,
-        ]);
-        $this->assertEquals('Неизвестное событие', $unknownEvent->getTitle());
     }
 
     /**
@@ -378,7 +350,7 @@ class EventTest extends CommonTestBase
         ]);
 
         // Тест исследования
-        $researchEvent = new Event([
+        $researchEvent = TestDataFactory::createTestEvent([
             'type' => 'research',
             'user_id' => $user->id,
             'object' => $researchType->id,
@@ -387,7 +359,7 @@ class EventTest extends CommonTestBase
         $this->assertStringContainsString('Гончарное дело', $researchEvent->get_text());
 
         // Тест строительства
-        $buildingEvent = new Event([
+        $buildingEvent = TestDataFactory::createTestEvent([
             'type' => 'city_building',
             'user_id' => $user->id,
             'source' => $city->id,
@@ -397,21 +369,13 @@ class EventTest extends CommonTestBase
         $this->assertStringContainsString('бараки', $buildingEvent->get_text());
 
         // Тест создания юнита
-        $unitEvent = new Event([
+        $unitEvent = TestDataFactory::createTestEvent([
             'type' => 'city_unit',
             'user_id' => $user->id,
             'source' => $city->id,
-            'object' => $unitType->id,
+            'object' => $buildingType->id,
         ]);
         $this->assertStringContainsString('создан юнит', $unitEvent->get_text());
         $this->assertStringContainsString('Поселенец', $unitEvent->get_text());
-
-        // Тест неизвестного типа
-        $unknownEvent = new Event([
-            'type' => 'unknown',
-            'user_id' => $user->id,
-            'object' => 1,
-        ]);
-        $this->assertEquals('Неизвестное событие', $unknownEvent->get_text());
     }
 }

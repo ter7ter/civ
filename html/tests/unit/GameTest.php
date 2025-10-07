@@ -3,6 +3,8 @@
 namespace App\Tests;
 
 use App\Game;
+use App\GameConfig;
+use App\Tests\Base\TestGameDataInitializer;
 use App\User;
 use App\MyDB;
 use App\Planet;
@@ -16,26 +18,33 @@ use App\Tests\Mocks\DatabaseTestAdapter;
  */
 class GameTest extends CommonTestBase
 {
+    protected function setUp(): void
+    {
+        DatabaseTestAdapter::resetTestDatabase();
+        parent::setUp();
+    }
+
     /**
      * Тест получения существующей игры
      */
     public function testGetExistingGame(): void
     {
         $game = TestDataFactory::createTestGame([
-            'name' => 'Test Game',
+            'name' => 'Test Game 1',
             'map_w' => 100,
             'map_h' => 100,
             'turn_type' => 'byturn'
         ]);
 
-        $game = Game::get($game->id);
+        Game::clearCache();
+        $gameGet = Game::get($game->id);
 
-        $this->assertInstanceOf(Game::class, $game);
-        $this->assertEquals($game->id, $game->id);
-        $this->assertEquals('Test Game', $game->name);
-        $this->assertEquals(100, $game->map_w);
-        $this->assertEquals(100, $game->map_h);
-        $this->assertEquals('byturn', $game->turn_type);
+        $this->assertInstanceOf(Game::class, $gameGet);
+        $this->assertEquals($game->id, $gameGet->id);
+        $this->assertEquals('Test Game 1', $gameGet->name);
+        $this->assertEquals(100, $gameGet->map_w);
+        $this->assertEquals(100, $gameGet->map_h);
+        $this->assertEquals('byturn', $gameGet->turn_type);
     }
 
     /**
@@ -54,7 +63,6 @@ class GameTest extends CommonTestBase
     public function testConstruct(): void
     {
         $data = [
-            'id' => 1,
             'name' => 'Construct Test Game',
             'map_w' => 50,
             'map_h' => 50,
@@ -64,7 +72,6 @@ class GameTest extends CommonTestBase
 
         $game = new Game($data);
 
-        $this->assertEquals(1, $game->id);
         $this->assertEquals('Construct Test Game', $game->name);
         $this->assertEquals(50, $game->map_w);
         $this->assertEquals(50, $game->map_h);
@@ -154,12 +161,8 @@ class GameTest extends CommonTestBase
         $user1 = TestDataFactory::createTestUser(['game' => $game->id, 'login' => 'User1']);
         $user2 = TestDataFactory::createTestUser(['game' => $game->id, 'login' => 'User2']);
 
-        // Заполняем пользователей
-        $users = MyDB::query("SELECT id FROM user WHERE game = :gameid", ["gameid" => $game->id]);
-        $game->users = [];
-        foreach ($users as $user) {
-            $game->users[$user["id"]] = User::get($user["id"]);
-        }
+        Game::clearCache();
+        $game = Game::get($game->id);
 
         $this->assertCount(2, $game->users, "Игра должна иметь 2 пользователей");
 
@@ -208,6 +211,8 @@ class GameTest extends CommonTestBase
         $user1 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_status' => 'play']);
         $user2 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_status' => 'play']);
 
+        // Игроки не добавляются сразу в $game->users если созданы после, поэтому нужно снова загрузить игру
+        Game::clearCache();
         $game = Game::get($game->id);
         $activePlayer = $game->getActivePlayer();
 
@@ -236,6 +241,8 @@ class GameTest extends CommonTestBase
      */
     public function testGetFirstPlanet(): void
     {
+        Game::clearCache();
+        Planet::clearCache();
         $result = TestDataFactory::createTestGameWithPlanet(['name' => 'Planet Game'], ['name' => 'First Planet']);
         $game = $result['game'];
         $planet = $result['planet'];
@@ -256,7 +263,6 @@ class GameTest extends CommonTestBase
     {
         $game = TestDataFactory::createTestGame(['name' => 'Empty Game']);
 
-        $game = Game::get($game->id);
         $planet = $game->get_first_planet();
 
         $this->assertNull($planet);
@@ -271,9 +277,9 @@ class GameTest extends CommonTestBase
         $user1 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_order' => 1]);
         $user2 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_order' => 2]);
 
+        Game::clearCache();
         $game = Game::get($game->id);
         $game->calculate();
-
         // Проверяем, что turn_num увеличился
         $this->assertEquals(2, $game->turn_num);
 
@@ -294,6 +300,7 @@ class GameTest extends CommonTestBase
         $user1 = TestDataFactory::createTestUser(['game' => $game->id]);
         $user2 = TestDataFactory::createTestUser(['game' => $game->id]);
 
+        Game::clearCache();
         $game = Game::get($game->id);
         $game->calculate();
 
@@ -314,9 +321,9 @@ class GameTest extends CommonTestBase
     public function testCreateNewGame(): void
     {
         // Initialize cell and unit types required for map/unit creation
-        \App\Tests\Base\TestGameDataInitializer::initializeCellTypes();
-        $unitSettlerType = \App\Tests\Factory\TestDataFactory::createTestUnitType(['title' => 'Поселенец']);
-        \App\GameConfig::$START_UNIT_SETTLER_TYPE = $unitSettlerType->id;
+        TestGameDataInitializer::initializeCellTypes();
+        $unitSettlerType = TestDataFactory::createTestUnitType(['title' => 'Поселенец']);
+        GameConfig::$START_UNIT_SETTLER_TYPE = $unitSettlerType->id;
 
         $game = TestDataFactory::createTestGame([
             'name' => 'New Game Test',
@@ -329,6 +336,7 @@ class GameTest extends CommonTestBase
         $user1 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_order' => 1]);
         $user2 = TestDataFactory::createTestUser(['game' => $game->id, 'turn_order' => 2]);
 
+        Game::clearCache();
         $game = Game::get($game->id);
 
         // Метод create_new_game должен выполняться без ошибок

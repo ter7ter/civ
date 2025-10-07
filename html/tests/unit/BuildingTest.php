@@ -107,15 +107,14 @@ class BuildingTest extends CommonTestBase
         $city = $testData['city'];
 
         $buildingType = TestDataFactory::createTestBuildingType(['title' => 'бараки']);
-
         $data = [
             'city_id' => $city->id,
             'type' => $buildingType->id, // Бараки
         ];
 
-        $building = new Building($data);
+        $building = TestDataFactory::createTestBuilding($data);
 
-        $this->assertEquals($buildingType->title, $building->getTitle());
+        $this->assertEquals('бараки', $building->getTitle());
     }
 
     /**
@@ -127,6 +126,7 @@ class BuildingTest extends CommonTestBase
         $city = $testData['city'];
 
         $buildingType = TestDataFactory::createTestBuildingType(['title' => 'бараки']);
+
         $data = [
             'city_id' => $city->id,
             'type' => $buildingType->id, // Бараки
@@ -157,10 +157,11 @@ class BuildingTest extends CommonTestBase
         $testData = TestDataFactory::createTestGameWithPlanetUserAndCity();
         $city = $testData['city'];
 
+        $buildingType = TestDataFactory::createTestBuildingType(['title' => 'бараки']);
         // Создаем здание через объект
         $building = new Building([
             'city_id' => $city->id,
-            'type' => 1, // Бараки
+            'type' => $buildingType->id,
         ]);
         $building->save();
 
@@ -193,10 +194,11 @@ class BuildingTest extends CommonTestBase
         $testData = TestDataFactory::createTestGameWithPlanetUserAndCity();
         $city = $testData['city'];
 
+        $buildingType = TestDataFactory::createTestBuildingType(['title' => 'бараки']);
         // Создаем здание через объект
         $building = new Building([
             'city_id' => $city->id,
-            'type' => 1,
+            'type' => $buildingType->id,
         ]);
         $building->save();
 
@@ -243,7 +245,7 @@ class BuildingTest extends CommonTestBase
     }
 
     /**
-     * Тест эффекта здания на город
+     * Тест применения эффектов зданий разных типов при расчете города
      */
     public function testCityEffect(): void
     {
@@ -251,65 +253,53 @@ class BuildingTest extends CommonTestBase
             define('BASE_EAT_UP', 20);
         }
 
-        TestGameDataInitializer::initializeCellTypes();
         $game = TestDataFactory::createTestGame();
         $planet = TestDataFactory::createTestPlanet(['game_id' => $game->id]);
+        $planetId = $planet->id;
         $user = TestDataFactory::createTestUser(['game' => $game->id]);
-
-        TestDataFactory::createTestCell([
-            'x' => 10,
-            'y' => 11,
-            'planet' => $planet->id,
-        ]);
         $city = TestDataFactory::createTestCity([
+            'planet' => $planetId,
             'user_id' => $user->id,
-            'planet' => $planet->id,
             'x' => 10,
             'y' => 10,
         ]);
-
-
-        var_dump($city->people_norm);
-        City::clearCache();
         $city = City::get($city->id);
 
+        // Устанавливаем начальные значения
+        $city->population = 2;
+        $city->eat_up = BASE_EAT_UP;
+        $city->people_norm = 2;
+        $city->people_happy = 0;
+        $city->people_dis = 0;
+        $city->presearch = 4;
+        $city->pmoney = 4;
+        $city->pwork = 10;
 
-        // Тест Амбара - уменьшает eat_up вдвое
-        $buildingType2 = TestDataFactory::createTestBuildingType([
+        // Создаем здания разных типов
+        $granaryType = TestDataFactory::createTestBuildingType([
             'title' => 'амбар',
             'cost' => 30,
             'upkeep' => 1,
             'city_effects' => ['eat_up_multiplier' => 0.5]
         ]);
-        $originalEatUp = $city->eat_up;
-        $buildingType2->city_effect($city);
+        $granary = TestDataFactory::createTestBuilding([
+            'city_id' => $city->id,
+            'type' => $granaryType->id,
+        ]);
 
-        $this->assertEquals((int)(BASE_EAT_UP / 2), $city->eat_up);
-
-        // Сброс города для следующего теста
-        $city->eat_up = $originalEatUp;
-
-        // Тест Храма - изменяет people_norm и people_happy
-        $buildingType3 = TestDataFactory::createTestBuildingType([
+        $templeType = TestDataFactory::createTestBuildingType([
             'title' => 'храм',
             'cost' => 30,
             'culture' => 2,
             'upkeep' => 1,
             'city_effects' => ['people_happy' => 1]
         ]);
-        $originalNorm = $city->people_norm;
-        $originalHappy = $city->people_happy;
-        $buildingType3->city_effect($city);
-        var_dump($city->people_norm);
-        $this->assertEquals($originalNorm - 1, $city->people_norm);
-        $this->assertEquals($originalHappy + 1, $city->people_happy);
+        $temple = TestDataFactory::createTestBuilding([
+            'city_id' => $city->id,
+            'type' => $templeType->id,
+        ]);
 
-        // Сброс города
-        $city->people_norm = $originalNorm;
-        $city->people_happy = $originalHappy;
-
-        // Тест Библиотеки - увеличивает presearch в 1.5 раза
-        $buildingType4 = TestDataFactory::createTestBuildingType([
+        $libraryType = TestDataFactory::createTestBuildingType([
             'title' => 'библиотека',
             'cost' => 50,
             'culture' => 3,
@@ -317,23 +307,46 @@ class BuildingTest extends CommonTestBase
             'research_bonus' => 50,
             'city_effects' => ['research_multiplier' => 1.5]
         ]);
-        $originalPresearch = $city->presearch;
-        $buildingType4->city_effect($city);
-        $this->assertEquals($originalPresearch * 1.5, $city->presearch);
+        $library = TestDataFactory::createTestBuilding([
+            'city_id' => $city->id,
+            'type' => $libraryType->id,
+        ]);
 
-        // Сброс города
-        $city->presearch = $originalPresearch;
-
-        // Тест Рынка - увеличивает pmoney в 1.5 раза
-        $buildingType6 = TestDataFactory::createTestBuildingType([
+        $marketType = TestDataFactory::createTestBuildingType([
             'title' => 'рынок',
             'cost' => 50,
             'upkeep' => 1,
             'money_bonus' => 50,
             'city_effects' => ['money_multiplier' => 1.5]
         ]);
-        $originalPmoney = $city->pmoney;
-        $buildingType6->city_effect($city);
-        $this->assertEquals($originalPmoney * 1.5, $city->pmoney);
+        $market = TestDataFactory::createTestBuilding([
+            'city_id' => $city->id,
+            'type' => $marketType->id,
+        ]);
+
+        $coliseumType = TestDataFactory::createTestBuildingType([
+            'title' => 'колизей',
+            'cost' => 80,
+            'upkeep' => 2,
+            'req_research' => [],
+            'city_effects' => ['people_norm' => 2]
+        ]);
+        $coliseum = TestDataFactory::createTestBuilding([
+            'city_id' => $city->id,
+            'type' => $coliseumType->id,
+        ]);
+
+        // Проверяем, что здания сохранены
+        $this->assertEquals(5, count($city->buildings));
+
+        // Расчет зданий применяет эффекты
+        $city->calculate_buildings();
+
+        // Проверяем эффекты
+        $this->assertEquals((int)(BASE_EAT_UP / 2), $city->eat_up, 'Granary should halve eat_up');
+        $this->assertEquals(1, $city->people_norm, 'Buildings should adjust people_norm');
+        $this->assertEquals(1, $city->people_happy, 'Temple should add happy people');
+        $this->assertEquals(6, $city->presearch, 'Library should multiply research');
+        $this->assertEquals(6, $city->pmoney, 'Market should multiply money');
     }
 }

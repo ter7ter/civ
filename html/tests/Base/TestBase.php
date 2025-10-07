@@ -10,6 +10,7 @@ use App\Planet;
 use App\User;
 use App\Tests\Mocks\DatabaseTestAdapter;
 use App\Tests\Factory\TestDataFactory;
+use App\Tests\Base\TestGameDataInitializer;
 use PDO;
 
 /**

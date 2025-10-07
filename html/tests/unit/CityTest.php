@@ -281,9 +281,9 @@ class CityTest extends CommonTestBase
         $city = City::get($cityData->id);
         $buildingType = TestDataFactory::createTestBuildingType(); // Granary
         $city->create_building($buildingType);
-        $originalPmoney = $city->pmoney;
+        $originalMoney = $user->money;
         $city->calculate_buildings();
-        $this->assertEquals($originalPmoney - $buildingType->upkeep, $city->pmoney);
+        $this->assertEquals($originalMoney - $buildingType->upkeep, $user->money);
 
     }
 

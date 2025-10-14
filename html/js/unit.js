@@ -105,7 +105,23 @@ var Unit = {
 		});
 	},
 	create_city_window: function() {
-		$('#city-create-window').show();
+		var html = `
+			<div class="city-create-content">
+				<button type="button" class="close-btn" onclick="$('#city-create-window').hide();">✕</button>
+				<div class="city-create-header">
+					<strong>Основать город</strong>
+				</div>
+				<div class="city-create-body">
+					<input type="text" id="city-create-title" placeholder="Введите название города">
+				</div>
+				<div class="city-create-footer">
+					<button type="button" class="btn btn-primary" onclick="Unit.create_city()">Основать</button>
+					<button type="button" class="btn btn-secondary" onclick="$('#city-create-window').hide()">Отмена</button>
+				</div>
+			</div>
+		`;
+		$('#city-create-window').html(html).show();
+		$('#city-create-title').focus();
 	},
 	create_city: function() {
 		var title = $('#city-create-title').val();

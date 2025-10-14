@@ -120,8 +120,9 @@
     position: absolute;
     width: 60px;
     height: 60px;
-    background-image: url(../img/people.png);
-    background-repeat: round;
+    background-image: url(../img/people.svg);
+    background-repeat: no-repeat;
+    background-size: contain;
     color: white;
     text-align: center;
     font-size: 10px;

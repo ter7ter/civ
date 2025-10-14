@@ -58,15 +58,15 @@ include 'partials/header.php';
                 <h3 class="mb-3">Игроки (минимум 2, максимум 16)</h3>
                 <div id="player-list">
                     <?php
-                    $user_list = isset($data["users"]) && is_array($data["users"]) ? $data["users"] : ["", ""];
-if (count($user_list) < 2) {
-    $user_list = ["", ""];
-}
-$player_count = 1;
-foreach ($user_list as $user_login): ?>
+                    $user_list = isset($data["users"]) && is_array($data["users"]) ? $data["users"] : [];
+                    if (count($user_list) < 2) {
+                        $user_list = ["", ""];
+                    }
+                    $player_count = 1;
+                    foreach ($user_list as $user_login): ?>
                     <div class="input-group mb-2 player-field">
                         <span class="input-group-text player-color-swatch"></span>
-                        <input type="text" class="form-control" name="users[]" value="<?= htmlspecialchars($user_login) ?>" placeholder="Имя игрока <?= $player_count ?>">
+                        <input type="text" class="form-control" name="users[]" value="<?php if ($user_login !== '') { echo htmlspecialchars($user_login); } else { echo 'Игрок ' . $player_count; } ?>" placeholder="Игрок <?= $player_count ?>">
                         <?php if ($player_count > 2): ?>
                         <button type="button" class="btn btn-outline-danger remove-player">✕</button>
                         <?php endif; ?>
@@ -95,7 +95,7 @@ $(document).ready(function() {
     function updatePlayerPlaceholdersAndColors() {
         var player_count = 1;
         $('.player-field').each(function() {
-            $(this).find('input').attr('placeholder', 'Имя игрока ' + player_count);
+            $(this).find('input').attr('placeholder', 'Игрок ' + player_count);
             
             var color = "#";
             var sym = "ff";

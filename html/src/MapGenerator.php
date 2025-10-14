@@ -91,12 +91,13 @@ class MapGenerator
         }
         foreach ($game->users as $user) {
             $position = array_shift($positions);
+            $unitType = UnitType::get(GameConfig::$START_UNIT_SETTLER_TYPE);
             $citizen = new Unit([
                 "x" => $position[0],
                 "y" => $position[1],
                 "planet" => $planetId,
                 "health" => 3,
-                "points" => 2,
+                "points" => $unitType->points,
                 "user_id" => $user->id,
                 "type" => GameConfig::$START_UNIT_SETTLER_TYPE,
             ]);

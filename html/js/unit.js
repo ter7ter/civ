@@ -242,13 +242,22 @@ var Unit = {
 			data['path['+i+'][y]'] = map.cells[path[i].i][path[i].k].y;
 		}
 		$('.map-path-line').remove();
+		this.select_mission = false;
 		$.post('index.php?method=unitaction&json=1', data, function (data) {
 			var data = JSON.parse(data);
 			if (data.status == 'error') {
 				window.alert(data.error);
 				return false;
 			}
-			map.load();
+			// After move_to, refresh the selected unit info without reloading the whole map
+			if (selected_unit && selected_unit.id) {
+				$.post('index.php?method=cellinfo', {'x': map.select_x, 'y': map.select_y, 'unit_id': selected_unit.id}, function(cellData) {
+					$('#cellinfo').html(cellData);
+					map.load();
+				});
+			} else {
+				map.load();
+			}
 		});
 	}
 }

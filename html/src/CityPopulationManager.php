@@ -16,7 +16,6 @@ class CityPopulationManager
         $city->people_cells = [];
         $cells = $city->get_city_cells();
         $people_count = $city->population;
-        var_dump($people_count);
         while ($people_count > 0 && count($cells) > 0) {
             $best = $cells[0];
             $best_key = 0;

@@ -126,6 +126,7 @@ class Game implements IModel
             $users = MyDB::query("SELECT id FROM user WHERE game = :gameid", [
                 "gameid" => $this->id,
             ]);
+            $this->users = [];
             foreach ($users as $user) {
                 $userObj = User::get($user["id"]);
                 if ($userObj !== null) {
@@ -176,7 +177,7 @@ class Game implements IModel
     /**
      * Рассчитать новый ход для всех пользователей в игре
      */
-    public function calculate()
+    public function calculate(): void
     {
         $this->manager->calculateTurn();
     }
@@ -191,10 +192,10 @@ class Game implements IModel
     }
 
     /**
-     * Получить активного игрока в игре
+     * Получить id активного игрока в игре
      * @return int|null Идентификатор активного игрока или null
      */
-    public function getActivePlayer()
+    public function getActivePlayer(): ?int
     {
         return $this->manager->getActivePlayer();
     }

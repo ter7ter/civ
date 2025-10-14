@@ -53,4 +53,23 @@ body {
 #message-window {
     border: 1px solid #495057;
     border-radius: .375rem;
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+#message-window-lines {
+    background-color: #495057;
+    color: #f8f9fa;
+}
+#message-window-input {
+    background-color: #495057;
+    color: #f8f9fa;
+    border: 1px solid #6c757d;
+}
+.message-window-tab {
+    background-color: #343a40;
+    color: #f8f9fa;
+}
+.message-window-tab-active {
+    background-color: #495057;
+    color: #f8f9fa;
 }

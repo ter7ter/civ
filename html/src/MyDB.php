@@ -235,8 +235,11 @@ class MyDB implements DatabaseInterface
         self::$_loggingEnabled = false;
     }
 
-    public static function getQueryLog()
+    public static function getQueryLog($last = false)
     {
+        if ($last) {
+            return self::$_queryLog[count(self::$_queryLog) - 1];
+        }
         return self::$_queryLog;
     }
 

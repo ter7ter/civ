@@ -185,10 +185,12 @@ class Unit implements IModel, UnitInterface
             );
         }
 
-        $this->type = UnitType::get($data["type"]);
-        if ($this->type === null || $this->type === false) {
+        $unitType = UnitType::get($data["type"]);
+        if ($unitType === null || $unitType === false) {
             throw new Exception("Invalid unit type provided: " . $data["type"]);
         }
+        $this->type = $unitType;
+        
         if (isset($data["mission"])) {
             $this->mission = MissionType::get($data["mission"]);
         }

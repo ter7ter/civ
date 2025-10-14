@@ -4,18 +4,24 @@ namespace App;
 
 class MissionType implements MissionInterface
 {
-    //int
-    public $id;
-    //string
-    public $title;
-    //array
-    public $cell_types = [];
+    /**
+     * @var ?string
+     */
+    public ?string $id = null;
+    /**
+     * @var string
+     */
+    public string $title;
+    /**
+     * @var array
+     */
+    public array $cell_types = [];
 
-    public $unit_lost = false;
+    public bool $unit_lost = false;
     //Сколько требуется очков для полного выполнения задания, в зависимости от типа местности
-    public $need_points = [];
+    public array $need_points = [];
     // Стратегия для завершения миссии
-    public $completeHandler;
+    public $completeHandler = null;
 
     public static $all = [];
 
@@ -67,6 +73,18 @@ class MissionType implements MissionInterface
         foreach (['id', 'title', 'unit_lost', 'cell_types', 'need_points'] as $field) {
             $this->$field = $data[$field];
         }
+        switch ($this->id) {
+            case 'build_city':
+                $this->completeHandler = new BuildCityMission();
+                break;
+            case 'build_road':
+                $this->completeHandler = new BuildRoadMission();
+                break;
+            case 'mine':
+            case 'irrigation':
+                $this->completeHandler = new BuildMineAndIrrigationMission($this->id);
+                break;
+        }
 
         MissionType::$all[$data['id']] = $this;
     }
@@ -85,7 +103,6 @@ new MissionType([   'id' => 'build_city',
                     'unit_lost' => true,
                     'cell_types' => ['plains', 'plains2', 'forest', 'hills', 'desert'],
                     'need_points' => []]);
-MissionType::$all['build_city']->completeHandler = new BuildCityMission();
 
 new MissionType([   'id' => 'build_road',
                     'title' => 'Строить дорогу',
@@ -99,7 +116,6 @@ new MissionType([   'id' => 'build_road',
                         'desert' => 4,
                         'mountains' => 8
                     ]]);
-MissionType::$all['build_road']->completeHandler = new BuildRoadMission();
 
 new MissionType([   'id' => 'mine',
                     'title' => 'Построить рудник',
@@ -111,7 +127,6 @@ new MissionType([   'id' => 'mine',
                         'hills' => 10,
                         'mountains' => 10
                     ]]);
-MissionType::$all['mine']->completeHandler = new BuildMineAndIrrigationMission('mine');
 
 new MissionType([   'id' => 'irrigation',
                     'title' => 'Орошать',
@@ -122,7 +137,6 @@ new MissionType([   'id' => 'irrigation',
                         'plains2' => 10,
                         'desert' => 10
                     ]]);
-MissionType::$all['irrigation']->completeHandler = new BuildMineAndIrrigationMission('irrigation');
 
 new MissionType([   'id' => 'move_to',
                     'title' => 'Идти к',

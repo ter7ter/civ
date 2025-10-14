@@ -250,7 +250,7 @@ class BuildingType extends BaseType
      * Применяет эффект этой постройки к городу
      * @param $city City
      */
-    public function city_effect($city)
+    public function city_effect(City $city): void
     {
         $city->eat_up = (int)($city->eat_up * $this->city_effects['eat_up_multiplier']);
 

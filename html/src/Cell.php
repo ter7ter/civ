@@ -4,6 +4,7 @@ namespace App;
 
 use App\Interfaces\CellInterface;
 use App\City;
+use App\Planet;
 
 class Cell implements CellInterface
 {
@@ -127,7 +128,11 @@ class Cell implements CellInterface
         if (!isset($data["planet"])) {
             throw new \Exception("Planet is required for Cell");
         }
-        $this->planet = $data["planet"];
+        if ($data['planet'] instanceof Planet) {
+            $this->planet = $data['planet']->id;
+        } else {
+            $this->planet = $data['planet'];
+        }
         $this->type = CellType::get($data["type"]);
         $this->city = City::by_coords($this->x, $this->y, $this->planet);
         if (isset($data["owner"]) && (int) $data["owner"]) {

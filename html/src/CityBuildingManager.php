@@ -16,7 +16,7 @@ class CityBuildingManager
         foreach ($city->buildings as $building) {
             $building->type->city_effect($city);
             if ($building->type->upkeep > 0 && $city->pwork > 0) {
-                $city->pmoney -= $building->type->upkeep;
+                $city->user->money -= $building->type->upkeep;
             }
         }
     }

@@ -57,7 +57,7 @@ $(document).on('click', '#event-window-research-ok', function (e) {
 		}
 	});
 });
-$(document).on('click', '#event-window-research-cancel', function (e) {
+$(document).on('click', '#event-window-research-cancel, #event-window-research .btn-close', function (e) {
 	$('#event-window-research').hide();
 	get_next_event($('#event-window-research').attr('eid'));
 });
@@ -77,7 +77,7 @@ $(document).on('click', '#event-window-build-ok', function (e) {
 		}
 	});
 });
-$(document).on('click', '#event-window-build-tocity', function (e) {
+$(document).on('click', '#event-window-build-tocity, #event-window-city .btn-close', function (e) {
 	$.post('index.php?method=event&json=1', {del: $('#event-window-city').attr('eid')}, function (data) {
 		$('#event-window-city').hide();
 		resp = $.parseJSON(data);

@@ -49,7 +49,9 @@ include 'partials/header.php';
                     <div class="message-window-tab" id="mw-system-messages">Системные</div>
                     <div class="message-window-tab" id="mw-chat-messages">Чат</div>
                 </div>
-                <input type="text" id="message-window-input" class="form-control bg-dark text-light">
+                <div style="margin-top: 5px;">
+                    <input type="text" id="message-window-input" class="form-control">
+                </div>
             </div>
         </div>
     </div>

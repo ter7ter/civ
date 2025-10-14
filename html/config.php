@@ -15,7 +15,6 @@ define("DB_NAME", "civ");
  */
 define("POPULATION_PEOPLE_DIS", 4); //С какого размера города появляются недовольные жители
 define("BASE_EAT_UP", 20); //Требуется еды для роста города
-define("START_UNIT_SETTLER_TYPE", 21);
 
 if (!defined('USE_TRANSACTION_MODE')) {
     define('USE_TRANSACTION_MODE', true);
@@ -27,7 +26,7 @@ class GameConfig
      * ID типа юнита поселенца
      * @var int
      */
-    public static $START_UNIT_SETTLER_TYPE = 21;
+    public static $START_UNIT_SETTLER_TYPE = 53;
 
     /**
      * Необходимое количество культуры для уровней

@@ -328,7 +328,6 @@
     width: 100%;
     clear: both;
     height: 200px;
-    background-color: #fce94f;
 }
 #message-window-lines{
     width: 100%;
@@ -337,12 +336,7 @@
     border-width: 1px;
     overflow-y: auto;
 }
-#message-window-tabs {
-    width: 100%;
-    height: 20px;
-    border-style: outset;
-    border-width: 1px;
-}
+
 .message-window-tab {
     display: table-cell;
     border-width: 1px;
@@ -350,7 +344,6 @@
     cursor: pointer;
 }
 .message-window-tab-active {
-    background-color: cornflowerblue;
     cursor: default;
 }
 #message-window-input {

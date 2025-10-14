@@ -12,149 +12,149 @@ class City
      * Идентификатор города
      * @var int|null
      */
-    public $id;
+    public ?int $id = null;
 
     /**
      * Координата X города на карте
      * @var int
      */
-    public $x;
+    public int $x;
 
     /**
      * Координата Y города на карте
      * @var int
      */
-    public $y;
+    public int $y;
 
     /**
      * Идентификатор планеты, на которой находится город
      * @var int
      */
-    public $planet = 0;
+    public int $planet = 0;
     /**
      * Население города
      * @var int
      */
-    public $population = 1;
+    public int $population = 1;
     /**
      * Число недовольных жителей
      * @var int
      */
-    public $people_dis = 0;
+    public int $people_dis = 0;
     /**
      * Число довольных жителей
      * @var int
      */
-    public $people_norm = 1;
+    public int $people_norm = 1;
     /**
      * Число счастливых жителей
      * @var int
      */
-    public $people_happy = 0;
+    public int $people_happy = 0;
     /**
      * Число специалистов - артистов
      * @var int
      */
-    public $people_artist = 0;
+    public int $people_artist = 0;
     /**
-     * Сколько еды накоплено в  городе для роста
+     * Сколько еды накоплено в городе для роста
      * @var int
      */
-    public $eat = 0;
+    public int $eat = 0;
     /**
      * Сколько еды нужно для роста города
      * @var int
      */
-    public $eat_up = BASE_EAT_UP;
+    public int $eat_up = BASE_EAT_UP;
     /**
      * Количество накопленных очков культуры
      * @var int
      */
-    public $culture = 0;
+    public int $culture = 0;
     /**
      * Уровень культуры города
      * @var int
      */
-    public $culture_level = 0;
+    public int $culture_level = 0;
     /**
      * Название города
      * @var string
      */
-    public $title;
+    public string $title;
     /**
      * Что производится в городе
-     * @var int
+     * @var int | bool
      */
-    public $production = false;
+    public int|bool $production = false;
 
     /**
      * Тип текущего производства (unit или buil)
      * @var string
      */
-    public $production_type = "unit";
+    public string $production_type = "unit";
 
     /**
      * Прогресс текущего производства
      * @var int
      */
-    public $production_complete = 0;
+    public int $production_complete = 0;
 
     /**
      * Производство за ход в городе
      * @var int
      */
-    public $pwork = 1;
+    public int $pwork = 1;
 
     /**
      * Добыча еды за ход в городе
      * @var int
      */
-    public $peat = 2;
+    public int $peat = 2;
 
     /**
      * Добыча денег за ход в городе
      * @var int
      */
-    public $pmoney = 1;
+    public int $pmoney = 1;
 
     /**
      * Добыча очков исследований за ход
      * @var int
      */
-    public $presearch = 0;
+    public int $presearch = 0;
     /**
      * В каких клетках размещены жители
      * @var array \
      */
-    public $people_cells = [];
+    public array $people_cells = [];
     /**
      * Постройки в этом городе
-     * @var array Building
+     * @var Building[]|array
      */
-    public $buildings = [];
+    public array $buildings = [];
     /**
-     * Является ли городе прибрежным
+     * Является ли город прибрежным
      * @var bool
      */
-    public $is_coastal = false;
+    public bool $is_coastal = false;
 
     /**
      * Кэш всех загруженных городов
-     * @var array
+     * @var City[]|array
      */
-    protected static $_all = [];
+    protected static array $_all = [];
 
     /**
      * Идентификатор владельца города
-     * @var int
+     * @var ?int
      */
-    public $user_id;
+    public ?int $user_id;
 
     /**
      * Владелец города
-     * @var User
+     * @var ?User
      */
-    public $user;
+    public ?User $user;
 
     /**
      * Очистка кэша для тестов
@@ -168,13 +168,13 @@ class City
      * Ресурсы, доступные в городе
      * @var array
      */
-    public $resources = [];
+    public array $resources = [];
 
     /**
      * Группа ресурсов города
      * @var int|null
      */
-    public $resource_group;
+    public ?int $resource_group;
 
     /**
      * Получить город по идентификатору
@@ -182,7 +182,7 @@ class City
      * @return City|null Город или null, если не найден
      * @throws Exception
      */
-    public static function get($id)
+    public static function get(int $id): ?City
     {
         if (isset(City::$_all[$id])) {
             return City::$_all[$id];
@@ -207,7 +207,7 @@ class City
      * @return City|false Город или false, если не найден
      * @throws Exception
      */
-    public static function by_coords($x, $y, $planet)
+    public static function by_coords(int $x, int $y, int $planet): City|false
     {
         $data = MyDB::query(
             "SELECT * FROM city WHERE x = :x AND y = :y AND planet = :planet",
@@ -231,7 +231,7 @@ class City
      * @return City Новый город
      * @throws Exception
      */
-    public static function new_city($user, $x, $y, $title, $planetId)
+    public static function new_city(User $user, int $x, int $y, string $title, int $planetId): City
     {
         $city = new City([
             "user_id" => $user->id,
@@ -270,9 +270,9 @@ class City
      * @param array $data Данные города
      * @throws Exception
      */
-    public function __construct($data)
+    public function __construct(array $data)
     {
-        if (!$data || !is_array($data)) {
+        if (!$data) {
             throw new Exception(
                 "Invalid city data provided to City constructor",
             );
@@ -280,6 +280,10 @@ class City
 
         foreach ($data as $field => $val) {
             if ($field == "user_id") {
+                continue;
+            }
+            if ($field == "production") {
+                $this->production = $val ?? false;
                 continue;
             }
             $this->$field = $val;

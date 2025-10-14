@@ -11,7 +11,7 @@ class TurnCalculator
      * Рассчитать новый ход для всех пользователей в игре
      * @param Game $game
      */
-    public static function calculateTurn(Game $game)
+    public static function calculateTurn(Game $game): void
     {
         $first = true;
         foreach ($game->users as $user) {
@@ -43,7 +43,7 @@ class TurnCalculator
      * @param Game $game
      * @return int|null
      */
-    public static function getActivePlayer(Game $game)
+    public static function getActivePlayer(Game $game): ?int
     {
         return MyDB::query(
             "SELECT id FROM user WHERE game = :gid AND turn_status = 'play' LIMIT 1",

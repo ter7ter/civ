@@ -11,21 +11,21 @@ class Event
     /**
      * @var User
      */
-    public $user;
+    public ?User $user;
     /**
      * @var string(research, city_building, city_unit)
      */
-    public $type;
+    public mixed $type;
     /**
      * Источник события
      * @var null|City|User
      */
-    public $soruce = null;
+    public City|null|User $soruce = null;
     /**
      * Предмет события
      * @var ResearchType|BuildingType|UnitType
      */
-    public $object;
+    public mixed $object;
 
     /**
      * @param $id

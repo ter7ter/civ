@@ -26,12 +26,12 @@ class CityProductionManager
             }
             $can_build = true;
             foreach ($unit->req_research as $research) {
-                if (!isset($have_research[$research->id])) {
+                if (is_array($research) || is_object($research) && isset($research->id) && !isset($have_research[$research->id])) {
                     $can_build = false;
                 }
             }
             foreach ($unit->req_resources as $res) {
-                if (!isset($city->resources[$res->id])) {
+                if (is_array($res) || is_object($res) && isset($res->id) && !isset($city->resources[$res->id])) {
                     $can_build = false;
                 }
             }

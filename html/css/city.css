@@ -1,27 +1,40 @@
 
 #city-window {
     display: none;
+    position: fixed;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
     width: 960px;
-    background-color: #343a40;
+    background-color: rgba(52, 58, 64, 0.9);
     color: #f8f9fa;
     border: 1px solid #495057;
     border-radius: 0.375rem;
-    height: 750px;
+    height: 85vh;
+    max-height: 750px;
     box-sizing: border-box;
     z-index: 1000;
 }
 #city-window-title {
-    background: #495057;
+    background: rgba(52, 58, 64, 0.9);
     color: #f8f9fa;
     text-align: center;
     font-size: 24pt;
-    padding: 10px 0;
+    padding: 10px 20px;
     margin-bottom: 0;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: auto;
+    z-index: 1000;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 #city-window-close {
     position: absolute;
     top: 10px;
-    left: 10px;
+    right: 10px;
     width: 30px;
     height: 30px;
     background-color: #6c757d;
@@ -34,24 +47,26 @@
     z-index: 1001;
 }
 #city-window-bottom-panel {
-    background: khaki;
-    margin-top: 605px;
+    background: rgba(73, 80, 87, 0.6);
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     height: 133px;
-    padding: 2px;
-    border-width: 4px;
-    border-style: double;
-
+    padding: 10px;
+    color: #f8f9fa;
 }
 #city-production-select {
-    float: right;
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
     border-width: 2px;
     border-style: dashed;
     height: 110px;
     width: 110px;
-    margin-top: -15px;
-    margin-right: 5px;
     padding: 5px;
     cursor: pointer;
+    background: rgba(255, 255, 255, 0.1);
 }
 #city-production-select-pic {
     text-align: center;
@@ -62,16 +77,19 @@
 #city-production-list {
     display: none;
     position: absolute;
-    background: blanchedalmond;
-    margin-left: 770px;
-    margin-top: 50px;
-    width: 180px;
-    border-width: 4px;
-    border-style: outset;
-    height: 545px;
+    background: rgba(73, 80, 87, 0.95);
+    color: #f8f9fa;
+    right: 10px;
+    bottom: 125px;
+    width: 280px;
+    border: 1px solid #495057;
+    border-radius: 0.25rem;
+    height: 400px;
     overflow-y: auto;
+    z-index: 1100;
 }
 #city-building-list {
+    display: none;
     position: absolute;
     background: khaki;
     margin-top: 88px;
@@ -90,13 +108,13 @@
 .city-production-list-item img {
     width: 50px;
     height: 50px;
+    float: left;
 }
 .city-production-list-item-title {
-    #float: right;
+    font-weight: bold;
 }
 .city-production-list-item-description {
-    float: right;
-    width: 112px
+    margin-left: 60px;
 }
 .city_map_citizen {
     position: absolute;
@@ -104,9 +122,10 @@
     height: 60px;
     background-image: url(../img/people.png);
     background-repeat: round;
-    margin-top: -460px;
-    margin-left: 350px;
-    color: mintcream;
+    color: white;
+    text-align: center;
+    font-size: 10px;
+    z-index: 200;
 }
 .city-window-bg {
     position: absolute;
@@ -125,17 +144,22 @@
 #city-window-up-panel {
     position: absolute;
     width: 100%;
-    background: antiquewhite;
+    background: rgba(52, 58, 64, 0.9);
+    color: #f8f9fa;
     margin-top: 48px;
-    height: 40px;
-    font-size: 20pt;
-    text-align: center;
+    padding: 5px;
+    font-size: 11px;
+    text-align: left;
+    line-height: 1.4;
 }
 #city-resource-info {
     position: absolute;
-    margin-left: 600px;
-    margin-top: 88px;
-    background-color: blanchedalmond;
+    right: 20px;
+    top: 20px;
+    background-color: rgba(52, 58, 64, 0.9);
+    color: #f8f9fa;
     z-index: 10;
     width: 170px;
+    padding: 5px;
+    border-radius: 0.25rem;
 }

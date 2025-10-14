@@ -36,9 +36,6 @@ var city = {
 				city.draw_buildings();
 				$('#city-window-title').text(city.title);
 				$('#city-window-eat-info').text(city.eat + ' / ' + city.eat_up);
-				if (city.production) {
-					city.draw_production();
-				}
 				$(document).on('click', '.city-production-list-item', function(e) {
 					city.select_production($(e.target).closest('.city-production-list-item'));
 				});
@@ -55,6 +52,7 @@ var city = {
 				$('#city-window').show();
 				city.draw_people();
 				city.draw_resources();
+				city.draw_production();
 			} else {
 				window.alert(resp.error);
 			}
@@ -127,8 +125,8 @@ var city = {
 				+ 'Е: ' + this.people_cells[i].eat + '<br>'
 				+ 'Д: ' + this.people_cells[i].money)
 			$('#city-window').append(citizen);
-			citizen.css('margin-left', parseInt(citizen.css('margin-left')) + dx*72);
-			citizen.css('margin-top', parseInt(citizen.css('margin-top')) + dy*72);
+			citizen.css('left', (350 + dx*72) + 'px');
+			citizen.css('top', (48 + dy*72) + 'px');
 		}
 		for (var dx = -1; dx < 2; dx++) {
 			for (var dy = -1; dy < 2; dy++) {

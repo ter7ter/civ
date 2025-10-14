@@ -2,7 +2,8 @@
 
 use App\BuildingType;
 use App\UnitType;
-use App\Сity;
+use App\City;
+use App\GameConfig;
 
 /**
  * Скрипт для обработки страницы города.

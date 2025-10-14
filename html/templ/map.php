@@ -61,7 +61,99 @@ include 'partials/header.php';
 <!-- Original Modals (should be outside the main layout flow) -->
 <div id="cellmenu" map-x="0" map-y="0"></div>
 <div id="city-create-window"></div>
-<div id="city-window">...</div>
+<div id="city-window">
+	<div id="city-window-close" onclick="$('#city-window').hide();">X</div>
+	<table>
+		<tr>
+			<td>
+				<div id="city-window-title">...</div>
+				<div id="city-window-eat-info">...</div>
+				<div>
+					Население: <span id="city-window-population">20</span>
+				</div>
+				<div>
+					Культура: <span id="city-window-culture">0</span> / <span id="city-window-culture-up">20</span>
+				</div>
+				<div>
+					Уровень: <span id="city-window-culture-level">0</span>
+				</div>
+			</td>
+			<td id="city-resource-info"></td>
+		</tr>
+	</table>
+	<div id="city-window-bottom-panel">
+		<table>
+			<tr>
+				<td>
+				<div id="city-window-up-panel">
+					Недовольных: <span id="city-window-people-dis">-</span><br>
+					Нормальных: <span id="city-window-people-norm">-</span><br>
+					Счастливых: <span id="city-window-people-happy">-</span><br>
+					Художников: <span id="city-window-people-artist">-</span>
+				</div>
+					<div id="city-map">
+						<div class="city-small-bg" style="display: none;">
+							<table>
+								<tr>
+									<td class="city-window-cell" id="city-window-cell-n1n1"></td>
+									<td class="city-window-cell" id="city-window-cell-n1p0"></td>
+									<td class="city-window-cell" id="city-window-cell-n1p1"></td>
+								</tr>
+								<tr>
+									<td class="city-window-cell" id="city-window-cell-p0n1"></td>
+									<td></td>
+									<td class="city-window-cell" id="city-window-cell-p0p1"></td>
+								</tr>
+								<tr>
+									<td class="city-window-cell" id="city-window-cell-p1n1"></td>
+									<td class="city-window-cell" id="city-window-cell-p1p0"></td>
+									<td class="city-window-cell" id="city-window-cell-p1p1"></td>
+								</tr>
+							</table>
+						</div>
+						<div class="city-big-bg" style="display: none;">
+							<table>
+								<tr>
+									<td class="city-window-cell" id="city-window-cell-n1n1"></td>
+									<td class="city-window-cell" id="city-window-cell-n1p0"></td>
+									<td class="city-window-cell" id="city-window-cell-n1p1"></td>
+								</tr>
+								<tr>
+									<td class="city-window-cell" id="city-window-cell-p0n1"></td>
+									<td></td>
+									<td class="city-window-cell" id="city-window-cell-p0p1"></td>
+								</tr>
+								<tr>
+									<td class="city-window-cell" id="city-window-cell-p1n1"></td>
+									<td class="city-window-cell" id="city-window-cell-p1p0"></td>
+									<td class="city-window-cell" id="city-window-cell-p1p1"></td>
+								</tr>
+							</table>
+						</div>
+					</div>
+				</td>
+				<td valign="top" style="padding-left: 20px;">
+					<div id="city-production-select">
+						<div id="city-production-select-pic">
+							<img src="./img/units/53.png">
+						</div>
+						<div id="city-production-select-title"></div>
+					</div>
+					<div id="city-production-list"></div>
+					<div id="city-building-list"></div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4" style="white-space: nowrap;">
+					Производство: <span id="city-window-pwork-info">-</span> |
+					Еда: <span id="city-window-peat-info">-</span> |
+					Деньги: <span id="city-window-pmoney-info">-</span> |
+					Исследования: <span id="city-window-presearch-info">-</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
 <div id="empire-window"></div>
 <div id="event-window-research" eid="">...</div>
 <div id="event-window-city" eid="" cid="">...</div>

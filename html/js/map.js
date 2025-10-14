@@ -31,8 +31,18 @@ var Map_cell = {
 		for (var unit in this.units) {
 			$('#cellmenu ul').append('<li unit="' + unit + '">' + this.units[unit].title + '</li>');
 		}
-		$('#cellmenu').css('margin-left', point_x - 8);
-		$('#cellmenu').css('margin-top', point_y - 600);
+
+		var offset = this.el.offset();
+		var width = this.el.width();
+		var height = this.el.height();
+		var top = offset.top + (height / 2);
+		var left = offset.left + (width / 2);
+
+		$('#cellmenu').css({
+			'top': top + 'px',
+			'left': left + 'px'
+		});
+
 		$('#cellmenu').attr('map-x', this.x);
 		$('#cellmenu').attr('map-y', this.y);
 		$('#cellmenu').show();
@@ -305,6 +315,28 @@ var map = {
 //
 //Клики по карте
 //
+$(document).on('click', '.open-city', function (e) {
+    e.stopImmediatePropagation();
+    var cid = $(e.target).attr('cid');
+    var x = $('#cellmenu').attr('map-x');
+    var y = $('#cellmenu').attr('map-y');
+    var cell = map.get_cell(x, y);
+    if (cell && cell.el) {
+        var offset = cell.el.offset();
+        var width = cell.el.width();
+        var height = cell.el.height();
+        var top = offset.top + (height / 2);
+        var left = offset.left + (width / 2);
+        $('#city-window').css({
+            'position': 'absolute',
+            'top': top + 'px',
+            'left': left + 'px',
+            'transform': 'translate(-50%, -50%)'
+        });
+    }
+    city.load(cid);
+    $('#cellmenu').hide();
+});
 $(document).on('click', '.map_cell', function (e) {
 	var x = $(e.target).closest('.map_cell').attr('coordx');
 	var y = $(e.target).closest('.map_cell').attr('coordy');
@@ -317,6 +349,10 @@ $(document).on('click', '.map_cell', function (e) {
 			selected_unit.cancel_select_target();
 		}
 	} else {
+		if ($('#cellmenu').is(':visible') && map.select_x == x && map.select_y == y) {
+			$("#cellmenu").hide();
+			return;
+		}
 		$("#cellmenu").hide();
 		map.select_x = x;
 		map.select_y = y;

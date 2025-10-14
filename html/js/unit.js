@@ -131,7 +131,7 @@ var Unit = {
 		}
 		$.post('index.php?method=unitaction&json=1', {'action': 'mission',
 													  'mission': 'build_city',
-													  'uid': this.id,
+													  'uid': selected_unit.id,
 													  'title': title}, function(data) {
 			var data = JSON.parse(data);
 			if (data.status == 'error') {

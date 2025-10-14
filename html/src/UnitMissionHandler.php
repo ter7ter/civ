@@ -49,7 +49,7 @@ class UnitMissionHandler
             return false;
         }
         $cell = Cell::get($unit->x, $unit->y, $unit->planet);
-        if (!$mtype->check_cell($unit->x, $unit->y)) {
+        if (!$mtype->check_cell($unit->x, $unit->y, $unit->planet)) {
             return false;
         }
         if (!in_array($cell->type->id, $mtype->cell_types)) {

@@ -5,7 +5,7 @@ include 'partials/header.php';
 <!-- Original game styles -->
 <link type="text/css" href="css/city.css" rel="Stylesheet" />
 <link type="text/css" href="css/map.css" rel="Stylesheet" />
-<link type="text/css" href="css/style.css" rel="Stylesheet" />
+<link type="text/css" href="css/style.css?v=2" rel="Stylesheet" />
 
 <div class="container-fluid">
     <div class="row justify-content-center">
@@ -60,7 +60,7 @@ include 'partials/header.php';
 
 <!-- Original Modals (should be outside the main layout flow) -->
 <div id="cellmenu" map-x="0" map-y="0"></div>
-<div id="city-create-window">...</div>
+<div id="city-create-window"></div>
 <div id="city-window">...</div>
 <div id="empire-window"></div>
 <div id="event-window-research" eid="">...</div>
@@ -68,7 +68,7 @@ include 'partials/header.php';
 
 <script src="js/functions.js"></script>
 <script src="js/map.js"></script>
-<script src="js/unit.js"></script>
+<script src="js/unit.js?v=2"></script>
 <script src="js/city.js"></script>
 <script src="js/events.js"></script>
 <script src="js/research.js"></script>

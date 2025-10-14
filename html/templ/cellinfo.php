@@ -1,42 +1,41 @@
-<div id="cell-info-window">
-<div style="width: 100%">
-    <?=$data['turn_num']?> ход
-</div>
-<div style="width: 100%">
-<?if ($data['turn_status'] == 'play'):?>
-    Ваш ход...
-<? elseif ($data['turn_status'] == 'wait'):?>
-    Ждём ваш ход...
-<? elseif ($data['turn_status'] == 'end'):?>
-    Ждём окончания хода
-<?endif;?>
-</div>
-<div style="width: 100%">
-    <b>Деньги: <?=$data['user_money']?></b> (<?=$data['user_income']?> за ход)
-</div>
-<div style="width: 100%">
-Эра: <?=$data['user_age']?>
-</div>
-<?if ($data['user_research_type']):?>
-<div style="width: 100%">
-    <b>Исследуется:<br> <?=$data['user_research_type']?></b> (<?=$data['user_research_turns']?> ходов)
-</div>
-<?endif;?>
-<?if ($data['turn_status'] == 'play'):?>
-<div style="text-align: center; padding: 10px">
-    <input type="button" value="Следующий ход[Enter]" id="do-next-step">
-</div>
-<?endif;?>
-<div class="d-flex align-items-start">
-    <div class="cell-info-img flex-shrink-0">
-        <img src="./img/map_<?=$data['type']?>.png">
+<div id="cell-info-window" style="padding-bottom: 10px;">
+    <div style="margin-bottom: 10px;">
+        <strong><?=$data['turn_num']?> ход</strong>
     </div>
-    <div class="flex-grow-1 ms-3">
-        <div style="width: 100%;">
-            <b>(<?=$data['x']?>,<?=$data['y']?>)</b> <?=$data['title']?>
+    <div style="margin-bottom: 10px;">
+    <?if ($data['turn_status'] == 'play'):?>
+        Ваш ход...
+    <? elseif ($data['turn_status'] == 'wait'):?>
+        Ждём ваш ход...
+    <? elseif ($data['turn_status'] == 'end'):?>
+        Ждём окончания хода
+    <?endif;?>
+    </div>
+    <div style="margin-bottom: 10px;">
+        <strong>Деньги: <?=$data['user_money']?></strong> (<?=$data['user_income']?> за ход)
+    </div>
+    <div style="margin-bottom: 10px;">
+        Эра: <?=$data['user_age']?>
+    </div>
+    <?if ($data['user_research_type']):?>
+    <div style="margin-bottom: 10px;">
+        <strong>Исследуется:<br> <?=$data['user_research_type']?></strong> (<?=$data['user_research_turns']?> ходов)
+    </div>
+    <?endif;?>
+    <?if ($data['turn_status'] == 'play'):?>
+    <div style="text-align: center; padding: 10px 0; margin-bottom: 15px; border-bottom: 1px solid #495057;">
+        <input type="button" value="Следующий ход[Enter]" id="do-next-step" style="padding: 5px 10px;">
+    </div>
+    <?endif;?>
+    <div class="d-flex align-items-start" style="margin-bottom: 10px;">
+        <div class="cell-info-img flex-shrink-0">
+            <img src="./img/map_<?=$data['type']?>.png">
         </div>
-        <div>
-            <table>
+        <div class="flex-grow-1 ms-3">
+            <div style="margin-bottom: 5px;">
+                <strong>(<?=$data['x']?>,<?=$data['y']?>)</strong> <?=$data['title']?>
+            </div>
+            <table style="border-spacing: 4px;">
                 <tr>
                     <td>производство</td>
                     <td><?=$data['work']?></td>
@@ -52,7 +51,6 @@
             </table>
         </div>
     </div>
-</div>
 <?if (isset($data['resource'])):?>
 <div>
     Ресурс <b><?=$data['resource']?></b>
@@ -74,36 +72,38 @@
     </div>
 <?endif;?>
 <?if (isset($data['unit'])):?>
-<div id="selected-unit-info">
-	<div style="float: left; padding: 10px">
-        <img src="./img/units/<?=$data['unit']['type']?>.png"></img>
-    </div>
-    <div>
-        <div><?=$data['unit']['title']?> (<?=$data['unit']['owner_name']?>)</div>
-        <div>Боевой опыт: рекрут</div>
-        <div>HP: <?=$data['unit']['health']?>/<?=$data['unit']['health_max']?></div>
-        <div>Движение <?=$data['unit']['points']?>/<?=$data['unit']['max_points']?></div>
-    </div>
-    <?if ($data['unit']['mission']):?>
-        <div style="clear:both;">
-            Сейчас выполняет <b><?=$data['unit']['mission']?>
-            <?if ($data['turn_status'] == 'play'):?>
-            <input class="unit-cancel-mission" type="button" value="Отменить">
-            <?endif;?>
+    <div id="selected-unit-info" style="border-top: 1px solid #495057; padding-top: 15px;">
+        <div class="d-flex">
+            <div style="padding-right: 10px;">
+                <img src="./img/units/<?=$data['unit']['type']?>.png" style="width: 66px; height: 66px;">
+            </div>
+            <div>
+                <div style="margin-bottom: 5px;"><strong><?=$data['unit']['title']?></strong> (<?=$data['unit']['owner_name']?>)</div>
+                <div style="margin-bottom: 3px;">Боевой опыт: рекрут</div>
+                <div style="margin-bottom: 3px;">HP: <?=$data['unit']['health']?>/<?=$data['unit']['health_max']?></div>
+                <div style="margin-bottom: 10px;">Движение: <?=$data['unit']['points']?>/<?=$data['unit']['max_points']?></div>
+            </div>
         </div>
-    <? elseif (count($data['unit']['missions']) && $data['turn_status'] == 'play'):?>
-    <div style="clear: both;padding-left: 10px;">
-    <div style="float: left">Приказы:</div>
-        <div style="float: left;padding-left: 10px">
-        <?foreach ($data['unit']['missions'] as $mtype):?>
-        <div>
-            <input class="unit-do-mission" type="button" mid="<?=$mtype['id']?>" value="<?=$mtype['title']?>">
-        </div>
-        <?endforeach;?>
-        </div>
+        <?if ($data['unit']['mission']):?>
+            <div style="margin-top: 10px;">
+                Сейчас выполняет: <strong><?=$data['unit']['mission']?></strong>
+                <?if ($data['turn_status'] == 'play'):?>
+                <div style="margin-top: 5px;">
+                    <input class="unit-cancel-mission" type="button" value="Отменить" style="padding: 3px 8px;">
+                </div>
+                <?endif;?>
+            </div>
+        <? elseif (count($data['unit']['missions']) && $data['turn_status'] == 'play'):?>
+            <div style="margin-top: 10px;">
+                <div style="margin-bottom: 8px;"><strong>Приказы:</strong></div>
+                <?foreach ($data['unit']['missions'] as $mtype):?>
+                <div style="margin-bottom: 5px;">
+                    <input class="unit-do-mission" type="button" mid="<?=$mtype['id']?>" value="<?=$mtype['title']?>" style="padding: 3px 8px; width: 100%;">
+                </div>
+                <?endforeach;?>
+            </div>
+        <?endif;?>
     </div>
-    <?endif;?>
-</div>
 <?endif;?>
 </div>
 <script type="text/javascript">

@@ -9,7 +9,7 @@
         </div>
         <?php endif; ?>
 
-        <form method="POST" action="index.php?page=building_types&action=save<?php echo $id ? '&id=' . htmlspecialchars($id) : ''; ?>">
+        <form enctype="multipart/form-data" method="POST" action="index.php?page=building_types&action=save<?php echo $id ? '&id=' . htmlspecialchars($id) : ''; ?>">
             <div class="mb-3">
                 <label for="title" class="form-label">Title</label>
                 <input type="text" name="title" id="title" class="form-control" value="<?php echo htmlspecialchars($buildingType->title ?? ''); ?>" required>
@@ -45,6 +45,15 @@
             <div class="mb-3">
                 <label for="description" class="form-label">Description</label>
                 <textarea name="description" id="description" class="form-control"><?php echo htmlspecialchars($buildingType->description ?? ''); ?></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="image_file" class="form-label">Image</label>
+                <input type="file" name="image_file" id="image_file" class="form-control" accept="image/*">
+                <?php if (!empty($buildingType->image_file) && file_exists(__DIR__ . '/../../img/buils/' . $buildingType->image_file)): ?>
+                    <div class="mt-2">
+                        <img src="../img/buils/<?php echo htmlspecialchars($buildingType->image_file); ?>" alt="Current image" style="width: 72px; height: 72px;">
+                    </div>
+                <?php endif; ?>
             </div>
             <div class="mb-3">
                 <label class="form-label">Req Research</label>

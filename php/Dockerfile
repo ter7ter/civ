@@ -1,8 +1,9 @@
 FROM php:8.4-apache
 
 RUN apt-get update \
-    && apt-get install -y libpq-dev libonig-dev \
-    && docker-php-ext-install pdo pdo_mysql mysqli pcntl 
+    && apt-get install -y mc libpq-dev libonig-dev libzip-dev libpng-dev libjpeg-dev libfreetype6-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install pdo pdo_mysql mysqli pcntl gd zip 
 RUN apt-get install -y apache2-bin
 RUN a2enmod alias
 RUN a2enmod rewrite

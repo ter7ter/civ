@@ -17,5 +17,8 @@
             "App\\Tests\\": "tests/",
             "App\\Tests\\base\\": "tests/base/"
         }
-    }
+    },
+  "require": {
+    "ext-fileinfo": "*"
+  }
 }

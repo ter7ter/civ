@@ -9,6 +9,11 @@ class ResearchType
     public $title;
     //Стоимость исследования
     public $cost;
+    /**
+     * Имя файла картинки
+     * @var string
+     */
+    public $image_file = "";
 
     /**
      * Требуемые исследования
@@ -123,6 +128,10 @@ class ResearchType
             }
         }
 
+        if (isset($data['image_file'])) {
+            $this->image_file = $data['image_file'];
+        }
+
         $this->loadRequirements();
 
         if (isset($data['id'])) {
@@ -193,6 +202,7 @@ class ResearchType
             'm_left' => $this->m_left,
             'age' => $this->age,
             'age_need' => (int)$this->age_need,
+            'image_file' => $this->image_file,
         ];
         if (isset($this->id)) {
             MyDB::update('research_type', $data, $this->id);

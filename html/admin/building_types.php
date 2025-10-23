@@ -2,6 +2,7 @@
 use App\BuildingType;
 
 require_once(__DIR__ . "/../includes.php");
+require_once(__DIR__ . "/functions.php");
 
 $action = $_REQUEST['action'] ?? 'list';
 $id = $_REQUEST['id'] ?? null;
@@ -16,6 +17,21 @@ if ($action == 'save') {
         }
     } else {
         $buildingType = new BuildingType([]);
+    }
+
+    // Обработка загрузки изображения
+    if (!$message && isset($_FILES['image_file'])) {
+        $fileError = $_FILES['image_file']['error'];
+        if ($fileError === UPLOAD_ERR_OK) {
+            try {
+                $result = uploadAndResizeImage($_FILES['image_file'], 'buils', $buildingType->id);
+                $buildingType->image_file = $result;
+            } catch (Exception $ex) {
+                $message = $ex->getMessage();
+            }
+        } elseif ($fileError !== UPLOAD_ERR_NO_FILE) {
+            $message = "Ошибка загрузки файла: " . $fileError;
+        }
     }
 
     if (!$message) {

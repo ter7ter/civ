@@ -2,6 +2,7 @@
 use App\UnitType;
 
 require_once(__DIR__ . "/../includes.php");
+require_once(__DIR__ . "/functions.php");
 
 global $error;
 
@@ -20,6 +21,22 @@ if ($action == 'save') {
         }
     } else {
         $unitType = new UnitType([]);
+    }
+
+    // Обработка загрузки изображения
+    if (!$message && isset($_FILES['image_file'])) {
+        $fileError = $_FILES['image_file']['error'];
+        if ($fileError === UPLOAD_ERR_OK) {
+            $result = uploadAndResizeImage($_FILES['image_file'], 'units', $unitType->id);
+            try {
+                $result = uploadAndResizeImage($_FILES['image_file'], 'buils', $unitType->id);
+                $unitType->image_file = $result;
+            } catch (Exception $ex) {
+                $message = $ex->getMessage();
+            }
+        } elseif ($fileError !== UPLOAD_ERR_NO_FILE) {
+            $message = "Ошибка загрузки файла: " . $fileError;
+        }
     }
 
     if (!$message) {

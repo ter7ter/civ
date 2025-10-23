@@ -17,6 +17,11 @@ class BaseType implements TypeInterface
      * @var string Название типа
      */
     public $title;
+    /**
+     * Имя файла картинки
+     * @var string
+     */
+    public $image_file = "";
 
     /**
      * Получить идентификатор типа.

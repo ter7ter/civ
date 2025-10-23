@@ -109,6 +109,7 @@ class BuildingType extends BaseType
             'money_bonus' => $this->money_bonus,
             'description' => $this->description,
             'city_effects' => json_encode($this->city_effects),
+            'image_file' => $this->image_file,
         ];
         if (isset($this->id)) {
             MyDB::update('building_type', $data, $this->id);
@@ -183,6 +184,10 @@ class BuildingType extends BaseType
                     $this->$field = $value;
                 }
             }
+        }
+
+        if (isset($data['image_file'])) {
+            $this->image_file = $data['image_file'];
         }
 
         $allowedEffects = [

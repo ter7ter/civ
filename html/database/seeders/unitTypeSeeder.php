@@ -26,7 +26,8 @@ $units = [
         'attack' => 0,
         'defence' => 1,
         'can_found_city' => true,
-        'description' => 'Может основывать города'
+        'description' => 'Может основывать города',
+        'image_file' => ''
     ],
     [
         'title' => 'Рабочий',

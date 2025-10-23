@@ -172,6 +172,7 @@ class UnitType extends BaseType
             'missions' => json_encode($this->missions),
             'req_research' => json_encode($this->req_research),
             'req_resources' => json_encode($this->req_resources),
+            'image_file' => $this->image_file,
         ];
         if (isset($this->id)) {
             MyDB::update('unit_type', $data, $this->id);
@@ -260,6 +261,10 @@ class UnitType extends BaseType
             if (isset($data[$field])) {
                 $this->$field = $data[$field];
             }
+        }
+
+        if (isset($data['image_file'])) {
+            $this->image_file = $data['image_file'];
         }
 
         // Обрабатываем JSON поля

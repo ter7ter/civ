@@ -63,96 +63,89 @@ include 'partials/header.php';
 <div id="city-create-window"></div>
 <div id="city-window">
 	<div id="city-window-close" onclick="$('#city-window').hide();">X</div>
-	<table>
-		<tr>
-			<td>
-				<div id="city-window-title">...</div>
-				<div id="city-window-eat-info">...</div>
-				<div>
-					Население: <span id="city-window-population">20</span>
-				</div>
-				<div>
-					Культура: <span id="city-window-culture">0</span> / <span id="city-window-culture-up">20</span>
-				</div>
-				<div>
-					Уровень: <span id="city-window-culture-level">0</span>
-				</div>
-			</td>
-			<td id="city-resource-info"></td>
-		</tr>
-	</table>
-	<div id="city-window-bottom-panel">
-		<table>
-			<tr>
-				<td>
-				<div id="city-window-up-panel">
-					Недовольных: <span id="city-window-people-dis">-</span><br>
-					Нормальных: <span id="city-window-people-norm">-</span><br>
-					Счастливых: <span id="city-window-people-happy">-</span><br>
-					Художников: <span id="city-window-people-artist">-</span>
-				</div>
-					<div id="city-map">
-						<div class="city-small-bg" style="display: none;">
-							<table>
-								<tr>
-									<td class="city-window-cell" id="city-window-cell-n1n1"></td>
-									<td class="city-window-cell" id="city-window-cell-n1p0"></td>
-									<td class="city-window-cell" id="city-window-cell-n1p1"></td>
-								</tr>
-								<tr>
-									<td class="city-window-cell" id="city-window-cell-p0n1"></td>
-									<td></td>
-									<td class="city-window-cell" id="city-window-cell-p0p1"></td>
-								</tr>
-								<tr>
-									<td class="city-window-cell" id="city-window-cell-p1n1"></td>
-									<td class="city-window-cell" id="city-window-cell-p1p0"></td>
-									<td class="city-window-cell" id="city-window-cell-p1p1"></td>
-								</tr>
-							</table>
-						</div>
-						<div class="city-big-bg" style="display: none;">
-							<table>
-								<tr>
-									<td class="city-window-cell" id="city-window-cell-n1n1"></td>
-									<td class="city-window-cell" id="city-window-cell-n1p0"></td>
-									<td class="city-window-cell" id="city-window-cell-n1p1"></td>
-								</tr>
-								<tr>
-									<td class="city-window-cell" id="city-window-cell-p0n1"></td>
-									<td></td>
-									<td class="city-window-cell" id="city-window-cell-p0p1"></td>
-								</tr>
-								<tr>
-									<td class="city-window-cell" id="city-window-cell-p1n1"></td>
-									<td class="city-window-cell" id="city-window-cell-p1p0"></td>
-									<td class="city-window-cell" id="city-window-cell-p1p1"></td>
-								</tr>
-							</table>
-						</div>
-					</div>
-				</td>
-				<td valign="top" style="padding-left: 20px;">
-					<div id="city-production-select">
-						<div id="city-production-select-pic">
-							<img src="./img/units/53.png">
-						</div>
-						<div id="city-production-select-title"></div>
-					</div>
-					<div id="city-production-list"></div>
-					<div id="city-building-list"></div>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="4" style="white-space: nowrap;">
-					Производство: <span id="city-window-pwork-info">-</span> |
-					Еда: <span id="city-window-peat-info">-</span> |
-					Деньги: <span id="city-window-pmoney-info">-</span> |
-					Исследования: <span id="city-window-presearch-info">-</span>
-				</td>
-			</tr>
-		</table>
-	</div>
+	<div id="city-window-title">...</div>
+
+    <!-- Контейнер для карты, центрированный -->
+    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+        <div id="city-map" style="position: relative;top: 3px;left: 3px;">
+            <div class="city-small-bg" style="display: none;">
+                <table>
+					<tr>
+						<td class="city-window-cell" id="city-window-cell-n1n1"></td>
+						<td class="city-window-cell" id="city-window-cell-n1p0"></td>
+						<td class="city-window-cell" id="city-window-cell-n1p1"></td>
+					</tr>
+					<tr>
+						<td class="city-window-cell" id="city-window-cell-p0n1"></td>
+						<td></td>
+						<td class="city-window-cell" id="city-window-cell-p0p1"></td>
+					</tr>
+					<tr>
+						<td class="city-window-cell" id="city-window-cell-p1n1"></td>
+						<td class="city-window-cell" id="city-window-cell-p1p0"></td>
+						<td class="city-window-cell" id="city-window-cell-p1p1"></td>
+					</tr>
+				</table>
+            </div>
+            <div class="city-big-bg" style="display: none;">
+                <table>
+					<tr>
+						<td class="city-window-cell" id="city-window-cell-n1n1"></td>
+						<td class="city-window-cell" id="city-window-cell-n1p0"></td>
+						<td class="city-window-cell" id="city-window-cell-n1p1"></td>
+					</tr>
+					<tr>
+						<td class="city-window-cell" id="city-window-cell-p0n1"></td>
+						<td></td>
+						<td class="city-window-cell" id="city-window-cell-p0p1"></td>
+					</tr>
+					<tr>
+						<td class="city-window-cell" id="city-window-cell-p1n1"></td>
+						<td class="city-window-cell" id="city-window-cell-p1p0"></td>
+						<td class="city-window-cell" id="city-window-cell-p1p1"></td>
+					</tr>
+				</table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Левая панель -->
+    <div class="city-panel" style="position: absolute; left: 20px; top: 60px; width: 250px; height: calc(100% - 100px); display: flex; flex-direction: column;">
+        <div id="city-window-eat-info">...</div>
+        <div>Население: <span id="city-window-population">20</span></div>
+        <div>Культура: <span id="city-window-culture">0</span> / <span id="city-window-culture-up">20</span></div>
+        <div>Уровень: <span id="city-window-culture-level">0</span></div>
+        <hr>
+        <div id="city-window-up-panel" class="info-panel" style="flex-grow: 1;">
+            Недовольных: <span id="city-window-people-dis">-</span><br>
+            Нормальных: <span id="city-window-people-norm">-</span><br>
+            Счастливых: <span id="city-window-people-happy">-</span><br>
+            Художников: <span id="city-window-people-artist">-</span>
+        </div>
+        <hr>
+        <div class="info-panel">
+            Производство: <span id="city-window-pwork-info">-</span><br>
+            Еда: <span id="city-window-peat-info">-</span><br>
+            Деньги: <span id="city-window-pmoney-info">-</span><br>
+            Исследования: <span id="city-window-presearch-info">-</span>
+        </div>
+    </div>
+
+    <!-- Правая панель -->
+    <div class="city-panel" style="position: absolute; right: 20px; top: 60px; width: 250px; height: calc(100% - 100px); display: flex; flex-direction: column;">
+        <div id="city-resource-info"></div>
+        <hr>
+        <div style="flex-grow: 1; overflow-y: auto;">
+            <div id="city-production-list"></div>
+            <div id="city-building-list"></div>
+        </div>
+        <div id="city-production-select">
+            <div id="city-production-select-pic">
+                <img src="./img/units/53.png">
+            </div>
+            <div id="city-production-select-title"></div>
+        </div>
+    </div>
 </div>
 <div id="empire-window"></div>
 <div id="event-window-research" eid="">...</div>

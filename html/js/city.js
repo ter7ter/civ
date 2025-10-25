@@ -118,32 +118,31 @@ var city = {
 	draw_people: function() {
 		$('.city_map_citizen').remove();
 		for (var i in this.people_cells) {
-			var dx = diff_coord(this.people_cells[i].x, this.x, map.max_x);
-			var dy = diff_coord(this.people_cells[i].y, this.y, map.max_y);
+			var dx = parseInt(diff_coord(this.people_cells[i].x, this.x, map.max_x));
+			var dy = parseInt(diff_coord(this.people_cells[i].y, this.y, map.max_y));
+
 			var citizen = $('<div class="city_map_citizen"></div>');
 			citizen.html('П: ' + this.people_cells[i].work + '<br>'
 				+ 'Е: ' + this.people_cells[i].eat + '<br>'
 				+ 'Д: ' + this.people_cells[i].money)
-			$('#city-window').append(citizen);
-			citizen.css('left', (350 + dx*72) + 'px');
-			citizen.css('top', (48 + dy*72) + 'px');
+
+			$('#city-map').append(citizen);
+			citizen.css('left', ((dx+1)*72 + 6) + 'px');
+			citizen.css('top', ((dy+1)*72 + 6) + 'px');
 		}
-		for (var dx = -1; dx < 2; dx++) {
-			for (var dy = -1; dy < 2; dy++) {
+		for (var dy = -1; dy < 2; dy++) {
+			for (var dx = -1; dx < 2; dx++) {
 				if (dx == 0 && dy == 0) continue;
-				var num = "";
-				if (dx < 0) {
-					num += "n" + Math.abs(dx);
-				} else {
-					num += "p" + dx;
-				}
-				if (dy < 0) {
-					num += "n" + Math.abs(dy);
-				} else {
-					num += "p" + dy;
-				}
-				$('#city-window-cell-' + num).attr('coordx', add_coord(this.x, dx, map.max_x));
-				$('#city-window-cell-' + num).attr('coordy', add_coord(this.y, dy, map.max_y));
+                
+                var dy_str = (dy < 0 ? "n" : "p") + Math.abs(dy);
+                var dx_str = (dx < 0 ? "n" : "p") + Math.abs(dx);
+                var cell_id = '#city-window-cell-' + dy_str + dx_str;
+                var cell = $(cell_id);
+
+                if (cell.length) {
+                    cell.attr('coordx', add_coord(this.x, dx, map.max_x));
+                    cell.attr('coordy', add_coord(this.y, dy, map.max_y));
+                }
 			}
 		}
 		$('#city-window-people-dis').text(this.people_dis);

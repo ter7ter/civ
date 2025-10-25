@@ -148,8 +148,7 @@ var map = {
 		                }
 		            }
 		            window.alert(error_msg);
-		        });	},
-	//Отрисовка карты
+		        });	}, //Отрисовка карты
 	draw: function() {
 		$('#mapv').empty();
 		for (var y = 0; y < map.height; y++) {
@@ -269,7 +268,7 @@ var map = {
 		                console.error("Error loading turn info:", textStatus, errorThrown, jqXHR.responseText);
 		                $('#turninfo-container').html('<div class="error">Failed to load turn info. See console for details.</div>');
 		            });
-		            					        }).fail(function(jqXHR, textStatus, errorThrown) {
+		            		        }).fail(function(jqXHR, textStatus, errorThrown) {
 		            console.error("Error loading cell info:", textStatus, errorThrown, jqXHR.responseText);
 		            $('#cellinfo').html('<div class="error">Failed to load cell info. See console for details.</div>');
 		        });	},
@@ -367,4 +366,33 @@ $(document).on('click', '.cell-info-img', function (e) {
 	map.center_x = map.select_x;
 	map.center_y = map.select_y;
 	map.load();
+});
+
+$(window).on('resize', function() {
+    if ($('#city-window').is(':visible') && city.id) {
+        var city_cell = null;
+        // Find the cell with the city
+        for (var x in map.cells) {
+            for (var y in map.cells[x]) {
+                var cell = map.cells[x][y];
+                if (cell.city && cell.city.id == city.id) {
+                    city_cell = cell;
+                    break;
+                }
+            }
+            if (city_cell) break;
+        }
+
+        if (city_cell && city_cell.el) {
+            var offset = city_cell.el.offset();
+            var width = city_cell.el.width();
+            var height = city_cell.el.height();
+            var top = offset.top + (height / 2);
+            var left = offset.left + (width / 2);
+            $('#city-window').css({
+                'top': top + 'px',
+                'left': left + 'px',
+            });
+        }
+    }
 });

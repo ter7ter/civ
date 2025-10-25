@@ -1,10 +1,9 @@
-
 #city-window {
     display: none;
     position: fixed;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 960px;
     background-color: rgba(52, 58, 64, 0.9);
     color: #f8f9fa;
@@ -46,16 +45,7 @@
     cursor: pointer;
     z-index: 1001;
 }
-#city-window-bottom-panel {
-    background: rgba(73, 80, 87, 0.6);
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 133px;
-    padding: 10px;
-    color: #f8f9fa;
-}
+
 #city-production-select {
     position: absolute;
     right: 10px;
@@ -134,7 +124,6 @@
     background: gray;
 }
 .city-window-cell {
-    position: absolute;
     width: 72px;
     height: 72px;
     cursor: pointer;
@@ -142,25 +131,14 @@
     opacity: 0.1;
     z-index: 100;
 }
-#city-window-up-panel {
-    position: absolute;
-    width: 100%;
-    background: rgba(52, 58, 64, 0.9);
-    color: #f8f9fa;
-    margin-top: 48px;
-    padding: 5px;
+
+.info-panel {
     font-size: 11px;
     text-align: left;
-    line-height: 1.4;
 }
-#city-resource-info {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    background-color: rgba(52, 58, 64, 0.9);
-    color: #f8f9fa;
-    z-index: 10;
-    width: 170px;
-    padding: 5px;
+
+.city-panel {
+    background-color: rgba(52, 58, 64, 0.8);
+    padding: 10px;
     border-radius: 0.25rem;
 }

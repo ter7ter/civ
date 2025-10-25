@@ -114,9 +114,12 @@
     background-repeat: no-repeat;
     background-size: contain;
     color: white;
-    text-align: center;
+    text-align: left;
     font-size: 10px;
     z-index: 200;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 .city-window-bg {
     position: absolute;
@@ -141,4 +144,8 @@
     background-color: rgba(52, 58, 64, 0.8);
     padding: 10px;
     border-radius: 0.25rem;
+}
+
+.icon-line {
+    min-height: 15px;
 }

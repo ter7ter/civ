@@ -14,13 +14,6 @@ class MapGenerator
      */
     public static function generateNewGame(Game $game)
     {
-        // Убеждаемся, что типы юнитов инициализированы перед созданием юнитов
-        if (empty(UnitType::getAll())) {
-            if (class_exists("TestGameDataInitializer")) {
-                TestGameDataInitializer::initializeUnitTypes();
-            }
-        }
-
         $planet = new Planet(['name' => 'Planet 1', 'game_id' => $game->id]);
         $planet->save();
         $planetId = $planet->id;

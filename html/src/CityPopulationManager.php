@@ -42,7 +42,6 @@ class CityPopulationManager
             array_splice($cells, $best_key, 1);
             $people_count--;
         }
-        //var_dump($city->people_cells);
     }
 
     /**

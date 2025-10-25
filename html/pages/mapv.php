@@ -25,68 +25,86 @@ $mapv = [];
 foreach ($map as $row) {
     $rowv = [];
     foreach ($row as $cell) {
-        $units = [];
-        if (count($cell->units)) {
-            foreach ($cell->units as $unit) {
-                $data_unit = ['id' => $unit->id,
-                    'type' => $unit->type->id,
-                    'x' => $unit->x,
-                    'y' => $unit->y,
-                    'title' => $unit->getTitle(),
-                    'user_id' => $unit->user->id,
-                    'health' => $unit->health,
-                    'owner_name' => $unit->user->login,
-                    'owner_color' => $unit->user->color,
-                    'can_move' => $unit->type->can_move];
-                if ($user == $unit->user) {
-                    $data_unit['points'] = $unit->points;
-                    $data_unit['max_points'] = $unit->type->points;
+        if (is_array($cell) && isset($cell['missing'])) {
+            // Missing cell
+            $info = [
+                'title' => 'Недостающая клетка',
+                'type' => 'unknown',
+                'x' => $cell['x'],
+                'y' => $cell['y'],
+                'city' => false,
+                'road' => false,
+                'units' => [],
+                'resource_id' => false,
+                'improvement' => false,
+                'owner_name' => false,
+                'missing' => true,
+            ];
+        } else {
+            // Normal cell
+            $units = [];
+            if (count($cell->units)) {
+                foreach ($cell->units as $unit) {
+                    $data_unit = ['id' => $unit->id,
+                        'type' => $unit->type->id,
+                        'x' => $unit->x,
+                        'y' => $unit->y,
+                        'title' => $unit->getTitle(),
+                        'user_id' => $unit->user->id,
+                        'health' => $unit->health,
+                        'owner_name' => $unit->user->login,
+                        'owner_color' => $unit->user->color,
+                        'can_move' => $unit->type->can_move];
+                    if ($user == $unit->user) {
+                        $data_unit['points'] = $unit->points;
+                        $data_unit['max_points'] = $unit->type->points;
+                    }
+                    $units[] = $data_unit;
                 }
-                $units[] = $data_unit;
             }
-        }
-        $city = false;
-        $info = ['title' => $cell->getTitle(),
-            'type' => $cell->type->id,
-            'x' => $cell->x,
-            'y' => $cell->y,
-            'city' => $city,
-            'road' => $cell->road,
-            'units' => $units,
-            'resource_id' => false];
-        if ($cell->city) {
-            $city = ['id' => $cell->city->id,
-                'user_id' => $cell->city->user->id,
-                'title' => $cell->city->title,
-                'x' => $cell->city->x,
-                'y' => $cell->city->y,
-                'population' => $cell->city->population];
-            $info['city'] = $city;
-            $info['owner_name'] = $cell->city->user->login;
-            $info['owner_color'] = $cell->city->user->color;
-        } else {
-            if ($cell->owner) {
-                $info['owner_name'] = $cell->owner->login;
-                $info['owner_color'] = $cell->owner->color;
+            $city = false;
+            $info = ['title' => $cell->getTitle(),
+                'type' => $cell->type ? $cell->type->id : 'unknown',
+                'x' => $cell->x,
+                'y' => $cell->y,
+                'city' => $city,
+                'road' => $cell->road,
+                'units' => $units,
+                'resource_id' => false];
+            if ($cell->city) {
+                $city = ['id' => $cell->city->id,
+                    'user_id' => $cell->city->user->id,
+                    'title' => $cell->city->title,
+                    'x' => $cell->city->x,
+                    'y' => $cell->city->y,
+                    'population' => $cell->city->population];
+                $info['city'] = $city;
+                $info['owner_name'] = $cell->city->user->login;
+                $info['owner_color'] = $cell->city->user->color;
             } else {
-                $info['owner_name'] = false;
+                if ($cell->owner) {
+                    $info['owner_name'] = $cell->owner->login;
+                    $info['owner_color'] = $cell->owner->color;
+                } else {
+                    $info['owner_name'] = false;
+                }
+                $info['city'] = false;
             }
-            $info['city'] = false;
-        }
-        if ($cell->resource && $cell->resource->type && $cell->resource->type->canUse($user)) {
-            $info['resource_id'] = $cell->resource->type->id;
-            $info['resource_title'] = $cell->resource->type->getTitle();
-        }
-        if ($cell->improvement) {
-            $info['improvement'] = $cell->improvement;
-            $mtype = MissionType::get($cell->improvement);
-            if ($mtype) {
-                $info['improvement_title'] = $mtype->getTitle();
+            if ($cell->resource && $cell->resource->type && $cell->resource->type->canUse($user)) {
+                $info['resource_id'] = $cell->resource->type->id;
+                $info['resource_title'] = $cell->resource->type->getTitle();
+            }
+            if ($cell->improvement) {
+                $info['improvement'] = $cell->improvement;
+                $mtype = MissionType::get($cell->improvement);
+                if ($mtype) {
+                    $info['improvement_title'] = $mtype->getTitle();
+                } else {
+                    $info['improvement_title'] = 'Неизв. улучшение';
+                }
             } else {
-                $info['improvement_title'] = 'Неизв. улучшение';
+                $info['improvement'] = false;
             }
-        } else {
-            $info['improvement'] = false;
         }
 
         $rowv[] = $info;

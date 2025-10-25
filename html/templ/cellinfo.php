@@ -3,13 +3,13 @@
         <strong><?=$data['turn_num']?> ход</strong>
     </div>
     <div style="margin-bottom: 10px;">
-    <?if ($data['turn_status'] == 'play'):?>
+        <?php if ($data['turn_status'] == 'play'):?>
         Ваш ход...
-    <? elseif ($data['turn_status'] == 'wait'):?>
+        <?php elseif ($data['turn_status'] == 'wait'):?>
         Ждём ваш ход...
-    <? elseif ($data['turn_status'] == 'end'):?>
+        <?php elseif ($data['turn_status'] == 'end'):?>
         Ждём окончания хода
-    <?endif;?>
+        <?php endif;?>
     </div>
     <div style="margin-bottom: 10px;">
         <strong>Деньги: <?=$data['user_money']?></strong> (<?=$data['user_income']?> за ход)
@@ -17,16 +17,16 @@
     <div style="margin-bottom: 10px;">
         Эра: <?=$data['user_age']?>
     </div>
-    <?if ($data['user_research_type']):?>
+    <?php if ($data['user_research_type']):?>
     <div style="margin-bottom: 10px;">
         <strong>Исследуется:<br> <?=$data['user_research_type']?></strong> (<?=$data['user_research_turns']?> ходов)
     </div>
-    <?endif;?>
-    <?if ($data['turn_status'] == 'play'):?>
+    <?php endif;?>
+    <?php if ($data['turn_status'] == 'play'):?>
     <div style="text-align: center; padding: 10px 0; margin-bottom: 15px; border-bottom: 1px solid #495057;">
         <input type="button" value="Следующий ход[Enter]" id="do-next-step" style="padding: 5px 10px;">
     </div>
-    <?endif;?>
+    <?php endif;?>
     <div class="d-flex align-items-start" style="margin-bottom: 10px;">
         <div class="cell-info-img flex-shrink-0">
             <img src="./img/map_<?=$data['type']?>.png">
@@ -51,27 +51,27 @@
             </table>
         </div>
     </div>
-<?if (isset($data['resource'])):?>
+    <?php if (isset($data['resource'])):?>
 <div>
     Ресурс <b><?=$data['resource']?></b>
 </div>
-<?endif;?>
-<?if ($data['owner_name']):?>
+    <?php endif;?>
+    <?php if ($data['owner_name']):?>
 <div style="width: 100%;">
     Территория <b><?=$data['owner_name']?></b>, влияние: <?=$data['owner_culture']?>
 </div>
-<?endif;?>
-<?if (isset($data['road'])):?>
+    <?php endif;?>
+    <?php if (isset($data['road'])):?>
 <div>
     <b><?=$data['road']?></b>
 </div>
-<?endif;?>
-<?if (isset($data['improvement'])):?>
+    <?php endif;?>
+    <?php if (isset($data['improvement'])):?>
     <div>
         <b><?=$data['improvement']?></b>
     </div>
-<?endif;?>
-<?if (isset($data['unit'])):?>
+    <?php endif;?>
+    <?php if (isset($data['unit'])):?>
     <div id="selected-unit-info" style="border-top: 1px solid #495057; padding-top: 15px;">
         <div class="d-flex">
             <div style="padding-right: 10px;">
@@ -84,27 +84,27 @@
                 <div style="margin-bottom: 10px;">Движение: <?=$data['unit']['points']?>/<?=$data['unit']['max_points']?></div>
             </div>
         </div>
-        <?if ($data['unit']['mission']):?>
+        <?php if ($data['unit']['mission']):?>
             <div style="margin-top: 10px;">
                 Сейчас выполняет: <strong><?=$data['unit']['mission']?></strong>
-                <?if ($data['turn_status'] == 'play'):?>
+                <?php if ($data['turn_status'] == 'play'):?>
                 <div style="margin-top: 5px;">
                     <input class="unit-cancel-mission" type="button" value="Отменить" style="padding: 3px 8px;">
                 </div>
-                <?endif;?>
+                <?php endif;?>
             </div>
-        <? elseif (count($data['unit']['missions']) && $data['turn_status'] == 'play'):?>
+        <?php elseif (count($data['unit']['missions']) && $data['turn_status'] == 'play'):?>
             <div style="margin-top: 10px;">
                 <div style="margin-bottom: 8px;"><strong>Приказы:</strong></div>
-                <?foreach ($data['unit']['missions'] as $mtype):?>
+                <?php foreach ($data['unit']['missions'] as $mtype):?>
                 <div style="margin-bottom: 5px;">
                     <input class="unit-do-mission" type="button" mid="<?=$mtype['id']?>" value="<?=$mtype['title']?>" style="padding: 3px 8px; width: 100%;">
                 </div>
-                <?endforeach;?>
+                <?php endforeach;?>
             </div>
-        <?endif;?>
+        <?php endif;?>
     </div>
-<?endif;?>
+    <?php endif;?>
 </div>
 <script type="text/javascript">
     map.turn_status = '<?=$data['turn_status']?>';

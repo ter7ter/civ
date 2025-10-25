@@ -12,4 +12,4 @@ CREATE TABLE IF NOT EXISTS `planet` (
 
 -- Добавление внешнего ключа
 ALTER TABLE `planet`
-  ADD CONSTRAINT `planet_ibfk_1` FOREIGN KEY (`game_id`) REFERENCES `game` (`id`);
+  ADD CONSTRAINT `planet_ibfk_1` FOREIGN KEY (`game_id`) REFERENCES `game` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;

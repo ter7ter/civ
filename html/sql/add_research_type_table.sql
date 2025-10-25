@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS `research_type`;
 CREATE TABLE IF NOT EXISTS `research_type` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
+  `image_file` varchar(255) DEFAULT '',
   `cost` int UNSIGNED NOT NULL DEFAULT '0',
   `m_top` int NOT NULL DEFAULT '30',
   `m_left` int NOT NULL DEFAULT '0',

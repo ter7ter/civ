@@ -26,7 +26,7 @@ class GameConfig
      * ID типа юнита поселенца
      * @var int
      */
-    public static $START_UNIT_SETTLER_TYPE = 53;
+    public static $START_UNIT_SETTLER_TYPE = 87;
 
     /**
      * Необходимое количество культуры для уровней

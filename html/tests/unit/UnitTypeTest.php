@@ -42,12 +42,12 @@ class UnitTypeTest extends CommonTestBase
         $unitTypeGet = UnitType::get($unitWarriorType->id);
 
         $this->assertInstanceOf(UnitType::class, $unitTypeGet);
-        $this->assertEquals($unitSettlerType->id, $unitTypeGet->id);
-        $this->assertEquals("Поселенец", $unitTypeGet->title);
-        $this->assertEquals(40, $unitTypeGet->cost);
-        $this->assertEquals(0, $unitTypeGet->attack);
+        $this->assertEquals($unitWarriorType->id, $unitTypeGet->id);
+        $this->assertEquals("Воин", $unitTypeGet->title);
+        $this->assertEquals(30, $unitTypeGet->cost);
+        $this->assertEquals(2, $unitTypeGet->attack);
         $this->assertEquals(1, $unitTypeGet->defence);
-        $this->assertTrue($unitTypeGet->can_found_city);
+        $this->assertFalse($unitTypeGet->can_found_city);
     }
 
     /**

@@ -26,8 +26,8 @@ $units = [
         'attack' => 0,
         'defence' => 1,
         'can_found_city' => true,
+        'missions' => ['move_to', 'build_city'],
         'description' => 'Может основывать города',
-        'image_file' => ''
     ],
     [
         'title' => 'Рабочий',
@@ -37,6 +37,7 @@ $units = [
         'attack' => 0,
         'defence' => 0,
         'can_build' => true,
+        'missions' => ['move_to', 'build_road', 'mine', 'irrigation'],
         'description' => 'Строит улучшения'
     ],
     [
@@ -46,18 +47,21 @@ $units = [
         'type' => 'land',
         'attack' => 1,
         'defence' => 1,
+        'missions' => ['move_to'],
         'description' => 'Базовый воин'
     ],
     [
         'title' => 'Копейщик',
+        'missions' => ['move_to'],
         'points' => 1,
         'cost' => 20,
         'type' => 'land',
         'attack' => 1,
-        'defence' => 2
+        'defence' => 2,
     ],
     [
         'title' => 'Лучник',
+        'missions' => ['move_to'],
         'points' => 1,
         'cost' => 30,
         'type' => 'land',
@@ -66,6 +70,7 @@ $units = [
     ],
     [
         'title' => 'Мечник',
+        'missions' => ['move_to'],
         'points' => 1,
         'cost' => 30,
         'type' => 'land',
@@ -74,6 +79,7 @@ $units = [
     ],
     [
         'title' => 'Секироносек',
+        'missions' => ['move_to'],
         'points' => 1,
         'cost' => 25,
         'type' => 'land',
@@ -82,6 +88,7 @@ $units = [
     ],
     [
         'title' => 'Колесница',
+        'missions' => ['move_to'],
         'points' => 2,
         'cost' => 30,
         'type' => 'land',
@@ -90,6 +97,7 @@ $units = [
     ],
     [
         'title' => 'Конник',
+        'missions' => ['move_to'],
         'points' => 2,
         'cost' => 50,
         'type' => 'land',
@@ -99,6 +107,7 @@ $units = [
     ],
     [
         'title' => 'Рыцарь',
+        'missions' => ['move_to'],
         'points' => 2,
         'cost' => 80,
         'type' => 'land',
@@ -107,6 +116,7 @@ $units = [
     ],
     [
         'title' => 'Катапульта',
+        'missions' => ['move_to'],
         'points' => 1,
         'cost' => 50,
         'type' => 'land',
@@ -115,6 +125,7 @@ $units = [
     ],
     [
         'title' => 'Требушет',
+        'missions' => ['move_to'],
         'points' => 1,
         'cost' => 50,
         'type' => 'land',
@@ -123,6 +134,7 @@ $units = [
     ],
     [
         'title' => 'Галера',
+        'missions' => ['move_to'],
         'points' => 3,
         'cost' => 30,
         'type' => 'water',
@@ -136,6 +148,7 @@ $units = [
     ],
     [
         'title' => 'Каравелла',
+        'missions' => ['move_to'],
         'points' => 3,
         'cost' => 50,
         'type' => 'water',
@@ -149,6 +162,7 @@ $units = [
     ],
     [
         'title' => 'Бронирован',
+        'missions' => ['move_to'],
         'points' => 4,
         'cost' => 80,
         'type' => 'water',
@@ -162,6 +176,7 @@ $units = [
     ],
     [
         'title' => 'Истребитель',
+        'missions' => ['move_to'],
         'points' => 5,
         'cost' => 60,
         'type' => 'air',
@@ -181,6 +196,7 @@ $units = [
     ],
     [
         'title' => 'Бомбардировщик',
+        'missions' => ['move_to'],
         'points' => 4,
         'cost' => 90,
         'type' => 'air',

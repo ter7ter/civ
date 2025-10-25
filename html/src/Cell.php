@@ -519,7 +519,11 @@ class Cell implements CellInterface
             $row = [];
             foreach ($inty as $y) {
                 $cell = Cell::get($x, $y, $planet);
-                $cell->get_units();
+                if ($cell) {
+                    $cell->get_units();
+                } else {
+                    $cell = ['missing' => true, 'x' => $x, 'y' => $y];
+                }
                 $row[] = $cell;
             }
             $result[] = $row;

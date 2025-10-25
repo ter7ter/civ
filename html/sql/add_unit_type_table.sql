@@ -5,6 +5,7 @@ DROP TABLE IF EXISTS `unit_type`;
 CREATE TABLE IF NOT EXISTS `unit_type` (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `title` varchar(100) NOT NULL,
+  `image_file` varchar(255) DEFAULT '',
   `points` int UNSIGNED NOT NULL DEFAULT '1',
   `cost` int UNSIGNED NOT NULL DEFAULT '0',
   `population_cost` int UNSIGNED NOT NULL DEFAULT '0',

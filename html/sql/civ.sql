@@ -312,7 +312,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `turn_order` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8;
-
+ALTER TABLE `user` ADD FOREIGN KEY (`game`) REFERENCES `game`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 
 --
@@ -368,8 +368,8 @@ ALTER TABLE `research`
 -- Ограничения внешнего ключа таблицы `resource_group`
 --
 ALTER TABLE `resource_group`
-  ADD CONSTRAINT `resource_group_ibfk_1` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`),
-  ADD CONSTRAINT `resource_group_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
+  ADD CONSTRAINT `resource_group_ibfk_1` FOREIGN KEY (`resource_id`) REFERENCES `resource` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `resource_group_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `unit`

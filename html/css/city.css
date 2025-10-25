@@ -94,6 +94,7 @@
     border-width: 1px;
     border-style: dotted;
     cursor: pointer;
+    overflow: auto;
 }
 .city-production-list-item img {
     width: 50px;

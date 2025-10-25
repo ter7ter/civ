@@ -128,4 +128,34 @@ if (!isset($_REQUEST['cid']) || !$cid = (int)$_REQUEST['cid']) {
             'count' => $resource['count']
         ];
     }
+
+    // Получаем ресурсы для клеток вокруг города (3x3, без центра)
+    $data['cell_resources'] = [];
+    for ($dy = -1; $dy <= 1; $dy++) {
+        for ($dx = -1; $dx <= 1; $dx++) {
+            if ($dx == 0 && $dy == 0) continue; // Пропускаем центр
+            $cx = $city->x;
+            $cy = $city->y;
+            \App\Cell::calc_coord($cx, $cy, $dx, $dy);
+            $cell = \App\Cell::get($cx, $cy, $city->planet);
+            if ($cell) {
+                $data['cell_resources'][] = [
+                    'dx' => $dx,
+                    'dy' => $dy,
+                    'work' => $cell->get_work($city),
+                    'eat' => $cell->get_eat($city),
+                    'money' => $cell->get_money($city)
+                ];
+            } else {
+                // Если клетки нет, используем базовые значения (например, 0)
+                $data['cell_resources'][] = [
+                    'dx' => $dx,
+                    'dy' => $dy,
+                    'work' => 0,
+                    'eat' => 0,
+                    'money' => 0
+                ];
+            }
+        }
+    }
 }

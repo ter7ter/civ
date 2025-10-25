@@ -23,6 +23,15 @@ var city = {
     presearch: 0,
 	title: "",
 	load_events_after: false,
+	cell_resources: [],
+	get_cell_resources: function(dx, dy) {
+		for (var i in this.cell_resources) {
+			if (this.cell_resources[i].dx == dx && this.cell_resources[i].dy == dy) {
+				return this.cell_resources[i];
+			}
+		}
+		return {work: 0, eat: 0, money: 0};
+	},
 	load: function(cid, options = {}) {
 		options['cid'] = cid;
 		$.post('index.php?method=city&json=1', options, function(data) {
@@ -53,6 +62,7 @@ var city = {
 				city.draw_people();
 				city.draw_resources();
 				city.draw_production();
+				city.cell_resources = resp.data.cell_resources || [];
 			} else {
 				window.alert(resp.error);
 			}
@@ -116,39 +126,67 @@ var city = {
 		}
 	},
 	draw_people: function() {
-		$('.city_map_citizen').remove();
-		for (var i in this.people_cells) {
-			var dx = parseInt(diff_coord(this.people_cells[i].x, this.x, map.max_x));
-			var dy = parseInt(diff_coord(this.people_cells[i].y, this.y, map.max_y));
+		$('.city_map_cell').remove();
+		var hammer_svg = '<svg width="12" height="12" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="5" width="4" height="11" fill="saddlebrown"/><rect x="2" y="2" width="12" height="4" fill="darkgray"/></svg>';
+		var apple_svg = '<svg width="800px" height="800px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M854.634667 169.365333c103.509333 103.530667 2.325333 309.12-186.901334 498.368-189.226667 189.162667-394.837333 290.368-498.346666 186.88-103.530667-103.530667-2.346667-309.12 186.88-498.368 189.205333-189.184 394.837333-290.389333 498.368-186.88z" fill="#FFB300" /><path d="M424.661333 617.322667c6.506667 89.216-7.36 140.138667-25.493333 169.237333-38.72 34.794667-57.002667 38.72-57.002667 38.72s-6.122667-242.474667 0.512-334.613333c0.448-6.229333 29.781333-45.781333 29.781334-45.781334s45.482667 80.277333 52.202666 172.437334zM595.328 474.645333c6.506667 89.216-7.381333 140.138667-25.493333 169.237334-38.72 34.794667-57.002667 38.72-57.002667 38.72s-6.122667-242.453333 0.490667-334.613334c0.448-6.229333 29.781333-45.781333 29.781333-45.781333s45.525333 80.298667 52.224 172.437333zM766.464 340.416c6.506667 89.216-7.381333 140.138667-25.493333 169.237333-38.72 34.794667-57.002667 38.72-57.002667 38.72s-6.122667-242.453333 0.490667-334.613333c0.448-6.229333 29.781333-45.781333 29.781333-45.781333s45.482667 80.298667 52.224 172.437333z" fill="#FFA000" /><path d="M384 657.984c0 92.394667-41.834667 167.296-41.834667 167.296s-41.813333-74.901333-41.813333-167.296c0-92.394667 41.813333-167.317333 41.813333-167.317333S384 565.589333 384 657.984zM554.965333 515.349333c0 92.416-41.813333 167.317333-41.813333 167.317334s-41.813333-74.901333-41.834667-167.317334c0-92.373333 41.834667-167.296 41.834667-167.296s41.813333 74.922667 41.813333 167.296zM725.333333 380.629333c0 92.416-41.834667 167.317333-41.834666 167.317334s-41.813333-74.901333-41.834667-167.317334c0-92.373333 41.834667-167.296 41.834667-167.296S725.333333 288.256 725.333333 380.629333z" fill="#FFE082" /></svg>';
+		var coin_svg = '<svg width="12" height="12" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="7" fill="gold"/><circle cx="8" cy="8" r="5" fill="goldenrod"/></svg>';
 
-			var citizen = $('<div class="city_map_citizen"></div>');
-						var hammer_svg = '<svg width="12" height="12" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><rect x="6" y="5" width="4" height="11" fill="saddlebrown"/><rect x="2" y="2" width="12" height="4" fill="darkgray"/></svg>';
-			var apple_svg = '<svg width="800px" height="800px" viewBox="0 0 1024 1024" class="icon"  version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M854.634667 169.365333c103.509333 103.530667 2.325333 309.12-186.901334 498.368-189.226667 189.162667-394.837333 290.368-498.346666 186.88-103.530667-103.530667-2.346667-309.12 186.88-498.368 189.205333-189.184 394.837333-290.389333 498.368-186.88z" fill="#FFB300" /><path d="M424.661333 617.322667c6.506667 89.216-7.36 140.138667-25.493333 169.237333-38.72 34.794667-57.002667 38.72-57.002667 38.72s-6.122667-242.474667 0.512-334.613333c0.448-6.229333 29.781333-45.781333 29.781334-45.781334s45.482667 80.277333 52.202666 172.437334zM595.328 474.645333c6.506667 89.216-7.381333 140.138667-25.493333 169.237334-38.72 34.794667-57.002667 38.72-57.002667 38.72s-6.122667-242.453333 0.490667-334.613334c0.448-6.229333 29.781333-45.781333 29.781333-45.781333s45.525333 80.298667 52.224 172.437333zM766.464 340.416c6.506667 89.216-7.381333 140.138667-25.493333 169.237333-38.72 34.794667-57.002667 38.72-57.002667 38.72s-6.122667-242.453333 0.490667-334.613333c0.448-6.229333 29.781333-45.781333 29.781333-45.781333s45.482667 80.298667 52.224 172.437333z" fill="#FFA000" /><path d="M384 657.984c0 92.394667-41.834667 167.296-41.834667 167.296s-41.813333-74.901333-41.813333-167.296c0-92.394667 41.813333-167.317333 41.813333-167.317333S384 565.589333 384 657.984zM554.965333 515.349333c0 92.416-41.813333 167.317333-41.813333 167.317334s-41.813333-74.901333-41.834667-167.317334c0-92.373333 41.834667-167.296 41.834667-167.296s41.813333 74.922667 41.813333 167.296zM725.333333 380.629333c0 92.416-41.834667 167.317333-41.834666 167.317334s-41.813333-74.901333-41.834667-167.317334c0-92.373333 41.834667-167.296 41.834667-167.296S725.333333 288.256 725.333333 380.629333z" fill="#FFE082" /></svg>';
-			var coin_svg = '<svg width="12" height="12" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><circle cx="8" cy="8" r="7" fill="gold"/><circle cx="8" cy="8" r="5" fill="goldenrod"/></svg>';
-
-			function get_icon_html(icon_svg, count) {
-				var html = '';
-				var icon_data_uri = 'data:image/svg+xml;utf8,' + encodeURIComponent(icon_svg);
-				for (var i = 0; i < count; i++) {
-					html += '<img src="' + icon_data_uri + '" width="15" height="15">';
-				}
-				return html;
+		function get_icon_html(icon_svg, count) {
+			var html = '';
+			var icon_data_uri = 'data:image/svg+xml;utf8,' + encodeURIComponent(icon_svg);
+			for (var i = 0; i < count; i++) {
+				html += '<img src="' + icon_data_uri + '" width="15" height="15">';
 			}
+			return html;
+		}
 
-			citizen.html(
-				'<div class="icon-line">' + get_icon_html(hammer_svg, this.people_cells[i].work) + '</div>' +
-				'<div class="icon-line">' + get_icon_html(apple_svg, this.people_cells[i].eat) + '</div>' +
-				'<div class="icon-line">' + get_icon_html(coin_svg, this.people_cells[i].money) + '</div>'
-			);
+		// Draw resources on all city cells
+		for (var dy = -1; dy < 2; dy++) {
+			for (var dx = -1; dx < 2; dx++) {
+				if (dx == 0 && dy == 0) continue;
 
-			$('#city-map').append(citizen);
-			citizen.css('left', ((dx+1)*72 + 6) + 'px');
-			citizen.css('top', ((dy+1)*72 + 6) + 'px');
+				var is_people_cell = false;
+				var cell_work = 0, cell_eat = 0, cell_money = 0;
+				for (var i in this.people_cells) {
+					var px = parseInt(diff_coord(this.people_cells[i].x, this.x, map.max_x));
+					var py = parseInt(diff_coord(this.people_cells[i].y, this.y, map.max_y));
+					if (px == dx && py == dy) {
+						is_people_cell = true;
+						cell_work = this.people_cells[i].work;
+						cell_eat = this.people_cells[i].eat;
+						cell_money = this.people_cells[i].money;
+						break;
+					}
+				}
+
+				var cell = $('<div class="city_map_cell"></div>');
+				if (is_people_cell) {
+					cell.addClass('city_map_people');
+				} else {
+					cell.addClass('city_map_citizen_no_people');
+				}
+
+				// Use cell resources if people cell, else cell-specific resources
+				var cell_res = this.get_cell_resources(dx, dy);
+				var work = is_people_cell ? cell_work : cell_res.work;
+				var eat = is_people_cell ? cell_eat : cell_res.eat;
+				var money = is_people_cell ? cell_money : cell_res.money;
+
+				cell.html(
+					'<div class="icon-line">' + get_icon_html(hammer_svg, work) + '</div>' +
+					'<div class="icon-line">' + get_icon_html(apple_svg, eat) + '</div>' +
+					'<div class="icon-line">' + get_icon_html(coin_svg, money) + '</div>'
+				);
+
+				$('#city-map').append(cell);
+				cell.css('left', ((dx+1)*72 + 6) + 'px');
+				cell.css('top', ((dy+1)*72 + 6) + 'px');
+			}
 		}
 		for (var dy = -1; dy < 2; dy++) {
 			for (var dx = -1; dx < 2; dx++) {
 				if (dx == 0 && dy == 0) continue;
-                
+
                 var dy_str = (dy < 0 ? "n" : "p") + Math.abs(dy);
                 var dx_str = (dx < 0 ? "n" : "p") + Math.abs(dx);
                 var cell_id = '#city-window-cell-' + dy_str + dx_str;
@@ -187,18 +225,13 @@ var city = {
 		$('#city-production-list').hide();
 	},
 	draw_production: function () {
-        if (this.production) {
-    		$('#city-production-select-pic img').attr('src', './img/' + this.production.type + 's/' + this.production.image_file);
-	    	let turns = Math.ceil((this.production.cost - this.production.complete) / city.pwork);
-		    if (turns < 1) {
-			    turns = 1;
-		    }
-		    $('#city-production-select-title').html(this.production.title +
-			    '<br>' + turns + ' ходов ');
-        } else {
-            $('#city-production-select-pic img').attr('src', './img/units/no_production.svg');
-            $('#city-production-select-title').html('Выберите постройку');
-        }
+		$('#city-production-select-pic img').attr('src', './img/' + this.production.type + 's/' + this.production.image_file);
+		let turns = Math.ceil((this.production.cost - this.production.complete) / city.pwork);
+		if (turns < 1) {
+			turns = 1;
+		}
+		$('#city-production-select-title').html(this.production.title +
+			'<br>' + turns + ' ходов ');
 	},
 	save_production: function() {
 		if (map.turn_status != 'play') return false;

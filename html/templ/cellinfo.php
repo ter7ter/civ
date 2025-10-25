@@ -75,7 +75,7 @@
     <div id="selected-unit-info" style="border-top: 1px solid #495057; padding-top: 15px;">
         <div class="d-flex">
             <div style="padding-right: 10px;">
-                <img src="./img/units/<?=$data['unit']['type']?>.png" style="width: 66px; height: 66px;">
+                <img src="./img/units/<?=$data['unit']['image_file']?>" style="width: 66px; height: 66px;">
             </div>
             <div>
                 <div style="margin-bottom: 5px;"><strong><?=$data['unit']['title']?></strong> (<?=$data['unit']['owner_name']?>)</div>

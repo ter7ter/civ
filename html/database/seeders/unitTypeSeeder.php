@@ -19,7 +19,9 @@ ResearchType::loadAll();
 // Данные типов юнитов из цивилизации 3
 $units = [
     [
+        'id' => 1,
         'title' => 'Поселенец',
+        'image_file' => 'settler.svg',
         'points' => 1,
         'cost' => 30,
         'type' => 'land',
@@ -30,7 +32,9 @@ $units = [
         'description' => 'Может основывать города',
     ],
     [
+        'id' => 2,
         'title' => 'Рабочий',
+        'image_file' => 'worker.svg',
         'points' => 1,
         'cost' => 20,
         'type' => 'land',
@@ -41,7 +45,9 @@ $units = [
         'description' => 'Строит улучшения'
     ],
     [
+        'id' => 3,
         'title' => 'Воин',
+        'image_file' => 'warrior.svg',
         'points' => 1,
         'cost' => 10,
         'type' => 'land',
@@ -51,7 +57,9 @@ $units = [
         'description' => 'Базовый воин'
     ],
     [
+        'id' => 4,
         'title' => 'Копейщик',
+        'image_file' => 'spearman.svg',
         'missions' => ['move_to'],
         'points' => 1,
         'cost' => 20,
@@ -60,7 +68,9 @@ $units = [
         'defence' => 2,
     ],
     [
+        'id' => 5,
         'title' => 'Лучник',
+        'image_file' => 'archer.svg',
         'missions' => ['move_to'],
         'points' => 1,
         'cost' => 30,
@@ -69,7 +79,9 @@ $units = [
         'defence' => 2
     ],
     [
+        'id' => 6,
         'title' => 'Мечник',
+        'image_file' => 'swordsman.svg',
         'missions' => ['move_to'],
         'points' => 1,
         'cost' => 30,
@@ -78,7 +90,9 @@ $units = [
         'defence' => 2
     ],
     [
+        'id' => 7,
         'title' => 'Секироносек',
+        'image_file' => 'axeman.svg',
         'missions' => ['move_to'],
         'points' => 1,
         'cost' => 25,
@@ -87,7 +101,9 @@ $units = [
         'defence' => 1
     ],
     [
+        'id' => 8,
         'title' => 'Колесница',
+        'image_file' => 'chariot.svg',
         'missions' => ['move_to'],
         'points' => 2,
         'cost' => 30,
@@ -96,7 +112,9 @@ $units = [
         'defence' => 1
     ],
     [
+        'id' => 9,
         'title' => 'Конник',
+        'image_file' => 'horseman.svg',
         'missions' => ['move_to'],
         'points' => 2,
         'cost' => 50,
@@ -106,7 +124,9 @@ $units = [
         'req_research' => [ResearchType::get(4)] // Верховая езда
     ],
     [
+        'id' => 10,
         'title' => 'Рыцарь',
+        'image_file' => 'knight.svg',
         'missions' => ['move_to'],
         'points' => 2,
         'cost' => 80,
@@ -115,7 +135,9 @@ $units = [
         'defence' => 2
     ],
     [
+        'id' => 11,
         'title' => 'Катапульта',
+        'image_file' => 'catapult.svg',
         'missions' => ['move_to'],
         'points' => 1,
         'cost' => 50,
@@ -124,7 +146,9 @@ $units = [
         'defence' => 1
     ],
     [
+        'id' => 12,
         'title' => 'Требушет',
+        'image_file' => 'trebuchet.svg',
         'missions' => ['move_to'],
         'points' => 1,
         'cost' => 50,
@@ -133,7 +157,9 @@ $units = [
         'defence' => 1
     ],
     [
+        'id' => 13,
         'title' => 'Галера',
+        'image_file' => 'galley.svg',
         'missions' => ['move_to'],
         'points' => 3,
         'cost' => 30,
@@ -147,7 +173,9 @@ $units = [
         ]
     ],
     [
+        'id' => 14,
         'title' => 'Каравелла',
+        'image_file' => 'caravel.svg',
         'missions' => ['move_to'],
         'points' => 3,
         'cost' => 50,
@@ -161,7 +189,9 @@ $units = [
         ]
     ],
     [
+        'id' => 15,
         'title' => 'Бронирован',
+        'image_file' => 'ironclad.svg',
         'missions' => ['move_to'],
         'points' => 4,
         'cost' => 80,
@@ -175,7 +205,9 @@ $units = [
         ]
     ],
     [
+        'id' => 16,
         'title' => 'Истребитель',
+        'image_file' => 'fighter.svg',
         'missions' => ['move_to'],
         'points' => 5,
         'cost' => 60,
@@ -195,7 +227,9 @@ $units = [
         ]
     ],
     [
+        'id' => 17,
         'title' => 'Бомбардировщик',
+        'image_file' => 'bomber.svg',
         'missions' => ['move_to'],
         'points' => 4,
         'cost' => 90,

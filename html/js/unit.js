@@ -11,7 +11,7 @@ var Unit = {
 		$('.map_unit_selected').removeClass('map_unit_selected').addClass('map_unit');
 		el.find('.map_unit').remove();
 		el.find('.map_unit_selected').remove();
-		el.append('<img class="map_unit_selected" src="./img/units/' + this.type + '.png" style="border-color: ' + this.owner_color + '"></img>');
+		el.append('<img class="map_unit_selected" src="./img/units/' + this.image_file + '" style="border-color: ' + this.owner_color + '"></img>');
 	},
 	//Перемещение юнита
 	move: function (dx, dy) {

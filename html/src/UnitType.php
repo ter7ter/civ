@@ -153,6 +153,7 @@ class UnitType extends BaseType
     public function save()
     {
         $data = [
+            'id' => $this->id,
             'title' => $this->title,
             'points' => $this->points,
             'cost' => $this->cost,
@@ -174,8 +175,9 @@ class UnitType extends BaseType
             'req_resources' => json_encode($this->req_resources),
             'image_file' => $this->image_file,
         ];
+
         if (isset($this->id)) {
-            MyDB::update('unit_type', $data, $this->id);
+            $this->id = MyDB::replace('unit_type', $data);
         } else {
             $this->id = MyDB::insert('unit_type', $data);
         }

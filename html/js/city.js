@@ -84,7 +84,7 @@ var city = {
 			$('#city-production-list').append(
 				'<div class="city-production-list-item" pid="unit' + this.possible_units[i].id +
 				'" cost="' + this.possible_units[i].cost + '">' +
-				'<img src="./img/units/' + this.possible_units[i].id + '.png">' +
+				'<img src="./img/units/' + this.possible_units[i].image_file + '">' +
 				'<div class="city-production-list-item-description">' +
 				'<div class="city-production-list-item-title">' + city.possible_units[i].title + '</div>' +
 				turns + ' ходов ' +
@@ -98,7 +98,7 @@ var city = {
 			}
 			$('#city-production-list').append(
 				'<div class="city-production-list-item" pid="buil' + this.possible_buildings[i].id + '" cost="' + city.possible_buildings[i].cost + '">' +
-				'<img src="./img/buils/' + this.possible_buildings[i].id + '.png">' +
+				'<img src="./img/buils/' + this.possible_buildings[i].image_file + '">' +
 				'<div class="city-production-list-item-description">' +
 				'<div class="city-production-list-item-title">' + this.possible_buildings[i].title + '</div>' +
 				turns + ' ходов ' +
@@ -181,18 +181,24 @@ var city = {
 							type : pid.substr(0, 4),
 							title : item.find('.city-production-list-item-title').text(),
 							cost : item.attr('cost'),
+                            image_file: item.find('img').attr('src').split('/').pop(),
 							complete:  complete};
 		city.draw_production();
 		$('#city-production-list').hide();
 	},
 	draw_production: function () {
-		$('#city-production-select-pic img').attr('src', './img/' + this.production.type + 's/' + this.production.id + '.png');
-		let turns = Math.ceil((this.production.cost - this.production.complete) / city.pwork);
-		if (turns < 1) {
-			turns = 1;
-		}
-		$('#city-production-select-title').html(this.production.title +
-			'<br>' + turns + ' ходов ');
+        if (this.production) {
+    		$('#city-production-select-pic img').attr('src', './img/' + this.production.type + 's/' + this.production.image_file);
+	    	let turns = Math.ceil((this.production.cost - this.production.complete) / city.pwork);
+		    if (turns < 1) {
+			    turns = 1;
+		    }
+		    $('#city-production-select-title').html(this.production.title +
+			    '<br>' + turns + ' ходов ');
+        } else {
+            $('#city-production-select-pic img').attr('src', './img/units/no_production.svg');
+            $('#city-production-select-title').html('Выберите постройку');
+        }
 	},
 	save_production: function() {
 		if (map.turn_status != 'play') return false;

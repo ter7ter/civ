@@ -52,17 +52,23 @@
     bottom: 10px;
     border-width: 2px;
     border-style: dashed;
-    height: 110px;
-    width: 110px;
+    height: 95px;
+    width: 120px;
     padding: 5px;
     cursor: pointer;
     background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
-#city-production-select-pic {
-    text-align: center;
+#city-production-select-pic img {
+    width: 50px;
+    height: 50px;
 }
 #city-production-select-title {
     text-align: center;
+    margin-top: 0;
 }
 #city-production-list {
     display: none;
@@ -70,7 +76,7 @@
     background: rgba(73, 80, 87, 0.95);
     color: #f8f9fa;
     right: 10px;
-    bottom: 125px;
+    bottom: 110px;
     width: 280px;
     border: 1px solid #495057;
     border-radius: 0.25rem;

@@ -99,6 +99,7 @@ class BuildingType extends BaseType
     public function save()
     {
         $data = [
+            'id' => $this->id,
             'title' => $this->title,
             'cost' => $this->cost,
             'need_coastal' => (int)$this->need_coastal,
@@ -111,11 +112,13 @@ class BuildingType extends BaseType
             'city_effects' => json_encode($this->city_effects),
             'image_file' => $this->image_file,
         ];
+
         if (isset($this->id)) {
-            MyDB::update('building_type', $data, $this->id);
+            $this->id = MyDB::replace('building_type', $data);
         } else {
             $this->id = MyDB::insert('building_type', $data);
         }
+
         // Update requirements in join table
         MyDB::query("DELETE FROM building_requirements_research WHERE building_type_id = :id", ["id" => $this->id]);
         foreach ($this->req_research as $req) {

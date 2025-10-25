@@ -62,6 +62,7 @@ if ($cell) {
             }
 
             $data['unit'] = ['type' => $unit->type->id,
+                             'image_file' => $unit->type->image_file,
                              'title' => $unit->getTitle(),
                              'points' => $unit->points,
                              'max_points' => $unit->type->points,

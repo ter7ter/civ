@@ -16,6 +16,7 @@ if ($SHOULD_CLEAN) {
 require_once 'cellTypeSeeder.php';
 require_once 'unitTypeSeeder.php';
 require_once 'researchTypeSeeder.php';
+require_once 'buildingTypeSeeder.php';
 require_once 'resourceTypeSeeder.php';
 
 echo "Все сидеры выполнены успешно.\n";

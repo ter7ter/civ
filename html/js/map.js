@@ -14,7 +14,7 @@ var Map_cell = {
 				unit = this.units[i];
 			}
 		}
-		this.el.append('<img class="map_unit" src="./img/units/' + unit.type + '.png"></img>');
+		this.el.append('<img class="map_unit" src="./img/units/' + unit.image_file + '"></img>');
 	},
 	show_menu: function (point_x, point_y) {
 		if (this.units.length == 0 && !this.city) {

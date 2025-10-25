@@ -119,6 +119,7 @@ class CityProductionManager
             $city->production_complete = 0;
             self::selectNextProduction($city);
         }
+        return true;
     }
 
     /**

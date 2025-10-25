@@ -78,12 +78,14 @@ if (!isset($_REQUEST['cid']) || !$cid = (int)$_REQUEST['cid']) {
     foreach ($units_possible as $unit) {
         $data['possible_units'][] = ['id' => $unit->id,
                                      'title' => $unit->getTitle(),
-                                     'cost' => $unit->cost];
+                                     'cost' => $unit->cost,
+                                     'image_file' => $unit->image_file];
     }
     foreach ($buildings_possible as $building) {
         $data['possible_buildings'][] = ['id' => $building->id,
                                         'title' => $building->getTitle(),
-                                        'cost' => $building->cost];
+                                        'cost' => $building->cost,
+                                        'image_file' => $building->image_file];
     }
     if ($city->production) {
         switch ($city->production_type) {
@@ -98,6 +100,7 @@ if (!isset($_REQUEST['cid']) || !$cid = (int)$_REQUEST['cid']) {
                                'type' => $city->production_type,
                                'cost' => $production->cost,
                                'title' => $production->getTitle(),
+                               'image_file' => $production->image_file,
                                'complete' => $city->production_complete];
     } else {
         $data['production'] = false;

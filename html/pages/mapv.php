@@ -47,6 +47,7 @@ foreach ($map as $row) {
                 foreach ($cell->units as $unit) {
                     $data_unit = ['id' => $unit->id,
                         'type' => $unit->type->id,
+                        'image_file' => $unit->type->image_file,
                         'x' => $unit->x,
                         'y' => $unit->y,
                         'title' => $unit->getTitle(),

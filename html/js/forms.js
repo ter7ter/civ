@@ -175,3 +175,10 @@ function select_user_change() {
 $(document).on("change", "#select-game-user", function (e) {
   select_user_change();
 });
+
+$(document).on('change', '#emperie-research-percent', function() {
+    var researchPercent = $(this).val();
+    $.post('index.php?method=emperie', { research_percent: researchPercent }, function(data) {
+        $('#empire-window').html(data);
+    });
+});

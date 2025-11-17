@@ -25,6 +25,7 @@ nginx_logs/
 *.tmp
 *.swp
 *.bak
+.php-cs-fixer.cache
 
 # Database files
 *.sql

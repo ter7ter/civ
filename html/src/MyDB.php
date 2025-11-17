@@ -70,16 +70,12 @@ class MyDB implements DatabaseInterface
     {
         $db = MyDB::get();
 
-        // Проверяем, является ли это запросом, который не возвращает данные
-        $queryStart = strtoupper(substr(trim($query), 0, 10));
-
         self::logQuery($query, $vars);
         $stmt = $db->prepare($query);
         $stmt->execute($vars);
 
-        if ($stmt->columnCount() == 0) {
-            // Запрос не возвращает столбцы
-            return true;
+        if (str_starts_with(strtoupper(trim($query)), 'SELECT') === false) {
+            return $stmt->rowCount();
         }
 
         switch ($output) {
@@ -152,6 +148,23 @@ class MyDB implements DatabaseInterface
         return $db->lastInsertId();
     }
 
+    public static function insertOrUpdate(string $table, array $values)
+    {
+        $db = self::get();
+        $keys = array_keys($values);
+        $placeholders = implode(", ", array_map(fn ($k) => ":$k", $keys));
+        $updatePlaceholders = implode(", ", array_map(fn ($k) => "`$k` = :$k", $keys));
+        $query = "INSERT INTO `$table` (" . implode(",", array_map(fn ($k) => "`$k`", $keys)) . ") VALUES (" . $placeholders . ") ON DUPLICATE KEY UPDATE " . $updatePlaceholders;
+        $params = [];
+        foreach ($values as $k => $v) {
+            $params[":$k"] = $v === "NULL" ? null : $v;
+        }
+        $stmt = $db->prepare($query);
+        self::logQuery($query, $params);
+        $stmt->execute($params);
+        return isset($values['id']) ? $values['id'] : $db->lastInsertId();
+    }
+
     public static function replace($table, $values)
     {
         $db = self::get();
@@ -165,7 +178,7 @@ class MyDB implements DatabaseInterface
         $stmt = $db->prepare($query);
         self::logQuery($query, $params);
         $stmt->execute($params);
-        return $db->lastInsertId();
+        return isset($values['id']) ? $values['id'] : $db->lastInsertId();
     }
 
     public static function update(string $table, array $values, mixed $where)

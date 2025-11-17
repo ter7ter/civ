@@ -91,9 +91,7 @@ class ResearchType
 
     public static function getAll()
     {
-        if (empty(ResearchType::$all)) {
-            self::loadAll();
-        }
+        self::loadAll();
         return ResearchType::$all;
     }
 
@@ -168,7 +166,7 @@ class ResearchType
     public static function get_need_age_ids($age)
     {
         $result = [];
-        foreach (ResearchType::getAllCached() as $research) {
+        foreach (ResearchType::getAll() as $research) {
             if ($research->age == $age && $research->age_need) {
                 $result[] = $research->id;
             }
@@ -196,6 +194,7 @@ class ResearchType
     public function save()
     {
         $data = [
+            'id' => $this->id, // Add id to data for replace
             'title' => $this->title,
             'cost' => $this->cost,
             'm_top' => $this->m_top,
@@ -204,11 +203,8 @@ class ResearchType
             'age_need' => (int)$this->age_need,
             'image_file' => $this->image_file,
         ];
-        if (isset($this->id)) {
-            MyDB::update('research_type', $data, $this->id);
-        } else {
-            $this->id = (int)MyDB::insert('research_type', $data);
-        }
+        $this->id = (int)MyDB::replace('research_type', $data);
+
         // Update requirements in join table
         MyDB::query("DELETE FROM research_requirements WHERE research_type_id = :id", ["id" => $this->id]);
         foreach ($this->requirements as $req) {

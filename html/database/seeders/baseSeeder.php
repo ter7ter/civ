@@ -29,10 +29,20 @@ function parseClearArgv($argv) {
 
 function clearData($clear, $deleteQueries) {
     if ($clear) {
-        \App\MyDB::startTransaction();
-        \App\MyDB::query("SET FOREIGN_KEY_CHECKS=0;\n" . implode("\n", $deleteQueries) . "\nSET FOREIGN_KEY_CHECKS=1;");
-        \App\MyDB::endTransaction();
-        echo "Данные очищены.\n";
+        try {
+            \App\MyDB::startTransaction();
+            \App\MyDB::query("SET FOREIGN_KEY_CHECKS=0;");
+            foreach ($deleteQueries as $query) {
+                $affectedRows = \App\MyDB::query($query, [], 'num_rows');
+                echo "Executing query: $query - Affected rows: $affectedRows\n";
+            }
+            \App\MyDB::query("SET FOREIGN_KEY_CHECKS=1;");
+            \App\MyDB::endTransaction();
+            echo "Данные очищены.\n";
+        } catch (\Exception $e) {
+            \App\MyDB::rollbackTransaction();
+            echo "An error occurred: " . $e->getMessage() . "\n";
+        }
     } else {
         echo "Очистка пропущена.\n";
     }

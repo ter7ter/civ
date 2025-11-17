@@ -6,6 +6,8 @@ include 'partials/header.php';
 <link type="text/css" href="css/city.css" rel="Stylesheet" />
 <link type="text/css" href="css/map.css" rel="Stylesheet" />
 <link type="text/css" href="css/style.css?v=2" rel="Stylesheet" />
+<link type="text/css" href="css/research.css" rel="Stylesheet" />
+<link type="text/css" href="css/events.css" rel="Stylesheet" />
 
 <div class="container-fluid">
     <div class="row justify-content-center">
@@ -148,8 +150,23 @@ include 'partials/header.php';
     </div>
 </div>
 <div id="empire-window"></div>
-<div id="event-window-research" eid="">...</div>
-<div id="event-window-city" eid="" cid="">...</div>
+<div id="research-window"></div>
+<div id="modal-backdrop"></div>
+<div id="event-window-research" eid="" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; z-index: 1001;">
+    <h3 id="event-window-research-title"></h3>
+    <p>Выберите новое исследование:</p>
+    <select id="event-window-select-research"></select>
+    <button id="event-window-research-ok">OK</button>
+    <button id="event-window-research-cancel">Отмена</button>
+</div>
+<div id="event-window-city" eid="" cid="" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; z-index: 1001;">
+    <h3 id="event-window-city-title"></h3>
+    <p>Завершено: <span id="event-window-city-build"></span></p>
+    <p>Выберите новое производство:</p>
+    <select id="event-window-select-build"></select>
+    <button id="event-window-build-ok">OK</button>
+    <button id="event-window-build-tocity">В город</button>
+</div>
 
 <script src="js/functions.js"></script>
 <script src="js/map.js"></script>
@@ -157,7 +174,9 @@ include 'partials/header.php';
 <script src="js/city.js"></script>
 <script src="js/events.js"></script>
 <script src="js/research.js"></script>
+<script src="js/research.js"></script>
 <script src="js/messages.js"></script>
+<script src="js/forms.js"></script>
 <?php
 $page_scripts = ob_get_clean();
 include 'partials/footer.php';

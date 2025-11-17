@@ -1,5 +1,6 @@
 <?php
 
+use App\Event;
 use App\Сity;
 use App\User;
 

@@ -24,7 +24,8 @@ foreach (ResearchType::getAll() as $res) {
                             'title' => $res->getTitle(),
                             'm_top' => $res->m_top,
                             'm_left' => $res->m_left,
-                            'status' => 'none'
+                            'status' => 'none',
+                            'req' => $res->requirements
                           ];
     if (isset($user_research[$res->id])) {
         //Уже исследовано
@@ -46,4 +47,3 @@ foreach (ResearchType::getAll() as $res) {
         }
     }
 }
-$page = 'research';

@@ -2,6 +2,9 @@
 
 namespace App;
 
+use Exception;
+use Generator;
+
 /**
  * Класс для управления миссиями юнита
  */
@@ -77,10 +80,54 @@ class UnitMissionHandler
     }
 
     /**
+     * Получить юнитов выполняющих миссию
+     *
+     * @param Cell $cell
+     * @param MissionType $mission
+     * @return Generator
+     * @throws Exception
+     */
+    public static function getMissionUnits(Cell $cell, MissionType $mission): Generator
+    {
+        $unitsData = [];
+        $unitsData = MyDB::query(
+            "SELECT id FROM unit WHERE x = :x AND y = :y AND planet = :planet AND mission = :mission",
+            ["x" => $cell->x, "y" => $cell->y, "planet" => $cell->planet, "mission" => $mission->id],
+        );
+        foreach ($unitsData as $unitData) {
+            yield Unit::get($unitData["id"]);
+        }
+    }
+
+    /**
+     *  Сколько ходов осталось до выполнения миссии
+     * @param int $x
+     * @param int $y
+     * @param int $planet
+     * @param MissionType $mission
+     * @return int
+     * @throws Exception
+     */
+    public static function getNeedTurns(int $x, int $y, int $planet, MissionType $mission): int
+    {
+        $cell = Cell::get($x, $y, $planet);
+        $need_points = $cell->get_mission_need_points($mission);
+        if ($need_points == 0) {
+            return 0;
+        }
+        $pointPerTurn = 0;
+        foreach (self::getMissionUnits($cell, $mission) as $unit) {
+            $pointPerTurn = $unit->type->points;
+        }
+        return ceil($need_points / $pointPerTurn);
+    }
+
+    /**
      * Обработка миссий в calculate
      * @param Unit $unit
+     * @throws Exception
      */
-    public static function processMissions(Unit $unit)
+    public static function processMissions(Unit $unit): void
     {
         if ($unit->points == 0) {
             return;
@@ -115,5 +162,26 @@ class UnitMissionHandler
                 $unit->points = 0;
             }
         }
+    }
+
+    /**
+     * Сколько ходов нужно юниту для выполнения миссии, с учётом уже работающих над этой миссией юнитов
+     * @param Unit $unit
+     * @param MissionType $mission
+     * @return int
+     * @throws Exception
+     */
+    public static function unitGetNeedTurns(Unit $unit, MissionType $mission): int
+    {
+        $cell = Cell::get($unit->x, $unit->y, $unit->planet);
+        $need_points = $cell->get_mission_need_points($mission);
+        if ($need_points == 0) {
+            return 0;
+        }
+        $pointPerTurn = $unit->type->points;
+        foreach (self::getMissionUnits($cell, $mission) as $unit) {
+            $pointPerTurn = $unit->type->points;
+        }
+        return ceil($need_points / $pointPerTurn);
     }
 }

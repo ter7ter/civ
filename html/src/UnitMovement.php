@@ -94,7 +94,7 @@ class UnitMovement
         ]);
         $number = 1;
         foreach ($path as $cell) {
-            $unit->add_order("move", $cell["x"], $cell["y"], $number);
+            $unit->addOrder("move", $cell["x"], $cell["y"], $number);
             $number++;
         }
     }

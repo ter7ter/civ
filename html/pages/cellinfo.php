@@ -70,14 +70,16 @@ if ($cell) {
                              'health_max' => $unit->health_max,
                              'owner_name' => $unit->user->login,
                              'mission' => $mission,
+                             'mission_turns' => $mission ? $unit->getCurrentMissionNeedTurns($unit->mission) : 0,
                              'missions' => []];
             if ($unit->points > 0) {
-                $mtypes = $unit->get_mission_types();
+                $mtypes = $unit->getMissionTypes();
                 foreach ($mtypes as $mtype) {
                     $data['unit']['missions'][] = ['id' => $mtype->id,
                                                    'title' => $mtype->getTitle(),
                                                    'points' => (isset($mtype->need_points[$cell->type->id])) ? $mtype->need_points[$cell->type->id] : 0,
-                                                   'unit_lost' => $mtype->unit_lost];
+                                                   'unit_lost' => $mtype->unit_lost,
+                                                   'need_turns' => $unit->getMissionNeedTurns($mtype)];
                 }
             }
         }

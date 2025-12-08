@@ -86,14 +86,12 @@ class BuildingType extends BaseType
      */
     public static function getAll()
     {
-        if (count(BuildingType::$all) == 0) {
-            $data = MyDB::query("SELECT * FROM building_type ORDER BY id");
-            $result = [];
-            foreach ($data as $row) {
-                $result[] = new BuildingType($row);
-            }
+        $data = MyDB::query("SELECT * FROM building_type ORDER BY id");
+        $result = [];
+        foreach ($data as $row) {
+            $result[] = new BuildingType($row);
         }
-        return BuildingType::$all;
+        return $result;
     }
 
     public function save()

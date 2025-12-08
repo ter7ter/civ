@@ -7,8 +7,8 @@ namespace App\Interfaces;
  */
 interface UnitInterface
 {
-    public function can_move($cell): bool;
-    public function move_to($cell): bool;
-    public function get_mission_types($x = null, $y = null): array;
-    public function start_mission($mission, $title = ""): bool|string;
+    public function canMove($cell): bool;
+    public function moveTo($cell): bool;
+    public function getMissionTypes($x = null, $y = null): array;
+    public function startMission($mission, $title = ""): bool|string;
 }

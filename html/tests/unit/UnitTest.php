@@ -279,7 +279,7 @@ class UnitTest extends CommonTestBase
             "planet" => $planet->id,
         ]);
 
-        $missionTypes = $unit->get_mission_types();
+        $missionTypes = $unit->getMissionTypes();
 
         $this->assertIsArray($missionTypes);
         $this->assertArrayHasKey('move_to', $missionTypes);
@@ -317,7 +317,7 @@ class UnitTest extends CommonTestBase
 
         $targetCell = Cell::get(6, 5, $planetId);
 
-        $canMove = $unit->can_move($targetCell);
+        $canMove = $unit->canMove($targetCell);
 
         $this->assertTrue($canMove);
     }
@@ -352,7 +352,7 @@ class UnitTest extends CommonTestBase
 
         $targetCell = Cell::get(8, 7, $planetId);
 
-        $moved = $unit->move_to($targetCell);
+        $moved = $unit->moveTo($targetCell);
 
         $this->assertTrue($moved);
         $this->assertEquals(8, $unit->x);
@@ -399,5 +399,266 @@ class UnitTest extends CommonTestBase
         foreach ($allUnits as $unit) {
             $this->assertInstanceOf(Unit::class, $unit);
         }
+    }
+
+    /**
+     * Тест метода getCurrentMissionNeedTurns без миссии
+     */
+    public function testGetCurrentMissionNeedTurnsNoMission(): void
+    {
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
+
+        // Создаем тип юнита
+        $unitType = TestDataFactory::createTestUnitType([
+            "title" => "No Mission Unit",
+            "points" => 1,
+        ]);
+
+        $unit = TestDataFactory::createTestUnit([
+            "user_id" => $user->id,
+            "type" => $unitType->id,
+            "x" => 12,
+            "y" => 12,
+            "planet" => $planet->id,
+        ]);
+
+        $needTurns = $unit->getCurrentMissionNeedTurns();
+
+        $this->assertEquals(0, $needTurns);
+    }
+
+    /**
+     * Тест метода getCurrentMissionNeedTurns с миссией
+     */
+    public function testGetCurrentMissionNeedTurnsWithMission(): void
+    {
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
+
+        // Создаем тип юнита с миссиями
+        $unitType = TestDataFactory::createTestUnitType([
+            "title" => "Mission Test Unit",
+            "points" => 2,
+        ]);
+
+        // Создаем тестовую миссию с need_points
+        $mission = new \App\MissionType([
+            'id' => 'test_build',
+            'title' => 'Test Build',
+            'unit_lost' => false,
+            'cell_types' => ['plains'],
+            'need_points' => ['plains' => 20],
+        ]);
+
+        TestDataFactory::createTestCell(['x' => 13, 'y' => 13, 'planet' => $planet->id, 'type' => 'plains']);
+
+        $unit = TestDataFactory::createTestUnit([
+            "user_id" => $user->id,
+            "type" => $unitType->id,
+            "x" => 13,
+            "y" => 13,
+            "planet" => $planet->id,
+            "mission" => $mission->id,
+        ]);
+
+        $needTurns = $unit->getCurrentMissionNeedTurns();
+
+        // need_points = 20, points per turn = 2 (один юнит), так что ceil(20/2) = 10
+        $this->assertEquals(10, $needTurns);
+    }
+
+    /**
+     * Тест метода getMissionNeedTurns
+     */
+    public function testGetMissionNeedTurns(): void
+    {
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
+
+        // Создаем тип юнита с 1 очком
+        $unitType = TestDataFactory::createTestUnitType([
+            "title" => "Mission Need Turns Unit",
+            "points" => 1,
+        ]);
+
+        // Создаем тестовую миссию с need_points
+        $mission = new \App\MissionType([
+            'id' => 'test_road',
+            'title' => 'Test Road',
+            'unit_lost' => false,
+            'cell_types' => ['plains'],
+            'need_points' => ['plains' => 15],
+        ]);
+
+        TestDataFactory::createTestCell(['x' => 14, 'y' => 14, 'planet' => $planet->id, 'type' => 'plains']);
+
+        $unit = TestDataFactory::createTestUnit([
+            "user_id" => $user->id,
+            "type" => $unitType->id,
+            "x" => 14,
+            "y" => 14,
+            "planet" => $planet->id,
+        ]);
+
+        $needTurns = $unit->getMissionNeedTurns($mission);
+
+        // need_points = 15, points per turn = 1 (unit1), так что ceil(15/1) = 15
+        $this->assertEquals(15, $needTurns);
+    }
+
+    /**
+     * Тест метода getCurrentMissionNeedTurns с несколькими юнитами на миссии
+     */
+    public function testGetCurrentMissionNeedTurnsMultipleUnits(): void
+    {
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
+
+        // Создаем тип юнита с 2 очками
+        $unitType = TestDataFactory::createTestUnitType([
+            "title" => "Multi Unit Test",
+            "points" => 2,
+        ]);
+
+        // Создаем тестовую миссию с need_points = 30
+        $mission = new \App\MissionType([
+            'id' => 'test_multi',
+            'title' => 'Test Multi',
+            'unit_lost' => false,
+            'cell_types' => ['plains'],
+            'need_points' => ['plains' => 30],
+        ]);
+
+        // Создаем клетку
+        TestDataFactory::createTestCell(['x' => 15, 'y' => 15, 'planet' => $planet->id, 'type' => 'plains']);
+
+        // Создаем первый юнит с миссией
+        $unit1 = TestDataFactory::createTestUnit([
+            "user_id" => $user->id,
+            "type" => $unitType->id,
+            "x" => 15,
+            "y" => 15,
+            "planet" => $planet->id,
+            "mission" => $mission->id,
+        ]);
+
+        // Создаем второй юнит с той же миссией на той же клетке
+        $unit2 = TestDataFactory::createTestUnit([
+            "user_id" => $user->id,
+            "type" => $unitType->id,
+            "x" => 15,
+            "y" => 15,
+            "planet" => $planet->id,
+            "mission" => $mission->id,
+        ]);
+
+        $needTurns1 = $unit1->getCurrentMissionNeedTurns();
+        $needTurns2 = $unit2->getCurrentMissionNeedTurns();
+
+        // Оба юнита работают вместе, так что needTurns должно быть одинаковым и меньше, чем если бы работал один юнит
+        $this->assertEquals($needTurns1, $needTurns2);
+        $this->assertGreaterThan(0, $needTurns1);
+        $this->assertLessThanOrEqual(15, $needTurns1); // Если бы работал один юнит: ceil(30/2) = 15
+    }
+
+    /**
+     * Тест метода getMissionNeedTurns с несколькими юнитами
+     */
+    public function testGetMissionNeedTurnsMultipleUnits(): void
+    {
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
+
+        // Создаем тип юнита с 3 очками
+        $unitType = TestDataFactory::createTestUnitType([
+            "title" => "Multi Unit Need Turns",
+            "points" => 3,
+        ]);
+
+        // Создаем тестовую миссию с need_points = 25
+        $mission = new \App\MissionType([
+            'id' => 'test_multi_need',
+            'title' => 'Test Multi Need',
+            'unit_lost' => false,
+            'cell_types' => ['plains'],
+            'need_points' => ['plains' => 25],
+        ]);
+
+        // Создаем клетку
+        TestDataFactory::createTestCell(['x' => 16, 'y' => 16, 'planet' => $planet->id, 'type' => 'plains']);
+
+        // Создаем первый юнит
+        $unit1 = TestDataFactory::createTestUnit([
+            "user_id" => $user->id,
+            "type" => $unitType->id,
+            "x" => 16,
+            "y" => 16,
+            "planet" => $planet->id,
+        ]);
+
+        // Второй юнит уже работает над миссией
+        $unit2 = TestDataFactory::createTestUnit([
+            "user_id" => $user->id,
+            "type" => $unitType->id,
+            "x" => 16,
+            "y" => 16,
+            "planet" => $planet->id,
+            "mission" => $mission->id,
+        ]);
+
+        $needTurns = $unit1->getMissionNeedTurns($mission);
+
+        // unitGetNeedTurns учитывает unit1 + юниты, уже работающие над миссией
+        // Так что с двумя юнитами needTurns меньше, чем если бы работал только unit1
+        $this->assertIsInt($needTurns);
+        $this->assertGreaterThan(0, $needTurns);
+        $this->assertLessThanOrEqual(9, $needTurns); // Если бы работал только unit1: ceil(25/3) ≈ 9
+    }
+
+    /**
+     * Тест метода getCurrentMissionNeedTurns с нулевыми need_points
+     */
+    public function testGetCurrentMissionNeedTurnsZeroPoints(): void
+    {
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
+
+        // Создаем тип юнита
+        $unitType = TestDataFactory::createTestUnitType([
+            "title" => "Zero Points Unit",
+            "points" => 1,
+        ]);
+
+        // Создаем миссию с нулевыми need_points
+        $mission = new \App\MissionType([
+            'id' => 'test_zero',
+            'title' => 'Test Zero',
+            'unit_lost' => false,
+            'cell_types' => ['plains'],
+            'need_points' => ['plains' => 0],
+        ]);
+
+        TestDataFactory::createTestCell(['x' => 17, 'y' => 17, 'planet' => $planet->id, 'type' => 'plains']);
+
+        $unit = TestDataFactory::createTestUnit([
+            "user_id" => $user->id,
+            "type" => $unitType->id,
+            "x" => 17,
+            "y" => 17,
+            "planet" => $planet->id,
+            "mission" => $mission->id,
+        ]);
+
+        $needTurns = $unit->getCurrentMissionNeedTurns();
+
+        // need_points = 0, должен вернуть 0
+        $this->assertEquals(0, $needTurns);
     }
 }

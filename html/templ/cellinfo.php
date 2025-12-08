@@ -81,7 +81,7 @@
                 <div style="margin-bottom: 5px;"><strong><?=$data['unit']['title']?></strong> (<?=$data['unit']['owner_name']?>)</div>
                 <div style="margin-bottom: 3px;">Боевой опыт: рекрут</div>
                 <div style="margin-bottom: 3px;">HP: <?=$data['unit']['health']?>/<?=$data['unit']['health_max']?></div>
-                <div style="margin-bottom: 10px;">Движение: <?=$data['unit']['points']?>/<?=$data['unit']['max_points']?></div>
+                <div style="margin-bottom: 10px;">Движение: <?=ceil($data['unit']['points'])?>/<?=$data['unit']['max_points']?></div>
             </div>
         </div>
         <?php if ($data['unit']['mission']):?>
@@ -92,13 +92,15 @@
                     <input class="unit-cancel-mission" type="button" value="Отменить" style="padding: 3px 8px;">
                 </div>
                 <?php endif;?>
+                Осталось ходов: <?=$data['unit']['mission_turns']?>
             </div>
         <?php elseif (count($data['unit']['missions']) && $data['turn_status'] == 'play'):?>
             <div style="margin-top: 10px;">
                 <div style="margin-bottom: 8px;"><strong>Приказы:</strong></div>
                 <?php foreach ($data['unit']['missions'] as $mtype):?>
                 <div style="margin-bottom: 5px;">
-                    <input class="unit-do-mission" type="button" mid="<?=$mtype['id']?>" value="<?=$mtype['title']?>" style="padding: 3px 8px; width: 100%;">
+                    <input class="unit-do-mission" type="button" mid="<?=$mtype['id']?>"
+                           value="<?=$mtype['title']?> <?php if ($mtype['need_turns']):?> (<?=$mtype['need_turns']?> ходов)<?php endif;?>" style="padding: 3px 8px; width: 100%;">
                 </div>
                 <?php endforeach;?>
             </div>

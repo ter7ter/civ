@@ -139,15 +139,12 @@ class UnitType extends BaseType
      */
     public static function getAll()
     {
-        if (count(UnitType::$all) == 0) {
-            $data = MyDB::query("SELECT * FROM unit_type ");
-            $result = [];
-            foreach ($data as $row) {
-                $result[] = new UnitType($row);
-            }
+        $data = MyDB::query("SELECT * FROM unit_type ");
+        $result = [];
+        foreach ($data as $row) {
+            $result[] = new UnitType($row);
         }
-
-        return UnitType::$all;
+        return $result;
     }
 
     public function save()

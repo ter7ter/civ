@@ -122,7 +122,7 @@ include 'partials/header.php';
             Недовольных: <span id="city-window-people-dis">-</span><br>
             Нормальных: <span id="city-window-people-norm">-</span><br>
             Счастливых: <span id="city-window-people-happy">-</span><br>
-            Художников: <span id="city-window-people-artist">-</span>
+            Артистов: <span id="city-window-people-artist">-</span>
         </div>
         <hr>
         <div class="info-panel">

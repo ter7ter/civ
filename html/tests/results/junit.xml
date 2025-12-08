@@ -1,79 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="64" assertions="206" errors="0" warnings="0" failures="0" skipped="0" time="56.941582">
-    <testsuite name="Unit Tests" tests="64" assertions="206" errors="0" warnings="0" failures="0" skipped="0" time="56.941582">
-      <testsuite name="App\Tests\CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" tests="19" assertions="55" errors="0" warnings="0" failures="0" skipped="0" time="0.742587">
-        <testcase name="testCreateBasicGame" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="19" assertions="6" time="0.311871"/>
-        <testcase name="testCreateConcurrentGame" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="73" assertions="2" time="0.011935"/>
-        <testcase name="testCreateOneWindowGame" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="110" assertions="1" time="0.005994"/>
-        <testcase name="testWhitespaceGameName" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="142" assertions="1" time="0.008239"/>
-        <testcase name="testEmptyGameName" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="161" assertions="1" time="0.003957"/>
-        <testcase name="testDuplicatePlayerNames" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="180" assertions="1" time="0.006217"/>
-        <testcase name="testTooSmallMapSize" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="208" assertions="2" time="0.006115"/>
-        <testcase name="testTooLargeMapSize" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="228" assertions="2" time="0.003578"/>
-        <testcase name="testTooManyPlayers" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="248" assertions="1" time="0.008245"/>
-        <testcase name="testDataPreservationOnError" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="273" assertions="4" time="0.002181"/>
-        <testcase name="testXSSInGameName" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="295" assertions="1" time="0.002506"/>
-        <testcase name="testXSSInPlayerNames" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="315" assertions="1" time="0.009105"/>
-        <testcase name="testVeryLongStrings" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="338" assertions="6" time="0.214185"/>
-        <testcase name="testPlayerColorGeneration" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="376" assertions="17" time="0.090716"/>
-        <testcase name="testEmptyPlayerFields" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="421" assertions="1" time="0.005038"/>
-        <testcase name="testInvalidTurnType" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="456" assertions="1" time="0.008031"/>
-        <testcase name="testNoPostData" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="475" assertions="1" time="0.033501"/>
-        <testcase name="testGameInitialConditions" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="495" assertions="5" time="0.006212"/>
-        <testcase name="testMinimumPlayers" class="App\Tests\CreateGameTest" classname="App.Tests.CreateGameTest" file="/var/www/html/tests/unit/CreateGameTest.php" line="540" assertions="1" time="0.004962"/>
-      </testsuite>
-      <testsuite name="App\Tests\GameTest" file="/var/www/html/tests/unit/GameTest.php" tests="15" assertions="58" errors="0" warnings="0" failures="0" skipped="0" time="22.360179">
-        <testcase name="testCreateNewGame" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="321" assertions="5" time="3.614096"/>
-        <testcase name="testGetExistingGame" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="30" assertions="6" time="0.788612"/>
-        <testcase name="testCalculateConcurrently" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="297" assertions="3" time="0.741386"/>
-        <testcase name="testCalculateByTurn" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="274" assertions="3" time="0.848159"/>
-        <testcase name="testGetFirstPlanet" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="242" assertions="5" time="0.974263"/>
-        <testcase name="testGetNonExistingGame" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="53" assertions="1" time="0.749845"/>
-        <testcase name="testConstruct" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="63" assertions="7" time="0.922741"/>
-        <testcase name="testSaveNew" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="87" assertions="6" time="1.049528"/>
-        <testcase name="testSaveUpdate" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="114" assertions="2" time="0.969984"/>
-        <testcase name="testGameList" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="135" assertions="5" time="0.861169"/>
-        <testcase name="testAllSystemMessage" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="158" assertions="10" time="1.602843"/>
-        <testcase name="testGetActivePlayerByTurn" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="193" assertions="1" time="6.770995"/>
-        <testcase name="testGetActivePlayerConcurrently" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="208" assertions="2" time="0.755549"/>
-        <testcase name="testGetActivePlayerNoActive" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="227" assertions="1" time="0.795580"/>
-        <testcase name="testGetFirstPlanetNoPlanets" class="App\Tests\GameTest" classname="App.Tests.GameTest" file="/var/www/html/tests/unit/GameTest.php" line="262" assertions="1" time="0.915429"/>
-      </testsuite>
-      <testsuite name="App\Tests\EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" tests="17" assertions="58" errors="0" warnings="0" failures="0" skipped="0" time="0.204205">
-        <testcase name="testLoadGameWithoutId" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="25" assertions="1" time="0.025138"/>
-        <testcase name="testEditBasicGameParameters" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="38" assertions="6" time="0.008622"/>
-        <testcase name="testEditGameNameOnly" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="90" assertions="4" time="0.005623"/>
-        <testcase name="testEditMapSize" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="128" assertions="3" time="0.006242"/>
-        <testcase name="testEditTurnType" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="159" assertions="6" time="0.012951"/>
-        <testcase name="testLoadGameDataForEditing" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="193" assertions="6" time="0.005436"/>
-        <testcase name="testEditWithEmptyName" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="240" assertions="2" time="0.007019"/>
-        <testcase name="testEditWithInvalidMapSize" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="267" assertions="4" time="0.017258"/>
-        <testcase name="testEditWithInvalidTurnType" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="313" assertions="2" time="0.006458"/>
-        <testcase name="testEditNonExistentGame" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="344" assertions="2" time="0.002723"/>
-        <testcase name="testEditWithoutGameId" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="384" assertions="1" time="0.002569"/>
-        <testcase name="testDataPreservationOnValidationError" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="402" assertions="6" time="0.007298"/>
-        <testcase name="testXSSInEditedGameName" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="458" assertions="2" time="0.026642"/>
-        <testcase name="testVeryLongStringsInEdit" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="496" assertions="4" time="0.007467"/>
-        <testcase name="testLoadNonExistentGameForEditing" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="537" assertions="1" time="0.003623"/>
-        <testcase name="testMultipleValidationErrors" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="550" assertions="3" time="0.053101"/>
-        <testcase name="testGameNotChangedOnValidationError" class="App\Tests\EditGameTest" classname="App.Tests.EditGameTest" file="/var/www/html/tests/unit/EditGameTest.php" line="578" assertions="5" time="0.006036"/>
-      </testsuite>
-      <testsuite name="App\Tests\OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" tests="13" assertions="35" errors="0" warnings="0" failures="0" skipped="0" time="33.634611">
-        <testcase name="testOpenGameWithUserFromDifferentGame" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="28" assertions="3" time="0.718965"/>
-        <testcase name="testSuccessfulGameOpening" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="60" assertions="2" time="0.785575"/>
-        <testcase name="testOpenGameWithMultiplePlayers" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="97" assertions="4" time="0.705097"/>
-        <testcase name="testOpenGameWithDifferentTurnTypes" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="135" assertions="6" time="1.000070"/>
-        <testcase name="testOpenNonExistentGame" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="172" assertions="1" time="0.767733"/>
-        <testcase name="testOpenGameWithNonExistentUser" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="191" assertions="1" time="5.000053"/>
-        <testcase name="testOpenGameWithoutGameId" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="212" assertions="1" time="1.874572"/>
-        <testcase name="testOpenGameWithoutUserId" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="231" assertions="1" time="1.955994"/>
-        <testcase name="testGameListLoading" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="250" assertions="7" time="4.156472"/>
-        <testcase name="testEmptyGameList" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="294" assertions="1" time="2.328214"/>
-        <testcase name="testSessionStateAfterGameOpening" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="303" assertions="3" time="9.937608"/>
-        <testcase name="testReopenGameWithDifferentUser" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="330" assertions="3" time="2.297975"/>
-        <testcase name="testOpenGameWithMaxPlayers" class="App\Tests\OpenGameTest" classname="App.Tests.OpenGameTest" file="/var/www/html/tests/unit/OpenGameTest.php" line="377" assertions="2" time="2.106285"/>
-      </testsuite>
+  <testsuite name="/var/www/html/tests/unit" tests="17" assertions="52" errors="0" warnings="0" failures="0" skipped="0" time="1.747023">
+    <testsuite name="App\Tests\UnitTest" file="/var/www/html/tests/unit/UnitTest.php" tests="17" assertions="52" errors="0" warnings="0" failures="0" skipped="0" time="1.747023">
+      <testcase name="testConstruct" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="66" assertions="8" time="1.271885"/>
+      <testcase name="testCanMove" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="293" assertions="1" time="0.035357"/>
+      <testcase name="testSaveUpdate" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="150" assertions="3" time="0.013958"/>
+      <testcase name="testGetAll" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="366" assertions="5" time="0.067767"/>
+      <testcase name="testGetExistingUnit" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="27" assertions="6" time="0.025397"/>
+      <testcase name="testRemove" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="221" assertions="1" time="0.028705"/>
+      <testcase name="testMoveTo" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="328" assertions="4" time="0.042705"/>
+      <testcase name="testSaveNew" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="106" assertions="6" time="0.040359"/>
+      <testcase name="testGetMissionTypes" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="260" assertions="4" time="0.063500"/>
+      <testcase name="testGetTitle" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="195" assertions="1" time="0.011971"/>
+      <testcase name="testGetCurrentMissionNeedTurnsMultipleUnits" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="516" assertions="4" time="0.016691"/>
+      <testcase name="testGetMissionNeedTurnsMultipleUnits" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="572" assertions="4" time="0.017277"/>
+      <testcase name="testGetNonExistingUnit" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="56" assertions="1" time="0.012300"/>
+      <testcase name="testGetCurrentMissionNeedTurnsNoMission" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="407" assertions="1" time="0.040154"/>
+      <testcase name="testGetCurrentMissionNeedTurnsWithMission" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="435" assertions="1" time="0.019195"/>
+      <testcase name="testGetMissionNeedTurns" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="476" assertions="1" time="0.016304"/>
+      <testcase name="testGetCurrentMissionNeedTurnsZeroPoints" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="627" assertions="1" time="0.023498"/>
     </testsuite>
   </testsuite>
 </testsuites>

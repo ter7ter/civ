@@ -37,7 +37,7 @@ class Unit implements IModel, UnitInterface
      * @var MissionType
      */
     public $mission = false;
-    public int $points = 0;
+    public float $points = 0;
 
     /**
      * Менеджер статистики юнита
@@ -54,9 +54,6 @@ class Unit implements IModel, UnitInterface
      * @var string
      */
     public $auto = "none";
-
-    public $mission_x = null;
-    public $mission_y = null;
 
     public $lvl = 1;
 
@@ -190,7 +187,7 @@ class Unit implements IModel, UnitInterface
             throw new Exception("Invalid unit type provided: " . $data["type"]);
         }
         $this->type = $unitType;
-        
+
         if (isset($data["mission"])) {
             $this->mission = MissionType::get($data["mission"]);
         }
@@ -212,7 +209,7 @@ class Unit implements IModel, UnitInterface
      * @param $y int
      * @return array
      */
-    public function get_mission_types($x = null, $y = null): array
+    public function getMissionTypes($x = null, $y = null): array
     {
         return UnitMissionHandler::getMissionTypes($this, $x, $y);
     }
@@ -224,9 +221,32 @@ class Unit implements IModel, UnitInterface
      * @return bool|string
      * @throws Exception
      */
-    public function start_mission($mtype, $title = ""): bool|string
+    public function startMission($mtype, $title = ""): bool|string
     {
         return UnitMissionHandler::startMission($this, $mtype, $title);
+    }
+
+    /**
+     * Сколько ходов осталось до завершения текущей миссии
+     * @return int
+     */
+    public function getCurrentMissionNeedTurns(): int
+    {
+        if ($this->mission) {
+            return UnitMissionHandler::getNeedTurns($this->x, $this->y, $this->planet, $this->mission);
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Сколько ходов займёт выполнение миссии
+     * @param MissionType $missionType
+     * @return int|bool
+     */
+    public function getMissionNeedTurns(MissionType $missionType): int|bool
+    {
+        return UnitMissionHandler::unitGetNeedTurns($this, $missionType);
     }
 
     /**
@@ -234,7 +254,7 @@ class Unit implements IModel, UnitInterface
      * @param Cell $cell
      * @return bool
      */
-    public function can_move($cell): bool
+    public function canMove($cell): bool
     {
         return UnitMovement::canMove($this, $cell);
     }
@@ -244,7 +264,7 @@ class Unit implements IModel, UnitInterface
      * @param Cell $cell
      * @return bool
      */
-    public function move_to($cell): bool
+    public function moveTo($cell): bool
     {
         return UnitMovement::moveTo($this, $cell);
     }
@@ -253,17 +273,17 @@ class Unit implements IModel, UnitInterface
      * Осуществляет перемещение по заданному пути
      * @param $path
      */
-    public function move_path($path)
+    public function movePath($path)
     {
         UnitMovement::movePath($this, $path);
     }
 
-    public function add_order(
+    public function addOrder(
         $mission,
         $target_x = "NULL",
         $target_y = "NULL",
         $number = false,
-    ) {
+    ): bool|int {
         return UnitOrderHandler::addOrder($this, $mission, $target_x, $target_y, $number);
     }
 
@@ -284,7 +304,7 @@ class Unit implements IModel, UnitInterface
      * @param int $max_path
      * @return array|bool
      */
-    public function calculate_path($cell1, $cell2, $max_path = 200)
+    public function calculatePath($cell1, $cell2, $max_path = 200)
     {
         return UnitMovement::calculatePath($this, $cell1, $cell2, $max_path);
     }

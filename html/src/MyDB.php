@@ -260,4 +260,9 @@ class MyDB implements DatabaseInterface
     {
         self::$_queryLog = [];
     }
+
+    public static function getLastQuery()
+    {
+        return end(self::$_queryLog);
+    }
 }

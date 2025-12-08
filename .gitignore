@@ -15,3 +15,5 @@ mysql/
 
 # Local configuration files
 phpmyadmin.config.php
+
+.php-cs-fixer.cache

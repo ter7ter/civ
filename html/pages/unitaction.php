@@ -26,7 +26,7 @@ if ($user->turn_status != 'play') {
                 $error = "Cell not found";
                 break;
             }
-            if (!$unit->move_to($cell)) {
+            if (!$unit->moveTo($cell)) {
                 $error = "Can not move";
                 break;
             }
@@ -35,7 +35,7 @@ if ($user->turn_status != 'play') {
             if (!is_array($_REQUEST['path'])) {
                 break;
             }
-            $unit->move_path($_REQUEST['path']);
+            $unit->movePath($_REQUEST['path']);
             $unit->calculate();
             break;
         case 'mission':
@@ -43,7 +43,7 @@ if ($user->turn_status != 'play') {
                 $error = "Mission not found";
                 break;
             }
-            $mtypes = $unit->get_mission_types();
+            $mtypes = $unit->getMissionTypes();
             if (!isset($mtypes[$_REQUEST['mission']])) {
                 $error = "Mission not found";
                 break;
@@ -52,9 +52,9 @@ if ($user->turn_status != 'play') {
             if (isset($_REQUEST['title'])) {
                 $title = htmlspecialchars($_REQUEST['title']);
             }
-            $result = $unit->start_mission($mtypes[$_REQUEST['mission']], $title);
+            $result = $unit->startMission($mtypes[$_REQUEST['mission']], $title);
             if (!$result) {
-                $error = "Неудалось";
+                $error = "Не удалось";
             }
             if ($result === 'unit_lost') {
                 $data['unit_lost'] = 1;

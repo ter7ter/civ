@@ -75,10 +75,10 @@ class MapActionsIntegrationTest extends TestBase
         $targetCell = Cell::get(11, 10, $planet->id);
 
         $this->assertTrue(
-            $unit->can_move($targetCell),
+            $unit->canMove($targetCell),
             "Юнит должен иметь возможность переместиться",
         );
-        $result = $unit->move_to($targetCell);
+        $result = $unit->moveTo($targetCell);
 
         $this->assertTrue($result, "Перемещение должно быть успешным");
 

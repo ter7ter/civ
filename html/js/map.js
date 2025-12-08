@@ -258,20 +258,21 @@ var map = {
 		if (selected_unit && selected_unit.x == this.select_x && selected_unit.y == this.select_y) {
 			unit_id = selected_unit.id;
 		}
-		        $.post('index.php?method=cellinfo', {'x': map.select_x, 'y': map.select_y, 'unit_id': unit_id}, function(data) {                
-		            $('.map_cell').removeClass('selected_cell');
-		            $('.map_cell[coordx="' + map.select_x + '"][coordy="' + map.select_y + '"]').addClass('selected_cell');
-		            $('#cellinfo').html(data);
-		            $.post('index.php?method=turninfo', {}, function(turnInfoData) {
-		                $('#turninfo-container').html(turnInfoData);
-		            }).fail(function(jqXHR, textStatus, errorThrown) {
-		                console.error("Error loading turn info:", textStatus, errorThrown, jqXHR.responseText);
-		                $('#turninfo-container').html('<div class="error">Failed to load turn info. See console for details.</div>');
-		            });
-		            		        }).fail(function(jqXHR, textStatus, errorThrown) {
-		            console.error("Error loading cell info:", textStatus, errorThrown, jqXHR.responseText);
-		            $('#cellinfo').html('<div class="error">Failed to load cell info. See console for details.</div>');
-		        });	},
+		$.post('index.php?method=cellinfo', {'x': map.select_x, 'y': map.select_y, 'unit_id': unit_id}, function(data) {
+			$('.map_cell').removeClass('selected_cell');
+			$('.map_cell[coordx="' + map.select_x + '"][coordy="' + map.select_y + '"]').addClass('selected_cell');
+			$('#cellinfo').html(data);
+			$.post('index.php?method=turninfo', {}, function(turnInfoData) {
+				$('#turninfo-container').html(turnInfoData);
+			}).fail(function(jqXHR, textStatus, errorThrown) {
+				console.error("Error loading turn info:", textStatus, errorThrown, jqXHR.responseText);
+				$('#turninfo-container').html('<div class="error">Failed to load turn info. See console for details.</div>');
+			});
+							}).fail(function(jqXHR, textStatus, errorThrown) {
+			console.error("Error loading cell info:", textStatus, errorThrown, jqXHR.responseText);
+			$('#cellinfo').html('<div class="error">Failed to load cell info. See console for details.</div>');
+		});
+	},
 	get_cell: function(x, y) {
 		for (var i in map.cells) {
 			for (var k in map.cells[i]) {
@@ -343,7 +344,11 @@ $(document).on('click', '.map_cell', function (e) {
 		if ($(e.target).closest('.map_cell').css('cursor') == 'crosshair') {
 			var path = selected_unit.calculate_path(x, y);
 			path.shift();
-			selected_unit.move_to(path);
+			if (selected_unit.select_mission == 'build_road_to') {
+				selected_unit.build_road_to(path);
+			} else {
+				selected_unit.move_to(path);
+			}
 		} else {
 			selected_unit.cancel_select_target();
 		}

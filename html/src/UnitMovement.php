@@ -24,9 +24,6 @@ class UnitMovement
         if ($unit->points == 0) {
             return false;
         }
-        if ($unit->mission) {
-            return false;
-        }
         if (!isset($unit->type->getCanMove()[$cell->type->id])) {
             return false;
         }
@@ -47,24 +44,30 @@ class UnitMovement
      */
     public static function moveTo(Unit $unit, Cell $cell)
     {
+        log_msg("start move to");
         if (!self::canMove($unit, $cell)) {
+            log_msg("can't move");
             return false;
         }
+        log_msg("move to " . $cell->x . " " . $cell->y);
         $cell_from = Cell::get($unit->x, $unit->y, $unit->planet);
         if (
             ($cell->road || $cell->city) &&
             ($cell_from->road || $cell_from->city)
         ) {
             $unit->points -= GameConfig::$ROAD_MOVE_POINTS;
+            log_msg("road, points - {$unit->points}");
         } else {
             if ($cell->city && $cell->city->user->id == $unit->user->id) {
                 $unit->points -= $unit->type->getCanMove()["city"];
             } else {
                 $unit->points -= $unit->type->getCanMove()[$cell->type->id];
             }
+            log_msg("no road, points - {$unit->points}");
         }
         $unit->x = $cell->x;
         $unit->y = $cell->y;
+        log_msg("points - {$unit->points}");
         if ($unit->points < 0) {
             $unit->points = 0;
         }
@@ -83,18 +86,19 @@ class UnitMovement
     }
 
     /**
-     * Осуществляет перемещение по заданному пути
+     * Осуществляет перемещение или строительство дороги по заданному пути
      * @param Unit $unit
      * @param array $path
+     * @param string $type
      */
-    public static function movePath(Unit $unit, $path)
+    public static function movePath(Unit $unit, $path, $type = "move")
     {
         MyDB::query("DELETE FROM mission_order WHERE unit_id = :uid", [
             "uid" => $unit->id,
         ]);
         $number = 1;
         foreach ($path as $cell) {
-            $unit->addOrder("move", $cell["x"], $cell["y"], $number);
+            $unit->addOrder($type, $cell["x"], $cell["y"], $number);
             $number++;
         }
     }

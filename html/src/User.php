@@ -316,7 +316,7 @@ class User
     /**
      * Рассчитать юниты пользователя
      */
-    public function calculate_units()
+    public function calculate_units(): void
     {
         $rows = MyDB::query("SELECT * FROM unit WHERE user_id = :id", [
             "id" => $this->id,
@@ -324,8 +324,8 @@ class User
         foreach ($rows as $row) {
             try {
                 $unit = new Unit($row);
-                $unit->calculate();
                 $unit->points = $unit->type->points;
+                $unit->calculate();
                 $unit->save();
             } catch (Exception $e) {
                 // Логируем ошибку создания юнита и пропускаем его

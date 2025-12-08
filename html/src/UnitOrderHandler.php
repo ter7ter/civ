@@ -40,11 +40,38 @@ class UnitOrderHandler
     }
 
     /**
+     * Убрает приказ из базы
+     *
+     * @param $unit
+     * @param $number
+     * @return void
+     */
+    protected static function deleteOrder($unit, $number)
+    {
+        MyDB::query(
+            "DELETE FROM mission_order WHERE `unit_id` = :uid AND `number` = :number",
+            ["uid" => $unit->id, "number" => $number],
+        );
+    }
+
+    public static function cancelOrders($unit)
+    {
+        MyDB::query(
+            "DELETE FROM mission_order WHERE `unit_id` = :uid",
+            ["uid" => $unit->id],
+        );
+    }
+
+    /**
      * Обрабатывает приказы в calculate
      * @param Unit $unit
+     * @throws \Exception
      */
-    public static function processOrders(Unit $unit)
+    public static function processOrders(Unit $unit): void
     {
+        if ($unit->mission) {//Если уже выполняется миссия, то не обрабатываем приказы (например, строим дорогу
+            return;
+        }
         $order = MyDB::query(
             "SELECT * FROM mission_order WHERE unit_id = :uid
                     ORDER BY `number` ASC LIMIT 1",
@@ -52,42 +79,37 @@ class UnitOrderHandler
             "row",
         );
         while ($order && $unit->points > 0) {
-            if ($order["type"] == "move") {
+            if ($order["type"] == "move" || $order["type"] == "road") {
                 $cell = Cell::get($order["target_x"], $order["target_y"], $unit->planet);
                 if (!$cell) {
                     //Несуществующая клетка в задаче, отменяем
-                    MyDB::query(
-                        "DELETE FROM mission_order WHERE `unit_id` = :uid",
-                        ["uid" => $unit->id],
-                    );
+                    self::cancelOrders($unit);
                     break;
                 }
+            }
+            if ($order["type"] == "move") {
                 if (UnitMovement::moveTo($unit, $cell)) {
-                    MyDB::query(
-                        "DELETE FROM mission_order WHERE `unit_id` = :uid AND `number` = :number",
-                        ["uid" => $unit->id, "number" => $order["number"]],
-                    );
+                    self::deleteOrder($unit, $order["number"]);
                 } else {
                     //Если не можем туда идти отменяем все дальнейшие задачи
-                    MyDB::query(
-                        "DELETE FROM mission_order WHERE `unit_id` = :uid",
-                        ["uid" => $unit->id],
-                    );
+                    self::cancelOrders($unit);
                     break;
+                }
+            } elseif ($order["type"] == "road") {
+                if ($unit->planet !== $cell->planet || $unit->x !== $cell->x || $unit->y !== $cell->y) {
+                    UnitMovement::moveTo($unit, $cell);
+                } else {
+                    log_msg("build road to {$cell->x}, {$cell->y}");
+                    UnitMissionHandler::startMission($unit, MissionType::get("build_road"));
+                    self::deleteOrder($unit, $order["number"]);
                 }
             } else {
                 if (UnitMissionHandler::startMission(Unit::get($unit->id), MissionType::get($order["type"]))) {
                     //Смогли запустить миссию
-                    MyDB::query(
-                        "DELETE FROM mission_order WHERE `unit_id` = :uid AND `number` = :number",
-                        ["uid" => $unit->id, "number" => $order["number"]],
-                    );
+                    self::deleteOrder($unit, $order["number"]);
                 } else {
-                    //Если не можем то отменяем все дальнейшие задачи
-                    MyDB::query(
-                        "DELETE FROM mission_order WHERE `unit_id` = :uid",
-                        ["uid" => $unit->id],
-                    );
+                    //Если не можем, то отменяем все дальнейшие задачи
+                    self::cancelOrders($unit);
                 }
             }
             $order = MyDB::query(

@@ -38,6 +38,14 @@ if ($user->turn_status != 'play') {
             $unit->movePath($_REQUEST['path']);
             $unit->calculate();
             break;
+        case 'build_road_to':
+            if (!is_array($_REQUEST['path'])) {
+                break;
+            }
+            $path = $_REQUEST['path'];
+            $unit->roadPath($path);
+            $unit->calculate();
+            break;
         case 'mission':
             if (!isset($_REQUEST['mission'])) {
                 $error = "Mission not found";

@@ -69,6 +69,7 @@ class UnitMissionHandler
                 return "unit_lost";
             }
             $unit->points -= $need_points;
+            $unit->save();
             return true;
         } else {
             $unit->mission = $mtype;

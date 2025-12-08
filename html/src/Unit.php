@@ -275,7 +275,17 @@ class Unit implements IModel, UnitInterface
      */
     public function movePath($path)
     {
-        UnitMovement::movePath($this, $path);
+        UnitMovement::movePath($this, $path, "move");
+    }
+
+    /**
+     * Строит дорогу по заданному пути
+     * @param $path
+     * @return void
+     */
+    public function roadPath($path)
+    {
+        UnitMovement::movePath($this, $path, "road");
     }
 
     public function addOrder(
@@ -292,8 +302,8 @@ class Unit implements IModel, UnitInterface
         if ($this->points == 0) {
             return;
         }
-        UnitMissionHandler::processMissions($this);
         UnitOrderHandler::processOrders($this);
+        UnitMissionHandler::processMissions($this);
         UnitAutoHandler::processAuto($this);
     }
 

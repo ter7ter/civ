@@ -41,7 +41,7 @@ $units = [
         'attack' => 0,
         'defence' => 0,
         'can_build' => true,
-        'missions' => ['move_to', 'build_road', 'mine', 'irrigation'],
+        'missions' => ['move_to', 'build_road', 'build_road_to', 'mine', 'irrigation'],
         'description' => 'Строит улучшения'
     ],
     [

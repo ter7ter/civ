@@ -19,8 +19,9 @@ function get_next_event(del = false) {
 						'</option>');
 				}
 				$('#event-window-research').attr('eid', resp.data.id);
-				                $('#event-window-research').show();
-				                $('#modal-backdrop').show();			} else if (resp.data.type == 'city_building' || resp.data.type == 'city_unit') {
+				$('#event-window-research').show();
+				$('#modal-backdrop').show();
+			} else if (resp.data.type == 'city_building' || resp.data.type == 'city_unit') {
 				$('#event-window-city').attr('eid', resp.data.id);
 				$('#event-window-city').attr('cid', resp.data.city_id);
 				$('#event-window-city-title').text(resp.data.city_title);
@@ -32,14 +33,15 @@ function get_next_event(del = false) {
 						unit.title + '(' + unit.turns + ') ходов' +
 						'</option>');
 				}
-				for (var i in resp.data.buildings_possible) {
-					var building = resp.data.buildings_possible[i];
+				for (var i in resp.data.possible_buildings) {
+					var building = resp.data.possible_buildings[i];
 					$('#event-window-select-build').append('<option value="buil' + building.id + '">' +
 						building.title + '(' + building.turns + ') ходов' +
 						'</option>');
 				}
-				                $('#event-window-city').show();
-				                $('#modal-backdrop').show();			}
+                    $('#event-window-city').show();
+                    $('#modal-backdrop').show();
+			    }
 		} else {
 			window.alert(resp.error);
 		}
@@ -50,7 +52,7 @@ $(document).on('click', '#event-window-research-ok', function (e) {
 		resp = $.parseJSON(data);
 		        if (resp.status == 'ok') {
 		            $('#event-window-research').hide();
-    $('#modal-backdrop').hide();
+    				$('#modal-backdrop').hide();
 		            $('#modal-backdrop').hide();			map.show_cell_info();
 			get_next_event($('#event-window-research').attr('eid'));
 		} else {
@@ -65,14 +67,19 @@ $(document).on('click', '#event-window-research-cancel, #event-window-research .
 $(document).on('click', '#event-window-build-ok', function (e) {
 	var vals = {'cid': $('#event-window-city').attr('cid')};
 	var build = $('#event-window-select-build').val();
-	vals['production_type'] = build.substr(0, 4);
+	if (build.substr(0, 4) == 'unit') {
+		vals['production_type'] = 'unit';
+	} else {
+		vals['production_type'] = 'building';
+	}
 	vals['production'] = build.substr(4);
 	$.post('index.php?method=city&json=1', vals, function(data) {
 		resp = $.parseJSON(data);
 		        if (resp.status == 'ok') {
 		            $('#event-window-city').hide();
-		            $('#modal-backdrop').hide();			map.show_cell_info();
-			get_next_event($('#event-window-city').attr('eid'));
+		            $('#modal-backdrop').hide();
+					map.show_cell_info();
+					get_next_event($('#event-window-city').attr('eid'));
 		} else {
 			window.alert(resp.error);
 		}
@@ -180,11 +187,12 @@ $(document).on('click', 'body', function (e) {
 	if ($(e.target).closest('#cellmenu').length == 0 && $(e.target).closest('.map_cell').length == 0 ) {
 		$("#cellmenu").hide();
 	}
-	if (selected_unit.select_mission &&
+	/*if (selected_unit.select_mission &&
 		$(e.target).closest('.map_cell').length == 0 &&
-		$(e.target).closest('.unit-do-mission[mid=move_to]').length == 0) {
+		$(e.target).closest('.unit-do-mission[mid=move_to]').length == 0 &&
+		$(e.target).closest('.unit-do-mission[mid=road_to]').length == 0) {
 		selected_unit.cancel_select_target();
-	}
+	}*/
 });
 $(document).on('click', '#do-next-step', function(e) {
 	next_step();

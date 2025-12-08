@@ -19,6 +19,7 @@ class TurnCalculator
             $user->calculate_resource();
             $user->calculate_cities();
             $user->calculate_income();
+            $user->calculate_units();
             if (
                 $game->turn_type == "byturn" ||
                 $game->turn_type == "onewindow"

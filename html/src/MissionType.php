@@ -93,7 +93,11 @@ class MissionType implements MissionInterface
     public function complete(Unit $unit, string|false $title = false): bool
     {
         if ($this->completeHandler) {
-            return $this->completeHandler->complete($unit, $title);
+            $result = $this->completeHandler->complete($unit);
+            if ($result) {
+                UnitOrderHandler::processOrders($unit);
+            }
+            return $result;
         }
         return false;
     }
@@ -143,4 +147,12 @@ new MissionType([   'id' => 'move_to',
                     'unit_lost' => false,
                     'cell_types' => ['plains', 'plains2', 'forest', 'hills', 'mountains', 'water1', 'water2', 'water3', 'desert'],
                     'need_points' => []]);
+
+new MissionType([   'id' => 'build_road_to',
+                    'title' => 'Строить дорогу к',
+                    'unit_lost' => false,
+                    'cell_types' => ['plains', 'plains2', 'forest', 'hills', 'mountains', 'desert'],
+                    'need_points' => []]);
+
 MissionType::$all['move_to']->completeHandler = null; // move_to doesn't complete instantly, it's for movement
+MissionType::$all['build_road_to']->completeHandler = null; // build_road_to is for building road to target

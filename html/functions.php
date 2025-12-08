@@ -18,3 +18,10 @@ function array_min($array)
     }
     return $min;
 }
+
+function log_msg($msg)
+{
+    $file = fopen(LOG_FILE, 'a');
+    fwrite($file, $msg."\n");
+    fclose($file);
+}

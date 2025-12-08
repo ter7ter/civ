@@ -20,6 +20,8 @@ if (!defined('USE_TRANSACTION_MODE')) {
     define('USE_TRANSACTION_MODE', true);
 }
 
+define('LOG_FILE', __DIR__ .'/log.txt');
+
 class GameConfig
 {
     /**

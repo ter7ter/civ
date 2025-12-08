@@ -14,7 +14,6 @@ if (!$user) {
     throw new Exception('User not found');
 }
 if ($user->turn_status == 'play') {
-    $user->calculate_units(); //Конец хода
     $game = Game::get($user->game);
     if (!$game) {
         throw new Exception('Game not found for user: ' . $user->id);

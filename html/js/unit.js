@@ -146,6 +146,10 @@ var Unit = {
 		});
 	},
 	select_move_target: function() {
+		this.select_path_target();
+		this.select_mission = 'move_to';
+	},
+	select_path_target: function() {
 		for (var y = 0; y < map.height; y++) {
 			for (var x = 0; x < map.width; x++) {
 				var cell = map.cells[x][y];
@@ -156,7 +160,10 @@ var Unit = {
 				}
 			}
 		}
-		this.select_mission = 'move_to';
+	},
+	select_road_target: function() {
+		this.select_path_target();
+		this.select_mission = 'build_road_to';
 	},
 	cancel_select_target: function() {
 		for (var y = 0; y < map.height; y++) {
@@ -232,11 +239,7 @@ var Unit = {
 		}
 		return false;
 	},
-	move_to: function (path) {
-		var data = {
-			'action': 'move_to',
-			'uid': this.id
-		}
+	do_path_to: function (data, path) {
 		for (var i in path) {
 			data['path['+i+'][x]'] = map.cells[path[i].i][path[i].k].x;
 			data['path['+i+'][y]'] = map.cells[path[i].i][path[i].k].y;
@@ -244,21 +247,41 @@ var Unit = {
 		$('.map-path-line').remove();
 		this.select_mission = false;
 		$.post('index.php?method=unitaction&json=1', data, function (data) {
-			var data = JSON.parse(data);
-			if (data.status == 'error') {
-				window.alert(data.error);
-				return false;
-			}
-			// After move_to, refresh the selected unit info without reloading the whole map
-			if (selected_unit && selected_unit.id) {
-				$.post('index.php?method=cellinfo', {'x': map.select_x, 'y': map.select_y, 'unit_id': selected_unit.id}, function(cellData) {
-					$('#cellinfo').html(cellData);
+				var data = JSON.parse(data);
+				if (data.status == 'error') {
+					window.alert(data.error);
+					return false;
+				}
+				// After build_road_to, refresh the selected unit info without reloading the whole map
+				if (selected_unit && selected_unit.id) {
+					$.post('index.php?method=cellinfo',
+						{
+							'x': map.select_x,
+							'y': map.select_y,
+							'unit_id': selected_unit.id
+						}, function(cellData) {
+						$('#cellinfo').html(cellData);
+						map.load();
+					});
+				} else {
 					map.load();
-				});
-			} else {
-				map.load();
-			}
+				}
 		});
+	},
+	build_road_to: function (path) {
+		var data = {
+			'action': 'build_road_to',
+			'uid': this.id
+		}
+		this.do_path_to(data, path);
+
+	},
+	move_to: function (path) {
+		var data = {
+			'action': 'move_to',
+			'uid': this.id
+		}
+		this.do_path_to(data, path);
 	}
 }
 $(document).on('click', '.unit-do-mission', function(e) {
@@ -267,6 +290,8 @@ $(document).on('click', '.unit-do-mission', function(e) {
 		selected_unit.create_city_window();
 	} else if(mid == 'move_to') {
 		selected_unit.select_move_target();
+	} else if(mid == 'build_road_to') {
+		selected_unit.select_road_target();
 	} else {
 		$.post('index.php?method=unitaction&json=1', {'action': 'mission',
 													  'mission': mid,

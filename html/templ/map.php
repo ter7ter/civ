@@ -5,7 +5,7 @@ include 'partials/header.php';
 <!-- Original game styles -->
 <link type="text/css" href="css/city.css" rel="Stylesheet" />
 <link type="text/css" href="css/map.css" rel="Stylesheet" />
-<link type="text/css" href="css/style.css?v=2" rel="Stylesheet" />
+<link type="text/css" href="css/style.css" rel="Stylesheet" />
 <link type="text/css" href="css/research.css" rel="Stylesheet" />
 <link type="text/css" href="css/events.css" rel="Stylesheet" />
 
@@ -170,7 +170,7 @@ include 'partials/header.php';
 
 <script src="js/functions.js"></script>
 <script src="js/map.js"></script>
-<script src="js/unit.js?v=2"></script>
+<script src="js/unit.js"></script>
 <script src="js/city.js"></script>
 <script src="js/events.js"></script>
 <script src="js/research.js"></script>

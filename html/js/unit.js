@@ -280,6 +280,17 @@ $(document).on('click', '.unit-do-mission', function(e) {
 		});
 	}
 });
+$(document).on('click', '.unit-cancel-mission', function(e) {
+	$.post('index.php?method=unitaction&json=1', {'action': 'cancel_mission',
+												  'uid': selected_unit.id }, function (data) {
+		var data = JSON.parse(data);
+		if (data.status == 'error') {
+			window.alert(data.error);
+			return false;
+		}
+		map.show_cell_info();
+	});
+});
 $(document).on('mouseenter', '.map_cell', function (e) {
 	if (selected_unit.select_mission) {
 		var x = $(e.target).closest('.map_cell').attr('coordx');

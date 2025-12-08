@@ -60,6 +60,9 @@ if ($user->turn_status != 'play') {
                 $data['unit_lost'] = 1;
             }
             break;
+        case 'cancel_mission':
+            $unit->cancelMission();
+            break;
     }
 
 }

@@ -661,4 +661,83 @@ class UnitTest extends CommonTestBase
         // need_points = 0, должен вернуть 0
         $this->assertEquals(0, $needTurns);
     }
+
+    /**
+     * Тест метода cancelMission
+     */
+    public function testCancelMission(): void
+    {
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
+
+        // Создаем тип юнита
+        $unitType = TestDataFactory::createTestUnitType([
+            "title" => "Cancel Mission Unit",
+            "points" => 2,
+        ]);
+
+        // Создаем миссию
+        $mission = new \App\MissionType([
+            'id' => 'test_cancel',
+            'title' => 'Test Cancel',
+            'unit_lost' => false,
+            'cell_types' => ['plains'],
+            'need_points' => ['plains' => 10],
+        ]);
+
+        TestDataFactory::createTestCell(['x' => 18, 'y' => 18, 'planet' => $planet->id, 'type' => 'plains']);
+
+        $unit = TestDataFactory::createTestUnit([
+            "user_id" => $user->id,
+            "type" => $unitType->id,
+            "x" => 18,
+            "y" => 18,
+            "planet" => $planet->id,
+            "mission" => $mission->id,
+            "points" => 0,
+            "mission_points" => 5,
+        ]);
+
+        // Отменяем миссию
+        $result = $unit->cancelMission();
+
+        $this->assertTrue($result);
+        $this->assertFalse($unit->mission);
+        $this->assertEquals(0, $unit->mission_points);
+        $this->assertEquals(0, $unit->points); // Очки остаются потраченными
+    }
+
+    /**
+     * Тест метода cancelMission без миссии
+     */
+    public function testCancelMissionNoMission(): void
+    {
+        $game = TestDataFactory::createTestGame();
+        $planet = TestDataFactory::createTestPlanet(["game_id" => $game->id]);
+        $user = TestDataFactory::createTestUser(["game" => $game->id]);
+
+        // Создаем тип юнита
+        $unitType = TestDataFactory::createTestUnitType([
+            "title" => "No Mission Cancel Unit",
+            "points" => 1,
+        ]);
+
+        TestDataFactory::createTestCell(['x' => 19, 'y' => 19, 'planet' => $planet->id, 'type' => 'plains']);
+
+        $unit = TestDataFactory::createTestUnit([
+            "user_id" => $user->id,
+            "type" => $unitType->id,
+            "x" => 19,
+            "y" => 19,
+            "planet" => $planet->id,
+            "points" => 1,
+        ]);
+
+        // Пытаемся отменить миссию, когда её нет
+        $result = $unit->cancelMission();
+
+        $this->assertFalse($result);
+        $this->assertEquals(1, $unit->points); // Очки не изменились
+    }
 }

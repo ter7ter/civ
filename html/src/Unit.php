@@ -298,6 +298,21 @@ class Unit implements IModel, UnitInterface
     }
 
     /**
+     * Отменяет текущую миссию юнита
+     * @return bool
+     */
+    public function cancelMission(): bool
+    {
+        if (!$this->mission) {
+            return false;
+        }
+        $this->mission = false;
+        $this->mission_points = 0;
+        $this->save();
+        return true;
+    }
+
+    /**
      * Расчитывает путь между двумя клетками
      * @param Cell $cell1
      * @param Cell $cell2

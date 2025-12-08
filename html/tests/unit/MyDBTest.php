@@ -218,7 +218,7 @@ class MyDBTest extends CommonTestBase
 
         // Создаем таблицу
         $result = MyDB::query("CREATE TABLE `$tableName` (id INT PRIMARY KEY)");
-        $this->assertTrue($result);
+        $this->assertEquals(0, $result); // DDL queries return 0 affected rows
 
         // Проверяем, что таблица создана
         $exists = MyDB::query("SHOW TABLES LIKE '$tableName'", [], 'num_rows');
@@ -226,7 +226,7 @@ class MyDBTest extends CommonTestBase
 
         // Удаляем таблицу
         $result = MyDB::query("DROP TABLE `$tableName`");
-        $this->assertTrue($result);
+        $this->assertEquals(0, $result); // DDL queries return 0 affected rows
     }
 
     /**

@@ -277,11 +277,8 @@ class CreateGameIntegrationTest extends CommonTestBase
 
         $this->executePage(PROJECT_ROOT . "/pages/creategame.php", $maliciousData);
 
-        // Получаем имя текущей базы данных
-        $currentDb = MyDB::query("SELECT DATABASE()", [], "elem");
-        $tableColumn = "Tables_in_{$currentDb}";
-
-        $tables = array_column(MyDB::query("SHOW TABLES"), $tableColumn);
+        // Получаем список таблиц
+        $tables = MyDB::query("SELECT table_name FROM information_schema.tables WHERE table_schema = DATABASE()", [], "column");
         $this->assertContains("game", $tables);
         $this->assertContains("user", $tables);
     }

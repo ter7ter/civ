@@ -90,12 +90,14 @@ class UserTest extends CommonTestBase
      */
     public function testSaveNew(): void
     {
+        $game = TestDataFactory::createTestGame();
+
         $data = [
             "login" => "NewUser",
             "money" => 150,
             "color" => "#00ff00",
             "age" => 1,
-            "game" => 1,
+            "game" => $game->id,
             "turn_status" => "wait",
             "turn_order" => 2,
             "research_percent" => 10,
@@ -116,7 +118,7 @@ class UserTest extends CommonTestBase
         $this->assertEquals(150, $savedData["money"]);
         $this->assertEquals("#00ff00", $savedData["color"]);
         $this->assertEquals(1, $savedData["age"]);
-        $this->assertEquals(1, $savedData["game"]);
+        $this->assertEquals($game->id, $savedData["game"]);
         $this->assertEquals("wait", $savedData["turn_status"]);
         $this->assertEquals(2, $savedData["turn_order"]);
         $this->assertEquals(10, $savedData["research_percent"]);

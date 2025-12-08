@@ -106,7 +106,7 @@ class DatabaseConfigTest extends CommonTestBase
         // Проверяем основные таблицы
         $expectedTables = ["game", "user", "cell", "unit", "city"];
 
-        $actualTables = MyDB::query("SHOW TABLES", [], "column");
+        $actualTables = MyDB::query("SELECT table_name FROM information_schema.tables WHERE table_schema = DATABASE()", [], "column");
 
         foreach ($expectedTables as $table) {
             $this->assertContains(

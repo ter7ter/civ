@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="/var/www/html/tests/unit" tests="17" assertions="52" errors="0" warnings="0" failures="0" skipped="0" time="1.747023">
-    <testsuite name="App\Tests\UnitTest" file="/var/www/html/tests/unit/UnitTest.php" tests="17" assertions="52" errors="0" warnings="0" failures="0" skipped="0" time="1.747023">
-      <testcase name="testConstruct" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="66" assertions="8" time="1.271885"/>
-      <testcase name="testCanMove" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="293" assertions="1" time="0.035357"/>
-      <testcase name="testSaveUpdate" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="150" assertions="3" time="0.013958"/>
-      <testcase name="testGetAll" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="366" assertions="5" time="0.067767"/>
-      <testcase name="testGetExistingUnit" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="27" assertions="6" time="0.025397"/>
-      <testcase name="testRemove" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="221" assertions="1" time="0.028705"/>
-      <testcase name="testMoveTo" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="328" assertions="4" time="0.042705"/>
-      <testcase name="testSaveNew" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="106" assertions="6" time="0.040359"/>
-      <testcase name="testGetMissionTypes" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="260" assertions="4" time="0.063500"/>
-      <testcase name="testGetTitle" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="195" assertions="1" time="0.011971"/>
-      <testcase name="testGetCurrentMissionNeedTurnsMultipleUnits" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="516" assertions="4" time="0.016691"/>
-      <testcase name="testGetMissionNeedTurnsMultipleUnits" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="572" assertions="4" time="0.017277"/>
-      <testcase name="testGetNonExistingUnit" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="56" assertions="1" time="0.012300"/>
-      <testcase name="testGetCurrentMissionNeedTurnsNoMission" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="407" assertions="1" time="0.040154"/>
-      <testcase name="testGetCurrentMissionNeedTurnsWithMission" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="435" assertions="1" time="0.019195"/>
-      <testcase name="testGetMissionNeedTurns" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="476" assertions="1" time="0.016304"/>
-      <testcase name="testGetCurrentMissionNeedTurnsZeroPoints" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="627" assertions="1" time="0.023498"/>
+  <testsuite name="/var/www/html/tests/unit" tests="6" assertions="29" errors="0" warnings="0" failures="0" skipped="0" time="15.339849">
+    <testsuite name="App\Tests\DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" tests="6" assertions="29" errors="0" warnings="0" failures="0" skipped="0" time="15.339849">
+      <testcase name="testTestTablesCreation" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="104" assertions="5" time="1.586465"/>
+      <testcase name="testTestDatabaseConfiguration" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="25" assertions="5" time="0.971322"/>
+      <testcase name="testTestDataOperations" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="123" assertions="5" time="3.363762"/>
+      <testcase name="testTestDataCleanup" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="171" assertions="4" time="7.276477"/>
+      <testcase name="testTransactionHandling" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="214" assertions="2" time="0.935852"/>
+      <testcase name="testGameAndUserMocks" class="App\Tests\DatabaseConfigTest" classname="App.Tests.DatabaseConfigTest" file="/var/www/html/tests/unit/DatabaseConfigTest.php" line="243" assertions="8" time="1.205970"/>
     </testsuite>
   </testsuite>
 </testsuites>

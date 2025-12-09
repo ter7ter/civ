@@ -227,7 +227,7 @@ class User
      * Получить видимую карту пользователя
      * @return array Массив клеток
      */
-    public function get_map()
+    public function getMap()
     {
         if (count($this->buildings) == 0) {
             $this->load_buildings();
@@ -258,21 +258,21 @@ class User
     /**
      * Рассчитать города пользователя
      */
-    public function calculate_cities()
+    public function calculateCities()
     {
-        $cities = $this->get_cities();
+        $cities = $this->getCities();
         foreach ($cities as $city) {
             $city->calculate();
         }
-        $this->caclulate_culture();
+        $this->caclulateCulture();
     }
 
     /**
      * Рассчитать культурное влияние городов пользователя
      */
-    public function caclulate_culture()
+    public function caclulateCulture()
     {
-        $cities = $this->get_cities();
+        $cities = $this->getCities();
         $culture_cells = [];
         foreach ($cities as $city) {
             $cells = $city->get_culture_cells();
@@ -316,7 +316,7 @@ class User
     /**
      * Рассчитать юниты пользователя
      */
-    public function calculate_units(): void
+    public function calculateUnits(): void
     {
         $rows = MyDB::query("SELECT * FROM unit WHERE user_id = :id", [
             "id" => $this->id,
@@ -338,11 +338,11 @@ class User
      * Рассчитать доход пользователя
      * @return int Доход
      */
-    public function calculate_income()
+    public function calculateIncome()
     {
         $this->income = 0;
         $this->research_amount = 0;
-        $cities = $this->get_cities();
+        $cities = $this->getCities();
         foreach ($cities as $city) {
             $this->income += $city->pmoney;
             $this->research_amount += $city->presearch;
@@ -355,7 +355,7 @@ class User
      * Рассчитать исследования пользователя
      * @return Research|false Завершенное исследование или false
      */
-    public function calculate_research()
+    public function calculateResearch()
     {
         if (!$this->process_research_type || !$this->research_amount) {
             return false;
@@ -408,7 +408,7 @@ class User
      * @return City[]
      * @throws Exception
      */
-    public function get_cities(): array
+    public function getCities(): array
     {
         $result = [];
         $rows = MyDB::query("SELECT id FROM city WHERE user_id = :id", [
@@ -425,7 +425,7 @@ class User
      * @return Research[]
      * @throws Exception
      */
-    public function get_research()
+    public function getResearch()
     {
         $rows = MyDB::query("SELECT * FROM research WHERE user_id = :id", [
             "id" => $this->id,
@@ -441,10 +441,10 @@ class User
      * Список исследований, которые пользователь сейчас может начать
      * @return ResearchType[]
      */
-    public function get_available_research()
+    public function getAvailableResearch()
     {
         $result = [];
-        $research = $this->get_research();
+        $research = $this->getResearch();
         foreach (ResearchType::getAll() as $res) {
             if (isset($research[$res->id])) {
                 continue;
@@ -470,9 +470,9 @@ class User
      * @param ResearchType $type Тип исследования
      * @return bool Успешно ли начато исследование
      */
-    public function start_research($type)
+    public function startResearch($type)
     {
-        $available = $this->get_available_research();
+        $available = $this->getAvailableResearch();
         if (!isset($available[$type->id])) {
             return false;
         }
@@ -485,7 +485,7 @@ class User
      * @param ResearchType|bool $research Тип исследования или false для текущего
      * @return int|bool Количество ходов или false
      */
-    public function get_research_need_turns($research = false)
+    public function getResearchNeedTurns($research = false)
     {
         if (!$this->process_research_type && !$research) {
             return false;
@@ -514,9 +514,9 @@ class User
      * Рассчитывает группы доступности ресурсов по городам
      * @throws Exception
      */
-    public function calculate_resource()
+    public function calculateResource()
     {
-        $cities = $this->get_cities();
+        $cities = $this->getCities();
         $groups = [];
         $group_id = 0;
         $cities_in_group = [];
@@ -666,11 +666,13 @@ class User
      * @return Message[] Массив сообщений
      * @throws Exception
      */
-    public function get_messages($last = 0)
+    public function getMessages($last = 0)
     {
         $result = [];
         $messages = MyDB::query(
-            "SELECT * FROM message WHERE (from_id = :uid OR to_id = :uid) AND id > :last ORDER BY DATE LIMIT 50",
+            "SELECT * FROM (
+                SELECT * FROM message WHERE (from_id = :uid OR to_id = :uid) AND id > :last ORDER BY DATE DESC LIMIT 50
+               ) as  messages ORDER BY id ASC",
             ["uid" => $this->id, "last" => $last],
         );
         foreach ($messages as $message) {
@@ -684,7 +686,7 @@ class User
      * @param string $text Текст сообщения
      * @return Message Созданное сообщение
      */
-    public function new_system_message($text)
+    public function newSystemMessage(string $text): Message
     {
         $message = new Message([
             "form_id" => false,
@@ -697,10 +699,20 @@ class User
     }
 
     /**
+     * @param string $message
+     * @param array $args
+     * @return void
+     */
+    public function newSystemMessageArgs(string $message, array $args = []): void
+    {
+        $this->newSystemMessage(sprintf(MESSAGES[$message], ...$args));
+    }
+
+    /**
      * Получить следующее событие пользователя
      * @return Event|false Событие или false, если нет
      */
-    public function get_next_event()
+    public function getNextEvent(): Event|bool
     {
         $data = MyDB::query(
             "SELECT * FROM event WHERE user_id = :uid ORDER BY id LIMIT 1",

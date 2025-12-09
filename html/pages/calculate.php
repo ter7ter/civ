@@ -36,7 +36,7 @@ if ($user->turn_status == 'play') {
                 throw new Exception('Next user not found: ' . $next_user);
             }
             $next_user_obj->turn_status = 'play';
-            $next_user_obj->new_system_message('Вы начинаете свой ход');
+            $next_user_obj->newSystemMessage('Вы начинаете свой ход');
             $next_user_obj->save();
         }
     }

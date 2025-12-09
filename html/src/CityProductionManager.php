@@ -16,7 +16,7 @@ class CityProductionManager
     {
         $units = UnitType::getAll();
         $result = [];
-        $have_research = $city->user->get_research();
+        $have_research = $city->user->getResearch();
         foreach ($units as $unit) {
             if ($unit->type == "water" && $city->is_coastal == false) {
                 continue;
@@ -52,7 +52,7 @@ class CityProductionManager
     {
         $buildings = BuildingType::getAll();
         $result = [];
-        $have_research = $city->user->get_research();
+        $have_research = $city->user->getResearch();
         foreach ($buildings as $building) {
             if (isset($city->buildings[$building->id])) {
                 continue;
@@ -88,7 +88,7 @@ class CityProductionManager
         }
         $productionItem = match ($city->production_type) {
             "unit" => UnitType::get($city->production),
-            "build" => BuildingType::get($city->production),
+            "building" => BuildingType::get($city->production),
             default => throw new \Exception(
                 "Missing production type {$city->production_type}",
             ),
@@ -134,7 +134,7 @@ class CityProductionManager
         switch ($productionType) {
             case "unit":
                 return new UnitProduction($productionItem);
-            case "buil":
+            case "building":
                 return new BuildingProduction($productionItem);
             default:
                 throw new \Exception("Unknown production type: {$productionType}");
@@ -147,8 +147,7 @@ class CityProductionManager
      */
     public static function selectNextProduction(City $city)
     {
-        if ($city->production_type == "buil") {
-            $city->production_type = "unit";
+        if ($city->production_type == "building") {
             $units = self::getPossibleUnits($city);
             $unit = array_shift($units);
             $city->production = $unit->id;

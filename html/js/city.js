@@ -108,7 +108,7 @@ var city = {
 			}
 			$('#city-production-list').append(
 				'<div class="city-production-list-item" pid="buil' + this.possible_buildings[i].id + '" cost="' + city.possible_buildings[i].cost + '">' +
-				'<img src="./img/buils/' + this.possible_buildings[i].image_file + '">' +
+				'<img src="./img/buildings/' + this.possible_buildings[i].image_file + '">' +
 				'<div class="city-production-list-item-description">' +
 				'<div class="city-production-list-item-title">' + this.possible_buildings[i].title + '</div>' +
 				turns + ' ходов ' +

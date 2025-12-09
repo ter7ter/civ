@@ -261,7 +261,7 @@ class City
         $city->locate_people();
         $city->calculate_people();
         $city->save();
-        $city->user->caclulate_culture();
+        $city->user->caclulateCulture();
         return $city;
     }
 
@@ -596,7 +596,7 @@ class City
     }
 
     /**
-     * Выбирает что следующим будет строится при завершении постройки
+     * Выбирает что следующим будет строиться при завершении постройки
      */
     public function select_next_production()
     {
@@ -609,12 +609,7 @@ class City
     public function calculate()
     {
         CityPopulationManager::checkMood($this);
-        $this->eat += $this->peat - $this->population * 2;
-        if ($this->eat >= $this->eat_up) {
-            $this->population++;
-            $this->eat -= $this->eat_up;
-            CityPopulationManager::locatePeople($this);
-        }
+        CityPopulationManager::calculateEat($this);
         CityPopulationManager::calculatePeople($this);
         CityBuildingManager::calculateBuildings($this);
         CityProductionManager::calculateProduction($this);

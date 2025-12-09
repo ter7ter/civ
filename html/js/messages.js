@@ -74,7 +74,7 @@ map.status_timer = setInterval(function () {
             }
         }
     });
-}, 50000000);
+}, 5000);
 $(document).on('click', '.message-window-tab', function(e) {
     $('.message-window-tab').removeClass('message-window-tab-active');
     $(e.currentTarget).addClass('message-window-tab-active');

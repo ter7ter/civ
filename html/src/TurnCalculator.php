@@ -15,11 +15,11 @@ class TurnCalculator
     {
         $first = true;
         foreach ($game->users as $user) {
-            $user->calculate_research(); //Начало нового
-            $user->calculate_resource();
-            $user->calculate_cities();
-            $user->calculate_income();
-            $user->calculate_units();
+            $user->calculateResearch(); //Начало нового
+            $user->calculateResource();
+            $user->calculateCities();
+            $user->calculateIncome();
+            $user->calculateUnits();
             if (
                 $game->turn_type == "byturn" ||
                 $game->turn_type == "onewindow"

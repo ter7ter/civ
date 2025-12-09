@@ -132,4 +132,20 @@ class CityPopulationManager
             $city->save();
         }
     }
+
+    public static function calculateEat(City $city)
+    {
+        $city->eat += $city->peat - $city->population * 2;
+        if ($city->eat >= $city->eat_up) {
+            $city->population++;
+            $city->eat -= $city->eat_up;
+            CityPopulationManager::locatePeople($city);
+        }
+        if ($city->eat < 0) {
+            $city->population--;
+            $city->eat = round($city->eat_up / 2);
+            CityPopulationManager::locatePeople($city);
+            $city->user->newSystemMessageArgs("city.hunger", [$city->title]);
+        }
+    }
 }

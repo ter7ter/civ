@@ -172,7 +172,7 @@ class UserTest extends CommonTestBase
             "presearch" => 5,
         ]);
 
-        $income = $user->calculate_income();
+        $income = $user->calculateIncome();
 
         $this->assertEquals(1, $income);
         $this->assertEquals(101, $user->money); // 100 + 1
@@ -209,7 +209,7 @@ class UserTest extends CommonTestBase
             "title" => "City 2",
         ]);
 
-        $cities = $user->get_cities();
+        $cities = $user->getCities();
 
         $this->assertCount(2, $cities);
         $this->assertEquals($city1->id, $cities[0]->id);
@@ -245,7 +245,7 @@ class UserTest extends CommonTestBase
         $research2 = new Research($research2Data);
         $research2->save();
 
-        $research = $user->get_research();
+        $research = $user->getResearch();
 
         $this->assertCount(2, $research);
         $this->assertArrayHasKey(1, $research);
@@ -272,7 +272,7 @@ class UserTest extends CommonTestBase
             "age_need" => true
         ]);
 
-        $result = $user->start_research($researchType);
+        $result = $user->startResearch($researchType);
 
         $this->assertTrue($result);
         $this->assertEquals($researchType, $user->process_research_type);
@@ -301,7 +301,7 @@ class UserTest extends CommonTestBase
         $research = new Research($researchData);
         $research->save();
 
-        $result = $user->start_research($researchType);
+        $result = $user->startResearch($researchType);
 
         $this->assertFalse($result);
         $this->assertNull($user->process_research_type);
@@ -315,7 +315,7 @@ class UserTest extends CommonTestBase
         $user = TestDataFactory::createTestUser();
 
         $userObj = User::get($user->id);
-        $message = $userObj->new_system_message("Test system message");
+        $message = $userObj->newSystemMessage("Test system message");
 
         $this->assertInstanceOf(Message::class, $message);
 
@@ -336,7 +336,7 @@ class UserTest extends CommonTestBase
         $user = TestDataFactory::createTestUser();
 
         $userObj = User::get($user->id);
-        $event = $userObj->get_next_event();
+        $event = $userObj->getNextEvent();
 
         $this->assertFalse($event);
     }
@@ -358,7 +358,7 @@ class UserTest extends CommonTestBase
         $event = new Event($eventData);
         $event->save();
 
-        $event = $user->get_next_event();
+        $event = $user->getNextEvent();
 
         $this->assertInstanceOf(Event::class, $event);
         $this->assertEquals("research", $event->type);
@@ -374,7 +374,7 @@ class UserTest extends CommonTestBase
         $user = TestDataFactory::createTestUser();
 
         $userObj = User::get($user->id);
-        $result = $userObj->calculate_research();
+        $result = $userObj->calculateResearch();
 
         $this->assertFalse($result);
     }
@@ -402,7 +402,7 @@ class UserTest extends CommonTestBase
         $user->process_research_type = ResearchType::get($researchType->id);
         $user->save();
 
-        $result = $user->calculate_research();
+        $result = $user->calculateResearch();
 
         $this->assertFalse($result); // Исследование не завершено
         $this->assertEquals(10, $user->process_research_complete);
@@ -433,7 +433,7 @@ class UserTest extends CommonTestBase
         $user->process_research_type = $researchType;
         $user->save();
 
-        $result = $user->calculate_research();
+        $result = $user->calculateResearch();
 
         $this->assertInstanceOf(Research::class, $result);
         $this->assertNull($user->process_research_type);
@@ -461,7 +461,7 @@ class UserTest extends CommonTestBase
     {
         $user = TestDataFactory::createTestUser(["age" => 1]);
 
-        $available = $user->get_available_research();
+        $available = $user->getAvailableResearch();
 
         // Должен быть доступен хотя бы один тип исследования (например, id=1 - Гончарное дело)
         $this->assertNotEmpty($available);
@@ -490,7 +490,7 @@ class UserTest extends CommonTestBase
         ]); // Гончарное дело, cost=50
         $user->process_research_type = $researchType;
 
-        $turns = $user->get_research_need_turns();
+        $turns = $user->getResearchNeedTurns();
 
         // (50 - 20) / 10 = 3, и 3 + 1 = 4 >= 4, так что возвращается 3
         $this->assertEquals(3, $turns);
@@ -517,7 +517,7 @@ class UserTest extends CommonTestBase
             "title" => "Test City",
         ]);
 
-        $user->calculate_cities();
+        $user->calculateCities();
 
         // Проверяем, что город рассчитан (метод calculate() вызван)
         $this->assertNotNull($city);
@@ -526,7 +526,7 @@ class UserTest extends CommonTestBase
 
 
     /**
-     * Тест метода get_messages
+     * Тест метода getMessages
      */
     public function testGetMessages(): void
     {
@@ -552,10 +552,29 @@ class UserTest extends CommonTestBase
         $message2->save();
 
         $userObj = User::get($user->id);
-        $messages = $userObj->get_messages();
+        $messages = $userObj->getMessages();
 
         $this->assertCount(2, $messages);
         $this->assertInstanceOf(Message::class, $messages[0]);
         $this->assertInstanceOf(Message::class, $messages[1]);
+    }
+
+    /**
+     * Тест метода newSystemMessageArgs
+     */
+    public function testNewSystemMessageArgs(): void
+    {
+        $user = TestDataFactory::createTestUser();
+
+        $userObj = User::get($user->id);
+        $userObj->newSystemMessageArgs('city.hunger', ['TestCity']);
+
+        // Проверяем, что сообщение сохранено
+        $messages = MyDB::query("SELECT * FROM message WHERE to_id = :uid", [
+            "uid" => $user->id,
+        ]);
+        $this->assertCount(1, $messages);
+        $this->assertEquals("В вашем городе <b>TestCity</b> голод", $messages[0]["text"]);
+        $this->assertEquals("system", $messages[0]["type"]);
     }
 }

@@ -29,7 +29,7 @@ if ($action == 'save') {
         if ($fileError === UPLOAD_ERR_OK) {
             $result = uploadAndResizeImage($_FILES['image_file'], 'units', $unitType->id);
             try {
-                $result = uploadAndResizeImage($_FILES['image_file'], 'buils', $unitType->id);
+                $result = uploadAndResizeImage($_FILES['image_file'], 'buildings', $unitType->id);
                 $unitType->image_file = $result;
             } catch (Exception $ex) {
                 $message = $ex->getMessage();

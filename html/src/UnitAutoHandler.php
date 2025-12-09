@@ -25,7 +25,7 @@ class UnitAutoHandler
                 ) == 0
             ) {
                 //Выполняемых задач нет, нужно выдать следующую
-                $cities = $unit->user->get_cities();
+                $cities = $unit->user->getCities();
                 $paths = [];
                 foreach ($cities as $city) {
                     //Проверяем расстояния до своих городов

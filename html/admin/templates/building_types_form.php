@@ -49,7 +49,7 @@
             <div class="mb-3">
                 <label for="image_file" class="form-label">Image</label>
                 <input type="file" name="image_file" id="image_file" class="form-control" accept="image/*">
-                <?php if (!empty($buildingType->image_file) && file_exists(__DIR__ . '/../../img/buils/' . $buildingType->image_file)): ?>
+                <?php if (!empty($buildingType->image_file) && file_exists(__DIR__ . '/../../img/buildings/' . $buildingType->image_file)): ?>
                     <div class="mt-2">
                         <img src="../img/buils/<?php echo htmlspecialchars($buildingType->image_file); ?>" alt="Current image" style="width: 72px; height: 72px;">
                     </div>

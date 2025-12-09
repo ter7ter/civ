@@ -18,6 +18,7 @@ define("TESTS_ROOT", __DIR__);
 
 // Подключаем конфигурацию
 require_once PROJECT_ROOT . "/config.php";
+require_once PROJECT_ROOT . "/messages.php";
 
 // Определяем тестовые константы БД
 if (!defined("TEST_DB_HOST")) {

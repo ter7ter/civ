@@ -24,7 +24,7 @@ if ($action == 'save') {
         $fileError = $_FILES['image_file']['error'];
         if ($fileError === UPLOAD_ERR_OK) {
             try {
-                $result = uploadAndResizeImage($_FILES['image_file'], 'buils', $buildingType->id);
+                $result = uploadAndResizeImage($_FILES['image_file'], 'buildings', $buildingType->id);
                 $buildingType->image_file = $result;
             } catch (Exception $ex) {
                 $message = $ex->getMessage();

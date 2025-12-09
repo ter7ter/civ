@@ -1,26 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="/var/www/html/tests/unit" tests="19" assertions="58" errors="0" warnings="0" failures="0" skipped="0" time="0.515419">
-    <testsuite name="App\Tests\UnitTest" file="/var/www/html/tests/unit/UnitTest.php" tests="19" assertions="58" errors="0" warnings="0" failures="0" skipped="0" time="0.515419">
-      <testcase name="testGetTitle" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="195" assertions="1" time="0.191412"/>
-      <testcase name="testGetExistingUnit" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="27" assertions="6" time="0.021839"/>
-      <testcase name="testSaveUpdate" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="150" assertions="3" time="0.010874"/>
-      <testcase name="testRemove" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="221" assertions="1" time="0.020832"/>
-      <testcase name="testMoveTo" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="328" assertions="4" time="0.031437"/>
-      <testcase name="testCanMove" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="293" assertions="1" time="0.011002"/>
-      <testcase name="testSaveNew" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="106" assertions="6" time="0.038206"/>
-      <testcase name="testGetMissionTypes" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="260" assertions="4" time="0.081291"/>
-      <testcase name="testGetAll" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="366" assertions="5" time="0.010549"/>
-      <testcase name="testConstruct" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="66" assertions="8" time="0.008961"/>
-      <testcase name="testGetCurrentMissionNeedTurnsMultipleUnits" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="516" assertions="4" time="0.013107"/>
-      <testcase name="testGetMissionNeedTurnsMultipleUnits" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="572" assertions="4" time="0.011006"/>
-      <testcase name="testGetNonExistingUnit" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="56" assertions="1" time="0.004716"/>
-      <testcase name="testGetCurrentMissionNeedTurnsNoMission" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="407" assertions="1" time="0.010270"/>
-      <testcase name="testGetCurrentMissionNeedTurnsWithMission" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="435" assertions="1" time="0.009450"/>
-      <testcase name="testGetMissionNeedTurns" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="476" assertions="1" time="0.010340"/>
-      <testcase name="testGetCurrentMissionNeedTurnsZeroPoints" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="627" assertions="1" time="0.009033"/>
-      <testcase name="testCancelMission" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="668" assertions="4" time="0.011869"/>
-      <testcase name="testCancelMissionNoMission" class="App\Tests\UnitTest" classname="App.Tests.UnitTest" file="/var/www/html/tests/unit/UnitTest.php" line="714" assertions="2" time="0.009225"/>
+  <testsuite name="" tests="1" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.245261">
+    <testsuite name="Unit Tests" tests="1" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.245261">
+      <testsuite name="App\Tests\UserTest" file="/var/www/html/tests/unit/UserTest.php" tests="1" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.245261">
+        <testcase name="testNewSystemMessageArgs" class="App\Tests\UserTest" classname="App.Tests.UserTest" file="/var/www/html/tests/unit/UserTest.php" line="565" assertions="3" time="0.245261"/>
+      </testsuite>
     </testsuite>
   </testsuite>
 </testsuites>

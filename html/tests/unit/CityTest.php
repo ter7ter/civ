@@ -326,7 +326,7 @@ class CityTest extends CommonTestBase
             'missions' => ['move_to', 'build_city'],
             'can_move' => ['plains' => 1, 'plains2' => 1, 'forest' => 1, 'hills' => 1, 'mountains' => 2, 'desert' => 1, 'city' => 1]
         ]); // Settler
-        $city->production_type = "buil";
+        $city->production_type = "building";
         $city->production = 1; // Некоторый building ID
         $city->select_next_production();
         $this->assertEquals("unit", $city->production_type);

@@ -1,8 +1,12 @@
 <?php
 
 /** @var User $user */
+
+use App\User;
+
 $last = (isset($_REQUEST['last']) ? (int)$_REQUEST['last'] : 0);
-$messages = $user->get_messages($last);
+$messages = $user->getMessages($last);
+//var_dump($messages);
 $data['messages'] = [];
 foreach ($messages as $message) {
     $data['messages'][] = [

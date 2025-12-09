@@ -45,7 +45,7 @@ if ($cell) {
     }
     if ($user->process_research_type) {
         $data['user_research_type'] = $user->process_research_type->getTitle();
-        $data['user_research_turns'] = $user->get_research_need_turns();
+        $data['user_research_turns'] = $user->getResearchNeedTurns();
         if (!$data['user_research_turns']) {
             $data['user_research_turns'] = '--';
         }

@@ -165,7 +165,7 @@ class ResourceType
         if (count($this->req_research) == 0) {
             return true;
         }
-        $uresearch = $user->get_research();
+        $uresearch = $user->getResearch();
         foreach ($this->req_research as $research) {
             if (!isset($uresearch[$research->id])) {
                 return false;

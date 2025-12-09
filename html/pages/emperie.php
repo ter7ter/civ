@@ -8,15 +8,15 @@ use App\User;
 /** @var User $user */
 if ($user->turn_status == 'play' && isset($_REQUEST['research_percent']) && (int)$_REQUEST['research_percent'] <= 10 && (int)$_REQUEST['research_percent'] >= 0) {
     $user->research_percent = (int)$_REQUEST['research_percent'];
-    $cities = $user->get_cities();
+    $cities = $user->getCities();
     foreach ($cities as $city) {
         $city->calculate_people();
         $city->calculate_buildings();
     }
-    $user->calculate_income();
+    $user->calculateIncome();
     $user->save();
 }
-$cities = $user->get_cities();
+$cities = $user->getCities();
 $data['cities'] = [];
 $data['all_amount'] = 0;
 $data['income'] = $user->income;

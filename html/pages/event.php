@@ -12,18 +12,18 @@ if ($user->turn_status == 'play') {
             $event->remove();
         }
     }
-    $event = $user->get_next_event();
+    $event = $user->getNextEvent();
     if ($event) {
         $data['id'] = $event->id;
         $data['type'] = $event->type;
         if ($event->type == 'research') {
             $data['research_title'] = $event->object->getTitle();
             $data['aresearch'] = [];
-            $aresearch = $user->get_available_research();
+            $aresearch = $user->getAvailableResearch();
             foreach ($aresearch as $research) {
                 $data['aresearch'][] = ['id' => $research->id,
                                         'title' => $research->getTitle(),
-                                        'turns' => $user->get_research_need_turns($research)];
+                                        'turns' => $user->getResearchNeedTurns($research)];
             }
         } elseif ($event->type == 'city_building' || $event->type == 'city_unit') {
             $city = $event->soruce;

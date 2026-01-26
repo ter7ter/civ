@@ -387,10 +387,15 @@ class City
             [-1, 1],
         ];
         if ($this->citizen_size == 2) {
+            $cells_diff[] = [-2, -1];
+            $cells_diff[] = [-2, 0];
+            $cells_diff[] = [-2, 1];
+            $cells_diff[] = [-1, -2];
             $cells_diff[] = [-1, 2];
             $cells_diff[] = [0, -2];
             $cells_diff[] = [1, -2];
             $cells_diff[] = [0, 2];
+            $cells_diff[] = [1, -2];
             $cells_diff[] = [1, 2];
             $cells_diff[] = [-2, -1];
             $cells_diff[] = [-2, 0];

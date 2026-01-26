@@ -233,8 +233,13 @@ class City
      * @return City Новый город
      * @throws Exception
      */
-    public static function new_city(User $user, int $x, int $y, string $title, int $planetId): City
-    {
+    public static function new_city(
+        User $user,
+        int $x,
+        int $y,
+        string $title,
+        int $planetId,
+    ): City {
         $city = new City([
             "user_id" => $user->id,
             "x" => $x,
@@ -315,7 +320,11 @@ class City
                 ["id" => $this->id],
             );
             foreach ($people_cells as $pcell) {
-                $this->people_cells[] = Cell::get($pcell["x"], $pcell["y"], $pcell["planet"]);
+                $this->people_cells[] = Cell::get(
+                    $pcell["x"],
+                    $pcell["y"],
+                    $pcell["planet"],
+                );
             }
             $buildings = MyDB::query(
                 "SELECT * FROM building WHERE city_id =:id ORDER BY `type`",
@@ -381,7 +390,6 @@ class City
             $cells_diff[] = [-1, 2];
             $cells_diff[] = [0, -2];
             $cells_diff[] = [1, -2];
-            $cells_diff[] = [-1, 2];
             $cells_diff[] = [0, 2];
             $cells_diff[] = [1, 2];
             $cells_diff[] = [-2, -1];
@@ -564,7 +572,8 @@ class City
                 "people_norm",
                 "people_happy",
                 "people_artist",
-            ] as $field
+            ]
+            as $field
         ) {
             $values[$field] = $this->$field;
         }
@@ -594,7 +603,9 @@ class City
                     ]),
             );
             // Не можем сохранить city_people без ID города
-            throw new \Exception("City::save() - Attempting to save city_people but city ID is null");
+            throw new \Exception(
+                "City::save() - Attempting to save city_people but city ID is null",
+            );
         }
 
         MyDB::query("DELETE FROM city_people WHERE city_id =:id", [

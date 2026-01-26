@@ -240,6 +240,9 @@ var city = {
         }
       }
     }
+    // Создаем объект для хранения координат клеток
+    city.cell_coordinates = {};
+
     for (var dy = -1 * city.citizen_size; dy <= city.citizen_size; dy++) {
       for (var dx = -1 * city.citizen_size; dx <= city.citizen_size; dx++) {
         if (dx === 0 && dy === 0) continue;
@@ -250,8 +253,20 @@ var city = {
         var cell = $(cell_id);
 
         if (cell.length) {
-          cell.attr("coordx", add_coord(this.x, dx, map.max_x));
-          cell.attr("coordy", add_coord(this.y, dy, map.max_y));
+          var coordx = add_coord(this.x, dx, map.max_x);
+          var coordy = add_coord(this.y, dy, map.max_y);
+
+          // Сохраняем координаты в объекте
+          city.cell_coordinates[cell_id.substring(1)] = {
+            x: coordx,
+            y: coordy,
+          }; // убираем символ #
+
+          // Устанавливаем атрибуты на элемент для совместимости
+          cell.attr("coordx", coordx);
+          cell.attr("coordy", coordy);
+        } else {
+          // Элемент не найден (например, угловые клетки для больших городов)
         }
       }
     }
@@ -342,20 +357,50 @@ $(document).on("click", "#city-production-select", function (e) {
 });
 $(document).on("click", ".city-window-cell", function (e) {
   if ($("#city-window:visible").length) {
-    var x = $(e.target).attr("coordx");
-    var y = $(e.target).attr("coordy");
+    var target = $(e.target).closest(".city-window-cell");
+    var elementId = target.attr("id");
+
+    // Пытаемся получить координаты из атрибутов, если они есть
+    var x = target.attr("coordx");
+    var y = target.attr("coordy");
+
+    // Если атрибуты отсутствуют, пробуем получить из внутреннего хранилища
+    if (x === undefined || y === undefined) {
+      if (
+        elementId &&
+        city.cell_coordinates &&
+        city.cell_coordinates[elementId]
+      ) {
+        x = city.cell_coordinates[elementId].x;
+        y = city.cell_coordinates[elementId].y;
+      }
+    }
     var people_cell = false;
     var peoples_var = { change_people: 1 };
     var people_index = 0;
     for (var i in city.people_cells) {
+      console.log(
+        "Проверка жителя [" +
+          i +
+          "]: (" +
+          city.people_cells[i].x +
+          ", " +
+          city.people_cells[i].y +
+          ")",
+      );
       if (city.people_cells[i].x == x && city.people_cells[i].y == y) {
+        console.log(
+          "Найден житель на координатах (" + x + ", " + y + "), удаляем",
+        );
         city.people_artist++;
         city.people_cells = array_remove(city.people_cells, i);
         people_cell = true;
         break;
       }
     }
+    console.log("people_cell после проверки: " + people_cell);
     if (!people_cell) {
+      console.log("Клетка (" + x + ", " + y + ") свободна, добавляем жителя");
       if (city.people_artist == 0) {
         var remove_cell = 0;
         for (var i in city.people_cells) {
@@ -376,6 +421,7 @@ $(document).on("click", ".city-window-cell", function (e) {
         }
         city.people_cells = array_remove(city.people_cells, remove_cell);
         city.people_artist++;
+        console.log("Удалена наименее продуктивная клетка");
       }
       city.people_artist--;
       var cell = map.get_cell(x, y);
@@ -384,6 +430,16 @@ $(document).on("click", ".city-window-cell", function (e) {
       field_name = "peopley[" + people_index + "]";
       peoples_var[field_name] = y;
       people_index++;
+      console.log(
+        "Добавлена новая клетка (" +
+          x +
+          ", " +
+          y +
+          ") в peoples_var с индексом " +
+          (people_index - 1),
+      );
+    } else {
+      console.log("Клетка (" + x + ", " + y + ") занята, житель удален");
     }
     for (var i in city.people_cells) {
       var field_name = "peoplex[" + people_index + "]";
@@ -391,8 +447,19 @@ $(document).on("click", ".city-window-cell", function (e) {
       field_name = "peopley[" + people_index + "]";
       peoples_var[field_name] = city.people_cells[i].y;
       people_index++;
+      console.log(
+        "Добавлена оставшаяся клетка [" +
+          i +
+          "]: (" +
+          city.people_cells[i].x +
+          ", " +
+          city.people_cells[i].y +
+          ") с индексом " +
+          (people_index - 1),
+      );
     }
     peoples_var["people_artist"] = city.people_artist;
+    console.log("Отправляемые данные:", peoples_var);
     city.load(city.id, peoples_var);
   }
 });

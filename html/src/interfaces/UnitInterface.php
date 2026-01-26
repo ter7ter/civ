@@ -10,5 +10,5 @@ interface UnitInterface
     public function canMove($cell): bool;
     public function moveTo($cell): bool;
     public function getMissionTypes($x = null, $y = null): array;
-    public function startMission($mission, $title = ""): bool|string;
+    public function startMission($mtype, &$result_mission = null, $title = ""): bool|string;
 }

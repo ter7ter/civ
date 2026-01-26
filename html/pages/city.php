@@ -69,7 +69,7 @@ if (!isset($_REQUEST['cid']) || !$cid = (int)$_REQUEST['cid']) {
     }
     foreach (['x', 'y', 'eat', 'eat_up', 'title', 'population', 'pwork', 'peat', 'pmoney', 'presearch',
                  'people_dis', 'people_norm', 'people_happy', 'people_artist',
-                 'culture', 'culture_level'] as $field) {
+                 'culture', 'culture_level', 'citizen_size'] as $field) {
         $data[$field] = $city->$field;
     }
     $data['culture_up'] = GameConfig::$CULTURE_LEVELS[$city->culture_level + 1];
@@ -129,11 +129,16 @@ if (!isset($_REQUEST['cid']) || !$cid = (int)$_REQUEST['cid']) {
         ];
     }
 
-    // Получаем ресурсы для клеток вокруг города (3x3, без центра)
+    // Получаем ресурсы для клеток вокруг города
     $data['cell_resources'] = [];
-    for ($dy = -1; $dy <= 1; $dy++) {
-        for ($dx = -1; $dx <= 1; $dx++) {
-            if ($dx == 0 && $dy == 0) continue; // Пропускаем центр
+    for ($dy = -1 * $city->citizen_size; $dy <= $city->citizen_size; $dy++) {
+        for ($dx = -1 * $city->citizen_size; $dx <= $city->citizen_size; $dx++) {
+            if ($dx == 0 && $dy == 0) {
+                continue;
+            } // Пропускаем центр
+            if ($dx == -2 && $dy == 2 || $dx == 2 && $dy == 2 || $dx == -2 && $dy == -2 || $dx == 2 && $dy == -2) {
+                continue;
+            }
             $cx = $city->x;
             $cy = $city->y;
             \App\Cell::calc_coord($cx, $cy, $dx, $dy);

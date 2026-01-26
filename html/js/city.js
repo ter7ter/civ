@@ -15,6 +15,7 @@ var city = {
 	people_artist: 0,
 	culture: 0,
 	culture_level: 0,
+	citizen_size: 1,
 	culture_up: 0,
 	buildings: [],
 	pwork: 0,
@@ -53,10 +54,10 @@ var city = {
 				$('#city-window-culture').text(city.culture);
 				$('#city-window-culture-up').text(city.culture_up);
 				$('#city-window-culture-level').text(city.culture_level);
-				if (city.culture_level > 0) {
-					$('.city-big-bg').show();
-				} else {
+				if (city.citizen_size === 1) {
 					$('.city-small-bg').show();
+				} else if (city.citizen_size === 2) {
+					$('.city-big-bg').show();
 				}
 				$('#city-window').show();
 				city.draw_people();
@@ -140,10 +141,10 @@ var city = {
 			return html;
 		}
 
-		// Draw resources on all city cells
-		for (var dy = -1; dy < 2; dy++) {
-			for (var dx = -1; dx < 2; dx++) {
-				if (dx == 0 && dy == 0) continue;
+		// Draw resources on all city cellss
+		for (var dy = -1*city.citizen_size; dy <= city.citizen_size; dy++) {
+			for (var dx = -1*city.citizen_size; dx <= city.citizen_size; dx++) {
+				if (dx === 0 && dy === 0) continue;
 
 				var is_people_cell = false;
 				var cell_work = 0, cell_eat = 0, cell_money = 0;
@@ -152,6 +153,8 @@ var city = {
 					var py = parseInt(diff_coord(this.people_cells[i].y, this.y, map.max_y));
 					if (px == dx && py == dy) {
 						is_people_cell = true;
+						//window.alert(this.people_cells[i].x + " IAIA " + this.people_cells[i].y);
+						//window.alert(dx + " 1IAIA1 " + dy);
 						cell_work = this.people_cells[i].work;
 						cell_eat = this.people_cells[i].eat;
 						cell_money = this.people_cells[i].money;
@@ -179,13 +182,21 @@ var city = {
 				);
 
 				$('#city-map').append(cell);
-				cell.css('left', ((dx+1)*72 + 6) + 'px');
-				cell.css('top', ((dy+1)*72 + 6) + 'px');
+				if (city.citizen_size == 1) {
+					cell.css('left', ((dx+2)*72 + 6) + 'px');
+					cell.css('top', ((dy+2)*72 + 6) + 'px');
+				} else if (city.citizen_size == 2) {
+					cell.css('left', ((dx+2)*72 + 6) + 'px');
+					cell.css('top', ((dy+2)*72 + 6) + 'px');
+				} else {
+					window.alert('pr**lem');
+				}
+
 			}
 		}
-		for (var dy = -1; dy < 2; dy++) {
-			for (var dx = -1; dx < 2; dx++) {
-				if (dx == 0 && dy == 0) continue;
+		for (var dy = -1*city.citizen_size; dy <= city.citizen_size; dy++) {
+			for (var dx = -1*city.citizen_size; dx <= city.citizen_size; dx++) {
+				if (dx === 0 && dy === 0) continue;
 
                 var dy_str = (dy < 0 ? "n" : "p") + Math.abs(dy);
                 var dx_str = (dx < 0 ? "n" : "p") + Math.abs(dx);
@@ -216,7 +227,7 @@ var city = {
         }
 		var pid = item.attr('pid');
 		this.production = {	id : pid.substr(4),
-							type : pid.substr(0, 4),
+							type : pid.substr(0, 4) === 'unit' ? 'unit' : 'building',
 							title : item.find('.city-production-list-item-title').text(),
 							cost : item.attr('cost'),
                             image_file: item.find('img').attr('src').split('/').pop(),
@@ -225,13 +236,19 @@ var city = {
 		$('#city-production-list').hide();
 	},
 	draw_production: function () {
-		$('#city-production-select-pic img').attr('src', './img/' + this.production.type + 's/' + this.production.image_file);
-		let turns = Math.ceil((this.production.cost - this.production.complete) / city.pwork);
-		if (turns < 1) {
-			turns = 1;
+		if (!this.production) {
+			$('#city-production-select-pic img').attr('src', '/img/icons/hammer.svg');
+			$('#city-production-select-title').html('Выберите производство');
+			return false;
+		} else {
+			$('#city-production-select-pic img').attr('src', './img/' + this.production.type + 's/' + this.production.image_file);
+			let turns = Math.ceil((this.production.cost - this.production.complete) / city.pwork);
+			if (turns < 1) {
+				turns = 1;
+			}
+			$('#city-production-select-title').html(this.production.title +
+				'<br>' + turns + ' ходов ');
 		}
-		$('#city-production-select-title').html(this.production.title +
-			'<br>' + turns + ' ходов ');
 	},
 	save_production: function() {
 		if (map.turn_status != 'play') return false;

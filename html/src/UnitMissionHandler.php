@@ -42,26 +42,31 @@ class UnitMissionHandler
      * @param string $title
      * @return bool|string
      */
-    public static function startMission(Unit $unit, $mtype, $title = "")
+    public static function startMission(Unit $unit, $mtype, &$result_message = null, string $title = "")
     {
         if ($unit->mission) {
+            $result_message = "mission_empty";
             $unit->mission = false;
         }
         if ($unit->points == 0) {
             $unit->save();
+            $result_message = "unit points empty";
             return false;
         }
         $cell = Cell::get($unit->x, $unit->y, $unit->planet);
         if (!$mtype->check_cell($unit->x, $unit->y, $unit->planet)) {
+            $result_message = "incorrect cell";
             return false;
         }
         if (!in_array($cell->type->id, $mtype->cell_types)) {
+            $result_message = "incorrect cell type";
             return false;
         }
         $need_points = $cell->get_mission_need_points($mtype);
         if ($unit->points >= $need_points) {
             //Можем сделать сразу
             if (!$mtype->complete($unit, $title)) {
+                $result_message = "mission failed";
                 return false;
             }
             if ($mtype->unit_lost) {

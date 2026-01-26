@@ -221,9 +221,9 @@ class Unit implements IModel, UnitInterface
      * @return bool|string
      * @throws Exception
      */
-    public function startMission($mtype, $title = ""): bool|string
+    public function startMission($mtype, &$result_mission = null, $title = ""): bool|string
     {
-        return UnitMissionHandler::startMission($this, $mtype, $title);
+        return UnitMissionHandler::startMission($this, $mtype, $result_mission, $title);
     }
 
     /**

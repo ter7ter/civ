@@ -60,9 +60,10 @@ if ($user->turn_status != 'play') {
             if (isset($_REQUEST['title'])) {
                 $title = htmlspecialchars($_REQUEST['title']);
             }
-            $result = $unit->startMission($mtypes[$_REQUEST['mission']], $title);
+            $result_message = null;
+            $result = $unit->startMission($mtypes[$_REQUEST['mission']], $result_message, $title);
             if (!$result) {
-                $error = "Не удалось";
+                $error = $result_message;
             }
             if ($result === 'unit_lost') {
                 $data['unit_lost'] = 1;

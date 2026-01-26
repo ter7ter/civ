@@ -45,6 +45,8 @@ class GameConfig
         8 => 500000,
         9 => 1000000
         ];
+    //Уровень культуры для большей территории для жителей
+    public static $CITIZEN_MEDIUM = 1;
     public static $POPULATION_MEDIUM = 6;
 
     public static $POPULATION_BIG = 12;

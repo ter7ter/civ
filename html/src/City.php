@@ -138,6 +138,8 @@ class City
      */
     public bool $is_coastal = false;
 
+    public int $citizen_size = 1;
+
     /**
      * Кэш всех загруженных городов
      * @var City[]|array
@@ -301,6 +303,10 @@ class City
             );
         }
 
+        if ($this->culture_level >= GameConfig::$CITIZEN_MEDIUM) {
+            $this->citizen_size = 2;
+        }
+
         if ($this->id !== null) {
             City::$_all[$this->id] = $this;
             $this->people_cells = [];
@@ -361,146 +367,36 @@ class City
     public function get_city_cells()
     {
         $cells = [];
-        $cells[] = Cell::d_coord(
-            $this->x,
-            $this->y,
-            0,
-            -1,
-            true,
-            $this->planet,
-        );
-        $cells[] = Cell::d_coord($this->x, $this->y, 0, 1, true, $this->planet);
-        $cells[] = Cell::d_coord(
-            $this->x,
-            $this->y,
-            -1,
-            0,
-            true,
-            $this->planet,
-        );
-        $cells[] = Cell::d_coord($this->x, $this->y, 1, 0, true, $this->planet);
-        $cells[] = Cell::d_coord(
-            $this->x,
-            $this->y,
-            -1,
-            -1,
-            true,
-            $this->planet,
-        );
-        $cells[] = Cell::d_coord(
-            $this->x,
-            $this->y,
-            1,
-            -1,
-            true,
-            $this->planet,
-        );
-        $cells[] = Cell::d_coord(
-            $this->x,
-            $this->y,
-            -1,
-            1,
-            true,
-            $this->planet,
-        );
-        $cells[] = Cell::d_coord($this->x, $this->y, 1, 1, true, $this->planet);
-        if ($this->culture_level > 0) {
+        $cells_diff = [
+            [0, -1],
+            [0, 1],
+            [-1, 0],
+            [1, 0],
+            [-1, -1],
+            [1, -1],
+            [1, 1],
+            [-1, 1],
+        ];
+        if ($this->citizen_size == 2) {
+            $cells_diff[] = [-1, 2];
+            $cells_diff[] = [0, -2];
+            $cells_diff[] = [1, -2];
+            $cells_diff[] = [-1, 2];
+            $cells_diff[] = [0, 2];
+            $cells_diff[] = [1, 2];
+            $cells_diff[] = [-2, -1];
+            $cells_diff[] = [-2, 0];
+            $cells_diff[] = [-2, 1];
+            $cells_diff[] = [2, -1];
+            $cells_diff[] = [2, 0];
+            $cells_diff[] = [2, 1];
+        }
+        foreach ($cells_diff as $diff) {
             $cells[] = Cell::d_coord(
                 $this->x,
                 $this->y,
-                -1,
-                -2,
-                true,
-                $this->planet,
-            );
-            $cells[] = Cell::d_coord(
-                $this->x,
-                $this->y,
-                0,
-                -2,
-                true,
-                $this->planet,
-            );
-            $cells[] = Cell::d_coord(
-                $this->x,
-                $this->y,
-                1,
-                -2,
-                true,
-                $this->planet,
-            );
-
-            $cells[] = Cell::d_coord(
-                $this->x,
-                $this->y,
-                -1,
-                2,
-                true,
-                $this->planet,
-            );
-            $cells[] = Cell::d_coord(
-                $this->x,
-                $this->y,
-                0,
-                2,
-                true,
-                $this->planet,
-            );
-            $cells[] = Cell::d_coord(
-                $this->x,
-                $this->y,
-                1,
-                2,
-                true,
-                $this->planet,
-            );
-
-            $cells[] = Cell::d_coord(
-                $this->x,
-                $this->y,
-                -2,
-                -1,
-                true,
-                $this->planet,
-            );
-            $cells[] = Cell::d_coord(
-                $this->x,
-                $this->y,
-                -2,
-                0,
-                true,
-                $this->planet,
-            );
-            $cells[] = Cell::d_coord(
-                $this->x,
-                $this->y,
-                -2,
-                1,
-                true,
-                $this->planet,
-            );
-
-            $cells[] = Cell::d_coord(
-                $this->x,
-                $this->y,
-                2,
-                -1,
-                true,
-                $this->planet,
-            );
-            $cells[] = Cell::d_coord(
-                $this->x,
-                $this->y,
-                2,
-                0,
-                true,
-                $this->planet,
-            );
-            $cells[] = Cell::d_coord(
-                $this->x,
-                $this->y,
-                2,
-                1,
+                $diff[0],
+                $diff[1],
                 true,
                 $this->planet,
             );

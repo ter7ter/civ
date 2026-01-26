@@ -268,7 +268,7 @@ var map = {
 				console.error("Error loading turn info:", textStatus, errorThrown, jqXHR.responseText);
 				$('#turninfo-container').html('<div class="error">Failed to load turn info. See console for details.</div>');
 			});
-							}).fail(function(jqXHR, textStatus, errorThrown) {
+		}).fail(function(jqXHR, textStatus, errorThrown) {
 			console.error("Error loading cell info:", textStatus, errorThrown, jqXHR.responseText);
 			$('#cellinfo').html('<div class="error">Failed to load cell info. See console for details.</div>');
 		});

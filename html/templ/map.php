@@ -91,21 +91,41 @@ include 'partials/header.php';
             </div>
             <div class="city-big-bg" style="display: none;">
                 <table>
+                    <tr>
+                        <td class="city-window-cell"></td>
+                        <td class="city-window-cell" id="city-window-cell-n2n1"></td>
+                        <td class="city-window-cell" id="city-window-cell-n2p0"></td>
+                        <td class="city-window-cell" id="city-window-cell-n2p1"></td>
+                        <td class="city-window-cell"></td>
+                    </tr>
 					<tr>
+                        <td class="city-window-cell" id="city-window-cell-n1n2"></td>
 						<td class="city-window-cell" id="city-window-cell-n1n1"></td>
 						<td class="city-window-cell" id="city-window-cell-n1p0"></td>
 						<td class="city-window-cell" id="city-window-cell-n1p1"></td>
+                        <td class="city-window-cell" id="city-window-cell-n1p2"></td>
 					</tr>
 					<tr>
+                        <td class="city-window-cell" id="city-window-cell-p0n2"></td>
 						<td class="city-window-cell" id="city-window-cell-p0n1"></td>
 						<td></td>
 						<td class="city-window-cell" id="city-window-cell-p0p1"></td>
+                        <td class="city-window-cell" id="city-window-cell-p0p2"></td>
 					</tr>
 					<tr>
+                        <td class="city-window-cell" id="city-window-cell-p1n2"></td>
 						<td class="city-window-cell" id="city-window-cell-p1n1"></td>
 						<td class="city-window-cell" id="city-window-cell-p1p0"></td>
 						<td class="city-window-cell" id="city-window-cell-p1p1"></td>
+                        <td class="city-window-cell" id="city-window-cell-p1p2"></td>
 					</tr>
+                    <tr>
+                        <td class="city-window-cell"></td>
+                        <td class="city-window-cell" id="city-window-cell-p2n1"></td>
+                        <td class="city-window-cell" id="city-window-cell-p2p0"></td>
+                        <td class="city-window-cell" id="city-window-cell-p2p1"></td>
+                        <td class="city-window-cell"></td>
+                    </tr>
 				</table>
             </div>
         </div>

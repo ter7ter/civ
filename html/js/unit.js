@@ -304,18 +304,23 @@ var Unit = {
             map.load();
           },
         ).fail(function (jqXHR, textStatus, errorThrown) {
-          var error_msg = "Ошибка при обновлении информации о клетке: " + textStatus + "\n" + errorThrown;
+          var error_msg =
+            "Ошибка при обновлении информации о клетке: " +
+            textStatus +
+            "\n" +
+            errorThrown;
           if (jqXHR.responseText) {
             try {
               var resp = $.parseJSON(jqXHR.responseText);
               error_msg += "\n\nСерверная ошибка: " + resp.error;
             } catch (e) {
-              error_msg += "\n\nОтвет сервера не является допустимым JSON:\n" + jqXHR.responseText.substring(0, 500);
+              error_msg +=
+                "\n\nОтвет сервера не является допустимым JSON:\n" +
+                jqXHR.responseText.substring(0, 500);
             }
           }
           showError(error_msg);
         });
-        );
       } else {
         map.load();
       }

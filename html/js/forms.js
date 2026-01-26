@@ -159,7 +159,7 @@ function select_game_change() {
       }
       select_user_change();
     } else {
-      window.alert(resp.error);
+      showError(resp.error);
     }
   });
 }
@@ -176,9 +176,30 @@ $(document).on("change", "#select-game-user", function (e) {
   select_user_change();
 });
 
-$(document).on('change', '#emperie-research-percent', function() {
-    var researchPercent = $(this).val();
-    $.post('index.php?method=emperie', { research_percent: researchPercent }, function(data) {
-        $('#empire-window').html(data);
-    });
+$(document).on("change", "#emperie-research-percent", function () {
+  var researchPercent = $(this).val();
+  $.post(
+    "index.php?method=emperie",
+    { research_percent: researchPercent },
+    function (data) {
+      $("#empire-window").html(data);
+    },
+  ).fail(function (jqXHR, textStatus, errorThrown) {
+    var error_msg =
+      "Ошибка при загрузке информации об империи: " +
+      textStatus +
+      "\n" +
+      errorThrown;
+    if (jqXHR.responseText) {
+      try {
+        var resp = $.parseJSON(jqXHR.responseText);
+        error_msg += "\n\nСерверная ошибка: " + resp.error;
+      } catch (e) {
+        error_msg +=
+          "\n\nОтвет сервера не является допустимым JSON:\n" +
+          jqXHR.responseText.substring(0, 500);
+      }
+    }
+    showError(error_msg);
+  });
 });

@@ -368,27 +368,41 @@ var map = {
         $.post("index.php?method=turninfo", {}, function (turnInfoData) {
           $("#turninfo-container").html(turnInfoData);
         }).fail(function (jqXHR, textStatus, errorThrown) {
-          console.error(
-            "Error loading turn info:",
-            textStatus,
-            errorThrown,
-            jqXHR.responseText,
-          );
-          $("#turninfo-container").html(
-            '<div class="error">Failed to load turn info. See console for details.</div>',
-          );
+          var error_msg =
+            "Ошибка при загрузке информации о ходе: " +
+            textStatus +
+            "\n" +
+            errorThrown;
+          if (jqXHR.responseText) {
+            try {
+              var resp = $.parseJSON(jqXHR.responseText);
+              error_msg += "\n\nСерверная ошибка: " + resp.error;
+            } catch (e) {
+              error_msg +=
+                "\n\nОтвет сервера не является допустимым JSON:\n" +
+                jqXHR.responseText.substring(0, 500);
+            }
+          }
+          showError(error_msg);
         });
       },
     ).fail(function (jqXHR, textStatus, errorThrown) {
-      console.error(
-        "Error loading cell info:",
-        textStatus,
-        errorThrown,
-        jqXHR.responseText,
-      );
-      $("#cellinfo").html(
-        '<div class="error">Failed to load cell info. See console for details.</div>',
-      );
+      var error_msg =
+        "Ошибка при загрузке информации о клетке: " +
+        textStatus +
+        "\n" +
+        errorThrown;
+      if (jqXHR.responseText) {
+        try {
+          var resp = $.parseJSON(jqXHR.responseText);
+          error_msg += "\n\nСерверная ошибка: " + resp.error;
+        } catch (e) {
+          error_msg +=
+            "\n\nОтвет сервера не является допустимым JSON:\n" +
+            jqXHR.responseText.substring(0, 500);
+        }
+      }
+      showError(error_msg);
     });
   },
   get_cell: function (x, y) {

@@ -335,7 +335,7 @@ var city = {
       function (data) {
         resp = $.parseJSON(data);
         if (resp.status == "error") {
-          window.alert(resp.error);
+          showError(resp.error);
         }
       },
     );

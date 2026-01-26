@@ -250,6 +250,23 @@ $(document).on("click", "#open-empire", function (e) {
     $("#empire-window").html(data);
     $("#empire-window").toggle();
     $("#empire-window").css("background-image", "");
+  }).fail(function (jqXHR, textStatus, errorThrown) {
+    var error_msg =
+      "Ошибка при загрузке информации об империи: " +
+      textStatus +
+      "\n" +
+      errorThrown;
+    if (jqXHR.responseText) {
+      try {
+        var resp = $.parseJSON(jqXHR.responseText);
+        error_msg += "\n\nСерверная ошибка: " + resp.error;
+      } catch (e) {
+        error_msg +=
+          "\n\nОтвет сервера не является допустимым JSON:\n" +
+          jqXHR.responseText.substring(0, 500);
+      }
+    }
+    showError(error_msg);
   });
 });
 $(document).on("click", "#open-research", function (e) {
@@ -260,6 +277,23 @@ $(document).on("click", "#open-research", function (e) {
     if ($("#research-window").is(":visible")) {
       $("#research-window").trigger("researchWindowShown");
     }
+  }).fail(function (jqXHR, textStatus, errorThrown) {
+    var error_msg =
+      "Ошибка при загрузке информации об исследованиях: " +
+      textStatus +
+      "\n" +
+      errorThrown;
+    if (jqXHR.responseText) {
+      try {
+        var resp = $.parseJSON(jqXHR.responseText);
+        error_msg += "\n\nСерверная ошибка: " + resp.error;
+      } catch (e) {
+        error_msg +=
+          "\n\nОтвет сервера не является допустимым JSON:\n" +
+          jqXHR.responseText.substring(0, 500);
+      }
+    }
+    showError(error_msg);
   });
 });
 $(document).on("click", ".emperie-city-line", function (e) {

@@ -4,7 +4,7 @@ use App\MyDB;
 use App\Game;
 use App\User;
 
-require_once("includes.php");
+require_once "includes.php";
 
 // Устанавливаем обработчик ошибок, который превращает их в исключения
 set_error_handler(function ($severity, $message, $file, $line) {
@@ -14,56 +14,66 @@ set_error_handler(function ($severity, $message, $file, $line) {
     throw new ErrorException($message, 0, $severity, $file, $line);
 });
 
-if (!defined('RUNNING_TESTS')) {
+if (!defined("RUNNING_TESTS")) {
     MyDB::setDBConfig(DB_HOST, DB_USER, DB_PASS, DB_PORT, DB_NAME);
 }
 
 try {
     session_start();
-    if (isset($_REQUEST['method'])) {
-        $page = $_REQUEST['method'];
+    if (isset($_REQUEST["method"])) {
+        $page = $_REQUEST["method"];
     } else {
-        $page = 'map';
+        $page = "map";
     }
 
-    $page = preg_replace('/[^a-z0-9_]+/', '', $page);
+    $page = preg_replace("/[^a-z0-9_]+/", "", $page);
     if (USE_TRANSACTION_MODE) {
         MyDB::startTransaction();
     }
 
-    if ($page == 'login' && isset($_REQUEST['gid']) && isset($_REQUEST['uid'])) {
-        $game = Game::get((int)$_REQUEST['gid']);
+    if (
+        $page == "login" &&
+        isset($_REQUEST["gid"]) &&
+        isset($_REQUEST["uid"])
+    ) {
+        $game = Game::get((int) $_REQUEST["gid"]);
         if (!$game) {
-            throw new Exception('Game error');
+            throw new Exception("Game error");
         }
 
-        if ($game->turn_type == 'onewindow') {
+        if ($game->turn_type == "onewindow") {
             $user_id = $game->getActivePlayer();
             if (!$user_id) {
                 // Fallback to the selected user if no active player is found for some reason
-                $user_id = (int)$_REQUEST['uid'];
+                $user_id = (int) $_REQUEST["uid"];
             }
             $user = User::get($user_id);
         } else {
-            $user = User::get((int)$_REQUEST['uid']);
+            $user = User::get((int) $_REQUEST["uid"]);
         }
 
         if (!$user || $user->game != $game->id) {
-            throw new Exception('User error');
+            throw new Exception("User error");
         }
-        $_SESSION['game_id'] = $game->id;
-        $_SESSION['user_id'] = $user->id;
-        $page = 'map';
+        $_SESSION["game_id"] = $game->id;
+        $_SESSION["user_id"] = $user->id;
+        $page = "map";
     }
     if (!file_exists("pages/{$page}.php")) {
-        throw new Exception('404 Not found');
+        throw new Exception("404 Not found");
     }
-    $page_no_login = ['selectgame', 'creategame', 'gameinfo', 'login', 'editgame'];
-    if (isset($_SESSION['game_id'])) {
-        $game = Game::get($_SESSION['game_id']);
-        $user = User::get($_SESSION['user_id']);
+    $page_no_login = [
+        "selectgame",
+        "creategame",
+        "gameinfo",
+        "login",
+        "editgame",
+    ];
+    if (isset($_SESSION["game_id"])) {
+        $game = Game::get($_SESSION["game_id"]);
+        $user = User::get($_SESSION["user_id"]);
     } elseif (!in_array($page, $page_no_login)) {
-        $page = 'selectgame';
+        $page = "selectgame";
     }
     $error = false;
     $data = [];
@@ -73,31 +83,35 @@ try {
         MyDB::endTransaction();
     }
 
-    if (isset($_REQUEST['json'])) {
+    if (isset($_REQUEST["json"])) {
         if ($error) {
-            $response = ['status' => 'error',
-                'error' => $error];
+            $response = [
+                "status" => "error",
+                "error" => SHOW_SERVER_ERRORS ? $error : "Произошла ошибка",
+            ];
         } else {
-            $response = ['status' => 'ok',
-                'data' => $data];
+            $response = ["status" => "ok", "data" => $data];
         }
         print json_encode($response);
     } else {
         include "templ/{$page}.php";
     }
-
 } catch (Throwable $e) {
     // Ловим любую ошибку или исключение
-    if (isset($_REQUEST['json'])) {
+    if (isset($_REQUEST["json"])) {
         // Если это был JSON запрос, возвращаем ошибку в JSON
         http_response_code(500);
         $error_details = [
-            'status' => 'error',
-            'error' => "Критическая ошибка на сервере: " . $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => $e->getTraceAsString()
+            "status" => "error",
+            "error" => SHOW_SERVER_ERRORS
+                ? "Критическая ошибка на сервере: " . $e->getMessage()
+                : "Произошла критическая ошибка",
         ];
+        if (SHOW_SERVER_ERRORS) {
+            $error_details["file"] = $e->getFile();
+            $error_details["line"] = $e->getLine();
+            $error_details["trace"] = $e->getTraceAsString();
+        }
         // Очищаем буфер вывода, чтобы наша ошибка была единственным выводом
         if (ob_get_level() > 0) {
             ob_end_clean();

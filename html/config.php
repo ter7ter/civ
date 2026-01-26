@@ -16,11 +16,14 @@ define("DB_NAME", "civ");
 define("POPULATION_PEOPLE_DIS", 4); //С какого размера города появляются недовольные жители
 define("BASE_EAT_UP", 20); //Требуется еды для роста города
 
-if (!defined('USE_TRANSACTION_MODE')) {
-    define('USE_TRANSACTION_MODE', true);
+if (!defined("USE_TRANSACTION_MODE")) {
+    define("USE_TRANSACTION_MODE", true);
 }
 
-define('LOG_FILE', __DIR__ .'/log.txt');
+define("LOG_FILE", __DIR__ . "/log.txt");
+
+// Показывать ошибки сервера пользователю
+define("SHOW_SERVER_ERRORS", true);
 
 class GameConfig
 {
@@ -43,8 +46,8 @@ class GameConfig
         6 => 50000,
         7 => 100000,
         8 => 500000,
-        9 => 1000000
-        ];
+        9 => 1000000,
+    ];
     //Уровень культуры для большей территории для жителей
     public static $CITIZEN_MEDIUM = 1;
     public static $POPULATION_MEDIUM = 6;

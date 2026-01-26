@@ -67,7 +67,7 @@ var city = {
         city.draw_production();
         city.cell_resources = resp.data.cell_resources || [];
       } else {
-        window.alert(resp.error);
+        showError(resp.error);
       }
     });
   },
@@ -261,10 +261,6 @@ var city = {
             x: coordx,
             y: coordy,
           }; // убираем символ #
-
-          // Устанавливаем атрибуты на элемент для совместимости
-          cell.attr("coordx", coordx);
-          cell.attr("coordy", coordy);
         } else {
           // Элемент не найден (например, угловые клетки для больших городов)
         }
@@ -360,20 +356,15 @@ $(document).on("click", ".city-window-cell", function (e) {
     var target = $(e.target).closest(".city-window-cell");
     var elementId = target.attr("id");
 
-    // Пытаемся получить координаты из атрибутов, если они есть
-    var x = target.attr("coordx");
-    var y = target.attr("coordy");
-
-    // Если атрибуты отсутствуют, пробуем получить из внутреннего хранилища
-    if (x === undefined || y === undefined) {
-      if (
-        elementId &&
-        city.cell_coordinates &&
-        city.cell_coordinates[elementId]
-      ) {
-        x = city.cell_coordinates[elementId].x;
-        y = city.cell_coordinates[elementId].y;
-      }
+    // Получаем координаты из внутреннего хранилища
+    var x, y;
+    if (
+      elementId &&
+      city.cell_coordinates &&
+      city.cell_coordinates[elementId]
+    ) {
+      x = city.cell_coordinates[elementId].x;
+      y = city.cell_coordinates[elementId].y;
     }
     var people_cell = false;
     var peoples_var = { change_people: 1 };

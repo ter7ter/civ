@@ -177,8 +177,10 @@ include "partials/header.php";
         <h3 style="margin: 0;">Полная карта</h3>
         <button id="close-full-map" class="btn btn-secondary" style="padding: 5px 10px; font-size: 16px;">Закрыть</button>
     </div>
-    <div id="full-map-container" style="width: 100%; height: calc(100% - 40px); overflow: auto; position: relative; display: flex; justify-content: center;">
-        <div id="full-map-content" style="position: relative;"></div>
+    <div id="full-map-container" style="width: 100%; height: calc(100% - 40px); overflow: hidden; position: relative; display: flex; justify-content: center;">
+        <div id="full-map-content-wrapper" style="position: relative; cursor: grab;">
+            <div id="full-map-content" style="position: relative;"></div>
+        </div>
     </div>
 </div>
 <div id="modal-backdrop"></div>
@@ -203,6 +205,7 @@ include "partials/header.php";
 <script src="js/unit.js"></script>
 <script src="js/city.js"></script>
 <script src="js/events.js"></script>
+<script src="js/fullmap.js"></script>
 <script src="js/research.js"></script>
 <script src="js/research.js"></script>
 <script src="js/messages.js"></script>

@@ -367,10 +367,11 @@
     border: 1px solid transparent;
     cursor: pointer;
     transition: opacity 0.2s;
+    opacity: 0.7; /* Снижаем яркость рельефа */
 }
 
 .full-map-cell:hover {
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 .full-map-city-indicator {
@@ -380,4 +381,10 @@
     background-color: red;
     border-radius: 50%;
     z-index: 10;
+    opacity: 1; /* Полная яркость для индикаторов городов */
+}
+
+/* Центрирование содержимого полной карты */
+#full-map-content {
+    margin: 0 auto;
 }

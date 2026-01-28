@@ -310,68 +310,81 @@ function renderFullMap(mapData) {
     position: "relative",
   });
 
-  // Создаем клетки
+  // Создаем HTML для всех клеток за один раз
+  var html = "";
   for (var x in mapData) {
     for (var y in mapData[x]) {
       var cell = mapData[x][y];
-      var cellDiv = $('<div class="full-map-cell"></div>');
+
+      // Устанавливаем цвет рельефа
+      var terrainColor = "#CCCCCC"; // серый по умолчанию
+      // Определяем цвет в зависимости от типа клетки
+      switch (cell.type) {
+        case "plains":
+        case "plains2":
+          terrainColor = "#90EE90"; // светло-зеленый
+          break;
+        case "forest":
+          terrainColor = "#228B22"; // темно-зеленый
+          break;
+        case "hills":
+          terrainColor = "#A0522D"; // коричневый
+          break;
+        case "desert":
+          terrainColor = "#F4A460"; // светло-коричневый
+          break;
+        case "mountains":
+          terrainColor = "#C0C0C0"; // серый
+          break;
+        case "water1":
+        case "water2":
+        case "water3":
+          terrainColor = "#4169E1"; // королевский синий
+          break;
+      }
 
       // Устанавливаем позицию
       var posX = (cell.x - minX) * 8;
       var posY = (cell.y - minY) * 8;
-      cellDiv.css({
-        left: posX + "px",
-        top: posY + "px",
-      });
 
-      // Устанавливаем цвет в зависимости от владельца
+      // Добавляем клетку рельефа с пониженной яркостью
+      html +=
+        '<div class="full-map-cell" style="left: ' +
+        posX +
+        "px; top: " +
+        posY +
+        "px; background-color: " +
+        terrainColor +
+        '; opacity: 0.5; z-index: 0;"></div>';
+
+      // Если у клетки есть владелец, добавляем поверх рельефа слой территории игрока
       if (cell.owner && cell.owner.color) {
-        cellDiv.css("background-color", cell.owner.color);
-        cellDiv.css("opacity", "0.7");
-      } else {
-        // Устанавливаем цвет в зависимости от типа клетки
-        var cellTypeClass = "map_cell_" + cell.type;
-        // Определяем цвет в зависимости от типа клетки
-        switch (cell.type) {
-          case "plains":
-          case "plains2":
-            cellDiv.css("background-color", "#90EE90"); // светло-зеленый
-            break;
-          case "forest":
-            cellDiv.css("background-color", "#228B22"); // темно-зеленый
-            break;
-          case "hills":
-            cellDiv.css("background-color", "#A0522D"); // коричневый
-            break;
-          case "desert":
-            cellDiv.css("background-color", "#F4A460"); // светло-коричневый
-            break;
-          case "mountains":
-            cellDiv.css("background-color", "#C0C0C0"); // серый
-            break;
-          case "water1":
-          case "water2":
-          case "water3":
-            cellDiv.css("background-color", "#4169E1"); // королевский синий
-            break;
-          default:
-            cellDiv.css("background-color", "#CCCCCC"); // серый по умолчанию
-        }
+        html +=
+          '<div class="full-map-cell" style="left: ' +
+          posX +
+          "px; top: " +
+          posY +
+          "px; background-color: " +
+          cell.owner.color +
+          '; opacity: 0.6; z-index: 1;"></div>';
       }
 
-      // Если есть город, добавляем индикатор
+      // Если есть город, добавляем индикатор поверх всего
       if (cell.city) {
-        var cityIndicator = $('<div class="full-map-city-indicator"></div>');
-        cityIndicator.css({
-          left: posX + 3 + "px",
-          top: posY + 3 + "px",
-        });
-        container.append(cityIndicator);
+        html +=
+          '<div class="full-map-city-indicator" style="left: ' +
+          (posX + 3) +
+          "px; top: " +
+          (posY + 3) +
+          'px; z-index: 2;"></div>';
       }
-
-      container.append(cellDiv);
     }
   }
+
+  // Создаем обертку для центрирования содержимого
+  var mapWrapper = $('<div style="display: inline-block;"></div>');
+  mapWrapper.html(html);
+  container.html(mapWrapper);
 }
 
 $(document).on("click", "#open-full-map", function (e) {

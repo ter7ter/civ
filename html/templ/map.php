@@ -177,7 +177,7 @@ include "partials/header.php";
         <h3 style="margin: 0;">Полная карта</h3>
         <button id="close-full-map" class="btn btn-secondary" style="padding: 5px 10px; font-size: 16px;">Закрыть</button>
     </div>
-    <div id="full-map-container" style="width: 100%; height: calc(100% - 40px); overflow: auto; position: relative;">
+    <div id="full-map-container" style="width: 100%; height: calc(100% - 40px); overflow: auto; position: relative; display: flex; justify-content: center;">
         <div id="full-map-content" style="position: relative;"></div>
     </div>
 </div>

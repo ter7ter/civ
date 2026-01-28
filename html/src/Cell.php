@@ -653,24 +653,50 @@ class Cell implements CellInterface
     public static function getAllByGame(int $gameId): array
     {
         // Получаем все планеты для игры
-        $planets = MyDB::query(
+        $planetIds = MyDB::query(
             "SELECT id FROM planet WHERE game_id = :game_id",
             ["game_id" => $gameId],
         );
 
-        $cells = [];
-        foreach ($planets as $planet) {
-            // Получаем все клетки для планеты
-            $planet_cells = MyDB::query(
-                "SELECT * FROM cell WHERE planet = :planet_id",
-                ["planet_id" => $planet["id"]],
-            );
+        if (empty($planetIds)) {
+            return [];
+        }
 
-            foreach ($planet_cells as $cell_data) {
-                $cells[] = new Cell($cell_data);
-            }
+        // Формируем список ID планет для IN запроса
+        $planetIdList = [];
+        foreach ($planetIds as $planet) {
+            $planetIdList[] = $planet["id"];
+        }
+
+        // Загружаем все клетки для всех планет игры за один запрос
+        $placeholders = str_repeat("?,", count($planetIdList) - 1) . "?";
+        $planetQuery = "SELECT * FROM cell WHERE planet IN ($placeholders)";
+        $allCells = MyDB::query($planetQuery, $planetIdList);
+
+        // Создаем клетки без полной инициализации, только с основными данными
+        $cells = [];
+        foreach ($allCells as $cell_data) {
+            // Создаем объект клетки с минимальными данными
+            $cell = new Cell($cell_data);
+            $cells[] = $cell;
         }
 
         return $cells;
+    }
+
+    /**
+     * Получить все клетки для указанной планеты
+     * @param int $planetId ID планеты
+     * @return array Массив данных клеток
+     */
+    public static function getAllByPlanet(int $planetId): array
+    {
+        // Загружаем все клетки для планеты с информацией о типе
+        $allCells = MyDB::query(
+            "SELECT c.x, c.y, c.planet, c.type, c.owner, ct.id as type_id FROM cell c LEFT JOIN cell_type ct ON c.type = ct.id WHERE c.planet = :planet_id",
+            ["planet_id" => $planetId],
+        );
+
+        return $allCells;
     }
 }

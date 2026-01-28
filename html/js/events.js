@@ -245,6 +245,144 @@ $(document).on("click", "body", function (e) {
 $(document).on("click", "#do-next-step", function (e) {
   next_step();
 });
+function loadFullMap() {
+  // Показываем сообщение о загрузке
+  $("#full-map-content").html(
+    "<div style='display: flex; justify-content: center; align-items: center; height: 100%;'>Загрузка полной карты...</div>",
+  );
+
+  // Загружаем данные полной карты
+  $.post("index.php?method=fullmap&json=1", {}, function (response) {
+    try {
+      var data = $.parseJSON(response);
+      if (data.status === "ok") {
+        renderFullMap(data.data);
+      } else {
+        showError(data.error || "Ошибка при загрузке полной карты");
+      }
+    } catch (e) {
+      showError("Ошибка при обработке данных полной карты: " + e.message);
+    }
+  }).fail(function (jqXHR, textStatus, errorThrown) {
+    var error_msg =
+      "Ошибка при загрузке полной карты: " + textStatus + "\n" + errorThrown;
+    if (jqXHR.responseText) {
+      try {
+        var resp = $.parseJSON(jqXHR.responseText);
+        error_msg += "\n\nСерверная ошибка: " + resp.error;
+      } catch (e) {
+        error_msg +=
+          "\n\nОтвет сервера не является допустимым JSON:\n" +
+          jqXHR.responseText.substring(0, 500);
+      }
+    }
+    showError(error_msg);
+  });
+}
+
+function renderFullMap(mapData) {
+  var container = $("#full-map-content");
+  container.empty();
+
+  // Определяем размеры карты
+  var minX = Infinity,
+    maxX = -Infinity,
+    minY = Infinity,
+    maxY = -Infinity;
+  for (var x in mapData) {
+    for (var y in mapData[x]) {
+      var cell = mapData[x][y];
+      if (cell.x < minX) minX = cell.x;
+      if (cell.x > maxX) maxX = cell.x;
+      if (cell.y < minY) minY = cell.y;
+      if (cell.y > maxY) maxY = cell.y;
+    }
+  }
+
+  // Рассчитываем размеры контейнера для клеток
+  var mapWidth = maxX - minX + 1;
+  var mapHeight = maxY - minY + 1;
+
+  // Устанавливаем размеры контейнера
+  container.css({
+    width: mapWidth * 8 + "px",
+    height: mapHeight * 8 + "px",
+    position: "relative",
+  });
+
+  // Создаем клетки
+  for (var x in mapData) {
+    for (var y in mapData[x]) {
+      var cell = mapData[x][y];
+      var cellDiv = $('<div class="full-map-cell"></div>');
+
+      // Устанавливаем позицию
+      var posX = (cell.x - minX) * 8;
+      var posY = (cell.y - minY) * 8;
+      cellDiv.css({
+        left: posX + "px",
+        top: posY + "px",
+      });
+
+      // Устанавливаем цвет в зависимости от владельца
+      if (cell.owner && cell.owner.color) {
+        cellDiv.css("background-color", cell.owner.color);
+        cellDiv.css("opacity", "0.7");
+      } else {
+        // Устанавливаем цвет в зависимости от типа клетки
+        var cellTypeClass = "map_cell_" + cell.type;
+        // Определяем цвет в зависимости от типа клетки
+        switch (cell.type) {
+          case "plains":
+          case "plains2":
+            cellDiv.css("background-color", "#90EE90"); // светло-зеленый
+            break;
+          case "forest":
+            cellDiv.css("background-color", "#228B22"); // темно-зеленый
+            break;
+          case "hills":
+            cellDiv.css("background-color", "#A0522D"); // коричневый
+            break;
+          case "desert":
+            cellDiv.css("background-color", "#F4A460"); // светло-коричневый
+            break;
+          case "mountains":
+            cellDiv.css("background-color", "#C0C0C0"); // серый
+            break;
+          case "water1":
+          case "water2":
+          case "water3":
+            cellDiv.css("background-color", "#4169E1"); // королевский синий
+            break;
+          default:
+            cellDiv.css("background-color", "#CCCCCC"); // серый по умолчанию
+        }
+      }
+
+      // Если есть город, добавляем индикатор
+      if (cell.city) {
+        var cityIndicator = $('<div class="full-map-city-indicator"></div>');
+        cityIndicator.css({
+          left: posX + 3 + "px",
+          top: posY + 3 + "px",
+        });
+        container.append(cityIndicator);
+      }
+
+      container.append(cellDiv);
+    }
+  }
+}
+
+$(document).on("click", "#open-full-map", function (e) {
+  loadFullMap();
+  $("#full-map-window").show();
+});
+
+$(document).on("click", "#close-full-map", function (e) {
+  $("#full-map-window").hide();
+});
+
 $(document).on("click", "#open-empire", function (e) {
   $.post("index.php?method=emperie", {}, function (data) {
     $("#empire-window").html(data);

@@ -1,6 +1,6 @@
 <?php
-$page_title = 'Карта игры';
-include 'partials/header.php';
+$page_title = "Карта игры";
+include "partials/header.php";
 ?>
 <!-- Original game styles -->
 <link type="text/css" href="css/city.css" rel="Stylesheet" />
@@ -36,6 +36,7 @@ include 'partials/header.php';
                 <!-- Main Action Buttons -->
                 <div style="width: 100px; margin-left: 10px;" class="align-self-center">
                     <div class="d-grid gap-3">
+                        <button type="button" id="open-full-map" class="btn btn-success py-3">Карта</button>
                         <button type="button" id="open-empire" class="btn btn-primary py-3">Империя</button>
                         <button type="button" id="open-research" class="btn btn-info py-3">Исслед.</button>
                         <button type="button" onclick="window.location.href='index.php?method=logout'" class="btn btn-danger py-3">Выход</button>
@@ -171,6 +172,15 @@ include 'partials/header.php';
 </div>
 <div id="empire-window"></div>
 <div id="research-window"></div>
+<div id="full-map-window" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; height: 80vh; background-color: rgba(52, 58, 64, 0.95); color: #f8f9fa; border: 1px solid #495057; border-radius: 0.375rem; z-index: 1002; padding: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3 style="margin: 0;">Полная карта</h3>
+        <button id="close-full-map" class="btn btn-secondary" style="padding: 5px 10px; font-size: 16px;">Закрыть</button>
+    </div>
+    <div id="full-map-container" style="width: 100%; height: calc(100% - 40px); overflow: auto; position: relative;">
+        <div id="full-map-content" style="position: relative;"></div>
+    </div>
+</div>
 <div id="modal-backdrop"></div>
 <div id="event-window-research" eid="" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; z-index: 1001;">
     <h3 id="event-window-research-title"></h3>
@@ -199,5 +209,7 @@ include 'partials/header.php';
 <script src="js/forms.js"></script>
 <?php
 $page_scripts = ob_get_clean();
-include 'partials/footer.php';
+include "partials/footer.php";
+
+
 ?>

@@ -128,10 +128,10 @@ class Cell implements CellInterface
         if (!isset($data["planet"])) {
             throw new \Exception("Planet is required for Cell");
         }
-        if ($data['planet'] instanceof Planet) {
-            $this->planet = $data['planet']->id;
+        if ($data["planet"] instanceof Planet) {
+            $this->planet = $data["planet"]->id;
         } else {
-            $this->planet = $data['planet'];
+            $this->planet = $data["planet"];
         }
         $this->type = CellType::get($data["type"]);
         $this->city = City::by_coords($this->x, $this->y, $this->planet);
@@ -331,7 +331,10 @@ class Cell implements CellInterface
                 $cell_type = Cell::generate_type($x, $y, $planetId);
 
                 if (!$cell_type || empty($cell_type->id)) {
-                    throw new \Exception("Invalid cell type for ($x, $y): " . var_export($cell_type, true));
+                    throw new \Exception(
+                        "Invalid cell type for ($x, $y): " .
+                            var_export($cell_type, true),
+                    );
                 }
 
                 // Собираем данные клеток для batch INSERT
@@ -522,7 +525,7 @@ class Cell implements CellInterface
                 if ($cell) {
                     $cell->get_units();
                 } else {
-                    $cell = ['missing' => true, 'x' => $x, 'y' => $y];
+                    $cell = ["missing" => true, "x" => $x, "y" => $y];
                 }
                 $row[] = $cell;
             }
@@ -627,18 +630,47 @@ class Cell implements CellInterface
         UnitType $type,
         User $owner,
         ?int $health = null,
-        ?int $points = null
+        ?int $points = null,
     ): Unit {
         $unit = new Unit([
             "x" => $this->x,
             "y" => $this->y,
             "planet" => $this->planet,
             "type" => $type->id,
-            'user_id' => $owner->id,
-            'health' => $health ?? $type->health,
-            'points' => $points ?? $type->points,
+            "user_id" => $owner->id,
+            "health" => $health ?? $type->health,
+            "points" => $points ?? $type->points,
         ]);
         $unit->save();
         return $unit;
+    }
+
+    /**
+     * Получить все клетки для указанной игры
+     * @param int $gameId ID игры
+     * @return array Массив клеток
+     */
+    public static function getAllByGame(int $gameId): array
+    {
+        // Получаем все планеты для игры
+        $planets = MyDB::query(
+            "SELECT id FROM planet WHERE game_id = :game_id",
+            ["game_id" => $gameId],
+        );
+
+        $cells = [];
+        foreach ($planets as $planet) {
+            // Получаем все клетки для планеты
+            $planet_cells = MyDB::query(
+                "SELECT * FROM cell WHERE planet = :planet_id",
+                ["planet_id" => $planet["id"]],
+            );
+
+            foreach ($planet_cells as $cell_data) {
+                $cells[] = new Cell($cell_data);
+            }
+        }
+
+        return $cells;
     }
 }

@@ -52,7 +52,7 @@
     border-radius: 2px;
 }
 .map-city-population {
-    background:tan;
+    background: tan;
     width: 18px;
     font-weight: bold;
     margin-top: 50px;
@@ -237,7 +237,8 @@
     opacity: 0.2;
     position: absolute;
 }
-.map-cell-resource,.map-cell-improvement {
+.map-cell-resource,
+.map-cell-improvement {
     position: absolute;
     width: 72px;
     height: 72px;
@@ -316,8 +317,8 @@
 }
 .map-path-line-46 {
     background-image: url(../img/path/line-46.png);
-}+
-.map-path-line-48 {
+}
++ .map-path-line-48 {
     background-image: url(../img/path/line-48.png);
 }
 .map-path-line-49 {
@@ -337,7 +338,7 @@
     clear: both;
     height: 200px;
 }
-#message-window-lines{
+#message-window-lines {
     width: 100%;
     height: 170px;
     border-style: outset;
@@ -356,4 +357,27 @@
 }
 #message-window-input {
     width: 100%;
+}
+
+/* Стили для полной карты */
+.full-map-cell {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.full-map-cell:hover {
+    opacity: 0.8;
+}
+
+.full-map-city-indicator {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background-color: red;
+    border-radius: 50%;
+    z-index: 10;
 }

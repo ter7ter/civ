@@ -2,20 +2,43 @@ var messages = {
   all: [],
   last: 0,
   load: function () {
-    $.post("index.php?method=message&json=1", {}, function (data) {
-      resp = $.parseJSON(data);
-      if (resp.status == "ok") {
-        messages.all = resp.data.messages;
-        for (var i in messages.all) {
-          if (messages.last * 1 < messages.all[i].id * 1) {
-            messages.last = messages.all[i].id;
+    $.post("index.php?method=message&json=1", {})
+      .done(function (data) {
+        try {
+          resp = $.parseJSON(data);
+          if (resp.status == "ok") {
+            messages.all = resp.data.messages;
+            for (var i in messages.all) {
+              if (messages.last * 1 < messages.all[i].id * 1) {
+                messages.last = messages.all[i].id;
+              }
+            }
+            messages.show_tab();
+          } else {
+            showError(resp.error);
+          }
+        } catch (e) {
+          showError("Ошибка обработки ответа сервера: " + e.message);
+        }
+      })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        var error_msg =
+          "Ошибка при загрузке сообщений: " +
+          textStatus +
+          "\n" +
+          errorThrown;
+        if (jqXHR.responseText) {
+          try {
+            var resp = $.parseJSON(jqXHR.responseText);
+            error_msg += "\n\nСерверная ошибка: " + resp.error;
+          } catch (e) {
+            error_msg +=
+              "\n\nОтвет сервера не является допустимым JSON:\n" +
+              jqXHR.responseText.substring(0, 500);
           }
         }
-        messages.show_tab();
-      } else {
-        showError(resp.error);
-      }
-    });
+        showError(error_msg);
+      });
   },
   show_tab: function () {
     var type = "";

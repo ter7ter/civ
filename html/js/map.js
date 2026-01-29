@@ -1,4 +1,4 @@
-var Map_cell = {
+  var Map_cell = {
   //Отобразить верхнего юнита в этой клетке
   show_unit: function () {
     this.el.find(".map_unit").remove();
@@ -6,19 +6,56 @@ var Map_cell = {
     if (this.units.length == 0) {
       return false;
     }
-    var unit = { points: 0, max_points: 0 };
+    var unit = null;
+    var currentUserHasUnit = false;
+    
+    // Сначала проверяем, есть ли у текущего пользователя юниты на этой клетке
     for (var i in this.units) {
-      if (this.units[i].points > unit.points) {
-        unit = this.units[i];
-      } else if (
-        this.units[i].points == unit.points &&
-        this.units[i].max_points > unit.max_points
-      ) {
-        unit = this.units[i];
+      if (this.units[i].user_id == current_user_id) {
+        currentUserHasUnit = true;
+        break;
       }
     }
+    
+    if (currentUserHasUnit) {
+      // Если у текущего пользователя есть юниты, выбираем юнит с максимальными points
+      var maxPoints = -1;
+      for (var i in this.units) {
+        if (this.units[i].user_id == current_user_id && 
+            this.units[i].points !== undefined && 
+            this.units[i].points > maxPoints) {
+          maxPoints = this.units[i].points;
+          unit = this.units[i];
+        }
+      }
+      // Если не нашли юнит с points (маловероятно), используем первый юнит пользователя
+      if (!unit) {
+        for (var i in this.units) {
+          if (this.units[i].user_id == current_user_id) {
+            unit = this.units[i];
+            break;
+          }
+        }
+      }
+    } else {
+      // Если у текущего пользователя нет юнитов, выбираем юнит с максимальным defense
+      var maxDefence = -1;
+      for (var i in this.units) {
+        if (this.units[i].defence !== undefined && 
+            this.units[i].defence > maxDefence) {
+          maxDefence = this.units[i].defence;
+          unit = this.units[i];
+        }
+      }
+      // Если не удалось найти по defense, используем первый юнит
+      if (!unit && this.units.length > 0) {
+        unit = this.units[0];
+      }
+    }
+    
+    let unitImageFile = unit.image_file || (unit.type ? unit.type + '.png' : 'unknown.png');
     this.el.append(
-      '<img class="map_unit" src="./img/units/' + unit.image_file + '"></img>',
+      '<img class="map_unit" src="./img/units/' + unitImageFile + '"></img>',
     );
   },
   show_menu: function (point_x, point_y) {
@@ -62,6 +99,8 @@ var Map_cell = {
     return true;
   },
 };
+
+var current_user_id = null; // ID текущего пользователя
 
 var map = {
   cell: [],
@@ -126,6 +165,10 @@ var map = {
         map.max_y = resp.data.max_y;
         map.center_x = resp.data.center_x;
         map.center_y = resp.data.center_y;
+        // Устанавливаем ID текущего пользователя из полученных данных
+        if (resp.data.user_id) {
+          current_user_id = resp.data.user_id;
+        }
         if (selected_unit) {
           var cell = map.get_cell(selected_unit.x, selected_unit.y);
           if (cell) {

@@ -8,19 +8,48 @@ function array_remove(array, index) {
   return new_array;
 }
 function next_step() {
-  $.post("index.php?method=calculate&json=1", {}, function (data) {
-    resp = $.parseJSON(data);
-    if (resp.status == "ok") {
-      if (resp.data.reload) {
-        window.location.href = "index.php";
-      } else {
-        map.load();
-        map.show_cell_info();
+  $.post("index.php?method=calculate&json=1", {})
+    .done(function (data) {
+      try {
+        resp = $.parseJSON(data);
+        if (resp.status == "ok") {
+          if (resp.data.reload) {
+            window.location.href = "index.php";
+          } else {
+            map.load();
+            map.show_cell_info();
+          }
+        } else {
+          showError(resp.error);
+        }
+      } catch (e) {
+        // Если ответ не является JSON, показываем текст ошибки
+        showError("Ошибка обработки ответа сервера: " + e.message + "\nОтвет: " + data);
       }
-    } else {
-      showError(resp.error);
-    }
-  });
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      // Обработка ошибки AJAX запроса
+      var errorMsg = "Ошибка связи с сервером при завершении хода: " + textStatus + "\n" + errorThrown;
+      
+      if (jqXHR.responseText) {
+        try {
+          var resp = $.parseJSON(jqXHR.responseText);
+          if (resp && resp.error) {
+            errorMsg += "\n\nСерверная ошибка: " + resp.error;
+          } else {
+            // Если в ответе есть текст, но это не JSON с ошибкой
+            errorMsg += "\n\nОтвет сервера: " + jqXHR.responseText.substring(0, 500);
+          }
+        } catch (e) {
+          // Если ответ не является JSON
+          errorMsg += "\n\nОтвет сервера не является допустимым JSON:\n" + jqXHR.responseText.substring(0, 500);
+        }
+      } else {
+        errorMsg += "\n\nНе получен ответ от сервера.";
+      }
+      
+      showError(errorMsg);
+    });
 }
 /**
  * Расстояние по координате, с учётом зацикливания
@@ -122,5 +151,5 @@ function showError(message) {
   // Автоматически скрываем через 10 секунд
   setTimeout(function () {
     errorDiv.style.display = "none";
-  }, 10000);
+  }, 1000000);
 }

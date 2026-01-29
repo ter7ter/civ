@@ -55,7 +55,9 @@ foreach ($map as $row) {
                         'health' => $unit->health,
                         'owner_name' => $unit->user->login,
                         'owner_color' => $unit->user->color,
-                        'can_move' => $unit->type->can_move];
+                        'can_move' => $unit->type->can_move,
+                        'attack' => $unit->type->attack,
+                        'defence' => $unit->type->defence];
                     if ($user == $unit->user) {
                         $data_unit['points'] = $unit->points;
                         $data_unit['max_points'] = $unit->type->points;

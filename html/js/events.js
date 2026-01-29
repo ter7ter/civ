@@ -3,73 +3,96 @@ function get_next_event(del = false) {
   if (del) {
     vals["del"] = del;
   }
-  $.post("index.php?method=event&json=1", vals, function (data) {
-    resp = $.parseJSON(data);
-    if (resp.status == "ok") {
-      if (resp.data.type == "none") {
-        //Больше нет событий
-        return;
-      } else if (resp.data.type == "research") {
-        $("#event-window-research-title").text(resp.data.research_title);
-        $("#event-window-select-research").empty();
-        for (var i in resp.data.aresearch) {
-          var research = resp.data.aresearch[i];
-          $("#event-window-select-research").append(
-            '<option value="' +
-              research.id +
-              '">' +
-              research.title +
-              "(" +
-              research.turns +
-              ") ходов" +
-              "</option>",
-          );
+  $.post("index.php?method=event&json=1", vals)
+    .done(function (data) {
+      try {
+        resp = $.parseJSON(data);
+        if (resp.status == "ok") {
+          if (resp.data.type == "none") {
+            //Больше нет событий
+            return;
+          } else if (resp.data.type == "research") {
+            $("#event-window-research-title").text(resp.data.research_title);
+            $("#event-window-select-research").empty();
+            for (var i in resp.data.aresearch) {
+              var research = resp.data.aresearch[i];
+              $("#event-window-select-research").append(
+                '<option value="' +
+                  research.id +
+                  '">' +
+                  research.title +
+                  "(" +
+                  research.turns +
+                  ") ходов" +
+                  "</option>",
+              );
+            }
+            $("#event-window-research").attr("eid", resp.data.id);
+            $("#event-window-research").show();
+            $("#modal-backdrop").show();
+          } else if (
+            resp.data.type == "city_building" ||
+            resp.data.type == "city_unit"
+          ) {
+            $("#event-window-city").attr("eid", resp.data.id);
+            $("#event-window-city").attr("cid", resp.data.city_id);
+            $("#event-window-city-title").text(resp.data.city_title);
+            $("#event-window-city-build").text(resp.data.build_title);
+            $("#event-window-select-build").empty();
+            for (var i in resp.data.possible_units) {
+              var unit = resp.data.possible_units[i];
+              $("#event-window-select-build").append(
+                '<option value="unit' +
+                  unit.id +
+                  '">' +
+                  unit.title +
+                  "(" +
+                  unit.turns +
+                  ") ходов" +
+                  "</option>",
+              );
+            }
+            for (var i in resp.data.possible_buildings) {
+              var building = resp.data.possible_buildings[i];
+              $("#event-window-select-build").append(
+                '<option value="buil' +
+                  building.id +
+                  '">' +
+                  building.title +
+                  "(" +
+                  building.turns +
+                  ") ходов" +
+                  "</option>",
+              );
+            }
+            $("#event-window-city").show();
+            $("#modal-backdrop").show();
+          }
+        } else {
+          showError(resp.error);
         }
-        $("#event-window-research").attr("eid", resp.data.id);
-        $("#event-window-research").show();
-        $("#modal-backdrop").show();
-      } else if (
-        resp.data.type == "city_building" ||
-        resp.data.type == "city_unit"
-      ) {
-        $("#event-window-city").attr("eid", resp.data.id);
-        $("#event-window-city").attr("cid", resp.data.city_id);
-        $("#event-window-city-title").text(resp.data.city_title);
-        $("#event-window-city-build").text(resp.data.build_title);
-        $("#event-window-select-build").empty();
-        for (var i in resp.data.possible_units) {
-          var unit = resp.data.possible_units[i];
-          $("#event-window-select-build").append(
-            '<option value="unit' +
-              unit.id +
-              '">' +
-              unit.title +
-              "(" +
-              unit.turns +
-              ") ходов" +
-              "</option>",
-          );
-        }
-        for (var i in resp.data.possible_buildings) {
-          var building = resp.data.possible_buildings[i];
-          $("#event-window-select-build").append(
-            '<option value="buil' +
-              building.id +
-              '">' +
-              building.title +
-              "(" +
-              building.turns +
-              ") ходов" +
-              "</option>",
-          );
-        }
-        $("#event-window-city").show();
-        $("#modal-backdrop").show();
+      } catch (e) {
+        showError("Ошибка обработки ответа сервера: " + e.message);
       }
-    } else {
-      showError(resp.error);
-    }
-  });
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      var error_msg =
+        "Ошибка при получении следующего события: " +
+        textStatus +
+        "\n" +
+        errorThrown;
+      if (jqXHR.responseText) {
+        try {
+          var resp = $.parseJSON(jqXHR.responseText);
+          error_msg += "\n\nСерверная ошибка: " + resp.error;
+        } catch (e) {
+          error_msg +=
+            "\n\nОтвет сервера не является допустимым JSON:\n" +
+            jqXHR.responseText.substring(0, 500);
+        }
+      }
+      showError(error_msg);
+    });
 }
 $(document).on("click", "#event-window-research-ok", function (e) {
   $.post(

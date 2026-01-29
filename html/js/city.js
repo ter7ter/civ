@@ -1,4 +1,9 @@
 var city = {
+ // Метод для проверки, принадлежит ли город текущему пользователю
+  isCurrentUserCity: function() {
+    // Предполагаем, что у города есть свойство user_id, которое устанавливается из данных сервера
+    return this.user_id == current_user_id;
+  },
   id: 0,
   x: 0,
   y: 0,
@@ -35,41 +40,64 @@ var city = {
   },
   load: function (cid, options = {}) {
     options["cid"] = cid;
-    $.post("index.php?method=city&json=1", options, function (data) {
-      city.id = cid;
-      resp = $.parseJSON(data);
-      if (resp.status == "ok") {
-        for (var field in resp.data) {
-          city[field] = resp.data[field];
+    $.post("index.php?method=city&json=1", options)
+      .done(function (data) {
+        try {
+          city.id = cid;
+          resp = $.parseJSON(data);
+          if (resp.status == "ok") {
+            for (var field in resp.data) {
+              city[field] = resp.data[field];
+            }
+            city.draw_production_list();
+            city.draw_buildings();
+            $("#city-window-title").text(city.title);
+            $("#city-window-eat-info").text(city.eat + " / " + city.eat_up);
+            $(document).on("click", ".city-production-list-item", function (e) {
+              city.select_production(
+                $(e.target).closest(".city-production-list-item"),
+              );
+            });
+            $(".city-window-bg").hide();
+            $("#city-window-population").text(city.population);
+            $("#city-window-culture").text(city.culture);
+            $("#city-window-culture-up").text(city.culture_up);
+            $("#city-window-culture-level").text(city.culture_level);
+            if (city.citizen_size === 1) {
+              $(".city-small-bg").show();
+            } else if (city.citizen_size === 2) {
+              $(".city-big-bg").show();
+            }
+            $("#city-window").show();
+            city.draw_people();
+            city.draw_resources();
+            city.draw_production();
+            city.cell_resources = resp.data.cell_resources || [];
+          } else {
+            showError(resp.error);
+          }
+        } catch (e) {
+          showError("Ошибка обработки ответа сервера: " + e.message);
         }
-        city.draw_production_list();
-        city.draw_buildings();
-        $("#city-window-title").text(city.title);
-        $("#city-window-eat-info").text(city.eat + " / " + city.eat_up);
-        $(document).on("click", ".city-production-list-item", function (e) {
-          city.select_production(
-            $(e.target).closest(".city-production-list-item"),
-          );
-        });
-        $(".city-window-bg").hide();
-        $("#city-window-population").text(city.population);
-        $("#city-window-culture").text(city.culture);
-        $("#city-window-culture-up").text(city.culture_up);
-        $("#city-window-culture-level").text(city.culture_level);
-        if (city.citizen_size === 1) {
-          $(".city-small-bg").show();
-        } else if (city.citizen_size === 2) {
-          $(".city-big-bg").show();
+      })
+      .fail(function (jqXHR, textStatus, errorThrown) {
+        var error_msg =
+          "Ошибка при загрузке информации о городе: " +
+          textStatus +
+          "\n" +
+          errorThrown;
+        if (jqXHR.responseText) {
+          try {
+            var resp = $.parseJSON(jqXHR.responseText);
+            error_msg += "\n\nСерверная ошибка: " + resp.error;
+          } catch (e) {
+            error_msg +=
+              "\n\nОтвет сервера не является допустимым JSON:\n" +
+              jqXHR.responseText.substring(0, 500);
+          }
         }
-        $("#city-window").show();
-        city.draw_people();
-        city.draw_resources();
-        city.draw_production();
-        city.cell_resources = resp.data.cell_resources || [];
-      } else {
-        showError(resp.error);
-      }
-    });
+        showError(error_msg);
+      });
   },
   draw_resources: function () {
     var html = "Ресурсы:";
@@ -331,14 +359,36 @@ var city = {
         cid: this.id,
         production: production_id,
         production_type: production_type,
-      },
-      function (data) {
+      }
+    )
+    .done(function (data) {
+      try {
         resp = $.parseJSON(data);
         if (resp.status == "error") {
           showError(resp.error);
         }
-      },
-    );
+      } catch (e) {
+        showError("Ошибка обработки ответа сервера: " + e.message);
+      }
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      var error_msg =
+        "Ошибка при сохранении производства города: " +
+        textStatus +
+        "\n" +
+        errorThrown;
+      if (jqXHR.responseText) {
+        try {
+          var resp = $.parseJSON(jqXHR.responseText);
+          error_msg += "\n\nСерверная ошибка: " + resp.error;
+        } catch (e) {
+          error_msg +=
+            "\n\nОтвет сервера не является допустимым JSON:\n" +
+            jqXHR.responseText.substring(0, 500);
+        }
+      }
+      showError(error_msg);
+    });
   },
 };
 $(document).on("click", "#city-window-close", function (e) {

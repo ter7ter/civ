@@ -64,6 +64,12 @@ class MissionType implements MissionInterface
                 return false;
             }
         }
+        if ($this->id == 'attack') {
+            // Для миссии атаки проверка будет выполнена в UnitMissionHandler::getMissionTypes
+            // потому что нам нужен доступ к юниту, который проверяет доступные миссии
+            // Здесь мы просто проверяем, что клетка допустима для типа миссии
+            return true;
+        }
 
         return true;
     }
@@ -154,5 +160,17 @@ new MissionType([   'id' => 'build_road_to',
                     'cell_types' => ['plains', 'plains2', 'forest', 'hills', 'mountains', 'desert'],
                     'need_points' => []]);
 
+// Миссия атаки другого юнита
+new MissionType([
+    'id' => 'attack',
+    'title' => 'Атаковать',
+    'unit_lost' => false,
+    'cell_types' => ['plains', 'plains2', 'forest', 'hills', 'mountains', 'water1', 'water2', 'water3', 'desert'],
+    'need_points' => [] // В бою очки будут использоваться по-другому
+]);
+
 MissionType::$all['move_to']->completeHandler = null; // move_to doesn't complete instantly, it's for movement
-MissionType::$all['build_road_to']->completeHandler = null; // build_road_to is for building road to target*/
+MissionType::$all['build_road_to']->completeHandler = null; // build_road_to is for building road to target
+
+// Присваиваем обработчик для миссии атаки
+MissionType::$all['attack']->completeHandler = new AttackMission();

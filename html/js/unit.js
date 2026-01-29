@@ -1,6 +1,11 @@
 var selected_unit = false;
 
 var Unit = {
+  // Метод для проверки, принадлежит ли юнит текущему пользователю
+  isCurrentUserUnit: function() {
+    // Предполагаем, что у юнита есть свойство user_id, которое устанавливается из данных сервера
+    return this.user_id == current_user_id;
+  },
   select_mission: false,
   select: function () {
     selected_unit = this;
@@ -35,8 +40,10 @@ var Unit = {
     var unit = this;
     $.post(
       "index.php?method=unitaction&json=1",
-      { action: "move", x: move_x, y: move_y, uid: this.id },
-      function (data) {
+      { action: "move", x: move_x, y: move_y, uid: this.id }
+    )
+    .done(function (data) {
+      try {
         var data = JSON.parse(data);
         if (data.status == "error") {
           showError(data.error);
@@ -110,8 +117,28 @@ var Unit = {
           selected_unit.select();
         }
         map.show_cell_info();
-      },
-    );
+      } catch (e) {
+        showError("Ошибка обработки ответа сервера: " + e.message);
+      }
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      var error_msg =
+        "Ошибка при перемещении юнита: " +
+        textStatus +
+        "\n" +
+        errorThrown;
+      if (jqXHR.responseText) {
+        try {
+          var resp = $.parseJSON(jqXHR.responseText);
+          error_msg += "\n\nСерверная ошибка: " + resp.error;
+        } catch (e) {
+          error_msg +=
+            "\n\nОтвет сервера не является допустимым JSON:\n" +
+            jqXHR.responseText.substring(0, 500);
+        }
+      }
+      showError(error_msg);
+    });
   },
   create_city_window: function () {
     var html = `
@@ -145,8 +172,10 @@ var Unit = {
         mission: "build_city",
         uid: selected_unit.id,
         title: title,
-      },
-      function (data) {
+      }
+    )
+    .done(function (data) {
+      try {
         var data = JSON.parse(data);
         if (data.status == "error") {
           showError(data.error);
@@ -157,8 +186,28 @@ var Unit = {
         map.show_cell_info();
         $("#city-create-title").val("");
         $("#city-create-window").hide();
-      },
-    );
+      } catch (e) {
+        showError("Ошибка обработки ответа сервера: " + e.message);
+      }
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      var error_msg =
+        "Ошибка при создании города: " +
+        textStatus +
+        "\n" +
+        errorThrown;
+      if (jqXHR.responseText) {
+        try {
+          var resp = $.parseJSON(jqXHR.responseText);
+          error_msg += "\n\nСерверная ошибка: " + resp.error;
+        } catch (e) {
+          error_msg +=
+            "\n\nОтвет сервера не является допустимым JSON:\n" +
+            jqXHR.responseText.substring(0, 500);
+        }
+      }
+      showError(error_msg);
+    });
   },
   select_move_target: function () {
     this.select_path_target();
@@ -352,31 +401,75 @@ $(document).on("click", ".unit-do-mission", function (e) {
   } else {
     $.post(
       "index.php?method=unitaction&json=1",
-      { action: "mission", mission: mid, uid: selected_unit.id },
-      function (data) {
+      { action: "mission", mission: mid, uid: selected_unit.id }
+    )
+    .done(function (data) {
+      try {
         var data = JSON.parse(data);
         if (data.status == "error") {
           showError(data.error);
           return false;
         }
         map.show_cell_info();
-      },
-    );
+      } catch (e) {
+        showError("Ошибка обработки ответа сервера: " + e.message);
+      }
+    })
+    .fail(function (jqXHR, textStatus, errorThrown) {
+      var error_msg =
+        "Ошибка при выполнении миссии юнита: " +
+        textStatus +
+        "\n" +
+        errorThrown;
+      if (jqXHR.responseText) {
+        try {
+          var resp = $.parseJSON(jqXHR.responseText);
+          error_msg += "\n\nСерверная ошибка: " + resp.error;
+        } catch (e) {
+          error_msg +=
+            "\n\nОтвет сервера не является допустимым JSON:\n" +
+            jqXHR.responseText.substring(0, 500);
+        }
+      }
+      showError(error_msg);
+    });
   }
 });
 $(document).on("click", ".unit-cancel-mission", function (e) {
   $.post(
     "index.php?method=unitaction&json=1",
-    { action: "cancel_mission", uid: selected_unit.id },
-    function (data) {
+    { action: "cancel_mission", uid: selected_unit.id }
+  )
+  .done(function (data) {
+    try {
       var data = JSON.parse(data);
       if (data.status == "error") {
         showError(data.error);
         return false;
       }
       map.show_cell_info();
-    },
-  );
+    } catch (e) {
+      showError("Ошибка обработки ответа сервера: " + e.message);
+    }
+  })
+  .fail(function (jqXHR, textStatus, errorThrown) {
+    var error_msg =
+      "Ошибка при отмене миссии юнита: " +
+      textStatus +
+      "\n" +
+      errorThrown;
+    if (jqXHR.responseText) {
+      try {
+        var resp = $.parseJSON(jqXHR.responseText);
+        error_msg += "\n\nСерверная ошибка: " + resp.error;
+      } catch (e) {
+        error_msg +=
+          "\n\nОтвет сервера не является допустимым JSON:\n" +
+          jqXHR.responseText.substring(0, 500);
+      }
+    }
+    showError(error_msg);
+  });
 });
 $(document).on("mouseenter", ".map_cell", function (e) {
   if (selected_unit.select_mission) {

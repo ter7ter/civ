@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="1" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.245261">
-    <testsuite name="Unit Tests" tests="1" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.245261">
-      <testsuite name="App\Tests\UserTest" file="/var/www/html/tests/unit/UserTest.php" tests="1" assertions="3" errors="0" warnings="0" failures="0" skipped="0" time="0.245261">
-        <testcase name="testNewSystemMessageArgs" class="App\Tests\UserTest" classname="App.Tests.UserTest" file="/var/www/html/tests/unit/UserTest.php" line="565" assertions="3" time="0.245261"/>
+  <testsuite name="" tests="4" assertions="22" errors="0" warnings="0" failures="0" skipped="0" time="0.370240">
+    <testsuite name="Unit Tests" tests="4" assertions="22" errors="0" warnings="0" failures="0" skipped="0" time="0.370240">
+      <testsuite name="App\Tests\AttackTest" file="/var/www/html/tests/unit/AttackTest.php" tests="4" assertions="22" errors="0" warnings="0" failures="0" skipped="0" time="0.370240">
+        <testcase name="testAttackEnemyUnit" class="App\Tests\AttackTest" classname="App.Tests.AttackTest" file="/var/www/html/tests/unit/AttackTest.php" line="36" assertions="12" time="0.324794"/>
+        <testcase name="testAttackThatDestroysEnemyUnit" class="App\Tests\AttackTest" classname="App.Tests.AttackTest" file="/var/www/html/tests/unit/AttackTest.php" line="218" assertions="8" time="0.019032"/>
+        <testcase name="testPeacefulUnitCannotAttack" class="App\Tests\AttackTest" classname="App.Tests.AttackTest" file="/var/www/html/tests/unit/AttackTest.php" line="120" assertions="1" time="0.014709"/>
+        <testcase name="testUnitCannotAttackSelf" class="App\Tests\AttackTest" classname="App.Tests.AttackTest" file="/var/www/html/tests/unit/AttackTest.php" line="181" assertions="1" time="0.011704"/>
       </testsuite>
     </testsuite>
   </testsuite>

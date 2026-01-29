@@ -1,12 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="4" assertions="22" errors="0" warnings="0" failures="0" skipped="0" time="0.370240">
-    <testsuite name="Unit Tests" tests="4" assertions="22" errors="0" warnings="0" failures="0" skipped="0" time="0.370240">
-      <testsuite name="App\Tests\AttackTest" file="/var/www/html/tests/unit/AttackTest.php" tests="4" assertions="22" errors="0" warnings="0" failures="0" skipped="0" time="0.370240">
-        <testcase name="testAttackEnemyUnit" class="App\Tests\AttackTest" classname="App.Tests.AttackTest" file="/var/www/html/tests/unit/AttackTest.php" line="36" assertions="12" time="0.324794"/>
-        <testcase name="testAttackThatDestroysEnemyUnit" class="App\Tests\AttackTest" classname="App.Tests.AttackTest" file="/var/www/html/tests/unit/AttackTest.php" line="218" assertions="8" time="0.019032"/>
-        <testcase name="testPeacefulUnitCannotAttack" class="App\Tests\AttackTest" classname="App.Tests.AttackTest" file="/var/www/html/tests/unit/AttackTest.php" line="120" assertions="1" time="0.014709"/>
-        <testcase name="testUnitCannotAttackSelf" class="App\Tests\AttackTest" classname="App.Tests.AttackTest" file="/var/www/html/tests/unit/AttackTest.php" line="181" assertions="1" time="0.011704"/>
+  <testsuite name="" tests="4" assertions="17" errors="1" warnings="0" failures="2" skipped="0" time="0.386698">
+    <testsuite name="Unit Tests" tests="4" assertions="17" errors="1" warnings="0" failures="2" skipped="0" time="0.386698">
+      <testsuite name="App\Tests\AttackTest" file="/var/www/html/tests/unit/AttackTest.php" tests="4" assertions="17" errors="1" warnings="0" failures="2" skipped="0" time="0.386698">
+        <testcase name="testAttackThatDestroysEnemyUnit" class="App\Tests\AttackTest" classname="App.Tests.AttackTest" file="/var/www/html/tests/unit/AttackTest.php" line="221" assertions="5" time="0.286215">
+          <error type="Error">App\Tests\AttackTest::testAttackThatDestroysEnemyUnit
+Error: Class "App\Tests\Unit" not found
+
+/var/www/html/tests/unit/AttackTest.php:294</error>
+        </testcase>
+        <testcase name="testAttackEnemyUnit" class="App\Tests\AttackTest" classname="App.Tests.AttackTest" file="/var/www/html/tests/unit/AttackTest.php" line="35" assertions="10" time="0.072002">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">App\Tests\AttackTest::testAttackEnemyUnit
+Failed asserting that 'unit_lost' is true.
+
+/var/www/html/tests/unit/AttackTest.php:105</failure>
+        </testcase>
+        <testcase name="testPeacefulUnitCannotAttack" class="App\Tests\AttackTest" classname="App.Tests.AttackTest" file="/var/www/html/tests/unit/AttackTest.php" line="123" assertions="1" time="0.014588"/>
+        <testcase name="testUnitCannotAttackSelf" class="App\Tests\AttackTest" classname="App.Tests.AttackTest" file="/var/www/html/tests/unit/AttackTest.php" line="184" assertions="1" time="0.013892">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">App\Tests\AttackTest::testUnitCannotAttackSelf
+Failed asserting that an array does not have the key 'attack'.
+
+/var/www/html/tests/unit/AttackTest.php:215</failure>
+        </testcase>
       </testsuite>
     </testsuite>
   </testsuite>

@@ -17,6 +17,8 @@ services:
    - DOMAIN=localhost
   networks:
    - pr1_network
+  extra_hosts:
+   - "host.docker.internal:host-gateway"
  db:
   image: mysql:latest
   volumes:

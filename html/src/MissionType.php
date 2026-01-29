@@ -96,11 +96,11 @@ class MissionType implements MissionInterface
     }
 
     //Завершение выполнения миссии
-    public function complete(Unit $unit, string|false $title = false): bool
+    public function complete(Unit &$unit, string|false $title = false): bool
     {
         if ($this->completeHandler) {
             $result = $this->completeHandler->complete($unit, $title);
-            if ($result) {
+            if ($result && isset($unit)) {
                 UnitOrderHandler::processOrders($unit);
             }
             return $result;

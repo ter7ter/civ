@@ -20,7 +20,7 @@ class BuildMineAndIrrigationMission implements MissionCompleteInterface
      * @param string|null $title
      * @return bool
      */
-    public function complete(Unit $unit, string|false $title = false): bool
+    public function complete(Unit &$unit, string|false $title = false): bool
     {
         $cell = Cell::get($unit->x, $unit->y, $unit->planet);
         $cell->improvement = $this->improvementType;

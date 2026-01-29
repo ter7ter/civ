@@ -1,6 +1,6 @@
 Attack (App\Tests\Attack)
- [x] Attack enemy unit
- [x] Attack that destroys enemy unit
+ [ ] Attack that destroys enemy unit
+ [ ] Attack enemy unit
  [x] Peaceful unit cannot attack
- [x] Unit cannot attack self
+ [ ] Unit cannot attack self
 

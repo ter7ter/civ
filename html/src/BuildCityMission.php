@@ -13,7 +13,7 @@ class BuildCityMission implements MissionCompleteInterface
      * @param string|null $title
      * @return bool
      */
-    public function complete(Unit $unit, string|false $title = false): bool
+    public function complete(Unit &$unit, string|false $title = false): bool
     {
         if (!$title) {
             return false;

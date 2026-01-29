@@ -26,7 +26,7 @@ var Unit = {
         '"></img>',
     );
   },
-  //Перемещение юнита
+  //Перемещение юнита или атака вражеского юнита
   move: function (dx, dy) {
     if (this.points == 0) {
       return false;
@@ -37,6 +37,66 @@ var Unit = {
     var move_y = this.y * 1 + dy;
     if (move_y < 0) move_y = map.max_y;
     if (move_y > map.max_y) move_y = 0;
+    
+    // Проверяем, есть ли вражеские юниты на целевой клетке
+    var target_cell = map.get_cell(move_x, move_y);
+    if (target_cell && target_cell.units.length > 0) {
+      var has_enemy = false;
+      for (var i in target_cell.units) {
+        if (target_cell.units[i].user_id != current_user_id) {
+          has_enemy = true;
+          break;
+        }
+      }
+      
+      // Если есть вражеские юниты, спрашиваем пользователя, хочет ли он атаковать
+      if (has_enemy) {
+        if (confirm("На этой клетке вражеский юнит. Атаковать его?")) {
+          // Выполняем миссию атаки, передавая координаты целевой клетки
+          var unit = this;
+          $.post(
+            "index.php?method=unitaction&json=1",
+            { action: "mission", mission: "attack", uid: unit.id, x: move_x, y: move_y }
+          )
+          .done(function (data) {
+            try {
+              var data = JSON.parse(data);
+              if (data.status == "error") {
+                showError(data.error);
+                return false;
+              }
+              map.show_cell_info();
+            } catch (e) {
+              showError("Ошибка обработки ответа сервера: " + e.message);
+            }
+          })
+          .fail(function (jqXHR, textStatus, errorThrown) {
+            var error_msg =
+              "Ошибка при атаке юнита: " +
+              textStatus +
+              "\n" +
+              errorThrown;
+            if (jqXHR.responseText) {
+              try {
+                var resp = $.parseJSON(jqXHR.responseText);
+                error_msg += "\n\nСерверная ошибка: " + resp.error;
+              } catch (e) {
+                error_msg +=
+                  "\n\nОтвет сервера не является допустимым JSON:\n" +
+                  jqXHR.responseText.substring(0, 500);
+              }
+            }
+            showError(error_msg);
+          });
+          return;
+        } else {
+          // Если пользователь отказался от атаки, просто возвращаемся
+          return;
+        }
+      }
+    }
+    
+    // Если нет вражеских юнитов, продолжаем обычное перемещение
     var unit = this;
     $.post(
       "index.php?method=unitaction&json=1",
@@ -389,6 +449,7 @@ var Unit = {
     };
     this.do_path_to(data, path);
   },
+  
 };
 $(document).on("click", ".unit-do-mission", function (e) {
   var mid = $(e.target).closest(".unit-do-mission").attr("mid");

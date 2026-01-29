@@ -23,7 +23,7 @@ interface MissionInterface
      * @param string|null $title
      * @return bool
      */
-    public function complete(Unit $unit, string|false $title = false): bool;
+    public function complete(Unit &$unit, string|false $title = false): bool;
 
     /**
      * Получить заголовок миссии.

@@ -49,6 +49,20 @@ class UnitMovement
             log_msg("can't move");
             return false;
         }
+        
+        // Проверяем, есть ли на клетке вражеские юниты
+        $cell->get_units(); // Загружаем юнитов на клетке
+        if ($cell->units && is_array($cell->units)) {
+            foreach ($cell->units as $existingUnit) {
+                if ($existingUnit->user->id != $unit->user->id) {
+                    // На клетке есть вражеский юнит, перемещение невозможно
+                    // Для атаки вражеского юнита нужно использовать миссию атаки
+                    log_msg("can't move - enemy unit on target cell, use attack mission instead");
+                    return false;
+                }
+            }
+        }
+        
         log_msg("move to " . $cell->x . " " . $cell->y);
         $cell_from = Cell::get($unit->x, $unit->y, $unit->planet);
         if (

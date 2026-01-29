@@ -29,38 +29,6 @@ class UnitMissionHandler
         foreach ($unit->type->missions as $mission_id) {
             $mtype = MissionType::get($mission_id);
             if ($mtype->check_cell($x, $y, $unit->planet)) {
-                // Дополнительная проверка для миссии атаки
-                if ($mtype->id === 'attack') {
-                    // Проверяем, есть ли вражеские юниты на клетке
-                    $allUnitsInCell = MyDB::query(
-                        "SELECT id, user_id FROM unit WHERE x = :x AND y = :y AND planet = :planet",
-                        [
-                            "x" => $x,
-                            "y" => $y,
-                            "planet" => $unit->planet
-                        ]
-                    );
-                    
-                    // Если нет юнитов на клетке, атака невозможна
-                    if (empty($allUnitsInCell)) {
-                        continue;
-                    }
-                    
-                    // Проверяем, есть ли вражеские юниты
-                    $hasEnemy = false;
-                    foreach ($allUnitsInCell as $unitData) {
-                        $otherUnit = Unit::get($unitData["id"]);
-                        if ($otherUnit && $otherUnit->user->id != $unit->user->id) {
-                            $hasEnemy = true;
-                            break;
-                        }
-                    }
-                    
-                    if (!$hasEnemy) {
-                        continue; // Нет вражеских юнитов для атаки
-                    }
-                }
-                
                 $result[$mtype->id] = $mtype;
             }
         }
@@ -100,6 +68,9 @@ class UnitMissionHandler
             if (!$mtype->complete($unit, $title)) {
                 $result_message = "mission failed";
                 return false;
+            }
+            if (is_null($unit)) {
+                return "unit_lost";
             }
             if ($mtype->unit_lost) {
                 $unit->remove();
